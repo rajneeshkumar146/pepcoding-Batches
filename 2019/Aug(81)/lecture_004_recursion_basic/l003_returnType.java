@@ -71,7 +71,8 @@ public class l003_returnType{
 //pathProblems.==========================
 
    public static void pathProblems(){
-       System.out.println(mazePath(0,0,2,2));
+    //    System.out.println(mazePath(0,0,2,2));
+       System.out.println(mazePath_multiMoves(0,0,2,2));
    }
 
    public static ArrayList<String> mazePath(int si,int ei,int sp,int ep){
@@ -96,9 +97,41 @@ public class l003_returnType{
            }
        }
         return myAns;
-
-
    }
+
+
+   public static ArrayList<String> mazePath_multiMoves(int si,int ei,int sp,int ep){
+    if(si==sp && ei==ep){
+        ArrayList<String> base=new ArrayList<>();
+        base.add("");
+        return base;
+    }
+
+     ArrayList<String> myAns=new ArrayList<>();
+    for(int jump=1;jump+ei<=ep;jump++){
+    
+        ArrayList<String> hRecAns=mazePath_multiMoves(si,ei+jump,sp,ep);
+        
+        for(String s:hRecAns){
+            myAns.add("H"+jump+s);
+          }
+     }
+
+     for(int jump=1;jump+si<=sp;jump++){
+     ArrayList<String> VRecAns=mazePath_multiMoves(si+jump,ei,sp,ep);
+     for(String s:VRecAns){
+         myAns.add("V"+jump+s);
+        }
+    }
+
+    for(int jump=1;si+jump<=sp && ei+jump<=ep;jump++){
+        ArrayList<String> DRecAns=mazePath_multiMoves(si+jump,ei+jump,sp,ep);
+        for(String s:DRecAns){
+            myAns.add("D"+jump+s);
+           }
+       }
+     return myAns;
+}
 
 
 
