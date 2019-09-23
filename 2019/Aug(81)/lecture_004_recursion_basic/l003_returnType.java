@@ -72,7 +72,8 @@ public class l003_returnType{
 
    public static void pathProblems(){
     //    System.out.println(mazePath(0,0,2,2));
-       System.out.println(mazePath_multiMoves(0,0,2,2));
+    //    System.out.println(mazePath_multiMoves(0,0,2,2));
+    System.out.println(boardPath(0,10).size());
    }
 
    public static ArrayList<String> mazePath(int si,int ei,int sp,int ep){
@@ -131,6 +132,45 @@ public class l003_returnType{
            }
        }
      return myAns;
+}
+
+public static ArrayList<String> boardPath(int si,int ei){
+    if(si==ei){
+        ArrayList<String> base=new ArrayList<>();
+        base.add("");
+        return base;
+    }
+
+    ArrayList<String> ans=new ArrayList<>();
+
+   for(int jump=1;si+jump<=ei && jump<=6;jump++){
+    ArrayList<String> recAns=boardPath(si+jump,ei);
+    for(String s: recAns){
+        ans.add(s+jump);
+    }
+   }
+
+   return ans;
+}
+
+public static ArrayList<String> boardPath_2(int ei){
+if(ei==0){
+    ArrayList<String> base=new ArrayList<>();
+    base.add("");
+    return base;
+}
+
+ArrayList<String> ans=new ArrayList<>();
+
+for(int jump=1;ei-jump>=0 && jump<=6;jump++){
+ ArrayList<String> recAns=boardPath(ei-jump);
+ for(String s: recAns){
+     ans.add(s+jump);
+ }
+}
+
+return ans;
+
 }
 
 
