@@ -73,11 +73,44 @@ int keyPad(string ques, string ans)
     return count;
 }
 
+int encoding(string ques, string ans)
+{
+    if (ques.size() == 0)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    char ch = ques[0];
+    int count = 0;
+
+    if (ch == '0')
+    {
+        count += encoding(ques.substr(1), ans);
+    }
+    else
+    {
+        count += encoding(ques.substr(1), ans + (char)(ch - '1' + 'a'));
+
+        if (ch<'3' && ques.size() > 1)
+        {
+            char ch1 = ques[1];
+            int num = (ch - '0') * 10 + (ch1 - '0');
+            if (num <= 26)
+            {
+                count += encoding(ques.substr(2), ans + (char)('a' + num - 1));
+            }
+        }
+    }
+    return count;
+}
+
 void basic()
 {
     // << subsequence("abc", "") << endl;
     // cout << permuation("aaa", "") << endl;
-    cout << keyPad("235", "");
+    // cout << keyPad("235", "");
+    cout << encoding("110028", "") << endl;
 }
 
 //pathProblem.===========================
@@ -349,12 +382,204 @@ void setQuestion()
     cout << equiSet(arr, 1, 10, 0, "10 ", "") << endl;
 }
 
+//coinChange===============================================
+
+int coinChange_01(vector<int> &arr, int idx, int target, string ans)
+{
+    if (idx == arr.size() || target == 0)
+    {
+        if (target == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    for (int i = idx; i < arr.size(); i++)
+    {
+        if (target - arr[i] >= 0)
+            count += coinChange_01(arr, i, target - arr[i], ans + to_string(arr[i]) + " ");
+    }
+
+    return count;
+}
+
+int coinChange_02(vector<int> &arr, int idx, int target, string ans)
+{
+    if (idx == arr.size() || target == 0)
+    {
+        if (target == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    for (int i = idx; i < arr.size(); i++)
+    {
+        if (target - arr[i] >= 0)
+            count += coinChange_02(arr, i + 1, target - arr[i], ans + to_string(arr[i]) + " ");
+    }
+
+    return count;
+}
+
+int coinChange_04(vector<int> &arr, int idx, int target, string ans)
+{
+    if (idx == arr.size() || target == 0)
+    {
+        if (target == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    if (target - arr[idx] >= 0)
+        count += coinChange_04(arr, idx + 1, target - arr[idx], ans + to_string(arr[idx]) + " ");
+    count += coinChange_04(arr, idx + 1, target, ans);
+
+    return count;
+}
+
+int coinChange_03(vector<int> &arr, int idx, int target, string ans)
+{
+    if (idx == arr.size() || target == 0)
+    {
+        if (target == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    if (target - arr[idx] >= 0)
+        count += coinChange_03(arr, idx, target - arr[idx], ans + to_string(arr[idx]) + " ");
+    count += coinChange_03(arr, idx + 1, target, ans);
+
+    return count;
+}
+
+int coinChange_P01(vector<int> &arr, int idx, int target, string ans)
+{
+    if (idx == arr.size() || target == 0)
+    {
+        if (target == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        if (target - arr[i] >= 0)
+            count += coinChange_P01(arr, i, target - arr[i], ans + to_string(arr[i]) + " ");
+    }
+
+    return count;
+}
+
+int coinChange_P02(vector<int> &arr, vector<bool> &isdone, int marked, int target, string ans)
+{
+    if (marked == arr.size() || target == 0)
+    {
+        if (target == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+    int count = 0;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        if (target - arr[i] >= 0 && !isdone[i])
+        {
+            isdone[i] = true;
+            count += coinChange_P02(arr, isdone, marked + 1, target - arr[i], ans + to_string(arr[i]) + " ");
+            isdone[i] = false;
+        }
+    }
+    return count;
+}
+
+int coinChange_P03(vector<int> &arr, int idx, int target, string ans)
+{
+    if (idx == arr.size() || target == 0)
+    {
+        if (target == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+    int count = 0;
+
+    if (target - arr[idx] >= 0)
+        count += coinChange_P03(arr, 0, target - arr[idx], ans + to_string(arr[idx]) + " ");
+    count += coinChange_P03(arr, idx + 1, target, ans);
+
+    return count;
+}
+
+int coinChange_P04(vector<int> &arr, vector<bool> &isdone, int idx, int target, string ans)
+{
+    if (idx == arr.size() || target == 0)
+    {
+        if (target == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+    int count = 0;
+
+    if (target - arr[idx] >= 0 && !isdone[idx])
+    {
+        isdone[idx] = true;
+        count += coinChange_P04(arr, isdone, 0, target - arr[idx], ans + to_string(arr[idx]) + " ");
+        isdone[idx] = false;
+    }
+    count += coinChange_P04(arr, isdone, idx + 1, target, ans);
+
+    return count;
+}
+
+void coinChange()
+{
+    vector<int> arr = {2, 3, 5, 7};
+    vector<bool> isdone(4, false);
+    int target = 10;
+    // cout << coinChange_01(arr, 0, target, "") << endl;
+    // cout << coinChange_02(arr, 0, target, "") << endl;
+    // cout << coinChange_03(arr, 0, target, "") << endl;
+
+    // cout << coinChange_P01(arr, 0, target, "") << endl;
+    // cout << coinChange_P02(arr, isdone, 0, target, "") << endl;
+    // cout << coinChange_P03(arr, 0, target, "") << endl;
+    cout << coinChange_P04(arr, isdone, 0, target, "") << endl;
+}
+
 void solve()
 {
-    // basic();
+    basic();
     // pathProblem();
     // flodfillQuestions();
-    setQuestion();
+    // setQuestion();
+    // coinChange();
 }
 
 int main(int args, char **argv)
