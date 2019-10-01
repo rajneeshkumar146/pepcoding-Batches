@@ -92,7 +92,7 @@ int encoding(string ques, string ans)
     {
         count += encoding(ques.substr(1), ans + (char)(ch - '1' + 'a'));
 
-        if (ch<'3' && ques.size() > 1)
+        if (ch < '3' && ques.size() > 1)
         {
             char ch1 = ques[1];
             int num = (ch - '0') * 10 + (ch1 - '0');
@@ -573,13 +573,155 @@ void coinChange()
     cout << coinChange_P04(arr, isdone, 0, target, "") << endl;
 }
 
+//queenPandC.==============================================
+
+int queenCombi(int boxes, int box, int tnq, int q, string ans)
+{
+    if (q == tnq + 1)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = box; i <= boxes; i++)
+    {
+        count += queenCombi(boxes, i + 1, tnq, q + 1,
+                            ans + "b" + to_string(i) + "q" + to_string(q));
+    }
+
+    return count;
+}
+
+int queenPerm(int boxes, int isSet, int tnq, int q, string ans)
+{
+    if (q == tnq + 1)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = 0; i <= boxes; i++)
+    {
+        int mask = (1 << i);
+        if ((isSet & mask) == 0)
+        {
+            isSet |= mask;
+            count += queenPerm(boxes, isSet, tnq, q + 1,
+                               ans + "b" + to_string(i) + "q" + to_string(q));
+            isSet &= (~mask);
+        }
+    }
+
+    return count;
+}
+
+int queenPerm_2D(vector<vector<bool>> &boxes, int tnq, int q, string ans)
+{
+    if (q == tnq + 1)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = 0; i < boxes.size() * boxes[0].size(); i++)
+    {
+        int r = i / boxes[0].size();
+        int c = i % boxes[0].size();
+
+        if (!boxes[r][c])
+        {
+            boxes[r][c] = true;
+            count += queenPerm_2D(boxes, tnq, q + 1,
+                                  ans + "b" + to_string(i) + "q" + to_string(q) + " ");
+            boxes[r][c] = false;
+        }
+    }
+    return count;
+}
+
+int queenPerm_2D_sub(vector<vector<bool>> &boxes, int oneDidx, int tnq, int q, string ans)
+{
+    if (q == tnq + 1 || oneDidx == boxes.size() * boxes[0].size())
+    {
+        if (q == tnq + 1)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    int r = oneDidx / boxes[0].size();
+    int c = oneDidx % boxes[0].size();
+
+    if (!boxes[r][c])
+    {
+        boxes[r][c] = true;
+        count += queenPerm_2D_sub(boxes, 0, tnq, q + 1,
+                                  ans + "b" + to_string(oneDidx) + "q" + to_string(q) + " ");
+        boxes[r][c] = false;
+    }
+
+    count += queenPerm_2D_sub(boxes, oneDidx + 1, tnq, q, ans);
+
+    return count;
+}
+
+int queenCom_2D(vector<vector<bool>> &boxes, int oneDidx, int tnq, int q, string ans)
+{
+    if (q == tnq + 1 || oneDidx == boxes.size() * boxes[0].size())
+    {
+        if (q == tnq + 1)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    int r = oneDidx / boxes[0].size();
+    int c = oneDidx % boxes[0].size();
+
+    int dirc[8][2] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}};
+for(int d=1;d<boxes.size();d++){
+    x=r +dirc[d][0];
+    if (isValidLocation(boxes, r, c))
+    {
+        boxes[r][c] = true;
+        count += queenCom_2D(boxes, oneDidx + 1, tnq, q + 1,
+                             ans + "b" + to_string(oneDidx) + "q" + to_string(q) + " ");
+        boxes[r][c]  = false;
+    }
+}
+    count += queenCom_2D(boxes, oneDidx + 1, tnq, q, ans);
+
+    return count;
+}
+
+void queenPandC()
+{
+
+    // cout << queenCombi(5, 0, 3, 1, "") << endl;
+    // cout << queenPerm(5, 0, 3, 1, "") << endl;
+
+    vector<vector<bool>> boxes(4, vector<bool>(4, 0));
+    // cout << queenPerm_2D_sub(boxes, 0, 3, 1, "") << endl;
+    cout << queenCom_2D(boxes, 0, 4, 1, "") << endl;
+}
+
 void solve()
 {
-    basic();
+    // basic();
     // pathProblem();
     // flodfillQuestions();
     // setQuestion();
     // coinChange();
+    queenPandC();
 }
 
 int main(int args, char **argv)
