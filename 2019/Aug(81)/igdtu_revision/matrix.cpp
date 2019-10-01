@@ -71,16 +71,33 @@ void turnBy90(vector<vector<int>> &arr, bool is90)
     display(arr);
 }
 
+void countOfSetBits(int num)
+{
+    int digit = 0;
+    int count = 0;
+    while (num != 0 )
+    {
+        if ((num & 1) != 0)
+            digit++;
+        count++;
+        num >>= 1;
+    }
+
+    cout << digit << endl;
+}
+
 int main()
 {
 
-    vector<vector<int>> arr{{1, 2, 3, 4},
-                            {5, 6, 7, 8},
-                            {9, 10, 11, 12},
-                            {13, 14, 15, 16}};
-    display(arr);
+    // vector<vector<int>> arr{{1, 2, 3, 4},
+    //                         {5, 6, 7, 8},
+    //                         {9, 10, 11, 12},
+    //                         {13, 14, 15, 16}};
+    // display(arr);
     // turnBy90(arr, true);
-    turnBy90(arr,false);
+    // turnBy90(arr,false);
+
+    countOfSetBits(3);
 
     return 0;
 }
