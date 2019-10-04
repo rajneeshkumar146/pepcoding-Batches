@@ -671,36 +671,96 @@ int queenPerm_2D_sub(vector<vector<bool>> &boxes, int oneDidx, int tnq, int q, s
     return count;
 }
 
-int queenCom_2D(vector<vector<bool>> &boxes, int oneDidx, int tnq, int q, string ans)
+bool isValidSpot(int r, int c, int n, int m)
 {
-    if (q == tnq + 1 || oneDidx == boxes.size() * boxes[0].size())
+    if (r < 0 || c < 0 || r >= n || c >= m)
+        return false;
+    return true;
+}
+
+bool isQueenSafe(vector<vector<bool>> &boxes, int x, int y)
+{
+    int n = boxes.size();
+    int m = boxes[0].size();
+
+    int arr[4][2] = {{0, -1}, {-1, -1}, {-1, 0}, {-1, 1}};
+    for (int i = 0; i < 4; i++)
     {
-        if (q == tnq + 1)
+        for (int rad = 1; rad < max(n, m); rad++)
         {
-            cout << ans << endl;
-            return 1;
+            int r = x + rad * arr[i][0];
+            int c = y + rad * arr[i][1];
+            if (isValidSpot(r, c, n, m) && boxes[r][c])
+                return false;
         }
-        return 0;
     }
+
+    return true;
+}
+
+int queenCom_2D(vector<vector<bool>> &boxes, int idx, int tnq, int qpsf, string ans, int &stop)
+{
+    if (qpsf == tnq)
+    {
+        // if (stop == 0)
+            cout << ans << endl;
+        stop = 1;
+        return 1;
+    }
+
+    int n = boxes.size();
+    int m = boxes[0].size();
 
     int count = 0;
-    int r = oneDidx / boxes[0].size();
-    int c = oneDidx % boxes[0].size();
-
-    int dirc[8][2] = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}, {1, 1}, {-1, 1}, {1, -1}, {-1, -1}};
-for(int d=1;d<boxes.size();d++){
-    x=r +dirc[d][0];
-    if (isValidLocation(boxes, r, c))
+    for (int i = idx; i < n * m; i++)
     {
-        boxes[r][c] = true;
-        count += queenCom_2D(boxes, oneDidx + 1, tnq, q + 1,
-                             ans + "b" + to_string(oneDidx) + "q" + to_string(q) + " ");
-        boxes[r][c]  = false;
+        int r = i / m;
+        int c = i % m;
+
+        if (isQueenSafe(boxes, r, c) && count==0)
+        {
+            boxes[r][c] = true;
+            count += queenCom_2D(boxes, i + 1, tnq, qpsf + 1,
+                                 ans + "(" + to_string(r) + ", " + to_string(c) + ")q" + to_string(qpsf + 1) + " ", stop);
+        
+            boxes[r][c] = false;
+        }
     }
-}
-    count += queenCom_2D(boxes, oneDidx + 1, tnq, q, ans);
 
     return count;
+}
+
+
+bool nQueenSub(vector<vector<bool>> &boxes, int idx, int tnq, int qpsf, string ans)
+{
+
+    int n = boxes.size();
+    int m = boxes[0].size();
+    if (qpsf == tnq || idx >= n * m)
+    {
+        if (qpsf == tnq)
+        {
+            cout << ans << endl;
+            return true;
+        }
+        return false;
+    }
+
+    bool flag = false;
+    int r = idx / m;
+    int c = idx % m;
+
+    if (isQueenSafe(boxes, r, c))
+    {
+        boxes[r][c] = true;
+        flag = flag || nQueenSub(boxes, idx + 1, tnq, qpsf + 1,
+                                 ans + "(" + to_string(r) + ", " + to_string(c) + ")q" + to_string(qpsf + 1) + " ");
+        boxes[r][c] = false;
+    }
+
+    flag = flag || nQueenSub(boxes, idx + 1, tnq, qpsf, ans);
+
+    return flag;
 }
 
 void queenPandC()
@@ -711,7 +771,9 @@ void queenPandC()
 
     vector<vector<bool>> boxes(4, vector<bool>(4, 0));
     // cout << queenPerm_2D_sub(boxes, 0, 3, 1, "") << endl;
-    cout << queenCom_2D(boxes, 0, 4, 1, "") << endl;
+    int stop = 0;
+    cout << queenCom_2D(boxes, 0, 4, 0, "", stop) << endl;
+    // cout << nQueenSub(boxes, 0, 4, 0, "") << endl;
 }
 
 void solve()
