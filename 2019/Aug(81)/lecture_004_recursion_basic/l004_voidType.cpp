@@ -1,6 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <string>
+
+#define vi vector<int>
+#define vii vector<vi>
+
 using namespace std;
 
 //basic.===================================
@@ -703,7 +707,7 @@ int queenCom_2D(vector<vector<bool>> &boxes, int idx, int tnq, int qpsf, string 
     if (qpsf == tnq)
     {
         // if (stop == 0)
-            cout << ans << endl;
+        cout << ans << endl;
         stop = 1;
         return 1;
     }
@@ -717,19 +721,18 @@ int queenCom_2D(vector<vector<bool>> &boxes, int idx, int tnq, int qpsf, string 
         int r = i / m;
         int c = i % m;
 
-        if (isQueenSafe(boxes, r, c) && count==0)
+        if (isQueenSafe(boxes, r, c) && count == 0)
         {
             boxes[r][c] = true;
             count += queenCom_2D(boxes, i + 1, tnq, qpsf + 1,
                                  ans + "(" + to_string(r) + ", " + to_string(c) + ")q" + to_string(qpsf + 1) + " ", stop);
-        
+
             boxes[r][c] = false;
         }
     }
 
     return count;
 }
-
 
 bool nQueenSub(vector<vector<bool>> &boxes, int idx, int tnq, int qpsf, string ans)
 {
@@ -776,6 +779,149 @@ void queenPandC()
     // cout << nQueenSub(boxes, 0, 4, 0, "") << endl;
 }
 
+//sudoku.==================================
+
+void display(vii &boxe)
+{
+    for (vi ar : boxe)
+    {
+        for (int i : ar)
+            cout << i << " ";
+        cout << endl;
+    }
+    cout << endl;
+}
+
+bool isSafeToPlaceNumber(vii &boxe, int r, int c, int val)
+{
+
+    for (int i = 0; i < 9; i++)
+        if (boxe[i][c] == val)
+            return false;
+
+    for (int j = 0; j < 9; j++)
+        if (boxe[r][j] == val)
+            return false;
+
+    int nr = (r / 3) * 3;
+    int nc = (c / 3) * 3;
+
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            if (boxe[nr + i][nc + j] == val)
+                return false;
+
+    return true;
+}
+
+int Sudoku_01(vii &boxe, int vidx)
+{
+    if (vidx == 81)
+    {
+        display(boxe);
+        return 1;
+    }
+
+    int count = 0;
+    int r = vidx / 9;
+    int c = vidx % 9;
+    if (boxe[r][c] == 0)
+    {
+        for (int val = 1; val <= 9; val++)
+        {
+            if (isSafeToPlaceNumber(boxe, r, c, val))
+            {
+                boxe[r][c] = val;
+                count += Sudoku_01(boxe, vidx + 1);
+                boxe[r][c] = 0;
+            }
+        }
+    }
+    else
+    {
+        count += Sudoku_01(boxe, vidx + 1);
+    }
+
+    return count;
+}
+
+int Sudoku_02(vii &boxe, int vidx, vi &row, vi &col, vii &mat)
+{
+    if (vidx == 81)
+    {
+        display(boxe);
+        return 1;
+    }
+
+    int count = 0;
+    int r = vidx / 9;
+    int c = vidx % 9;
+    if (boxe[r][c] == 0)
+    {
+        for (int val = 1; val <= 9; val++)
+        {
+            int mask = 1 << val;
+            if (((row[r] & mask) == 0) &&
+                ((col[c] & mask) == 0) &&
+                ((mat[r / 3][c / 3] & mask) == 0))
+            {
+                boxe[r][c] = val;
+                row[r] |= mask;
+                col[c] |= mask;
+                mat[r / 3][c / 3] |= mask;
+
+                count += Sudoku_02(boxe, vidx + 1, row, col, mat);
+
+                boxe[r][c] = 0;
+                row[r] ^= mask;
+                col[c] ^= mask;
+                mat[r / 3][c / 3] ^= mask;
+            }
+        }
+    }
+    else
+    {
+        count += Sudoku_02(boxe, vidx + 1, row, col, mat);
+    }
+
+    return count;
+}
+
+void sudoku_populate(vii &boxe, vi &row, vi &col, vii &mat)
+{
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            if (boxe[i][j] == 0)
+                continue;
+
+            int mask = (1 << boxe[i][j]);
+            row[i] |= mask;
+            col[j] |= mask;
+            mat[i / 3][j / 3] |= mask;
+        }
+    }
+}
+
+void sudoku()
+{
+    vector<vector<int>> boxe = {{3, 0, 6, 5, 0, 8, 4, 0, 0},
+                                {5, 2, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 8, 7, 0, 0, 0, 0, 3, 1},
+                                {0, 0, 3, 0, 1, 0, 0, 8, 0},
+                                {9, 0, 0, 8, 6, 3, 0, 0, 5},
+                                {0, 5, 0, 0, 9, 0, 6, 0, 0},
+                                {1, 3, 0, 0, 0, 0, 2, 5, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 7, 4},
+                                {0, 0, 5, 2, 0, 6, 3, 0, 0}};
+    vi row(9, 0);
+    vi col(9, 0);
+    vii mat(3, vi(3, 0));
+    sudoku_populate(boxe, row, col, mat);
+    cout << Sudoku_02(boxe, 0, row, col, mat) << endl;
+}
+
 void solve()
 {
     // basic();
@@ -783,7 +929,8 @@ void solve()
     // flodfillQuestions();
     // setQuestion();
     // coinChange();
-    queenPandC();
+    // queenPandC();
+    sudoku();
 }
 
 int main(int args, char **argv)
