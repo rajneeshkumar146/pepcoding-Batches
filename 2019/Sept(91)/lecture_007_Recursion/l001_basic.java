@@ -55,7 +55,29 @@ public class l001_basic {
         System.out.println("Post: " + n);
 
         return count + 3;
+    }
 
+    public static int calls_01(int n, int level) {
+        if (n <= 1) {
+            System.out.println("base: " + n + "@" + level);
+            return n + 1;
+        }
+
+        int count = 0;
+ 
+        System.out.println("Pre: " + n + "@" + level);
+        count += calls_01(n - 1, level + 1);
+
+        System.out.println("In 1: " + n + "@" + level);
+
+        count += calls_01(n - 2, level + 1);
+
+        System.out.println("In 2: " + n + "@" + level);
+
+        count += calls_01(n - 3, level + 1);
+        System.out.println("Post: " + n + "@" + level);
+
+        return count + 3;
     }
 
 }

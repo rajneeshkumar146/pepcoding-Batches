@@ -922,6 +922,138 @@ void sudoku()
     cout << Sudoku_02(boxe, 0, row, col, mat) << endl;
 }
 
+//WordBreak_Crypto.===========================================
+bool isWordPresent(vector<string> &dict, string word)
+{
+    for (string str : dict)
+    {
+        if (word.compare(str) == 0)
+            return true;
+    }
+    return false;
+}
+
+int wordBreak(vector<string> &dict, string statement, string ans)
+{
+    if (statement.length() == 0)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = 1; i <= statement.length(); i++)
+    {
+        string str = statement.substr(0, i);
+        if (isWordPresent(dict, str))
+        {
+            count += wordBreak(dict, statement.substr(i), ans + str + " ");
+        }
+    }
+
+    return count;
+}
+
+string str1 = "send";
+string str2 = "more";
+string str3 = "money";
+
+int getNumber(string str, vi &numberAgainstCHAR)
+{
+    int ans = 0;
+    for (int i = 0; i < str.length(); i++)
+    {
+        char ch = str[i];
+        int num = numberAgainstCHAR[ch - 'a'];
+        ans = ans * 10 + num;
+    }
+
+    return ans;
+}
+
+int cryptoArithmatic_01(string ques, int vidx, vi &numberAgainstCHAR, int isTaken)
+{
+    if (vidx == ques.length())
+    {
+        int num1 = getNumber(str1, numberAgainstCHAR);
+        int num2 = getNumber(str2, numberAgainstCHAR);
+        int num3 = getNumber(str3, numberAgainstCHAR);
+
+        if (num1 + num2 == num3)
+        {
+
+            if ((str3.length() > str2.length() && numberAgainstCHAR[str3[0] - 'a'] == 0))
+            {
+                return 0;
+            }
+
+            cout << num1 << "\n"
+                 << num2 << "\n+"
+                 << "------\n"
+                 << num3 << endl;
+            cout << endl;
+            return 1;
+        }
+
+        return 0;
+    }
+
+    int count = 0;
+    for (int i = 0; i < 10; i++)
+    {
+        int mask = 1 << i;
+        if ((isTaken & mask) == 0)
+        { //Not Taken
+            isTaken |= mask;
+            numberAgainstCHAR[ques[vidx] - 'a'] = i;
+            count += cryptoArithmatic_01(ques, vidx + 1, numberAgainstCHAR, isTaken);
+            numberAgainstCHAR[ques[vidx] - 'a'] = 0;
+            isTaken ^= mask;
+        }
+    }
+    return count;
+}
+
+vi freqMap(string str)
+{
+    vi freq(26, 0);
+    for (int i = 0; i < str.length(); i++)
+    {
+        freq[str[i] - 'a']++;
+    }
+    return freq;
+}
+
+void cryptoArithmatic()
+{
+    vi freq = freqMap(str1 + str2 + str3);
+    string ques = "";
+    for (int i = 0; i < freq.size(); i++)
+    {
+        if (freq[i] > 0)
+        {
+            ques += (char)(i + 'a');
+        }
+    }
+
+    // for (int i = 0; i < 26; i++)
+    // {
+    //     cout << i << " " << freq[i] << " " << (char)(i + 'a') << endl;
+    // }
+
+    // cout<<ques;
+    vi numberAgainstCHAR(26, 0);
+    int isTaken = 0;
+    cout << cryptoArithmatic_01(ques, 0, numberAgainstCHAR, isTaken);
+}
+
+void WordBreak_Crypto()
+{
+    // vector<string> dict = {"samsung", "sam", "sung", "i", "like", "ilike", "sun", "go", "samsungo"};
+    // string str = "ilikelikesamsungo";
+    // cout << wordBreak(dict, str, "") << endl;
+    cryptoArithmatic();
+}
 void solve()
 {
     // basic();
@@ -930,7 +1062,8 @@ void solve()
     // setQuestion();
     // coinChange();
     // queenPandC();
-    sudoku();
+    // sudoku();
+    WordBreak_Crypto();
 }
 
 int main(int args, char **argv)
