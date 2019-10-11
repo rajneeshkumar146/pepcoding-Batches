@@ -1,15 +1,28 @@
 #include <iostream>
 using namespace std;
 
+void test5()
+{
+
+    // int arr[4] = {1, 2, 3, 4};
+    int *arr = new int(4);
+    int size = sizeof(arr) / sizeof(int);
+    cout << size;
+}
+
 void test4()
 {
-    int i = 97;
-    int j = (int)(&i);
-    cout << *(int *)j << endl;
+    long i = 97;
+    long j = (long)(&i);
+    cout << &i << " " << *(int *)j << endl;
+
+    // long a = (1l << 62);
+    // int b = (int)a;
+    // cout << a << " " << b << endl;
 }
 
 int a = 10;
-void test3()
+void test3(char)
 {
     static int ii = 10;
     cout << ii << " " << a << endl;
@@ -59,6 +72,7 @@ int main(int args, char **argv)
     //     a++;
     // }
 
-    test4();
+    // test4();
+    test5();
     return 0;
 }
