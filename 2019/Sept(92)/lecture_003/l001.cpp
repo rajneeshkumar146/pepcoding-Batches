@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 void mirrorTriangle(int rows)
@@ -98,7 +99,30 @@ void fullDiamond(int rows)
             nst -= 2;
             nsp++;
         }
-        cout<<endl;
+        cout << endl;
+    }
+}
+
+void input(vector<int> &arr)
+{
+    for (int i = 0; i < arr.size(); i++)
+    {
+        cin >> arr[i];
+    }
+}
+
+void display(vector<int> &arr)
+{
+    for (int i = 0; i < arr.size(); i++)
+    {
+        cout << arr[i] << " ";
+    }
+
+    cout<<endl;
+
+    for (int ele : arr)
+    {
+        cout << ele << " ";
     }
 }
 
@@ -109,5 +133,9 @@ int main(int args, char **argv)
     cin >> rows;
     // mirrorTriangle(rows);
     // halfDiamond(rows);
-    fullDiamond(rows);
+    // fullDiamond(rows);
+
+    vector<int> arr(rows, 0);
+    input(arr);
+    display(arr);
 }
