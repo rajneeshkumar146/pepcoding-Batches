@@ -2,8 +2,14 @@ import java.util.ArrayList;
 
 public class basic {
     public static void main(String[] args) {
+        
+        // System.out.println(printWithSpace("ABC", 0));
+    }
 
-        System.out.println(printWithSpace("ABC", 0));
+    public static void yashInfiniteCall(int i){
+
+        yashInfiniteCall(i+1);
+
     }
 
     static ArrayList<String> printWithSpace(String str, int idx) {

@@ -1,6 +1,38 @@
 #include <iostream>
 using namespace std;
 
+class person{
+    // static int a=10;
+
+};
+
+// int person::a=10;
+
+
+
+void test6()
+{
+    int j = 10;
+    int **arr = new int *[10];
+    for (int i = 0; i < 22; i++)
+    {
+        if(i>0)
+        cout<<*arr[i-1]<<endl;
+        arr[i] = &i;
+        if(i>0)
+        cout<< *arr[i-1]<<" "<< *arr[i]<<endl;
+    }
+
+    // for (int i = 0; i < 15; i++)
+    // {
+    //     // for (int j = 0; j < 10; j++)
+    //     // {
+    //     // cout << arr[i][j] << " ";
+    //     // }
+    //     cout << *arr[i] << endl;
+    // }
+}
+
 void test5()
 {
 
@@ -73,6 +105,7 @@ int main(int args, char **argv)
     // }
 
     // test4();
-    test5();
+    // test5();
+    test6();
     return 0;
 }
