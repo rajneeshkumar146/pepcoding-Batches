@@ -1,6 +1,8 @@
 public class BTTree {
+
     private class Node {
         private int data = 0;
+
         private Node left = null;
         private Node right = null;
 
@@ -11,14 +13,14 @@ public class BTTree {
         }
     }
 
-    Node root = null;
+   private Node root = null;
 
     public BTTree(int[] arr) {
         root = construct(arr);
     }
 
-    static int idx = 0;
-    public Node construct(int[] arr) {
+   private static int idx = 0;
+    private Node construct(int[] arr) {
         if (idx >= arr.length || arr[idx] == -1) {
             idx++;
             return null;
@@ -31,6 +33,27 @@ public class BTTree {
 
         return node;
     }
+   
+    public void display(){
+        display(this.root);
+    }
+
+   private void display(Node node){
+        if(node==null) return;
+
+        StringBuilder sb=new StringBuilder();
+
+        sb.append(node.left!=null?node.left.data:".");
+        sb.append(" -> " + node.data + " <- ");
+        sb.append(node.right!=null?node.right.data:".");
+         
+        System.out.println(sb.toString());
+
+        display(node.left);
+        display(node.right);
+    }
+
+
 
 
 

@@ -103,12 +103,20 @@ void fullDiamond(int rows)
     }
 }
 
-void input(vector<int> &arr)
+void input(vector<int>& arr)
 {
     for (int i = 0; i < arr.size(); i++)
     {
         cin >> arr[i];
     }
+
+    cout<<"Input Function: "<<endl;
+    for (int ele : arr)
+    {
+        cout << ele << " ";
+    }
+
+    cout<<endl;
 }
 
 void display(vector<int> &arr)
@@ -137,5 +145,11 @@ int main(int args, char **argv)
 
     vector<int> arr(rows, 0);
     input(arr);
-    display(arr);
+    // display(arr);
+
+    cout<<"Main Function: "<<endl;
+    for (int ele : arr)
+    {
+        cout << ele << " ";
+    }
 }

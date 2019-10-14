@@ -39,6 +39,44 @@ int BtoD(int num)
     return res;
 }
 
+
+int AnytoD(int num,int base1)
+{
+    int res = 0;
+    int pow = 1;
+
+    while (num != 0)
+    {
+        int rem = num % 10;
+        num /= 10;
+
+        // res=res+pow*rem;
+        res += pow * rem;
+        pow *= base1;
+    }
+
+    return res;
+}
+
+int DtoAny(int num,int base2)
+{
+    int res = 0;
+    int pow = 1;
+
+    while (num != 0)
+    {
+
+        int rem = num % base2;
+        num /= base2;
+
+        // res=res+pow*rem;
+        res += pow * rem;
+        pow *= 10;
+    }
+
+    return res;
+}
+
 int main(int args, char **argv)
 {
     cout << "Entre Number: ";
