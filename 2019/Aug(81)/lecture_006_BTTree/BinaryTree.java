@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
+
 public class BinaryTree{
     
     public static void main(String[] args){
@@ -29,7 +31,18 @@ public class BinaryTree{
     // }else System.out.println("Empty ArrayList:");
     
 
-    leafNodes(root);
+    // leafNodes(root);
+    // levelOder_01(root);
+    // levelOder_02(root);
+    // levelOder_03(root);
+
+    int a=10;
+    int b=20;
+
+    System.out.println(a + " " + b);
+    swapInt(a,b);
+    System.out.println(a + " " + b);
+
 
     }
 
@@ -188,13 +201,85 @@ public class BinaryTree{
     public static void leafNodes(Node node){
       if(node==null) return;
       if(node.left==null && node.right==null) {
-        System.out.print(node.data + " "); 
+        System.out.print(node.data + " ");
         return;
       }
       leafNodes(node.left);
       leafNodes(node.right);
+    }
+
+    //simple.
+    public static void levelOder_01(Node root){
+      LinkedList<Node> que=new LinkedList<>();
+      que.addLast(root);
+      while(!que.isEmpty()){
+          Node proc=que.removeFirst();
+          System.out.print(proc.data+" ");
+
+          if(proc.left!=null) que.addLast(proc.left);
+          if(proc.right!=null) que.addLast(proc.right);
+      }
+
+      System.out.println();
+    }
 
 
+    //line Wise
+    public static void levelOder_02(Node root){
+        LinkedList<Node> que=new LinkedList<>();
+        que.addLast(root);
+
+        while(!que.isEmpty()){
+           int size=que.size();
+
+           while(size--> 0){
+            Node proc=que.removeFirst();
+            System.out.print(proc.data+" ");
+
+            if(proc.left!=null) que.addLast(proc.left);
+            if(proc.right!=null) que.addLast(proc.right);
+           }
+           System.out.println();
+        }
+
+        System.out.println();
+    }
+
+    public static void swap(LinkedList<Node>[] arr){
+        LinkedList<Node> temp=arr[0];
+        arr[0]=arr[1];
+        arr[1]=temp;
+    }
+
+    public static void swapInt(int a,int b)
+    {
+         int temp=a;
+         a=b;
+         b=temp;
+    }
+
+    public static void levelOder_03(Node root){
+        LinkedList<Node> que=new LinkedList<>();
+        LinkedList<Node> childQue=new LinkedList<>();
+        
+        que.addLast(root);
+
+        while(!que.isEmpty()){
+           Node proc=que.removeFirst();
+            System.out.print(proc.data+" ");
+
+            if(proc.left!=null) childQue.addLast(proc.left);
+            if(proc.right!=null) childQue.addLast(proc.right);
+            
+            if(que.size()==0){
+              System.out.println();
+              LinkedList<Node> temp=que;
+              que=childQue;
+              childQue=temp;
+          }
+        } 
+
+        System.out.println();
     }
 
 
