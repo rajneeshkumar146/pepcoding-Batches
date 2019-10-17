@@ -16,7 +16,16 @@ public class l003_returnType {
         // System.out.println(mazePath_diag(0,0,2,2));
         // System.out.println(mazePath_diag_hei(0,0,4,6));
         // System.out.println(mazePath_diag_Minhei(0,0,2,2));
-        System.out.println(mazePath_diag_multi(0, 0, 3, 3));
+        // System.out.println(mazePath_diag_multi(0, 0, 3, 3));
+
+        // System.out.println(floodFill(0,0,2,2,new boolean[3][3]));
+        boolean[][] path={{false,false,false},
+                          {false,false,true},
+                          {false,false,false},
+                         };
+
+        System.out.println(floodFill_eightCalls(0,0,2,2,path,new boolean[3][3]));
+
     }
 
     public static ArrayList < String > subseq(String str) {
@@ -242,7 +251,90 @@ public class l003_returnType {
     }
 
 
+    public static ArrayList<String> floodFill(int sr,int sc,int er,int ec,boolean[][] isdone){
+       if(sr==er && sc==ec){
+        ArrayList<String> base=new ArrayList<>();
+        base.add("");
+        return base;
+       }
 
 
+    ArrayList<String> myAns=new ArrayList<>();
+    isdone[sr][sc]=true;  
+    
+    if(sr-1>=0 && !isdone[sr-1][sc]){
+        ArrayList<String> upward=floodFill(sr-1,sc,er,ec,isdone);
+        for(String s:upward){
+          myAns.add("U" + s);
+        }
 
+    }
+
+    if(sc+1<=ec&& !isdone[sr][sc+1]){
+        ArrayList<String> right=floodFill(sr,sc+1,er,ec,isdone);
+        for(String s:right){
+          myAns.add("R" + s);
+        }
+    }
+
+    if(sr+1<=er&& !isdone[sr+1][sc]){
+        ArrayList<String> down=floodFill(sr+1,sc,er,ec,isdone);
+        for(String s:down){
+          myAns.add("D" + s);
+        }
+    }
+
+    int x=sr+0;
+    int y=sc-1;
+    if(y>=0&& !isdone[x][y]){
+        ArrayList<String> left=floodFill(x,y,er,ec,isdone);
+        for(String s:left){
+          myAns.add("L" + s);
+        }
+    }
+
+    isdone[sr][sc]=false;
+
+    
+
+    return myAns;
+    }
+
+    public static boolean isValid(int x,int y,boolean[][] path,boolean[][] isdone){
+      if(x>=0 && y>=0 && x<isdone.length && y<isdone[0].length && !isdone[x][y] && !path[x][y]) return true;
+      return false;
+    }
+
+
+    public static ArrayList<String> floodFill_eightCalls(int sr,int sc,int er,int ec,boolean[][] path,boolean[][] isdone){
+        if(sr==er && sc==ec){
+         ArrayList<String> base=new ArrayList<>();
+         base.add("");
+         return base;
+        }
+
+        int[][] dir={{1,0},{0,1},{-1,0},{0,-1},{1,1},{-1,-1},{-1,1},{1,-1}};
+        String[] dirName={"D","R","U","L","1","3","4","2"};
+    
+        ArrayList<String> myAns=new ArrayList<>();
+        
+        isdone[sr][sc]=true;
+        for(int d=0;d<dir.length;d++){
+            int x=sr+dir[d][0];
+            int y=sc+dir[d][1];
+             
+        if(isValid(x,y,path,isdone)){
+            ArrayList<String> calls=floodFill_eightCalls(x,y,er,ec,path,isdone);
+            for(String s:calls){
+              myAns.add(dirName[d] + s);
+            }  
+          }
+        }
+
+        isdone[sr][sc]=false;
+
+        return myAns;
+
+
+    }
 }
