@@ -19,13 +19,19 @@ public class l003_returnType {
         // System.out.println(mazePath_diag_multi(0, 0, 3, 3));
 
         // System.out.println(floodFill(0,0,2,2,new boolean[3][3]));
-        boolean[][] path={{false,false,false},
-                          {false,false,true},
-                          {false,false,false},
-                         };
+        // boolean[][] isdone={{false,false,false},
+        //                   {false,false,true},
+        //                   {false,false,false},
+        //                  };
 
-        System.out.println(floodFill_eightCalls(0,0,2,2,path,new boolean[3][3]));
-
+        // System.out.println(floodFill_eightCalls(0,0,2,2,new boolean[3][3]));
+   
+        // System.out.println(knightPath(0,0,2,2,new boolean[3][3],"(0, 0), "));
+        // System.out.println(knightPath_(0,0,0,64,new boolean[8][8],new int[8][8]));
+    
+        String[] keys={".","abc","def","ghi","jkl","mno","pqrs","tu","vwx","yz"};
+        System.out.println(keyPad_01("245",keys));
+    
     }
 
     public static ArrayList < String > subseq(String str) {
@@ -300,13 +306,13 @@ public class l003_returnType {
     return myAns;
     }
 
-    public static boolean isValid(int x,int y,boolean[][] path,boolean[][] isdone){
-      if(x>=0 && y>=0 && x<isdone.length && y<isdone[0].length && !isdone[x][y] && !path[x][y]) return true;
+    public static boolean isValid(int x,int y,boolean[][] isdone){
+      if(x>=0 && y>=0 && x<isdone.length && y<isdone[0].length && !isdone[x][y]) return true;
       return false;
     }
 
 
-    public static ArrayList<String> floodFill_eightCalls(int sr,int sc,int er,int ec,boolean[][] path,boolean[][] isdone){
+    public static ArrayList<String> floodFill_eightCalls(int sr,int sc,int er,int ec,boolean[][] isdone){
         if(sr==er && sc==ec){
          ArrayList<String> base=new ArrayList<>();
          base.add("");
@@ -323,8 +329,8 @@ public class l003_returnType {
             int x=sr+dir[d][0];
             int y=sc+dir[d][1];
              
-        if(isValid(x,y,path,isdone)){
-            ArrayList<String> calls=floodFill_eightCalls(x,y,er,ec,path,isdone);
+        if(isValid(x,y,isdone)){
+            ArrayList<String> calls=floodFill_eightCalls(x,y,er,ec,isdone);
             for(String s:calls){
               myAns.add(dirName[d] + s);
             }  
@@ -334,7 +340,86 @@ public class l003_returnType {
         isdone[sr][sc]=false;
 
         return myAns;
+    }
 
 
+    public static int knightPath(int sr,int sc,int er,int ec,boolean[][] isdone,String ans){
+        if(sr==er && sc==ec){
+        System.out.println(ans);
+         return 1;
+        }
+
+        int[][] dir={{2,1},{1,2},{-1,2},{-2,1},{-2,-1},{-1,-2},{1,-2},{2,-1}};
+        
+        isdone[sr][sc]=true;
+        int count=0;
+
+        for(int d=0;d<dir.length;d++){
+            int x=sr+dir[d][0];
+            int y=sc+dir[d][1];
+            
+            if(isValid(x,y,isdone)){
+           count+= knightPath(x,y,er,ec,isdone,ans+"("+x + ", "+ y+"), ");
+           }
+        }
+
+        isdone[sr][sc]=false;
+
+        return count;
+    }
+
+
+    public static boolean knightPath_(int sr,int sc,int count,int boxSize,boolean[][] isdone,int[][] ans){
+        isdone[sr][sc]=true;
+        ans[sr][sc]=count;
+        
+        if(count==boxSize-1){
+            for(int[] ar:ans){
+                for(int ele: ar){
+                    System.out.print(ele+" ");
+                }
+                System.out.println();
+            }
+
+            return true;
+        }
+
+        int[][] dir={{2,1},{1,2},{-1,2},{-2,1},{-2,-1},{-1,-2},{1,-2},{2,-1}};
+        boolean res=false;
+
+        for(int d=0;d<dir.length && !res;d++){
+            int x=sr+dir[d][0];
+            int y=sc+dir[d][1];
+             
+        if(isValid(x,y,isdone)){
+           res=res || knightPath_(x,y,count+1,boxSize,isdone,ans);
+           }
+        }
+
+        isdone[sr][sc]=false;
+        ans[sr][sc]=0;
+        return res;
+    }
+
+    public static ArrayList<String> keyPad_01(String ques,String[] keys){
+if(ques.length()==0){
+    ArrayList<String> base=new ArrayList<>();
+    base.add("");
+    return base;
+}
+
+    
+        char ch=ques.charAt(0);
+        String roq=ques.substring(1);
+        int idx=ch-'0';
+        String word=keys[idx];
+
+        ArrayList<String> myAns=new ArrayList<>();
+        ArrayList<String> recAns=keyPad_01(roq,keys);
+        for(String s: recAns){
+            for(int i=0;i<word.length();i++)
+               myAns.add(word.charAt(i)+s);
+        }
+         return myAns;
     }
 }
