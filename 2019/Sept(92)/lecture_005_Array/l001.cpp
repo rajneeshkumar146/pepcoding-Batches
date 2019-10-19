@@ -66,6 +66,11 @@ void input(vector<int> &arr)
     }
 }
 
+
+
+
+
+
 int RainMAxWater(vector<int>& arr){
     int max_=0;
     int i=0;
