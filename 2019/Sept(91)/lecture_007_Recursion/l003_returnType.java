@@ -29,9 +29,25 @@ public class l003_returnType {
         // System.out.println(knightPath(0,0,2,2,new boolean[3][3],"(0, 0), "));
         // System.out.println(knightPath_(0,0,0,64,new boolean[8][8],new int[8][8]));
     
-        String[] keys={".","abc","def","ghi","jkl","mno","pqrs","tu","vwx","yz"};
-        System.out.println(keyPad_01("245",keys));
-    
+        // String[] keys={".","abc","def","ghi","jkl","mno","pqrs","tu","vwx","yz"};
+        // System.out.println(keyPad_01("245",keys));
+        
+        // System.out.println(permuatation("aba"));
+
+        int[][] board = {{3, 0, 6, 5, 0, 8, 4, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 8, 7, 0, 0, 0, 0, 3, 1},
+        {0, 0, 3, 0, 1, 0, 0, 8, 0},
+        {9, 0, 0, 8, 6, 3, 0, 0, 5},
+        {0, 5, 0, 0, 9, 0, 6, 0, 0},
+        {1, 3, 0, 0, 0, 0, 2, 5, 0},
+        {0, 0, 0, 0, 0, 0, 0, 7, 4},
+        {0, 0, 5, 2, 0, 6, 3, 0, 0}};
+          
+        System.out.println(sudoku(board,0));
+
+
+
     }
 
     public static ArrayList < String > subseq(String str) {
@@ -422,4 +438,130 @@ if(ques.length()==0){
         }
          return myAns;
     }
+
+    public static ArrayList<String> permuatation(String str){
+
+        if(str.length()==0) return new ArrayList<>();
+        if(str.length()==1) {
+            ArrayList<String> base=new ArrayList<>();
+            base.add(str);
+            return base;
+        }
+
+
+        char ch=str.charAt(0);
+        String roq=str.substring(1);
+
+        ArrayList<String> myAns=new ArrayList<>();
+        ArrayList<String> recAns=permuatation(roq);
+        
+        for(String s:recAns){
+            for(int i=0;i<=s.length();i++){
+                String ans=s.substring(0,i) + ch + s.substring(i); 
+                myAns.add(ans);
+            }
+        }
+        return myAns;
+    }
+
+    public static ArrayList<String> encoding(String ques){
+        if(ques.length()==0){
+            ArrayList<String> base=new ArrayList<>();
+            base.add("");
+            return base;
+        }
+
+        char ch=ques.charAt(0);
+        ArrayList<String> myAns=new ArrayList<>();
+
+        if(ch=='0'){
+            return encoding(ques.substring(1));
+        }else{
+            ArrayList<String> recAns=encoding(ques.substring(1));
+            for(String s: recAns){
+              char ch1=(char)('a'+ ch-'1');
+                myAns.add(ch1+s);
+            }
+        }
+
+        if(ques.length()>1){
+            // char ch1 = ques.charAt(1);
+            // int num  = (ch-'0')*10 + (ch1-'0');
+             int num=Integer.parseInt(ques.substring(0,2));
+            
+            
+            if(num<27){
+                ArrayList<String> recAns=encoding(ques.substring(2));
+                for(String s: recAns){
+                  char ch1=(char)('a'+ num-1);
+                    myAns.add(ch1+s);
+                }   
+            } 
+
+        }
+
+        return myAns;
+    }
+
+
+    public static boolean isValidSudoku(int[][] board,int i,int j,int num){
+
+           //row
+           for(int idx=0;idx<board.length;idx++){
+              if(board[idx][j]==num){
+                  return false;
+              }
+           }
+
+
+        // col
+           for(int idx=0;idx<board.length;idx++){
+            if(board[i][idx]==num){
+                return false;
+            }
+         }
+
+         //mat
+         int r=(i/3)*3;
+         int c=(j/3)*3;
+         for(int row=0;row<3;row++){
+            for(int col=0;col<3;col++){
+                if(board[r+row][c+col]==num) return false;
+            }
+         }
+
+
+        return  true;
+    }
+
+    public static boolean sudoku(int[][] board,int vidx){
+        if(vidx==board.length*board[0].length){
+          for(int[] ar:board){
+              for(int ele:ar){
+                System.out.print(ele+" ");
+              }
+              System.out.println();            
+          }
+          System.out.println();
+             return true;
+         }
+ 
+          int r=vidx/9;
+          int c=vidx%9;
+          boolean res=false;
+
+          if(board[r][c]!=0){
+             res=res|| sudoku(board,vidx+1);
+          }else{
+             for(int num=1;num<=9;num++){
+                   if(isValidSudoku(board,r,c,num)){
+                       board[r][c]=num;
+                       res=res ||  sudoku(board,vidx+1);
+                       board[r][c]=0;
+                   }
+               }
+    }
+
+    return res;
+}
 }
