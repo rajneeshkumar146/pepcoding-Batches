@@ -99,9 +99,5 @@ public static void targetSum(int[] arr,int target,int li,int ri){
        }else if(sum<target) li++;
        else ri--;
     }
-}
-
-
-
-
+  }
 }

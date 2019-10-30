@@ -5,8 +5,12 @@ import java.util.LinkedList;
 public class BinaryTree{
     
     public static void main(String[] args){
-        int[] arr={10,20,40,80,-1,-1,90,-1,-1,50,100,-1,-1,-1,30,
-                   60,-1,110,-1,-1,70,120,-1,-1,-1};
+        // int[] arr={10,20,40,80,-1,-1,90,-1,-1,50,100,-1,-1,-1,30,
+        //            60,-1,110,-1,-1,70,120,-1,-1,-1};
+
+
+
+        int[] arr={50,30,10,-1,20,-1,-1,40,-1,-1,80,50,60,-1,-1,-1,90};
         Node root=construct(arr);
 
         display(root);
@@ -20,7 +24,7 @@ public class BinaryTree{
         // System.out.println(find(root,500));
         // System.out.println(max(root));
        
-        ArrayList<Node> ans=new ArrayList<>();
+        // ArrayList<Node> ans=new ArrayList<>();
         // rootToNodePath_01(root,50,ans);
     //     ans=rootToNodePath(root,500);
     //     if(ans!=null){
@@ -36,12 +40,7 @@ public class BinaryTree{
     // levelOder_02(root);
     // levelOder_03(root);
 
-    int a=10;
-    int b=20;
-
-    System.out.println(a + " " + b);
-    swapInt(a,b);
-    System.out.println(a + " " + b);
+    System.out.println(BST(root).isBst);
 
 
     }
@@ -281,6 +280,170 @@ public class BinaryTree{
 
         System.out.println();
     }
+
+    //LCA.=======================================
+
+    public static Node LCA_01(Node root,int data1,int data2){
+        ArrayList<Node> list1=rootToNodePath(root,data1);
+        ArrayList<Node> list2=rootToNodePath(root,data2);
+
+        if(list1==null || list2==null) return null;
+        Node ans=null;
+
+        int i=list1.size()-1;
+        int j=list2.size()-1;
+        while(i>=0 && j>=0){
+            if(list1.get(i).data==list2.get(j).data){
+                ans=list1.get(i);
+            }else{
+                break;
+            }
+            i--;
+            j--;
+        }
+        
+        return ans;
+
+    }
+
+
+
+    static Node LCA=null;
+    public static boolean LCA_02(Node node,int data1,int data2){
+      if(node==null) return false;
+       
+      boolean selfDone = node.data==data1 || node.data==data2;
+      
+      boolean left=LCA_02(node.left,data1,data2);
+      boolean right=LCA_02(node.right,data1,data2);
+
+      if((left&& right) || (left && selfDone) || (right&& selfDone))
+          LCA=node;
+        
+    return left || right || selfDone;
+    }
+
+    public static class pair{
+        int max=Integer.MIN_VALUE;
+        int min=Integer.MAX_VALUE;
+        boolean isBst=true;
+        int countBst=0;
+    }
+
+    public static pair BST(Node node){
+        if(node==null) return new pair();
+         
+        pair left=BST(node.left);
+        pair right=BST(node.right);
+        pair mypair=new pair();
+        
+        mypair.isBst=false;
+        if(left.isBst && right.isBst && left.max<= node.data && right.min>=node.data){
+            mypair.isBst=true;
+            mypair.countBst = 1;
+        }
+
+        mypair.min=Math.min(node.data,Math.min(left.min,right.min));
+        mypair.max=Math.max(node.data,Math.max(left.max,right.max));
+        mypair.countBst +=left.countBst + right.countBst;
+
+        return mypair;
+
+        
+    }
+
+    static int prev=Integer.MIN_VALUE;
+    public static boolean isBST(Node curr){
+      if(curr==null) return true;
+
+      boolean left=isBST(curr.left);
+      if(!left) return false;
+      
+      if(prev<curr.data) prev=curr.data;
+      else return false;
+      boolean right=isBST(curr.right);
+      if(!right) return false;
+
+      return true;
+
+    }
+
+
+    public static int diameter_01(Node node){
+    if(node==null) return 0;
+
+    int lh=height(node.left);
+    int rh=height(node.right);
+
+    int ld=diameter_01(node.left);
+    int rd=diameter_01(node.right);
+
+    return Math.max(Math.max(ld,rd),lh+rh+1);
+    }
+
+    public static class diaPair{
+        int height=0;
+        int dia=0;
+    }
+
+    public static diaPair diameter_02(Node node){
+        if(node==null) return new diaPair();
+
+        diaPair left=diameter_02(node.left);
+        diaPair right=diameter_02(node.right);
+
+        diaPair mypair=new diaPair();
+        mypair.height=Math.max(left.height,right.height)+1;
+        mypair.dia=Math.max(Math.max(left.dia,right.dia),left.height+right.height+1);
+
+        return mypair;
+    }
+
+    public static void deleteLeaf_01(Node node,int leaf){
+     if(node==null) return ;
+
+     if(node.left!=null && node.left.data==leaf) node.left=null;
+     if(node.right!=null && node.right.data==leaf) node.right=null;
+
+     deleteLeaf_01(node.left,leaf);
+     deleteLeaf_01(node.right,leaf);
+    }
+
+
+    public static Node deleteLeaf_02(Node node,int leaf){
+        if(node==null) return null;
+   
+        if(node.left==null && node.right==null && node.data==leaf)   return null;
+
+        node.left= deleteLeaf_02(node.left,leaf);
+        node.right=deleteLeaf_02(node.right,leaf);
+        
+        return node;
+    }
+
+
+    public static void addLeaf_01(Node node,int par,int leaf,boolean isLeft){
+        if(node==null) return null;
+   
+        if(node.data==par){
+            if(isLeft) node.left=new Node(leaf);
+            else node.right=new Node(left);
+        }
+
+        addLeaf_01(node.left,par,leaf,isLeft);
+        addLeaf_01(node.right,par,leaf,isLeft);
+    
+    }
+
+
+
+
+
+
+
+
+
+
 
 
 
