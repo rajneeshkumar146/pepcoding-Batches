@@ -5,15 +5,21 @@ import java.util.LinkedList;
 public class BinaryTree{
     
     public static void main(String[] args){
+        int[] pre={10,20,40,50,60,30,70,90,80};
+        int[] in={40,20,60,50,10,70,90,30,80};
+        int[] post= {40,60,50,20,90,70,80,30,10};
+
         // int[] arr={10,20,40,80,-1,-1,90,-1,-1,50,100,-1,-1,-1,30,
         //            60,-1,110,-1,-1,70,120,-1,-1,-1};
 
 
 
-        int[] arr={50,30,10,-1,20,-1,-1,40,-1,-1,80,50,60,-1,-1,-1,90};
-        Node root=construct(arr);
-
+        // int[] arr={50,30,10,-1,20,-1,-1,40,-1,-1,80,50,60,-1,-1,-1,90};
+        // Node root=construct(arr);
+        
+        Node root=preIn(pre,in,0,pre.length-1,0,in.length-1);
         display(root);
+
         // System.out.println(size(root));
         // System.out.println(height(root));
 
@@ -40,8 +46,15 @@ public class BinaryTree{
     // levelOder_02(root);
     // levelOder_03(root);
 
-    System.out.println(BST(root).isBst);
+    // System.out.println(BST(root).isBst);
 
+
+      DLL(root);
+      Node itr=prev1;
+      while(itr!=null){
+       System.out.print(itr.data + " ");
+       itr=itr.left;
+      }
 
     }
 
@@ -54,6 +67,11 @@ public class BinaryTree{
             this.data = data;
             this.left = left;
             this.right = right;
+        }
+
+        Node(int data){
+         this.data=data;
+             
         }
     }
 
@@ -423,17 +441,85 @@ public class BinaryTree{
 
 
     public static void addLeaf_01(Node node,int par,int leaf,boolean isLeft){
-        if(node==null) return null;
+        if(node==null) return;
    
         if(node.data==par){
             if(isLeft) node.left=new Node(leaf);
-            else node.right=new Node(left);
+            else node.right=new Node(leaf);
         }
 
         addLeaf_01(node.left,par,leaf,isLeft);
         addLeaf_01(node.right,par,leaf,isLeft);
     
     }
+
+    public static Node preIn(int[] pre,int[] in,int ps,int pe,int is,int ie){
+      if(ps>pe || is>ie){
+          return null;
+      }
+
+       Node node=new Node(pre[ps]);
+       int idx=is;
+       while(idx<=ie){
+           if(in[idx]==pre[ps]) break;
+           idx++;
+       }
+
+       int tne=idx-is;
+
+       node.left=preIn(pre,in,ps+1,ps+tne,is,idx-1);
+       node.right=preIn(pre,in,ps+tne+1,pe,idx+1,ie);
+       
+       return node;
+    }
+
+    public static Node postIn(int[] post,int[] in,int ps,int pe,int is,int ie){
+        if(ps>pe || is>ie){
+            return null;
+        }
+  
+         Node node=new Node(post[pe]);
+         int idx=is;
+         while(idx<=ie){
+             if(in[idx]==post[pe]) break;
+             idx++;
+         }
+  
+         int tne=idx-is;
+  
+         node.left=postIn(post,in,ps,ps+tne-1,is,idx-1);
+         node.right=postIn(post,in,ps+tne,pe-1,idx+1,ie);
+         
+         return node;
+      }
+
+    static Node head=null;
+    static Node prev1=null;
+    
+     public static void DLL(Node curr){
+         if(curr==null) return;
+
+        DLL(curr.left);
+
+         if(head==null){
+             head=curr;
+         }else{
+             prev1.right=curr;
+             curr.left=prev1;
+         }
+
+         prev1=curr;
+
+
+        DLL(curr.right);
+
+
+
+
+     }
+
+
+  
 
 
 
