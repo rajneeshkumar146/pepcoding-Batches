@@ -19,7 +19,7 @@ public class BTTree {
         root = construct(arr);
     }
 
-   private static int idx = 0;
+   private int idx = 0;
     private Node construct(int[] arr) {
         if (idx >= arr.length || arr[idx] == -1) {
             idx++;
