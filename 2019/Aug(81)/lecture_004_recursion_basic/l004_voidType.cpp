@@ -383,7 +383,7 @@ void setQuestion()
 {
     vector<int> arr = {10, 20, 30, 40, 50, 60, 70};
     // cout << targetSum(arr, 0, 60, "") << endl;
-    cout << equiSet(arr, 1, 10, 0, "10 ", "") << endl;
+    cout << equiSet(arr, 0, 0, 0, "", "") << endl;
 }
 
 //coinChange===============================================
@@ -1059,11 +1059,11 @@ void solve()
     // basic();
     // pathProblem();
     // flodfillQuestions();
-    // setQuestion();
+    setQuestion();
     // coinChange();
     // queenPandC();
     // sudoku();
-    WordBreak_Crypto();
+    // WordBreak_Crypto();
 }
 
 int main(int args, char **argv)

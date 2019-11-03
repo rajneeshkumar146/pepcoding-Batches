@@ -6,7 +6,9 @@ public class l001 {
         // System.out.println(ans);
 
         // System.out.println(power_idiot(2, 10));
-        System.out.println(euler(5,0));
+        // System.out.println(euler(5,0));
+        String[] words={" ","abc","def","ghi","jkl","mno","pqrs","tuv","wx","yz","*","#"};
+        System.out.println(nokiaKeyPad(words,"456",""));
     }
 
     public static void DecreasingOder(int n) {
@@ -67,6 +69,42 @@ public class l001 {
 
       return a+b+3;
     }
+
+    public static int euler2(int n,int level){
+        if(n<=2){
+            System.out.println("Base: "+ n*level);
+            return n;
+        } 
+        System.out.println("Pre: "+ n*level);
+        int a=euler2(n-1,level+1);
+        
+        System.out.println("In1: "+ n*level);
+        int b=euler2(n-2,level+1);
+        
+        System.out.println("In2: "+ n*level);
+        int c=euler2(n-3,level-1);
+
+        System.out.println("Post: "+ n*level);
+        return a+b+c+3;
+      }
+
+     
+      public static int nokiaKeyPad(String[] words,String num,String ans){
+            if(num.length()==0){
+             System.out.print(ans + " ");
+             return 1; 
+            }
+    
+        char ch=num.charAt(0);
+        String newNum=num.substring(1);
+        String word=words[ch-'0'];
+        int count=0;
+
+         for(int i=0;i<word.length();i++){
+          count+=nokiaKeyPad(words,newNum,ans + word.charAt(i));
+        }
+         return count;
+              }
 
 
 
