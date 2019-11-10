@@ -532,6 +532,32 @@ void pathType()
     cout << boardPath(0, 10, "") << endl;
 }
 
+int score[3] = {3, 1, 0};
+int matches[3] = {0, 0, 0};
+int game(int match, int points, int vidx)
+{
+    if (match == 0)
+    {
+        if (points == 0)
+        {
+            cout << matches[0] << " " << matches[1] << " " << matches[2] << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    for (int i = vidx; i < 3; i++)
+    {
+        if (points - score[i] >= 0)
+        {
+            matches[i]++;
+            count += game(match - 1, points - score[i], i);
+        }
+    }
+    return count;
+}
+
 //======================================================
 
 void solve()
@@ -540,7 +566,8 @@ void solve()
     // pathType();
     // combiAndPermu();
     // nqueenWays();
-    Nqueen();
+    // Nqueen();
+    cout << game(8, 15, 0) << endl;
 }
 
 int main(int args, char **argv)
