@@ -242,6 +242,9 @@ Node *deleteNode(Node *node, int data)
             node->left = deleteNode(node->left, max_);
         }
     }
+    
+    
+
 
     return node;
 }
