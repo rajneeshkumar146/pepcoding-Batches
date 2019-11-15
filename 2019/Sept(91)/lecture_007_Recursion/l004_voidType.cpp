@@ -519,10 +519,43 @@ int nQueen(vector<vector<bool>> &boxes, int tnq, int qloc, int qpsf, string ans)
     return count;
 }
 
+int nQueen_01(vector<vector<bool>> &boxes, int tnq, int qpsf, int vidx, string ans)
+{
+    if (vidx == boxes.size() * boxes[0].size() || tnq == qpsf)
+    {
+        if (qpsf == tnq)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int x = vidx / boxes[0].size();
+    int y = vidx % boxes[0].size();
+
+    int count = 0;
+    if (isSafeToPlace(boxes, x, y))
+    {
+        boxes[x][y] = true;
+
+        count += nQueen_01(boxes, tnq, qpsf + 1, vidx + 1,
+                           ans + "(" + to_string(x) + ", " +
+                               to_string(y) + ")" + "@" +
+                               to_string(qpsf) + " ");
+
+        boxes[x][y] = false;
+    }
+
+    count += nQueen_01(boxes, tnq, qpsf, vidx + 1, ans);
+    return count;
+}
+
 void Nqueen()
 {
     vector<vector<bool>> boxes(4, vector<bool>(4, false));
-    cout << nQueen(boxes, 4, -1, 0, "") << endl;
+    // cout << nQueen(boxes, 4, -1, 0, "") << endl;
+    cout << nQueen_01(boxes, 4, 0, 0, "") << endl;
 }
 
 void pathType()
@@ -558,6 +591,58 @@ int game(int match, int points, int vidx)
     return count;
 }
 
+//===================================================
+
+string str1 = "send";
+string str2 = "more";
+string str3 = "money";
+vector<int> maping(26, 0);
+vector<bool> numUsed(10, -1);
+
+int crypto(string str, int idx)
+{
+    if(idx==str.length()){
+       if(strNum1+strNum2==strNum3){
+           return 1;
+       }
+       return 0;
+    }
+
+    for (int i = 0; i < 10; i++)
+    {
+
+        //used
+        //1. numUsed
+        //2. maping
+
+        //call
+
+        //1. numUsed
+        //2. maping
+    }
+}
+
+void crypto()
+{
+    string str = str1 + str2 + str3;
+    vector<int> freqMap(26, 0);
+
+    for (int i = 0; i < str.length(); i++)
+    {
+        int idx = str[i] - 'a';
+        freqMap[idx]++;
+    }
+
+    string ans = "";
+    for (int i = 0; i < 26; i++)
+    {
+        if (freqMap[i] != 0)
+        {
+            str += (char)(i + 'a');
+        }
+    }
+}
+
 //======================================================
 
 void solve()
@@ -567,7 +652,7 @@ void solve()
     // combiAndPermu();
     // nqueenWays();
     // Nqueen();
-    cout << game(8, 15, 0) << endl;
+    // cout << game(8, 15, 0) << endl;
 }
 
 int main(int args, char **argv)

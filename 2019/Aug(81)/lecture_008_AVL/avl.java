@@ -6,8 +6,8 @@ public class avl{
 
     root=addData(root,51);
     root=addData(root,52);
+    root=addData(root,53);
     // root=addData(root,64);
-    // root=addData(root,65);
     display(root);
 
 
@@ -25,6 +25,7 @@ public class avl{
 
         Node(int data){
           this.data=data;
+          this.height=0;
         }
     }
 
@@ -139,8 +140,10 @@ public class avl{
     }
 
     static Node addData(Node node,int data){
-        if(node==null) return new Node(data);
-
+        if(node==null){
+            Node base=new Node(data);
+            return base;
+        }
         if(node.data<data)
             node.right=addData(node.right,data);
         else
