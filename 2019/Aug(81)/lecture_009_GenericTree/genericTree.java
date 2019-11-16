@@ -52,5 +52,60 @@ public class genericTree{
         }
     }
 
+    //basic.============================
+
+    public static int size(Node node){
+
+        int size=0;
+        for(Node child:node.childs){
+            size+=size(child);
+        }
+
+        return size+1;
+    }
+
+
+    public static int height(Node node){
+
+        int ht=-1;
+        for(Node child:node.childs){
+            int recH=height(child);
+            ht=Math.max(recH,ht);
+        }
+
+        return ht+1;
+    }
+
+    public static boolean find(Node node,int data){
+        if(node.data==data) return true;
+       
+        boolean res=false;
+       
+        for(Node child:node.childs){
+            res=res||find(child,data);
+        }
+
+        return res;
+    }
+
+    public static boolean isFoldable(Node node1,Node node2){
+        if((node1==null && node2! =null ) || (node1!=null && node2==null))
+        return false;
+        if(node1.childs.size()!=node2.childs.size()) return false;
+
+        if(node1.data!=node2.data) return false;
+
+        for(int i=0,j=node1.childs.size()-1;i<node1.childs.size();i++,j--){
+           Node child1=node1.childs.get(i);
+           Node child2=node2.childs.get(j);
+           
+            boolean res=isFoldable(child1,child2);
+            if(!res) return res;  
+        }
+
+        return true;
+    }
+
+
 
 }

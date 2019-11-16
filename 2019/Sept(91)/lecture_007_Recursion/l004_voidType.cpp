@@ -596,30 +596,54 @@ int game(int match, int points, int vidx)
 string str1 = "send";
 string str2 = "more";
 string str3 = "money";
-vector<int> maping(26, 0);
-vector<bool> numUsed(10, -1);
+vector<int> maping(26, -1);
+vector<bool> numUsed(10, false);
+
+int decode(string str)
+{
+    int res = 0;
+    for (int i = 0; i < str.length(); i++)
+    {
+        int num = maping[str[i] - 'a'];
+        res = res * 10 + num;
+    }
+    return res;
+}
 
 int crypto(string str, int idx)
 {
-    if(idx==str.length()){
-       if(strNum1+strNum2==strNum3){
-           return 1;
-       }
-       return 0;
+    if (idx == str.length())
+    {
+        int num1 = decode(str1);
+        int num2 = decode(str2);
+        int num3 = decode(str3);
+        if (num1 + num2 == num3)
+        {
+            cout << num1 << " " << num2 << " = " << num3 << endl;
+            return 1;
+        }
+        return 0;
     }
+
+    char ch = str[idx];
+    int count = 0;
 
     for (int i = 0; i < 10; i++)
     {
 
-        //used
-        //1. numUsed
-        //2. maping
+        if (!numUsed[i])
+        {
+            numUsed[i] = true;
+            maping[ch - 'a'] = i;
 
-        //call
+            count += crypto(str, idx + 1);
 
-        //1. numUsed
-        //2. maping
+            numUsed[i] = false;
+            maping[ch - 'a'] = -1;
+        }
     }
+
+    return count;
 }
 
 void crypto()
@@ -638,9 +662,131 @@ void crypto()
     {
         if (freqMap[i] != 0)
         {
-            str += (char)(i + 'a');
+            ans += (char)(i + 'a');
         }
     }
+
+    cout << crypto(ans, 0) << endl;
+}
+
+vector<string> dict = {"i", "ke", "ili", "ilike", "like", "man", "go", "mango", "and", "sam", "sung", "samsung"};
+bool checkWordIsPresent(string word)
+{
+    for (string s : dict)
+    {
+        if (s.compare(word) == 0)
+            return true;
+    }
+
+    return false;
+}
+
+int wordBreak(string word, string ans)
+{
+    if (word.length() == 0)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    string temp = "";
+    int count = 0;
+    for (int i = 0; i < word.length(); i++)
+    {
+        temp += word[i];
+        if (checkWordIsPresent(temp))
+        {
+            count += wordBreak(word.substr(i + 1), ans + temp + " ");
+        }
+    }
+}
+
+vector<vector<int>> board;
+vector<int> row(9,0);
+vector<int> col(9,0);
+vector<vector<int>> mat(3,vector<int>(3,0));
+
+bool isSafeToPlaceNum(int x, int y, int data)
+{
+
+    //Row Check
+    for (int i = 0; i < 9; i++)
+    {
+        if (board[x][i] == data)
+            return false;
+    }
+
+    //Col Check
+    for (int i = 0; i < 9; i++)
+    {
+        if (board[i][y] == data)
+            return false;
+    }
+
+    //3X3 matrix Check.
+
+    x = (x / 3) * 3;
+    y = (y / 3) * 3;
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (board[x + i][y + j] == data)
+                return false;
+        }
+    }
+
+    return true;
+}
+
+int sudoku(int vidx)
+{
+    if (vidx == 81)
+    {
+        for (vector<int> vec : board)
+        {
+            for (int ele : vec)
+            {
+                cout << ele << " ";
+            }
+            cout << endl;
+        }
+        return 1;
+    }
+
+    int i = vidx / 9;
+    int j = vidx % 9;
+
+    int count = 0;
+    if (board[i][j] == 0)
+    {
+        for (int num = 1; num <= 9; num++)
+        {
+            int mask=1<<num;
+            if ((row[i]&mask)==0 &&(col[i]&mask)==0 &&(mat[i/3][j/3]&mask)==0)
+            {
+
+                board[i][j] = num;
+                row[i]|=mask;
+                col[j]|=mask;
+                mat[i/3][j/3]|=mask;
+
+                count += sudoku(vidx + 1);
+
+                board[i][j] = 0;
+                row[i]^=mask;
+                col[j]^=mask;
+                mat[i/3][j/3]^=mask;
+
+            }
+        }
+    }
+    else
+    {
+        count += sudoku(vidx + 1);
+    }
+
+    return count;
 }
 
 //======================================================
@@ -653,6 +799,24 @@ void solve()
     // nqueenWays();
     // Nqueen();
     // cout << game(8, 15, 0) << endl;
+    // crypto();
+    // cout<<wordBreak("ilikemangoandsamsung","")<<endl;
+
+
+
+     for(int i=0;i<9;i++){
+         for(int j=0;j<9;j++){
+             if(board[i][j]!=0){
+                 int mask=1<<board[i][j];
+                 row[i]|=mask;
+                 col[j]|=mask;
+                 mat[i/3][j/3]|=mask;
+             }
+
+         }
+     }
+
+
 }
 
 int main(int args, char **argv)
