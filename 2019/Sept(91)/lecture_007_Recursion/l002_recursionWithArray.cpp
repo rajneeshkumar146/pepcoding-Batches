@@ -47,16 +47,20 @@ int minimum(vector<int> &arr, int vidx)
 
 int lastIndex(vector<int> &arr, int vidx, int data)
 {
-    if (vidx == arr.size())
-    {
-        return -1;
-    }
+    // if (vidx == arr.size())
+    // {
+    //     return -1;
+    // }
 
-    int recAns = lastIndex(arr, vidx + 1, data);
-    if (recAns != -1)
-        return recAns;
-    else
-        return (arr[vidx] == data ? vidx : -1);
+    // int recAns = lastIndex(arr, vidx + 1, data);
+    // if (recAns != -1)
+    //     return recAns;
+    // else
+    //     return (arr[vidx] == data ? vidx : -1);
+
+    return vidx==arr.size()?-1:lastIndex(arr,vidx+1,data)?true:arr[vidx]==data?true:false;
+
+
 }
 
 int stairs(int n)
