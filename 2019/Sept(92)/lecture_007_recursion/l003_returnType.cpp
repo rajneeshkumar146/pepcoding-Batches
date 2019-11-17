@@ -107,6 +107,93 @@ vector<string> permutation(string str)
     return myAns;
 }
 
+vector<string> words = {"_", "+-/", "abc", "def", "ghi",
+                        "jkl", "mno",
+                        "pqrs", "tuv", "wxyz", "&()%", "#@$"};
+
+vector<string> keyPad(string str)
+{
+
+    if (str.length() == 0)
+    {
+        vector<string> base;
+        base.push_back("");
+        return base;
+    }
+
+    char ch = str[0];
+    string word1 = words[ch - '0'];
+    vector<string> myAns;
+
+    vector<string> firstRes = keyPad(str.substr(1));
+    for (string s : firstRes)
+    {
+        for (int i = 0; i < word1.length(); i++)
+        {
+            myAns.push_back(word1[i] + s);
+        }
+    }
+
+    if (str.length() > 1 && ch != '0')
+    {
+        int num = (ch - '0') * 10 + (str[1] - '0');
+        if (num < 12)
+        {
+            string word2 = words[num];
+
+            vector<string> secondRes = keyPad(str.substr(2));
+            for (string s : secondRes)
+            {
+                for (int i = 0; i < word2.length(); i++)
+                {
+                    myAns.push_back(word2[i] + s);
+                }
+            }
+        }
+    }
+    return myAns;
+}
+
+vector<string> encoding(string str)
+{
+    if (str.length() == 0)
+    {
+        vector<string> base;
+        base.push_back("");
+        return base;
+    }
+
+    char ch = str[0];
+    vector<string> myAns;
+    if (ch == '0')
+    {
+        return encoding(str.substr(1));
+    }
+
+    char ch_ = (char)(ch - '1' + 'a');
+    vector<string> firstRes = encoding(str.substr(1));
+    for (string s : firstRes)
+    {
+        myAns.push_back(ch_ + s);
+    }
+
+    if (str.length() > 1)
+    {
+        int num = (ch - '0') * 10 + (str[1] - '0');
+        if (num <= 26)
+        {
+            ch_ = (char)(num + 'a' -1);
+            vector<string> secondRes = encoding(str.substr(2));
+            for (string s : secondRes)
+            {
+                myAns.push_back(ch_ + s);
+            }
+        }
+    }
+
+    return myAns;
+}
+
 void basic()
 {
     // cout << removeHi("hihiihihhiiiiihihhiihhhhhhhhhhiiiiiiiihihihi");
@@ -114,9 +201,11 @@ void basic()
     // removeDupli0("aaaabbbbcccccddddefghii", "");
     // cout << removeDupli("aaaabbbbcccccddddefghii", 0) << endl;
 
-    vector<string> ans = permutation("abcd");
+    // vector<string> ans = permutation("abcd");
+    // vector<string> ans = keyPad("108");
+    vector<string> ans = encoding("1023");
     for (string s : ans)
-        cout << s << " ";
+        cout << s << endl;
 }
 
 //=================================================
@@ -233,9 +322,8 @@ bool isSafe(int x, int y, vector<vector<bool>> &board)
     if (x < 0 || y < 0 || x >= board.size() || y >= board[0].size() || board[x][y])
         return false;
     return true;
-}=                              z
-
-    vector<vector<int>>direction = {{0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}};
+}
+vector<vector<int>> direction = {{0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}};
 vector<string> dir = {"R", "1", "U", "2", "L", "3", "D", "4"};
 
 int floodFill(int sr, int sc, int er, int ec, vector<vector<bool>> &board, string ans)
