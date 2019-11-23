@@ -182,7 +182,7 @@ vector<string> encoding(string str)
         int num = (ch - '0') * 10 + (str[1] - '0');
         if (num <= 26)
         {
-            ch_ = (char)(num + 'a' -1);
+            ch_ = (char)(num + 'a' - 1);
             vector<string> secondRes = encoding(str.substr(2));
             for (string s : secondRes)
             {
@@ -364,11 +364,40 @@ void floodFill()
     cout << floodFill(0, 1, 4, 3, board, "");
 }
 
+bool isPlaindrome(string str, int i, int j)
+{
+    while (i < j)
+    {
+        if (str[i++] != str[j--])
+            return false;
+    }
+
+    return true;
+}
+
+int minimumPalindromicCuts(string str, int i, int j)
+{
+    if (i == j)
+        return 0;
+    if (isPlaindrome(str, i, j))
+        return 0;
+
+    int min_=1000000;
+    for(int cut=i;cut<j;cut++){
+        int leftMinCuts=minimumPalindromicCuts(str,i,cut);
+        int rightMinCuts=minimumPalindromicCuts(str,cut+1,j);
+        min_=min(leftMinCuts+rightMinCuts+1,min_);
+    }
+    return min_;
+}
+
 void solve()
 {
-    basic();
+    // basic();
     // mazePAth();
     // floodFill();
+    string str="feabccbad";
+    cout<<minimumPalindromicCuts(str,0,str.length()-1)<<endl;
 }
 
 int main()
