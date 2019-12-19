@@ -465,8 +465,8 @@ void queenBox()
     // cout<<queenBoxPermu(3,tnb,"")<<endl;
 
     vector<vector<bool>> tnb(4, vector<bool>(4, 0));
-    cout << queen2dBoxCombi(4, tnb, 0, "") << endl;
-    // cout << queen2DBoxPermu(4, tnb, "") << endl;
+    // cout << queen2dBoxCombi(4, tnb, 0, "") << endl;
+    cout << queen2DBoxPermu(4, tnb, "") << endl;
 }
 
 //================================================
@@ -516,8 +516,92 @@ int nQueen(int tnq, vector<vector<bool>> &boxes, int lqpsf, string ans)
 
 void nqueen()
 {
-    vector<vector<bool>> boxes(4, vector<bool>(4, 0));
-    cout << nQueen(4, boxes, 0, "") << endl;
+    vector<vector<bool>> boxes(7, vector<bool>(7, 0));
+    cout << nQueen(7, boxes, 0, "") << endl;
+}
+
+//crypto.===============================
+string str1 = "send";
+string str2 = "more";
+string str3 = "money";
+vector<int> mapCharToNumber(26, 0);
+vector<bool> numberUsed(10, 0); // can used bit.
+
+int stringToNumber(string str)
+{
+    int num = 0;
+    for (int i = 0; i < str.length(); i++)
+        num = num * 10 + mapCharToNumber[str[i] - 'a'];
+
+    return num;
+}
+
+int crytoSimple(string s, int idx,int num)
+{
+    if(num==-1 && s.length()!=idx){
+        return 0;
+    }
+    if(idx==s.length()){
+        int num1=stringToNumber(str1);
+        int num2=stringToNumber(str2);
+        int num3=stringToNumber(str3);
+        if(num1+num2 == num3 && mapCharToNumber[str3[0]-'a']!=0){
+            cout<<" "<<num1<<endl<<"+"<<num2 <<endl<<"------"<<endl<<num3<<endl;
+            cout<<endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count=0;
+//    for(int num=9;num>=0;num--){
+       if(!numberUsed[num]){
+           numberUsed[num]=true;
+           mapCharToNumber[s[idx]-'a']=num;
+
+           count+=crytoSimple(s,idx+1,9);
+
+           numberUsed[num]=false;
+       }
+
+       count+=crytoSimple(s,idx,num-1);
+//    }
+
+    return count;
+}
+
+void crypto()
+{
+    vector<int> freqMap(26, 0);
+    string str = str1 + str2 + str3;
+
+    for (int i = 0; i < str.length(); i++)
+        freqMap[str[i] - 'a']++;
+
+    string s = "";
+
+    for (int i = 0; i < 26; i++)
+    {
+        if (freqMap[i] > 0)
+            s += (char)(i + 'a');
+    }
+
+    cout<<crytoSimple(s,0,9)<<endl;
+}
+
+//sudoku.==========================================
+
+void sudoku()
+{
+    vector<vector<int>> boxe = {{3, 0, 6, 5, 0, 8, 4, 0, 0},
+                                {5, 2, 0, 0, 0, 0, 0, 0, 0},
+                                {0, 8, 7, 0, 0, 0, 0, 3, 1},
+                                {0, 0, 3, 0, 1, 0, 0, 8, 0},
+                                {9, 0, 0, 8, 6, 3, 0, 0, 5},
+                                {0, 5, 0, 0, 9, 0, 6, 0, 0},
+                                {1, 3, 0, 0, 0, 0, 2, 5, 0},
+                                {0, 0, 0, 0, 0, 0, 0, 7, 4},
+                                {0, 0, 5, 2, 0, 6, 3, 0, 0}};
 }
 
 void solve()
@@ -527,7 +611,8 @@ void solve()
     // setType();
     // coinChange();
     // queenBox();
-    nqueen();
+    // nqueen();
+    crypto();
 }
 
 int main()
