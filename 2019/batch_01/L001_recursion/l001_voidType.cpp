@@ -828,7 +828,7 @@ bool canPlaceVertical(string word, int r, int c)
         if (board[r + word.length()][c] != '+')
             return false;
     }
-    else if ((r + word.length()) >= board.size() && word.length() != board.size())
+    else if ((r + word.length()) == board.size() && word.length() != board.size())
     {
         if (board[r - 1][c] != '+')
             return false;
@@ -985,7 +985,7 @@ void solve()
     // nqueen();
     // crypto();
     // sudoku();
-    crossWord();
+    // crossWord();
 }
 
 int main()
