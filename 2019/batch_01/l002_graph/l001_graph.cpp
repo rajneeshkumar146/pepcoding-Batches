@@ -81,46 +81,63 @@ void removeVtx(int u)
     // graph.erase(graph.begin()+u);
 }
 
-bool hasPath(int src, int des, vector<bool> &visited, string ans)
+bool hashPath(int src, int dest, vector<bool> &vis, string ans)
 {
-    if (visited[src])
-        return false;
-
-    if (src == des)
+    if (src == dest)
     {
-        cout << ans << endl;
+        cout << ans + to_string(dest) << endl;
         return true;
     }
 
-    visited[src] = true;
+    vis[src] = true; //mark
     bool res = false;
-    for (Edge *e : graph[src])
-    {
-        int v = e->v;
-        res = res || hasPath(v, des, visited, ans + to_string(v) + "->");
+
+    for (int i = 0; i < graph[src].size(); i++)
+    { //loop
+        int nbr = graph[src][i]->v;
+        if (!vis[nbr])                                                            //chek for vis
+            res = res || hashPath(nbr, dest, vis, ans + to_string(src) + " -> "); //call
     }
+
+    return res;
 }
 
-void hasPath_allPath(int src, int des, vector<bool> &visited, string ans)
+int allPath(int src, int dest, vector<bool> &vis, string ans)
 {
-    if (visited[src])
-        return;
-
-    if (src == des)
+    if (src == dest)
     {
-        cout << ans << endl;
-        return;
+        cout << ans + to_string(dest) << endl;
+        return 1;
     }
 
-    visited[src] = true;
-    // bool res = false;
-    for (Edge *e : graph[src])
+    vis[src] = true; //mark
+    int count = 0;
+
+    for (int i = 0; i < graph[src].size(); i++)
     {
-        int v = e->v;
-        hasPath_allPath(v, des, visited, ans + to_string(v) + "->");
+        int nbr = graph[src][i]->v;
+        if (!vis[nbr])                                                       //chek for vis
+            count += allPath(nbr, dest, vis, ans + to_string(src) + " -> "); //call
     }
 
-    visited[src] = false;
+    vis[src] = false; //unmark.
+    return count;
+}
+
+void preOderPath(int src, int w, vector<bool> &vis, string ans)
+{
+    vis[src] = true; //mark.
+    cout << to_string(src) + " -> " + ans + to_string(src) + " @ " + to_string(w) << endl;
+
+    for (int i = 0; i < graph[src].size(); i++)
+    {
+        int nbr = graph[src][i]->v;
+        int wt = graph[src][i]->w;
+        if (!vis[nbr])                                           //chek for vis
+            preOderPath(nbr, w + wt, vis, ans + to_string(src)); //call
+    }
+
+    vis[src] = false; //unmark.
 }
 
 void solve()
@@ -131,19 +148,21 @@ void solve()
         graph.push_back(ar);
     }
 
-    addEdge(0, 3, 10);
     addEdge(0, 1, 10);
     addEdge(1, 2, 10);
     addEdge(2, 3, 40);
+    addEdge(0, 3, 10);
     addEdge(3, 4, 2);
     addEdge(4, 5, 2);
-    addEdge(4, 6, 3);
     addEdge(5, 6, 8);
+    addEdge(4, 6, 3);
 
     // removeVtx(3);
 
-    vector<bool> visited(graph.size(), false);
-    hasPath(0, 6, visited, to_string(0) + "->");
+    vector<bool> vis(7, false);
+    // cout<<hashPath(0,6,vis,"")<<endl;
+    // cout<<allPath(0,6,vis,"")<<endl;
+    preOderPath(0, 0, vis, "");
 
     // display();
 }

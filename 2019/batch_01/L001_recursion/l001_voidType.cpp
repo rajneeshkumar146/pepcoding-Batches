@@ -981,7 +981,7 @@ void solve()
     // path();
     // setType();
     // coinChange();
-    // queenBox();
+    queenBox();
     // nqueen();
     // crypto();
     // sudoku();
