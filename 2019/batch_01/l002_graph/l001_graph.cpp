@@ -102,11 +102,11 @@ bool hashPath(int src, int dest, vector<bool> &vis, string ans)
     return res;
 }
 
-int allPath(int src, int dest, vector<bool> &vis, string ans)
+int allPath(int src, int wt,int dest, vector<bool> &vis, string ans)
 {
     if (src == dest)
     {
-        cout << ans + to_string(dest) << endl;
+        cout << ans + to_string(dest) << " @ "<<wt<<endl;
         return 1;
     }
 
@@ -116,8 +116,9 @@ int allPath(int src, int dest, vector<bool> &vis, string ans)
     for (int i = 0; i < graph[src].size(); i++)
     {
         int nbr = graph[src][i]->v;
+        int w=graph[src][i]->w;
         if (!vis[nbr])                                                       //chek for vis
-            count += allPath(nbr, dest, vis, ans + to_string(src) + " -> "); //call
+            count += allPath(nbr,wt+w, dest, vis, ans + to_string(src) + " -> "); //call
     }
 
     vis[src] = false; //unmark.
@@ -140,6 +141,107 @@ void preOderPath(int src, int w, vector<bool> &vis, string ans)
     vis[src] = false; //unmark.
 }
 
+int fwt = 100000;
+string fans = "";
+
+void lightestPath(int src, int dest, int wt, vector<bool> &vis, string ans)
+{
+    if (src == dest)
+    {
+        if (wt < fwt)
+        {
+            fwt = wt;
+            fans = ans;
+        }
+
+        // cout<<ans<<" -> "<<wt<<endl;
+        return;
+    }
+
+    vis[src] = true;
+    for (Edge *e : graph[src])
+    {
+        int nbr = e->v;
+        int w = e->w;
+        if (!vis[nbr])
+            lightestPath(nbr, dest, wt + w, vis, ans + to_string(nbr));
+    }
+
+    vis[src] = false;
+}
+
+class pair_path
+{
+public:
+    int wt = 100000;
+    string s = "";
+
+    pair_path(int wt, string s)
+    {
+        this->wt = wt;
+        this->s = s;
+    }
+    pair_path()
+    {
+    }
+};
+
+pair_path *lightestPath_01(int src, int dest, vector<bool> &vis)
+{
+    if (src == dest)
+    {
+        pair_path *obj = new pair_path(0, to_string(src) + "");
+        return obj;
+    }
+
+    vis[src] = true;
+    pair_path *myAns = new pair_path();
+
+    for (Edge *e : graph[src])
+    {
+        int nbr = e->v;
+        int w = e->w;
+        if (!vis[nbr])
+        {
+            pair_path *recRes = lightestPath_01(nbr, dest, vis);
+            if (recRes->wt + w < myAns->wt)
+            {
+                myAns->wt = recRes->wt + w;
+                myAns->s = to_string(src) + recRes->s;
+            }
+        }
+    }
+
+    vis[src] = false;
+    return myAns;
+}
+
+void hamintonianPathCycle(int src,int osrc,int cnt,int wt,vector<bool>& vis,string ans){
+   if(cnt==graph.size()-1){
+       cout<<ans+to_string(src);
+       for(Edge* e:graph[src]){
+           if(e->v==osrc){
+               cout<<" -> Cycle";
+           }
+       }
+      cout<<endl;
+      return ;
+   }
+
+   //mark.
+   vis[src]=true;
+    for(Edge* e:graph[src]){
+        int nbr=e->v;
+        int w=e->w;
+        if(!vis[nbr]){
+            hamintonianPathCycle(nbr,osrc,cnt+1,wt+w,vis,ans+to_string(src));
+        }
+    }
+
+   vis[src]=false;
+}
+
+
 void solve()
 {
     for (int i = 0; i < 7; i++)
@@ -152,17 +254,27 @@ void solve()
     addEdge(1, 2, 10);
     addEdge(2, 3, 40);
     addEdge(0, 3, 10);
+    addEdge(0, 3, 10);   
     addEdge(3, 4, 2);
     addEdge(4, 5, 2);
     addEdge(5, 6, 8);
     addEdge(4, 6, 3);
 
+    addEdge(2, 5, 13);
+
     // removeVtx(3);
 
     vector<bool> vis(7, false);
     // cout<<hashPath(0,6,vis,"")<<endl;
-    // cout<<allPath(0,6,vis,"")<<endl;
+    // cout<<allPath(0,0,6,vis,"")<<endl;
     preOderPath(0, 0, vis, "");
+
+    // lightestPath(0, 6, 0, vis, "");
+    // cout << fans << " -> " << fwt << endl;
+
+    // pair_path *ans = lightestPath_01(0, 6, vis);
+    // cout << ans->s << " -> " << ans->wt << endl;
+    // hamintonianPathCycle(2,2,0,0,vis,"");
 
     // display();
 }
