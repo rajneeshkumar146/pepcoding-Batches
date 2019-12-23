@@ -31,7 +31,7 @@ public class l001_graph{
         addEdge(0,1,10);
         addEdge(1,2,10);
         addEdge(2,3,40);
-        addEdge(3,4,2);
+        // addEdge(3,4,2);
         addEdge(4,5,2);
         addEdge(4,6,3);
         addEdge(5,6,8);
@@ -182,8 +182,17 @@ public class l001_graph{
         // display();
         
         boolean[] vis=new boolean[graph.length];
-        BFS_ShortestPath(0,vis);
+        // BFS_ShortestPath(0,vis);
         // BFS_ShortestPath_02(0,vis);
+
+        int comp=0;
+        for(int i=0;i<graph.length;i++){
+            if(!vis[i]){
+                BFS_ShortestPath_02(i,vis);
+                comp++;
+            }
+        }
+        System.out.println("dis-connected components: " + comp);
 
     }
 

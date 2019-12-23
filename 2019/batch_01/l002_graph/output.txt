@@ -1,3 +1,4 @@
 Cycle Number: 0: 0->1->2
-0->3->4->6 @ 15 -> 4
-Cycle Number: 1: 0->3->4->5->6
+4->6 @ 3 -> 2
+Cycle Number: 0: 4->5->6
+dis-connected components: 3
