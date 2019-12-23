@@ -77,23 +77,20 @@ public class l001_graph{
 
     }
 
-    public static void BFS_ShortestPath(int src,int dest){
+    public static void BFS_ShortestPath(int src,boolean[] vis){
         LinkedList<BFSpair> que=new LinkedList<>();
-        boolean[] vis=new boolean[graph.length];
         
         BFSpair root=new BFSpair(src,0,src+"");
         que.addLast(root);
         que.addLast(null);
 
+        int dest=6;
         int cycleCounter=0;
-        boolean isPath=false;
+        boolean firstPath=false;
         int level=1;
 
         while(que.size()!=1){
             //remove 
-
-            
-
             BFSpair rpair=que.removeFirst();
 
             //cycle
@@ -106,9 +103,9 @@ public class l001_graph{
             vis[rpair.vtx]=true;
 
             //destination.
-            if(rpair.vtx==dest && !isPath){
+            if(rpair.vtx==dest && !firstPath){
                 System.out.println(rpair.psf + " @ " + rpair.wsf + " -> " + level);
-                isPath=true;
+                firstPath=true;
             }
 
             //nbr.
@@ -132,14 +129,61 @@ public class l001_graph{
     }
 
 
+    public static void BFS_ShortestPath_02(int src,boolean[] vis){
+        LinkedList<BFSpair> que=new LinkedList<>();
+        
+        BFSpair root=new BFSpair(src,0,src+"");
+        que.addLast(root);
+
+        int dest=6;
+        int cycleCounter=0;
+        boolean firstPath=false;
+        int level=1;
+
+        while(que.size()!=0){
+            //remove 
+            int size=que.size();
+            while(size-->0){
+            BFSpair rpair=que.removeFirst();
+
+            //cycle
+            if(vis[rpair.vtx]){
+                System.out.println("Cycle Number: "+cycleCounter + ": "+rpair.psf );
+                cycleCounter++;
+            }
+
+            //mark.
+            vis[rpair.vtx]=true;
+
+            //destination.
+            if(rpair.vtx==dest && !firstPath){
+                System.out.println(rpair.psf + " @ " + rpair.wsf + " -> " + level);
+                firstPath=true;
+            }
+
+            //nbr.
+            for(Edge e: graph[rpair.vtx]){
+                if(!vis[e.v]){ //unmark nbr.
+                    BFSpair pair=new BFSpair(e.v,rpair.wsf+e.w,rpair.psf+"->"+e.v);
+                    que.addLast(pair);
+                }
+            }
+        }
+        level++;
+    }
+}
+
+
 
 
 
     public static void main(String[] args){
         caseI();
         // display();
-
-        BFS_ShortestPath(0,6);
+        
+        boolean[] vis=new boolean[graph.length];
+        BFS_ShortestPath(0,vis);
+        // BFS_ShortestPath_02(0,vis);
 
     }
 
