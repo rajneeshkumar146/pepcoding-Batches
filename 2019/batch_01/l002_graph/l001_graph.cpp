@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <list>
+#include <queue>
 using namespace std;
 
 class Edge
@@ -21,24 +23,25 @@ public:
 
 // vector<vector<Edge *>> graph(7, vector<Edge *>());
 vector<vector<Edge *>> graph;
+vector<vector<Edge *>> dgraph;
 
 void addEdge(int u, int v, int w)
 {
     if (u < 0 || v < 0 || u >= graph.size() || v >= graph.size())
         return;
 
-    graph[u].push_back(new Edge(v, w));
-    graph[v].push_back(new Edge(u, w));
+    dgraph[u].push_back(new Edge(v, w));
+    dgraph[v].push_back(new Edge(u, w));
 }
 
 void display()
 {
-    for (int i = 0; i < graph.size(); i++)
+    for (int i = 0; i < dgraph.size(); i++)
     {
         cout << i << " => ";
-        for (int j = 0; j < graph[i].size(); j++)
+        for (int j = 0; j < dgraph[i].size(); j++)
         {
-            cout << "( " << graph[i][j]->v << ", " << graph[i][j]->w << "), ";
+            cout << "( " << dgraph[i][j]->v << ", " << dgraph[i][j]->w << "), ";
         }
         cout << endl;
     }
@@ -102,11 +105,11 @@ bool hashPath(int src, int dest, vector<bool> &vis, string ans)
     return res;
 }
 
-int allPath(int src, int wt,int dest, vector<bool> &vis, string ans)
+int allPath(int src, int wt, int dest, vector<bool> &vis, string ans)
 {
     if (src == dest)
     {
-        cout << ans + to_string(dest) << " @ "<<wt<<endl;
+        cout << ans + to_string(dest) << " @ " << wt << endl;
         return 1;
     }
 
@@ -116,9 +119,9 @@ int allPath(int src, int wt,int dest, vector<bool> &vis, string ans)
     for (int i = 0; i < graph[src].size(); i++)
     {
         int nbr = graph[src][i]->v;
-        int w=graph[src][i]->w;
-        if (!vis[nbr])                                                       //chek for vis
-            count += allPath(nbr,wt+w, dest, vis, ans + to_string(src) + " -> "); //call
+        int w = graph[src][i]->w;
+        if (!vis[nbr])                                                               //chek for vis
+            count += allPath(nbr, wt + w, dest, vis, ans + to_string(src) + " -> "); //call
     }
 
     vis[src] = false; //unmark.
@@ -216,58 +219,179 @@ pair_path *lightestPath_01(int src, int dest, vector<bool> &vis)
     return myAns;
 }
 
-void hamintonianPathCycle(int src,int osrc,int cnt,int wt,vector<bool>& vis,string ans){
-   if(cnt==graph.size()-1){
-       cout<<ans+to_string(src);
-       for(Edge* e:graph[src]){
-           if(e->v==osrc){
-               cout<<" -> Cycle";
-           }
-       }
-      cout<<endl;
-      return ;
-   }
+void hamintonianPathCycle(int src, int osrc, int cnt, int wt, vector<bool> &vis, string ans)
+{
+    if (cnt == graph.size() - 1)
+    {
+        cout << ans + to_string(src);
+        for (Edge *e : graph[src])
+        {
+            if (e->v == osrc)
+            {
+                cout << " -> Cycle";
+            }
+        }
+        cout << endl;
+        return;
+    }
 
-   //mark.
-   vis[src]=true;
-    for(Edge* e:graph[src]){
-        int nbr=e->v;
-        int w=e->w;
-        if(!vis[nbr]){
-            hamintonianPathCycle(nbr,osrc,cnt+1,wt+w,vis,ans+to_string(src));
+    //mark.
+    vis[src] = true;
+    for (Edge *e : graph[src])
+    {
+        int nbr = e->v;
+        int w = e->w;
+        if (!vis[nbr])
+        {
+            hamintonianPathCycle(nbr, osrc, cnt + 1, wt + w, vis, ans + to_string(src));
         }
     }
 
-   vis[src]=false;
+    vis[src] = false;
 }
 
+class partite_pair
+{
+public:
+    int vtx = -1;
+    string color = "";
+
+    partite_pair(int vtx, string color)
+    {
+        this->vtx = vtx;
+        this->color = color;
+    }
+
+    partite_pair()
+    {
+    }
+};
+
+bool bipartite(int src, vector<string> &vis)
+{
+    list<partite_pair> que;
+    partite_pair root(src, "R");
+    que.push_back(root);
+
+    bool res = true;
+
+    while (que.size() > 0)
+    {
+        //remove vtx.
+        partite_pair rpair = que.front();
+        que.pop_front();
+
+        if (vis[rpair.vtx] != "")
+        {
+            if (!vis[rpair.vtx].compare(rpair.color))
+            {
+                cout << rpair.vtx << " -> "
+                     << "Not bipartite" << endl;
+                res = false;
+            }
+            else
+                cout << rpair.vtx << " -> "
+                     << "bipartite" << endl;
+
+            continue;
+        }
+
+        vis[rpair.vtx] = rpair.color;
+        for (Edge *e : graph[rpair.vtx])
+        {
+            if (vis[e->v] == "")
+            {
+                partite_pair npair(e->v, rpair.color.compare("R") ? "G" : "R");
+                que.push_back(npair);
+            }
+        }
+    }
+
+    return res;
+}
+
+class dpair
+{
+public:
+    int vtx = 0, pvtx = 0, wt = 0, wsf = 0;
+    string psf = "";
+
+    dpair(int vtx, int pvtx, int wt, int wsf, string psf)
+    {
+        this->vtx = vtx;
+        this->pvtx = pvtx;
+        this->wt = wt;
+        this->wsf;
+        this->psf = psf;
+    }
+};
+
+bool operator<(const dpair &d1, const dpair &d2)
+{
+    return d1.wsf > d2.wsf;
+}
+
+void dijikstra()
+{
+    priority_queue<dpair> pq;
+    pq.push(dpair(0, -1, 0, 0, "0"));
+    vector<bool> vis(graph.size(), false);
+    while (!pq.empty())
+    {
+        dpair rpair = pq.top();
+        pq.pop();
+        if (rpair.pvtx != -1)
+        {
+            addEdge(rpair.vtx, rpair.pvtx, rpair.wt);
+        }
+
+        vis[rpair.vtx] = true;
+        for (Edge *e : graph[rpair.vtx])
+        {
+            if (!vis[e->v])
+            {
+                pq.push(dpair(e->v, rpair.vtx, e->w, rpair.wsf + e->w, rpair.psf + " " + to_string(e->v)));
+            }
+        }
+    }
+
+    display();
+}
 
 void solve()
 {
     for (int i = 0; i < 7; i++)
     {
         vector<Edge *> ar;
+        vector<Edge *> ar1;
         graph.push_back(ar);
+        dgraph.push_back(ar);
     }
 
     addEdge(0, 1, 10);
     addEdge(1, 2, 10);
     addEdge(2, 3, 40);
     addEdge(0, 3, 10);
-    addEdge(0, 3, 10);   
     addEdge(3, 4, 2);
     addEdge(4, 5, 2);
     addEdge(5, 6, 8);
     addEdge(4, 6, 3);
 
-    addEdge(2, 5, 13);
+    // addEdge(2, 5, 13);
+
+    // addEdge(0, 1, 10);
+    // addEdge(0, 2, 10);
+    // addEdge(2, 3, 40);
+    // addEdge(2, 4, 10);
+    // addEdge(3, 4, 2);
+    // addEdge(1, 3, 2);
 
     // removeVtx(3);
 
-    vector<bool> vis(7, false);
+    // vector<bool> vis(7, false);
     // cout<<hashPath(0,6,vis,"")<<endl;
     // cout<<allPath(0,0,6,vis,"")<<endl;
-    preOderPath(0, 0, vis, "");
+    // preOderPath(0, 0, vis, "");
 
     // lightestPath(0, 6, 0, vis, "");
     // cout << fans << " -> " << fwt << endl;
@@ -277,6 +401,14 @@ void solve()
     // hamintonianPathCycle(2,2,0,0,vis,"");
 
     // display();
+    // vector<string> vis(7, "");
+    // for (int i = 0; i < vis.size(); i++)
+    // {
+    //     if (!vis[i].compare(""))
+    //         cout << (boolalpha) << bipartite(i, vis) << endl;
+    // }
+
+    dijikstra();
 }
 
 int main()
