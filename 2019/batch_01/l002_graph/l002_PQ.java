@@ -10,8 +10,8 @@ class l002_PQ{
 
         @Override
         public int compareTo(pair o){
-          System.out.println(this.rank+ " " + o.rank);
-          return this.rank-o.rank;
+        //   System.out.println(this.rank+ " " + o.rank);
+          return -(this.rank-o.rank);
         }
     }
 
@@ -25,9 +25,9 @@ class l002_PQ{
         }
 
 
-        // while(!pq.isEmpty()){
-        // System.out.println(pq.remove().rank);
-        // }
+        while(!pq.isEmpty()){
+        System.out.println(pq.remove().rank);
+        }
     }
 
 }

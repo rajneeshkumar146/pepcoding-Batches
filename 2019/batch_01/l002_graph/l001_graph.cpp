@@ -30,11 +30,33 @@ void addEdge(int u, int v, int w)
     if (u < 0 || v < 0 || u >= graph.size() || v >= graph.size())
         return;
 
+    graph[u].push_back(new Edge(v, w));
+    graph[v].push_back(new Edge(u, w));
+}
+
+void addEdge2(int u, int v, int w)
+{
+    if (u < 0 || v < 0 || u >= dgraph.size() || v >= dgraph.size())
+        return;
+
     dgraph[u].push_back(new Edge(v, w));
     dgraph[v].push_back(new Edge(u, w));
 }
 
 void display()
+{
+    for (int i = 0; i < graph.size(); i++)
+    {
+        cout << i << " => ";
+        for (int j = 0; j < graph[i].size(); j++)
+        {
+            cout << "( " << graph[i][j]->v << ", " << graph[i][j]->w << "), ";
+        }
+        cout << endl;
+    }
+}
+
+void display2()
 {
     for (int i = 0; i < dgraph.size(); i++)
     {
@@ -321,64 +343,87 @@ public:
         this->vtx = vtx;
         this->pvtx = pvtx;
         this->wt = wt;
-        this->wsf;
+        this->wsf = wsf;
         this->psf = psf;
+    }
+
+    bool operator<(const dpair &o) const
+    {
+        // return this->wsf < o.wsf; //weak -> strong -> weak(upper). //max heap
+        return this->wsf > o.wsf; //strong -> weak -> strong (down). min heap
     }
 };
 
-bool operator<(const dpair &d1, const dpair &d2)
-{
-    return d1.wsf > d2.wsf;
-}
+// bool operator<(const dpair &p, const dpair &o)
+// {
+//     // return this->wsf < o.wsf; //weak -> strong -> weak(upper). //max heap
+//     return p.wsf > o.wsf; //strong -> weak -> strong (down). min heap
+// }
 
-void dijikstra()
+void dijikstra(int src)
 {
-    priority_queue<dpair> pq;
-    pq.push(dpair(0, -1, 0, 0, "0"));
+    priority_queue<dpair> que;
     vector<bool> vis(graph.size(), false);
-    while (!pq.empty())
+    int dest = 5;
+
+    dpair root(src, -1, 0, 0, to_string(src) + "");
+    que.push(root);
+
+    while (que.size() > 0)
     {
-        dpair rpair = pq.top();
-        pq.pop();
+        dpair rpair = que.top();
+        que.pop();
+
+        if (vis[rpair.vtx])
+            continue;
+
+        if (rpair.vtx == dest)
+            cout << rpair.psf << " -> " << rpair.wsf << endl;
+
         if (rpair.pvtx != -1)
-        {
-            addEdge(rpair.vtx, rpair.pvtx, rpair.wt);
-        }
+            addEdge2(rpair.vtx, rpair.pvtx, rpair.wt);
 
         vis[rpair.vtx] = true;
         for (Edge *e : graph[rpair.vtx])
         {
             if (!vis[e->v])
             {
-                pq.push(dpair(e->v, rpair.vtx, e->w, rpair.wsf + e->w, rpair.psf + " " + to_string(e->v)));
+                dpair npair(e->v, rpair.vtx, e->w, rpair.wsf + e->w, rpair.psf + " " + to_string(e->v));
+                que.push(npair);
             }
         }
     }
 
-    display();
+    display2();
 }
+
+
 
 void solve()
 {
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 6; i++)
     {
         vector<Edge *> ar;
-        vector<Edge *> ar1;
         graph.push_back(ar);
-        dgraph.push_back(ar);
+
+        vector<Edge *> ar1;
+        dgraph.push_back(ar1);
     }
 
-    addEdge(0, 1, 10);
-    addEdge(1, 2, 10);
-    addEdge(2, 3, 40);
-    addEdge(0, 3, 10);
-    addEdge(3, 4, 2);
-    addEdge(4, 5, 2);
-    addEdge(5, 6, 8);
-    addEdge(4, 6, 3);
+    // graph_01===================
+    // addEdge(0, 1, 10);
+    // addEdge(1, 2, 10);
+    // addEdge(2, 3, 40);
+    // addEdge(0, 3, 10);
+    // addEdge(3, 4, 2);
+    // addEdge(4, 5, 2);
+    // addEdge(5, 6, 8);
+    // addEdge(4, 6, 3);
 
+    // removeVtx(3);
     // addEdge(2, 5, 13);
 
+    // graph_02===================
     // addEdge(0, 1, 10);
     // addEdge(0, 2, 10);
     // addEdge(2, 3, 40);
@@ -386,7 +431,17 @@ void solve()
     // addEdge(3, 4, 2);
     // addEdge(1, 3, 2);
 
-    // removeVtx(3);
+    // graph_03===================
+
+    addEdge(0, 1, 5);
+    addEdge(0, 2, 2);
+    addEdge(1, 3, 4);
+    addEdge(1, 2, 8);
+    addEdge(2, 4, 7);
+    addEdge(1, 4, 2);
+    addEdge(3, 4, 6);
+    addEdge(3, 5, 3);
+    addEdge(4, 5, 1);
 
     // vector<bool> vis(7, false);
     // cout<<hashPath(0,6,vis,"")<<endl;
@@ -408,7 +463,7 @@ void solve()
     //         cout << (boolalpha) << bipartite(i, vis) << endl;
     // }
 
-    dijikstra();
+    // dijikstra(0);
 }
 
 int main()
