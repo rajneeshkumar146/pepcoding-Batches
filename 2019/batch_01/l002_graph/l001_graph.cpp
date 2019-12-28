@@ -397,7 +397,22 @@ void dijikstra(int src)
     display2();
 }
 
+int QueenBoxPermu_01(vector<bool> &boxes, int tnq, int qpsf, String ans)
+{
+    if (qpsf == tnq)
+    {
+        cout << ans << endl;
+        return 1;
+    }
 
+    int count = 0;
+    for (int i = 0; i < boxes.size(); i++)
+    {
+        count += QueenBoxPermu_01(boxes, tnq, qpsf + 1, ans + "b" + i + "q" + qpsf);
+    }
+
+    return count;
+}
 
 void solve()
 {
