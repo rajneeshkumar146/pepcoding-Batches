@@ -24,11 +24,11 @@ vector<string> floodFill_returnType(int sr, int sc, int er, int ec, int len, vec
     {
         for (int rad = 1; rad <= len; rad++)
         {
-            int x = sr + rad*dir[d][0];
-            int y = sc + rad*dir[d][1];
+            int x = sr + rad * dir[d][0];
+            int y = sc + rad * dir[d][1];
             if (isLocationSafe(board, x, y))
             {
-                vector<string> recAns = floodFill_returnType(x, y, er, ec, len,board, dir, path);
+                vector<string> recAns = floodFill_returnType(x, y, er, ec, len, board, dir, path);
                 for (string s : recAns)
                 {
                     myAns.push_back(path[d] + s);
@@ -68,6 +68,46 @@ int floodFill_voidType(int sr, int sc, int er, int ec, int len, vector<vector<in
     return count;
 }
 
+bool nkight(vector<vector<int>> &board, int x, int y, int move, vector<vector<int>> &dir)
+{
+    if (move == board.size() * board[0].size())
+    {
+        for(vector<int>& ar: board){
+            for(int ele: ar){
+                cout<<ele<<" ";
+            }
+            cout<<endl;
+        }
+
+        return true;
+    }
+
+    bool res = false;
+    
+    for (int d = 0; d < dir.size(); d++)
+    {
+        int r = x + dir[d][0];
+        int c = y + dir[d][1];
+        if (r >= 0 && c >= 0 && r < board.size() && c < board[0].size() && board[r][c] == -1)
+        {
+    board[r][c]=move;
+            res = res || nkight(board, r, c, move + 1, dir);
+            board[r][c]=-1;
+
+        }
+    }
+    board[x][y]=-1;
+
+    return res;
+}
+
+void knight(){
+    vector<vector<int>> board(8, vector<int>(8, -1));
+    vector<vector<int>> dir = {{2,1}, {1,2}, {-1,2},{-2,1}, {-2,-1}, {-1,-2},{1,-2},{2,-1}};
+    board[0][0]=0;
+    nkight(board,0,0,1,dir);
+}
+
 void floodFill()
 {
     vector<vector<int>> board(3, vector<int>(3, 0));
@@ -87,7 +127,8 @@ void floodFill()
 
 void solve()
 {
-    floodFill();
+    // floodFill();
+    knight();
 }
 
 int main()

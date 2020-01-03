@@ -92,8 +92,81 @@ void coinChange()
     // cout << coinCombiWithouRepe(arr, 0, tar, "") << endl;
 }
 
+// lqpl = last queen place location.
+// qpsf = queen placed so far.
+int queenPermu(int nbox, int idx, int qpsf, int tnq, vector<bool> &vis, string ans)
+{
+    if (idx == nbox || qpsf == tnq)
+    {
+        if (qpsf == tnq)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    if (!vis[idx])
+    {
+        vis[idx] = true;
+        count += queenPermu(nbox, 0, qpsf + 1, tnq, vis, ans + "b" + to_string(idx) + "q" + to_string(qpsf));
+        vis[idx] = false;
+    }
+    count += queenPermu(nbox, idx + 1, qpsf, tnq, vis, ans);
+    return count;
+}
+
+int queenPermu2(int nbox, int qpsf, int tnq, vector<bool> &vis, string ans)
+{
+    if (qpsf == tnq)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = 0; i < nbox; i++)
+        if (!vis[i])
+        {
+            vis[i] = true;
+            count += queenPermu2(nbox, qpsf + 1, tnq, vis, ans + "b" + to_string(i) + "q" + to_string(qpsf));
+            vis[i] = false;
+        }
+    return count;
+}
+
+int queenCombi(int nbox, int lqpl, int qpsf, int tnq, string ans)
+{
+    if (lqpl == nbox || qpsf == tnq)
+    {
+        if (qpsf == tnq)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    count += queenCombi(nbox, lqpl + 1, qpsf + 1, tnq, ans + "b" + to_string(lqpl) + "q" + to_string(qpsf));
+    count += queenCombi(nbox, lqpl + 1, qpsf, tnq, ans);
+
+    return count;
+}
+
+void queen()
+{
+    // cout << queenCombi(5, 0, 0, 3, "") << endl;
+
+    vector<bool> vis(5, false);
+    // cout << queenPermu(5, 0, 0, 3, vis, "") << endl;
+    cout << queenPermu2(5, 0, 3, vis, "") << endl;
+}
+
 int main()
 {
-    coinChange();
+    // coinChange();
+    queen();
     return 0;
 }
