@@ -186,7 +186,7 @@ int mazePathMultiDP(int sr, int sc, int er, int ec)
     return dp[0][0];
 }
 
-vector<vector<int>> dirArray = {{0, 1}, {1, 0},{1,1}};
+vector<vector<int>> dirArray = {{0, 1}, {1, 0}, {1, 1}};
 
 int minCost(vector<vector<int>> &costArray, int sr, int sc, vector<vector<int>> &dp)
 {
@@ -285,6 +285,63 @@ void pathType()
     }
 }
 
+//===================================
+
+int minJumps(vector<int> &arr)
+{
+    vector<int> dp(arr.size(), 1e6);
+    dp[arr.size() - 1] = 0;
+
+    for (int i = arr.size() - 2; i >= 0; i--)
+    {
+        int min_ = (int)1e6;
+        for (int j = 1; j <= arr[i] && i + j < arr.size(); j++)
+        {
+            min_ = min(min_, dp[i + j]);
+        }
+        dp[i] = min_ + 1;
+    }
+    return dp[0];
+}
+
+int PairAndSingle(int n)
+{
+    vector<int> dp(n + 1, 0);
+    dp[1] = 1;
+    dp[2] = 2;
+    for (int i = 3; i <= n; i++)
+    {
+        dp[i] += dp[i - 1];           // single
+        dp[i] += dp[i - 2] * (i - 1); //pairUp ways.
+    }
+
+    return dp[n];
+}
+
+int PairAndSingle2(int n)
+{
+
+    int a = 1;
+    int b = 2;
+    int c = 0;
+    for (int i = 3; i <= n; i++)
+    {
+        c = b + a * (i - 1); // f(n)=f(n-1) + f(n-2) * (n-1).
+        a = b;
+        b = c;
+    }
+
+    return c;
+}
+
+void minType()
+{
+    vector<int> jumps = {0, 3, 0, 4, 0, 0, 2, 1, 1, 0};
+    // cout<<minJumps(jumps)<<endl;
+    // cout<<PairAndSingle(5)<<endl;
+    cout << PairAndSingle2(5) << endl;
+}
+
 void solve()
 {
     // vector<vector<int>> a = {{1, 1}, {1, 0}};
@@ -293,7 +350,8 @@ void solve()
     // power(a, I, n + 1);
     // cout << a[1][1] << endl;
 
-    pathType();
+    // pathType();
+    minType();
 }
 
 int main()
