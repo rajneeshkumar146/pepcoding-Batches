@@ -486,6 +486,7 @@ bool isSafeToPlaceQueen(vector<vector<bool>> &boxes, int x, int y)
                 return false;
         }
     }
+    
     return true;
 }
 
@@ -983,9 +984,12 @@ void solve()
     // coinChange();
     queenBox();
     // nqueen();
+<<<<<<< HEAD
+=======
     // crypto();
     // sudoku();
     // crossWord();
+>>>>>>> 95c1ad7037670218b089696c7d427b41e6c3abee
 }
 
 int main()
