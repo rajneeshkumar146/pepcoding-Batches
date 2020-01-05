@@ -322,8 +322,14 @@ bool isSafe(int x, int y, vector<vector<bool>> &board)
     if (x < 0 || y < 0 || x >= board.size() || y >= board[0].size() || board[x][y])
         return false;
     return true;
+<<<<<<< HEAD
+}                    
+
+    vector<vector<int>>direction = {{0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}};
+=======
 }
 vector<vector<int>> direction = {{0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}};
+>>>>>>> refs/remotes/origin/master
 vector<string> dir = {"R", "1", "U", "2", "L", "3", "D", "4"};
 
 int floodFill(int sr, int sc, int er, int ec, vector<vector<bool>> &board, string ans)
@@ -339,8 +345,8 @@ int floodFill(int sr, int sc, int er, int ec, vector<vector<bool>> &board, strin
 
     for (int d = 0; d < 8; d++)
     {
-        int y = sr + direction[d][0];
-        int x = sc + direction[d][1];
+        int x = sr + direction[d][0];
+        int y = sc + direction[d][1];
 
         if (isSafe(x, y, board))
         {
