@@ -1,5 +1,11 @@
 #include <iostream>
 #include <vector>
+
+#define vi vector<int>
+#define vvi vector<vi>
+#define vb vector<bool>
+#define vvb vector<vb>
+
 using namespace std;
 
 void multiplication(vector<vector<int>> &a, vector<vector<int>> &b)
@@ -334,12 +340,102 @@ int PairAndSingle2(int n)
     return c;
 }
 
+int divideInKGroups(int n, int k)
+{
+    vector<vector<int>> dp(k + 1, vector<int>(n + 1, 0));
+    dp[0][0] = 1;
+    for (int i = 1; i <= k; i++)
+    {
+        for (int j = i; j <= n; j++)
+        {
+            dp[i][j] += dp[i - 1][j - 1] + dp[i][j - 1] * i;
+        }
+    }
+    return dp[k][n];
+}
+
+vector<vector<bool>> isPali(string str)
+{
+    vector<vector<bool>> isPlaidrome(str.length(), vector<bool>(str.length(), false));
+
+    for (int gap = 0; gap < str.length(); gap++)
+    {
+        for (int i = 0, j = gap; j < str.length(); j++, i++)
+        {
+            if (gap == 0)
+            {
+                isPlaidrome[i][j] = true;
+            }
+            else if (str[i] == str[j])
+            {
+                if (gap == 1)
+                    isPlaidrome[i][j] = true;
+                else if (isPlaidrome[i + 1][j - 1])
+                    isPlaidrome[i][j] = true;
+            }
+        }
+    }
+
+    return isPlaidrome;
+}
+
+int lpSubstring(string str)
+{
+    vector<vector<int>> dp(str.length(), vector<int>(str.length(), 0));
+    vvb isPalindrome = isPali(str);
+
+    for (int gap = 0; gap < str.length(); gap++)
+    {
+        for (int i = 0, j = gap; j < str.length(); j++, i++)
+        {
+            if (gap == 0)
+            {
+                dp[i][j] = 1;
+            }
+            else if (gap == 1 && str[i] == str[j])
+            {
+                dp[i][j] = 2;
+            }
+            else if (str[i] == str[j] && isPalindrome[i + 1, j - 1])
+            {
+                dp[i][j] = dp[i + 1][j - 1] + 2;
+            }
+            else
+            {
+                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+
+    return dp[0][str.length() - 1];
+}
+
+int lpSubsequence(string str)
+{
+    vector<vector<int>> dp(str.length(), vector<int>(str.length(), 0));
+
+    for (int gap = 0; gap < str.length(); gap++)
+    {
+        for (int i = 0, j = gap; j < str.length(); j++, i++)
+        {
+            if (gap == 0)
+                dp[i][j] = 1;
+            else if (str[i] == str[j])
+                dp[i][j] = dp[i + 1][j - 1] + 2;
+            else
+                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]);
+        }
+    }.
+    return dp[0][str.length() - 1];
+}
+
 void minType()
 {
     vector<int> jumps = {0, 3, 0, 4, 0, 0, 2, 1, 1, 0};
     // cout<<minJumps(jumps)<<endl;
     // cout<<PairAndSingle(5)<<endl;
-    cout << PairAndSingle2(5) << endl;
+    // cout << PairAndSingle2(5) << endl;
+    cout << divideInKGroups(6, 4) << endl;
 }
 
 void solve()
