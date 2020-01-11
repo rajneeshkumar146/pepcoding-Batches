@@ -450,7 +450,7 @@ void queens()
     // cout << queen2DCombi(board, 0, 10, "") << endl;
     // cout << queen2DPermu(board, 0, 4, "") << endl;
 
-    int r = 15, c = 15;
+    int r = 10, c = 10;
     // vb col(c, false);
     // vb diag(r + c - 1, false);
     // vb adiag(r + c - 1, false);
@@ -463,11 +463,220 @@ void queens()
     // cout << calls << endl;
 }
 
+void display(vvi &board)
+{
+    for (vi ar : board)
+    {
+        for (int ele : ar)
+        {
+            cout << ele << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+vi row(9, 0);
+vi col(9, 0);
+vvi mat(3, vi(3, 0));
+
+int sudoku_01(vvi &board, vi &calls, int idx)
+{
+    if (idx == calls.size())
+    {
+        display(board);
+        return 1;
+    }
+
+    int x = calls[idx] / 9;
+    int y = calls[idx] % 9;
+    int count = 0;
+    for (int num = 1; num <= 9; num++)
+    {
+        int mask = 1 << num;
+        if (!(row[x] & mask) && !(col[y] & mask) && !(mat[x / 3][y / 3] & mask))
+        {
+            board[x][y] = num;
+            row[x] ^= mask;
+            col[y] ^= mask;
+            mat[x / 3][y / 3] ^= mask;
+
+            count += sudoku_01(board, calls, idx + 1);
+
+            board[x][y] = 0;
+            row[x] ^= mask;
+            col[y] ^= mask;
+            mat[x / 3][y / 3] ^= mask;
+        }
+    }
+    return count;
+}
+
+void sudoku()
+{
+    vvi board = {{0, 0, 6, 0, 0, 8, 0, 0, 0},
+                 {5, 2, 0, 0, 0, 0, 0, 0, 0},
+                 {0, 8, 7, 0, 0, 0, 0, 3, 1},
+                 {0, 0, 3, 0, 1, 0, 0, 8, 0},
+                 {9, 0, 0, 8, 6, 3, 0, 0, 5},
+                 {0, 5, 0, 0, 9, 0, 6, 0, 0},
+                 {1, 3, 0, 0, 0, 0, 2, 5, 0},
+                 {0, 0, 0, 0, 0, 0, 0, 7, 4},
+                 {0, 0, 5, 2, 0, 6, 3, 0, 0}};
+
+    vi calls;
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            if (board[i][j] == 0)
+                calls.push_back(i * 9 + j);
+            else
+            {
+                int mask = 1 << board[i][j];
+                row[i] |= mask;
+                col[j] |= mask;
+                mat[i / 3][j / 3] |= mask;
+            }
+        }
+    }
+    cout << sudoku_01(board, calls, 0) << endl;
+}
+
+vector<vector<char>> board = {
+    {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+    {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+    {'+', '-', '-', '-', '-', '-', '-', '-', '+', '+'},
+    {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+    {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+    {'+', '-', '-', '-', '-', '-', '-', '+', '+', '+'},
+    {'+', '-', '+', '+', '+', '-', '+', '+', '+', '+'},
+    {'+', '+', '+', '+', '+', '-', '+', '+', '+', '+'},
+    {'+', '+', '+', '+', '+', '-', '+', '+', '+', '+'},
+    {'+', '+', '+', '+', '+', '+', '+', '+', '+', '+'}};
+
+bool isSafePWH(int x, int y, string word)
+{
+    for (int i = 0; i < word.size(); i++)
+    {
+        if (board[x][y + i] != '-' && board[x][y + i] != word[i])
+            return false;
+    }
+    return true;
+}
+
+vb PWH(int x, int y, string word)
+{
+    vb loc(word.size(), false);
+    for (int i = 0; i < word.size(); i++)
+    {
+        if (board[x][y] == '-')
+        {
+            loc[i] = true;
+            board[x][y + i] = word[i];
+        }
+    }
+}
+
+void UnPWH(int x, int y, vb &loc)
+{
+    for (int i = 0; i < loc.size(); i++)
+    {
+        if (loc[i])
+        {
+            board[x][y + i] = '-';
+        }
+    }
+}
+
+bool isSafePWV(int x, int y, string word)
+{
+    for (int i = 0; i < word.size(); i++)
+    {
+        if (board[x + i][y] != '-' && board[x + i][y] != word[i])
+            return false;
+    }
+    return true;
+}
+
+vb PWV(int x, int y, string word)
+{
+    vb loc(word.size(), false);
+    for (int i = 0; i < word.size(); i++)
+    {
+        if (board[x][y] == '-')
+        {
+            loc[i] = true;
+            board[x + i][y] = word[i];
+        }
+    }
+}
+
+void UnPWV(int x, int y, vb &loc)
+{
+    for (int i = 0; i < loc.size(); i++)
+    {
+        if (loc[i])
+        {
+            board[x + i][y] = '-';
+        }
+    }
+}
+
+int crossWord(vector<string> &arr, int idx)
+{
+    if (idx == arr.size())
+    {
+        for (int i = 0; i < board.size(); i++)
+        {
+            for (int j = 0; j < board[0].size(); j++)
+            {
+                cout << board[i][j] << " ";
+            }
+            cout << endl;
+        }
+        return 1;
+    }
+
+    string word = arr[idx];
+    int count = 0;
+    for (int i = 0; i < board.size(); i++)
+    {
+        for (int j = 0; j < board[0].size(); j++)
+        {
+            if (board[i][j] == '-' || board[i][j] == word[0])
+            {
+                if (isSafePWH(i, j, word))
+                {
+                    vb loc = PWH(i, j, word);
+                    count += crossWord(arr, idx + 1);
+                    UnPWH(i, j, loc);
+                }
+
+                if (isSafePWV(i, j, word))
+                {
+                    vb loc = PWV(i, j, word);
+                    count += crossWord(arr, idx + 1);
+                    UnPWV(i, j, loc);
+                }
+            }
+        }
+        return count;
+    }
+}
+
+void crossW()
+{
+    vector<string> words = {"agra", "norway", "england", "gwalior"};
+    cout << crossWord(words, 0) << endl;
+}
+
 void solve()
 {
     // basicQues();
     // combiPermu();
-    queens();
+    // queens();
+    // sudoku();
+    crossW();
 }
 
 int main()

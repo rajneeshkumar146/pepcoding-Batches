@@ -92,11 +92,12 @@ bool nkight(vector<vector<int>> &board, int x, int y, int move, vector<vector<in
         {
     board[r][c]=move;
             res = res || nkight(board, r, c, move + 1, dir);
-            board[r][c]=-1;
+            board[r][c]=-1;0-
+            
 
         }
     }
-    board[x][y]=-1;
+    
 
     return res;
 }
