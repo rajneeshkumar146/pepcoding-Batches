@@ -86,8 +86,8 @@ bool nkight(vector<vector<int>> &board, int x, int y, int move, vector<vector<in
     
     for (int d = 0; d < dir.size(); d++)
     {
-        int r = x + dir[d][0];
-        int c = y + dir[d][1];
+        int r = x + 1*dir[d][0];
+        int c = y + 1*dir[d][1];
         if (r >= 0 && c >= 0 && r < board.size() && c < board[0].size() && board[r][c] == -1)
         {
     board[r][c]=move;
