@@ -1,6 +1,11 @@
 #include <iostream>
 #include <vector>
 
+#define vi vector<int>
+#define vvi vector<vi>
+#define vb vector<bool>
+#define vvb vector<vb>
+
 using namespace std;
 
 int subseq(string str, string ans)
@@ -300,23 +305,26 @@ int queenPermu(vector<bool> &box, int qpsf, int tnq, string ans)
     return count;
 }
 
-bool isSafeToPlacQueen(vector<vector<bool>> & board,int x,int y)
+bool isSafeToPlacQueen(vector<vector<bool>> &board, int x, int y)
 {
-    vector<vector<int>> dir={{-1,0},{0,-1} ,{-1,-1},{-1,1},
-                             {1,0},{0,1} ,{1,1},{1,-1}};
-    for(int i=0;i<dir.size();i++){
-        for(int rad=1;rad<max(board.size(),board[0].size());rad++){
-            int nx=x+ rad*dir[i][0];
-            int ny=y+ rad*dir[i][1];
-            if(nx<0 || ny<0 || nx>=board.size() || ny>=board[0].size()) break;
-            if(board[nx][ny]) return false;
+    vector<vector<int>> dir = {{-1, 0}, {0, -1}, {-1, -1}, {-1, 1}, {1, 0}, {0, 1}, {1, 1}, {1, -1}};
+    for (int i = 0; i < dir.size(); i++)
+    {
+        for (int rad = 1; rad < max(board.size(), board[0].size()); rad++)
+        {
+            int nx = x + rad * dir[i][0];
+            int ny = y + rad * dir[i][1];
+            if (nx < 0 || ny < 0 || nx >= board.size() || ny >= board[0].size())
+                break;
+            if (board[nx][ny])
+                return false;
         }
     }
     return true;
 }
 
 // lqpl= last queen placed location
-int calls=0;
+int calls = 0;
 int queen2DCombi(vector<vector<bool>> &board, int lqpl, int tnq, string ans)
 {
     if (tnq == 0)
@@ -367,29 +375,69 @@ int queen2DPermu(vector<vector<bool>> &board, int qpsf, int tnq, string ans)
     return count;
 }
 
-int queen(vector<vector<bool>> &board, int row,int tnq, string ans){
-if(row==board.size() || tnq==0){
-    if ( tnq==0)
+int queen2(int n, int r, int tnq, int &col, int &diag, int &adiag, string ans)
+{
+    if (r == n || tnq == 0)
     {
-        cout << ans << endl;
-        return 1;
-    }
-    return 0;
-}
-int count=0;
-calls++;
-for(int col=0;col<board[0].size();col++){
-     if (isSafeToPlacQueen(board, row, col))
+        if (tnq == 0)
         {
-            board[row][col] = true;
-            count += queen(board, row + 1, tnq-1,
-                                  ans + "(" + to_string(row) + ", " + to_string(col) + ") ");
-            board[row][col] = false;
+            cout << ans << endl;
+            return 1;
         }
+        return 0;
+    }
+    int count = 0;
+    for (int c = 0; c < n; c++)
+    {
+        int w = 1 << c;
+        int x = 1 << (r + c);
+        int y = 1 << (r - c + n - 1);
+        if (!(col & w) && !(diag & x) && !(adiag & y))
+        {
+            col ^= w;
+            diag ^= x;
+            adiag ^= y;
 
+            count += queen2(n, r + 1, tnq - 1, col, diag, adiag,
+                            ans + "(" + to_string(r) + ", " + to_string(c) + ") ");
+            col ^= w;
+            diag ^= x;
+            adiag ^= y;
+        }
+    }
+
+    return count;
 }
 
-return count;
+int queen(int r, int tnq, vb &col, vb &diag, vb &adiag, string ans)
+{
+    int n = col.size();
+    if (r == n || tnq == 0)
+    {
+        if (tnq == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+    int count = 0;
+    for (int c = 0; c < n; c++)
+    {
+        if (!col[c] && !diag[r + c] && !adiag[r - c + n - 1])
+        {
+            col[c] = true;
+            diag[r + c] = true;
+            adiag[r - c + n - 1] = true;
+            count += queen(r + 1, tnq - 1, col, diag, adiag,
+                           ans + "(" + to_string(r) + ", " + to_string(c) + ") ");
+            col[c] = false;
+            diag[r + c] = false;
+            adiag[r - c + n - 1] = false;
+        }
+    }
+
+    return count;
 }
 
 void queens()
@@ -398,18 +446,237 @@ void queens()
     // cout << queenCombi(16, 0, 0, 4, "") << endl;
     // cout<<queenPermu(box,0,3,"")<<endl;
 
-    vector<vector<bool>> board(10, vector<bool>(10, false));
-    cout << queen2DCombi(board, 0, 10, "") << endl;
+    // vector<vector<bool>> board(10, vector<bool>(10, false));
+    // cout << queen2DCombi(board, 0, 10, "") << endl;
     // cout << queen2DPermu(board, 0, 4, "") << endl;
-    // cout << queen(board, 0, 10, "") << endl;
-    cout<<calls<<endl;
+
+    int r = 10, c = 10;
+    // vb col(c, false);
+    // vb diag(r + c - 1, false);
+    // vb adiag(r + c - 1, false);
+    // cout << queen(0, r, col, diag, adiag, "") << endl;
+
+    int col = 0;
+    int diag = 0;
+    int adiag = 0;
+    cout << queen2(c, 0, r, col, diag, adiag, "") << endl;
+    // cout << calls << endl;
+}
+
+void display(vvi &board)
+{
+    for (vi ar : board)
+    {
+        for (int ele : ar)
+        {
+            cout << ele << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+vi row(9, 0);
+vi col(9, 0);
+vvi mat(3, vi(3, 0));
+
+int sudoku_01(vvi &board, vi &calls, int idx)
+{
+    if (idx == calls.size())
+    {
+        display(board);
+        return 1;
+    }
+
+    int x = calls[idx] / 9;
+    int y = calls[idx] % 9;
+    int count = 0;
+    for (int num = 1; num <= 9; num++)
+    {
+        int mask = 1 << num;
+        if (!(row[x] & mask) && !(col[y] & mask) && !(mat[x / 3][y / 3] & mask))
+        {
+            board[x][y] = num;
+            row[x] ^= mask;
+            col[y] ^= mask;
+            mat[x / 3][y / 3] ^= mask;
+
+            count += sudoku_01(board, calls, idx + 1);
+
+            board[x][y] = 0;
+            row[x] ^= mask;
+            col[y] ^= mask;
+            mat[x / 3][y / 3] ^= mask;
+        }
+    }
+    return count;
+}
+
+void sudoku()
+{
+    vvi board = {{0, 0, 6, 0, 0, 8, 0, 0, 0},
+                 {5, 2, 0, 0, 0, 0, 0, 0, 0},
+                 {0, 8, 7, 0, 0, 0, 0, 3, 1},
+                 {0, 0, 3, 0, 1, 0, 0, 8, 0},
+                 {9, 0, 0, 8, 6, 3, 0, 0, 5},
+                 {0, 5, 0, 0, 9, 0, 6, 0, 0},
+                 {1, 3, 0, 0, 0, 0, 2, 5, 0},
+                 {0, 0, 0, 0, 0, 0, 0, 7, 4},
+                 {0, 0, 5, 2, 0, 6, 3, 0, 0}};
+
+    vi calls;
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            if (board[i][j] == 0)
+                calls.push_back(i * 9 + j);
+            else
+            {
+                int mask = 1 << board[i][j];
+                row[i] |= mask;
+                col[j] |= mask;
+                mat[i / 3][j / 3] |= mask;
+            }
+        }
+    }
+    cout << sudoku_01(board, calls, 0) << endl;
+}
+
+vector<vector<char>> board = {
+    {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+    {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+    {'+', '-', '-', '-', '-', '-', '-', '-', '+', '+'},
+    {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+    {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+    {'+', '-', '-', '-', '-', '-', '-', '+', '+', '+'},
+    {'+', '-', '+', '+', '+', '-', '+', '+', '+', '+'},
+    {'+', '+', '+', '+', '+', '-', '+', '+', '+', '+'},
+    {'+', '+', '+', '+', '+', '-', '+', '+', '+', '+'},
+    {'+', '+', '+', '+', '+', '+', '+', '+', '+', '+'}};
+
+bool isSafePWH(int x, int y, string word)
+{
+    for (int i = 0; i < word.size(); i++)
+    {
+        if (board[x][y + i] != '-' && board[x][y + i] != word[i])
+            return false;
+    }
+    return true;
+}
+
+vb PWH(int x, int y, string word)
+{
+    vb loc(word.size(), false);
+    for (int i = 0; i < word.size(); i++)
+    {
+        if (board[x][y] == '-')
+        {
+            loc[i] = true;
+            board[x][y + i] = word[i];
+        }
+    }
+}
+
+void UnPWH(int x, int y, vb &loc)
+{
+    for (int i = 0; i < loc.size(); i++)
+    {
+        if (loc[i])
+        {
+            board[x][y + i] = '-';
+        }
+    }
+}
+
+bool isSafePWV(int x, int y, string word)
+{
+    for (int i = 0; i < word.size(); i++)
+    {
+        if (board[x + i][y] != '-' && board[x + i][y] != word[i])
+            return false;
+    }
+    return true;
+}
+
+vb PWV(int x, int y, string word)
+{
+    vb loc(word.size(), false);
+    for (int i = 0; i < word.size(); i++)
+    {
+        if (board[x][y] == '-')
+        {
+            loc[i] = true;
+            board[x + i][y] = word[i];
+        }
+    }
+}
+
+void UnPWV(int x, int y, vb &loc)
+{
+    for (int i = 0; i < loc.size(); i++)
+    {
+        if (loc[i])
+        {
+            board[x + i][y] = '-';
+        }
+    }
+}
+
+int crossWord(vector<string> &arr, int idx)
+{
+    if (idx == arr.size())
+    {
+        for (int i = 0; i < board.size(); i++)
+        {
+            for (int j = 0; j < board[0].size(); j++)
+            {
+                cout << board[i][j] << " ";
+            }
+            cout << endl;
+        }
+        return 1;
+    }
+
+    string word = arr[idx];
+    int count = 0;
+    for (int i = 0; i < board.size(); i++)
+    {
+        for (int j = 0; j < board[0].size(); j++)
+        {
+            if (board[i][j] == '-' || board[i][j] == word[0])
+            {
+                if (isSafePWH(i, j, word))
+                {
+                    vb loc = PWH(i, j, word);
+                    count += crossWord(arr, idx + 1);
+                    UnPWH(i, j, loc);
+                }
+
+                if (isSafePWV(i, j, word))
+                {
+                    vb loc = PWV(i, j, word);
+                    count += crossWord(arr, idx + 1);
+                    UnPWV(i, j, loc);
+                }
+            }
+        }
+        return count;
+    }
+}
+
+void crossW()
+{
+    vector<string> words = {"agra", "norway", "england", "gwalior"};
+    cout << crossWord(words, 0) << endl;
 }
 
 void solve()
 {
     // basicQues();
     // combiPermu();
-    queens();
+    // queens();
+    // sudoku();
+    crossW();
 }
 
 int main()

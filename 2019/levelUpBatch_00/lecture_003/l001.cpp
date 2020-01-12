@@ -325,10 +325,12 @@ string str3 = "money";
 int vis = 0;
 vector<int> maping(26, 0);
 
-int getIntFromString(string str){
-    int res=0;
-    for(int i=0;i<str.length();i++){
-        res=res*10 + maping[(str[i]-'a')];
+int getIntFromString(string str)
+{
+    int res = 0;
+    for (int i = 0; i < str.length(); i++)
+    {
+        res = res * 10 + maping[(str[i] - 'a')];
     }
     return res;
 }
@@ -337,25 +339,33 @@ int crypto(string str, int idx)
 {
     if (idx == str.length())
     {
-        int a=getIntFromString(str1);
-        int b=getIntFromString(str2);
-        int c=getIntFromString(str3);
-        if(a+b==c){
-            cout<<a<<endl<<"+"<<b<<endl<<"------"<<endl<<c<<endl<<endl;
+        int a = getIntFromString(str1);
+        int b = getIntFromString(str2);
+        int c = getIntFromString(str3);
+        if (a + b == c)
+        {
+            cout << a << endl
+                 << "+" << b << endl
+                 << "------" << endl
+                 << c << endl
+                 << endl;
             return 1;
         }
         return 0;
     }
-    int ch = str[idx]-'a';
-    int count=0;
-    for (int num = 0; num <10; num++)
+    int ch = str[idx] - 'a';
+    int count = 0;
+    for (int num = 0; num < 10; num++)
     {
         int mask = 1 << num;
         if ((vis & mask) == 0)
         {
-            if(str1[0]==str[idx] && num==0) continue;
-            if(str2[0]==str[idx] && num==0) continue;
-            if(str3[0]==str[idx] && num==0) continue;
+            if (str1[0] == str[idx] && num == 0)
+                continue;
+            if (str2[0] == str[idx] && num == 0)
+                continue;
+            if (str3[0] == str[idx] && num == 0)
+                continue;
 
             vis ^= mask;
             maping[ch] = num;
@@ -387,17 +397,185 @@ void crypto()
             ans += (char)(i + 'a');
         }
     }
-    cout<<endl<<ans<<endl;
-    cout<<crypto(ans,0)<<endl;
+    cout << endl
+         << ans << endl;
+    cout << crypto(ans, 0) << endl;
 }
 
+//======================================
 
+vector<vector<char>> board = {
+    {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+    {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+    {'+', '-', '-', '-', '-', '-', '-', '-', '+', '+'},
+    {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+    {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+    {'+', '-', '-', '-', '-', '-', '-', '+', '+', '+'},
+    {'+', '-', '+', '+', '+', '-', '+', '+', '+', '+'},
+    {'+', '+', '+', '+', '+', '-', '+', '+', '+', '+'},
+    {'+', '+', '+', '+', '+', '-', '+', '+', '+', '+'},
+    {'+', '+', '+', '+', '+', '+', '+', '+', '+', '+'}};
+
+bool canPlaceVertical(string word, int r, int c)
+{
+    if (r == 0 && word.length() != board.size())
+    {
+        if (board[r + word.length()][c] != '+')
+            return false;
+    }
+    else if ((r + word.length()) == board.size() && word.length() != board.size())
+    {
+        if (board[r - 1][c] != '+')
+            return false;
+    }
+    else
+    {
+        if (board[r - 1][c] != '+' || board[r + word.length()][c] != '+')
+            return false;
+    }
+
+    for (int i = 0; i < word.length(); i++)
+    {
+        if (!(board[r + i][c] == '-' || word[i] == board[r + i][c]))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+vector<bool> placeWordVertical(string word, int r, int c)
+{
+    vector<bool> pos(word.length(), false);
+    for (int i = 0; i < word.length(); i++)
+    {
+        if (board[r + i][c] == '-')
+        {
+            board[r + i][c] = word[i];
+            pos[i] = true;
+        }
+    }
+
+    return pos;
+}
+
+void unplaceWordVertical(int r, int c, vector<bool> pos)
+{
+    for (int i = 0; i < pos.size(); i++)
+    {
+        if (pos[i])
+        {
+            board[r + i][c] = '-';
+        }
+    }
+}
+
+bool canPlaceHorizontal(string word, int r, int c)
+{
+    if (c == 0 && word.length() != board[0].size())
+    {
+        if (board[r][c + word.length()] != '+')
+            return false;
+    }
+    else if ((c + word.length()) == board[0].size() && word.length() != board[0].size())
+    {
+        if (board[r][c - 1] != '+')
+            return false;
+    }
+    else
+    {
+        if (board[r][c - 1] != '+' || board[r][c + word.length()] != '+')
+            return false;
+    }
+
+    for (int i = 0; i < word.length(); i++)
+    {
+        if (!(board[r][c + i] == '-' || word[i] == board[r][c + i]))
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+vector<bool> placeWordHorizontal(string word, int r, int c)
+{
+    vector<bool> pos(word.length(), false);
+    for (int i = 0; i < word.length(); i++)
+    {
+        if (board[r][c + i] == '-')
+        {
+            board[r][c + i] = word[i];
+            pos[i] = true;
+        }
+    }
+
+    return pos;
+}
+
+void unplaceWordHorizontal(int r, int c, vector<bool> pos)
+{
+    for (int i = 0; i < pos.size(); i++)
+    {
+        if (pos[i])
+        {
+            board[r][c + i] = '-';
+        }
+    }
+}
+
+int crossWordUtil(vector<string> &words, int idx)
+{
+    if (idx == words.size())
+    {
+        for (vector<char> ar : board)
+        {
+            for (char ele : ar)
+            {
+                cout << ele << " ";
+            }
+            cout << endl;
+        }
+        return 1;
+    }
+
+    string word = words[idx];
+    int count = 0;
+    for (int i = 0; i < board.size(); i++)
+    {
+        for (int j = 0; j < board[0].size(); j++)
+        {
+
+            if (canPlaceHorizontal(word, i, j))
+            {
+                vector<bool> pos = placeWordHorizontal(word, i, j);
+                count += crossWordUtil(words, idx + 1);
+                unplaceWordHorizontal(i, j, pos);
+            }
+
+            if (canPlaceVertical(word, i, j))
+            {
+                vector<bool> pos = placeWordVertical(word, i, j);
+                count += crossWordUtil(words, idx + 1);
+                unplaceWordVertical(i, j, pos);
+            }
+        }
+    }
+    return count;
+}
+
+void crossWord()
+{
+    vector<string> words = {"agra", "norway", "england", "gwalior"};
+    cout << crossWordUtil(words, 0) << endl;
+}
 
 int main()
 {
     // coinChange();
     // queen();
     // sudoku();
-    crypto();
+    // crypto();
+    crossWord();
     return 0;
 }
