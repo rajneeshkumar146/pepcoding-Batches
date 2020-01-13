@@ -92,13 +92,106 @@ void removeVtx(int u)
     }
 }
 
+void hasPath(int src, int dest, vector<bool> &vis, string psf)
+{
+    cout << psf << endl;
+    vis[src] = true;
+    for (Edge *e : graph[src])
+    {
+        if (!vis[e->v])
+        {
+            hasPath(e->v, dest, vis, psf + to_string(e->v));
+        }
+    }
+}
+
+int allPath(int src, int dest, vector<bool> &vis, int wsf, string psf)
+{
+    if (src == dest)
+    {
+        cout << psf + " @ " + to_string(wsf) << endl;
+        return 1;
+    }
+    int count = 0;
+    // cout << psf << endl;
+    vis[src] = true;
+    for (Edge *e : graph[src])
+    {
+        if (!vis[e->v])
+        {
+            count += allPath(e->v, dest, vis, wsf + e->w, psf + to_string(e->v));
+        }
+    }
+    vis[src] = false;
+    return count;
+}
+
+int swsf = 1e8;
+string spsf = "";
+
+int lwsf = -1;
+string lpsf = "";
+
+void allSolutions(int src, int desti, vector<bool> &vis, int wsf, string psf)
+{
+    if (src == desti)
+    {
+        if (wsf < swsf)
+        {
+            swsf = wsf;
+            spsf = psf;
+        }
+
+        if (wsf > lwsf)
+        {
+            lwsf = wsf;
+            lpsf = psf;
+        }
+    }
+
+    vis[src] = true;
+    for (Edge *e : graph[src])
+    {
+        if (!vis[e->v])
+            allSolutions(e->v, desti, vis, wsf + e->w, psf + to_string(src) + "->");
+    }
+    vis[src] = false;
+}
+
+void dfs(int src, vector<bool> &vis)
+{
+    vis[src] = true;
+    for (Edge *e : graph[src])
+        if (!vis[e->v])
+            dfs(e->v, vis);
+}
+
+void getConnectedComponents()
+{
+    vector<bool> vis(n, false);
+    int compo = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (!vis[i])
+        {
+            compo++;
+            dfs(i, vis);
+        }
+    }
+    cout << compo << endl;
+}
+
 void solve()
 {
     constructGraph();
     //    removeEdge(3,4);
-    vector<bool> vis(n, false);
+    // vector<bool> vis(n, false);
     //    hasPath(0,6,vis,to_string(0) + "");
-    cout << allPath(0, 6, vis, 0, to_string(0) + "") << endl;
+    // cout << allPath(0, 6, vis, 0, to_string(0) + "") << endl;
+
+    // allSolutions(0, 6, vis, 0, "");
+    // cout << spsf << " @ " << swsf << endl;
+    // cout << lpsf << " @ " << lwsf << endl;
 }
 
 int main()
