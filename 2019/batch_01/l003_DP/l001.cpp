@@ -550,6 +550,28 @@ int coinChangeCombi(vector<int> &coins, int tar)
     return dp[tar];
 }
 
+int knapsack(vi &cost, vi &weight, int tar)
+{
+    vvi dp(cost.size(), vi(tar + 1, 0));
+    for (int i = 0; i < cost.size(); i++)
+    {
+        for (int j = 1; j <= tar; j++)
+        {
+            if (i == 0)
+                dp[i][j] = j - weight[i] >= 0 ? cost[i] : 0;
+            else
+            {
+                int taken = 0;
+                if (j - weight[i] >= 0)
+                    taken = dp[i - 1][j - weight[i]] + cost[i];
+                dp[i][j] = max(dp[i - 1][j], taken);
+                // dp[i][j] =dp[i-1][j] || (j-coin[i]>=0 && dp[i-1][j-coin[i]]); 
+            }
+        }
+    }
+    return dp[cost.size() - 1][tar];
+}
+
 void set2()
 {
 

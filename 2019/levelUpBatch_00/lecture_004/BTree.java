@@ -1,24 +1,26 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class BTree {
 
     public static void main(String[] args) {
         int[] arr = { 10, 20, 30, -1, -1, 40, -1, -1, 50, 60, 80, -1, -1, -1, 70, 90, -1, 100, -1, -1, -1 };
         Node root = create(arr);
-        // display(root);
+        display(root);
         solve(root);
 
     }
 
     public static void solve(Node root) {
         // LCA(root);
-        basic(root);
+        // basic(root);
     }
 
     public static void basic(Node root) {
-        System.out.println(diameter(root));
-        System.out.println(diameter2(root)[0]);
-
+        // System.out.println(diameter(root));
+        // System.out.println(diameter2(root)[0]);
+        // levelOder_01(root);
+        levelOder_02(root);
     }
 
     public static void LCA(Node root) {
@@ -169,9 +171,185 @@ public class BTree {
         int left = diameter3(node.left);
         int right = diameter3(node.right);
 
-        int myAns = new int[2];
+        int[] myAns = new int[2];
         dia = Math.max(dia, left + right + 1);
         return Math.max(left, right) + 1;
+
+    }
+
+    public static void levelOder_01(Node root) {
+        LinkedList<Node> que = new LinkedList<>();
+        que.addLast(root);
+        int level = 0;
+
+        while (que.size() > 0) {
+            System.out.print("Level: " + level + " -> ");
+            int size = que.size();
+            while (size-- > 0) {
+                Node rnode = que.removeFirst();
+                System.out.print(rnode.data + " ");
+                if (rnode.left != null)
+                    que.addLast(rnode.left);
+                if (rnode.right != null)
+                    que.addLast(rnode.right);
+            }
+            level++;
+            System.out.println();
+        }
+
+    }
+
+    public static void levelOder_02(Node root) {
+        LinkedList<Node> que = new LinkedList<>();
+        que.addLast(root);
+        que.addLast(null);
+
+        int level = 0;
+
+        System.out.print("Level: " + level + " -> ");
+        while (que.size() != 1) {
+
+            Node rnode = que.removeFirst();
+            System.out.print(rnode.data + " ");
+            if (rnode.left != null)
+                que.addLast(rnode.left);
+            if (rnode.right != null)
+                que.addLast(rnode.right);
+            if (que.getFirst() == null) {
+                que.addLast(null);
+                que.removeFirst();
+
+                level++;
+                System.out.println();
+                System.out.print("Level: " + level + " -> ");
+            }
+        }
+
+    }
+
+    // ==================================
+
+    public static void set2() {
+
+    }
+
+    public static void kaway(Node node, int k, Node rnode) { // rnode = return node
+        if (node == null)
+            return;
+        if (node == rnode)
+            return;
+        if (k == 0) {
+            System.out.print(node.data + " ");
+            return;
+        }
+
+        kaway(node.left, k - 1, rnode);
+        kaway(node.right, k - 1, rnode);
+
+    }
+
+    public static void kfar_01(Node node, int k, int data) {
+        ArrayList<Node> path = rootToNodePath(node, data);
+
+        Node rnode = null;
+        for (int i = 0; i < path.size(); i++) {
+            kaway(path.get(i), k - i, rnode);
+            rnode = path.get(i);
+        }
+    }
+
+    public static int kfar_02(Node node, int k, int data) {
+        if (node == null)
+            return -1;
+        if (node.data == data) {
+            kaway(node, k, null);
+            return 1;
+        }
+
+        int ld = kfar_02(node.left, k, data);
+        if (ld != -1) {
+            if (ld == k) {
+                System.out.print(node.data + " ");
+            } else {
+                kaway(node, k - ld, node.left);
+            }
+            return ld + 1;
+        }
+
+        int rd = kfar_02(node.right, k, data);
+        if (rd != -1) {
+            if (rd == k) {
+                System.out.print(node.data + " ");
+            } else {
+                kaway(node, k - rd, node.right);
+            }
+            return rd + 1;
+        }
+
+        return -1;
+
+    }
+
+    public static class allPair {
+        int height = 0;
+        int size = 0;
+        boolean find = false;
+
+        int ceil = (int) 1e8;
+        int floor = (int) -1e8;
+
+        Node pred = null;
+        Node succ = null;
+        Node prev = null;
+    }
+
+    public static void allSol(Node node, int level, int data, allPair sol) {
+        if (node == null)
+            return;
+
+        sol.size++;
+        sol.height = Math.max(sol.height, levle);
+        sol.find = sol.find || node.data == data;
+
+        if (node.data > data && node.data < sol.ceil)
+            sol.ceil = node.data;
+
+        if (node.data < data && node.data > sol.floor)
+            sol.floor = node.data;
+
+        if (node.data == data && sol.pred == null) {
+            sol.pred = sol.prev;
+        }
+
+        if (sol.prev != null && sol.succ == null && prev.data == data) {
+            sol.suc = node;
+        }
+
+        sol.prev = node;
+
+        allSol(node.left, level + 1, data, sol);
+        allSol(node.right, level + 1, data, sol);
+
+    }
+
+    static int prev = (int) -1e8;
+
+    public static boolean isBST(Node node) {
+        if (node == null)
+            return true;
+
+        if (!isBST(node.left))
+            return false;
+
+        if (prev > node.data) {
+            return false;
+        }
+        prev = node.data;
+
+        if (!isBST(node.right))
+            return false;
+
+        return true;
 
     }
 
