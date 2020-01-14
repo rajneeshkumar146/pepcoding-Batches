@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 using namespace std;
 
 class Edge
@@ -15,7 +16,7 @@ public:
     }
 };
 
-int n = 7;
+int n = 10;
 vector<vector<Edge *>> graph(n, vector<Edge *>());
 
 void display()
@@ -50,6 +51,11 @@ void constructGraph()
     addEdge(4, 5, 2);
     addEdge(4, 6, 3);
     addEdge(5, 6, 8);
+
+    addEdge(2, 7, 8);
+    addEdge(7, 8, 8);
+    addEdge(8, 9, 8);
+    addEdge(7, 9, 8);
 
     display();
     cout << endl;
@@ -181,6 +187,87 @@ void getConnectedComponents()
     cout << compo << endl;
 }
 
+void bfs(int src)
+{
+    queue<int> que;
+    vector<bool> vis(n, false);
+
+    que.push(src);
+    que.push(-1);
+    int cycle = 0, level = 0;
+    int dest = 6;
+
+    while (que.size() != 1)
+    {
+        int rvtx = que.front();
+        que.pop();
+
+        if (que.front() == -1)
+        {
+            level++;
+            que.pop();
+            que.push(-1);
+            continue;
+        }
+
+        if (vis[rvtx])
+        {
+            cout << "cycle: " << ++cycle << " @ " << rvtx << endl;
+            continue;
+        }
+
+        if (rvtx == dest)
+        {
+            cout << "ypiee! i got destination at lowest no of edges from src: " << level << endl;
+        }
+
+        vis[rvtx] = true;
+        for (Edge *e : graph[rvtx])
+            if (!vis[e->v])
+                que.push(e->v);
+    }
+}
+
+void bfs2(int src)
+{
+    queue<int> que;
+    vector<bool> vis(n, false);
+
+    que.push(src);
+
+    bool isDest = false;
+    int cycle = 0, level = 0;
+    int dest = 9;
+
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int rvtx = que.front();
+            que.pop();
+
+            if (vis[rvtx])
+            {
+                cout << "cycle: " << ++cycle << " @ " << rvtx << endl;
+                continue;
+            }
+
+            if (rvtx == dest && !isDest)
+            {
+                cout << "ypiee! i got destination at lowest no of edges from src: " << level << endl;
+                isDest = true;
+            }
+
+            vis[rvtx] = true;
+            for (Edge *e : graph[rvtx])
+                if (!vis[e->v])
+                    que.push(e->v);
+        }
+        level++;
+    }
+}
+
 void solve()
 {
     constructGraph();
@@ -192,6 +279,7 @@ void solve()
     // allSolutions(0, 6, vis, 0, "");
     // cout << spsf << " @ " << swsf << endl;
     // cout << lpsf << " @ " << lwsf << endl;
+    bfs2(0);
 }
 
 int main()
