@@ -202,14 +202,13 @@ void bfs(int src)
         int rvtx = que.front();
         que.pop();
 
-        if (que.front() == -1)
+        if (rvtx == -1)
         {
             level++;
-            que.pop();
             que.push(-1);
             continue;
         }
-
+        
         if (vis[rvtx])
         {
             cout << "cycle: " << ++cycle << " @ " << rvtx << endl;
@@ -279,7 +278,7 @@ void solve()
     // allSolutions(0, 6, vis, 0, "");
     // cout << spsf << " @ " << swsf << endl;
     // cout << lpsf << " @ " << lwsf << endl;
-    bfs2(0);
+    bfs(0);
 }
 
 int main()
