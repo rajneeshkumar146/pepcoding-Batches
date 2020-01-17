@@ -14,6 +14,20 @@ public class BTree {
     public static void solve(Node root) {
         // LCA(root);
         // basic(root);
+
+        // linearTree(root);
+        // display(root);
+
+        DLL(root);
+        while (head_ != null) {
+            System.out.print(head_.data + " -> ");
+            head_ = head_.right;
+        }
+        System.out.println();
+        while (prev_ != null) {
+            System.out.print(prev_.data + " -> ");
+            prev_ = prev_.left;
+        }
     }
 
     public static void basic(Node root) {
@@ -66,6 +80,35 @@ public class BTree {
         Node nnode = new Node(arr[idx], null, null);
         idx++;
         nnode.left = create(arr);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         nnode.right = create(arr);
         return nnode;
     }
@@ -308,7 +351,7 @@ public class BTree {
             return;
 
         sol.size++;
-        sol.height = Math.max(sol.height, levle);
+        sol.height = Math.max(sol.height, level);
         sol.find = sol.find || node.data == data;
 
         if (node.data > data && node.data < sol.ceil)
@@ -321,8 +364,8 @@ public class BTree {
             sol.pred = sol.prev;
         }
 
-        if (sol.prev != null && sol.succ == null && prev.data == data) {
-            sol.suc = node;
+        if (sol.prev != null && sol.succ == null && sol.prev.data == data) {
+            sol.succ = node;
         }
 
         sol.prev = node;
@@ -350,7 +393,85 @@ public class BTree {
             return false;
 
         return true;
+    }
 
+    public static class BSTpair {
+        boolean isBst = true;
+        int count = 0;
+        int lBSTsize = 0;
+        Node lBstRoot = null;
+
+        int min = (int) 1e8;
+        int max = (int) -1e8;
+
+    }
+
+    public static BSTpair BSTSol_(Node node) {
+        if (node == null) {
+            return new BSTpair();
+        }
+
+        BSTpair lp = BSTSol_(node.left);
+        BSTpair rp = BSTSol_(node.right);
+
+        BSTpair myPair = new BSTpair();
+        myPair.count = lp.count + rp.count;
+
+        if (lp.isBst && rp.isBst && lp.max < node.data && node.data <= rp.min) {
+            myPair.count++;
+            myPair.lBSTsize = myPair.count;
+            myPair.lBstRoot = node;
+        } else {
+            myPair.isBst = false;
+            if (lp.lBSTsize > rp.lBSTsize) {
+                myPair.lBSTsize = lp.lBSTsize;
+                myPair.lBstRoot = lp.lBstRoot;
+            } else {
+                myPair.lBSTsize = rp.lBSTsize;
+                myPair.lBstRoot = rp.lBstRoot;
+            }
+        }
+
+        myPair.min = Math.min(Math.min(lp.min, rp.min), node.data);
+        myPair.max = Math.max(Math.max(lp.max, rp.max), node.data);
+
+        return myPair;
+    }
+
+    public static Node linearTree(Node node) {
+        if (node == null)
+            return null;
+        if (node.left == null && node.right == null)
+            return node;
+
+        Node leftTail = linearTree(node.left);
+        Node rightTail = linearTree(node.right);
+
+        if (leftTail == null)
+            node.left = node.right;
+        else {
+            leftTail.left = node.right;
+        }
+        node.right = null;
+        return rightTail != null ? rightTail : leftTail;
+    }
+
+    static Node prev_ = null;
+    static Node head_ = null;
+
+    public static void DLL(Node node) {
+        if (node == null)
+            return;
+
+        DLL(node.left);
+        if (prev_ == null)
+            head_ = node;
+        else {
+            node.left = prev_;
+            prev_.right = node;
+        }
+        prev_ = node;
+        DLL(node.right);
     }
 
 }

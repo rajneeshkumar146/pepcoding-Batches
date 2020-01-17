@@ -565,11 +565,142 @@ int knapsack(vi &cost, vi &weight, int tar)
                 if (j - weight[i] >= 0)
                     taken = dp[i - 1][j - weight[i]] + cost[i];
                 dp[i][j] = max(dp[i - 1][j], taken);
-                // dp[i][j] =dp[i-1][j] || (j-coin[i]>=0 && dp[i-1][j-coin[i]]); 
+                // dp[i][j] =dp[i-1][j] || (j-coin[i]>=0 && dp[i-1][j-coin[i]]);
             }
         }
     }
     return dp[cost.size() - 1][tar];
+}
+
+int mcm_rec(int st, int end, vi &row, vi &col, vvi &dp)
+{
+    if (st == end)
+    {
+        return 0;
+    }
+
+    if (dp[st][end] != 0)
+        return dp[st][end];
+
+    int min_ = 1e8;
+    for (int cut = st; cut < end; cut++)
+    {
+        int left = mcm_rec(st, cut, row, col, dp);       //dp[st][cut]
+        int right = mcm_rec(cut + 1, end, row, col, dp); //dp[cut+1][end]
+
+        int cost = left + row[st] * col[cut] * col[end] + right;
+        min_ = min(cost, min_);
+    }
+
+    dp[st][end] = min_;
+
+    return min_;
+}
+
+string mcm_dp(vi &row, vi &col, vvi &dp)
+{
+
+    vector<vector<string>> ans(row.size(), vector<string>(row.size(), " "));
+
+    for (int gap = 0; gap < row.size(); gap++)
+    {
+        for (int st = 0, end = gap; end < row.size(); st++, end++)
+        {
+            if (gap == 0)
+            {
+                ans[st][end] = string(1, (char)('A' + st));
+                continue;
+            }
+
+            int min_ = 1e8;
+            for (int cut = st; cut < end; cut++)
+            {
+                int left = dp[st][cut];
+                int right = dp[cut + 1][end];
+
+                int cost = left + row[st] * col[cut] * col[end] + right;
+                if (cost < min_)
+                {
+                    min_ = cost;
+                    ans[st][end] = "(" + ans[st][cut] + ans[cut + 1][end] + ")";
+                }
+            }
+            dp[st][end] = min_;
+        }
+    }
+
+    for (vector<string> ar : ans)
+    {
+        for (string s : ar)
+        {
+            cout << s << " ";
+        }
+        cout << endl;
+    }
+
+    return (ans[0][row.size() - 1] + " -> " + to_string(dp[0][row.size() - 1]));
+}
+
+int minPalindromicCut(string &str, int st, int end, vvi &dp, vvb &isPali)
+{
+    if (st == end || isPali[st][end])
+        return 0;
+
+    if (dp[st][end] != 0)
+        return dp[st][end];
+
+    int min_ = 1e8;
+    for (int cut = st; cut < end; cut++)
+    {
+        int left = minPalindromicCut(str, st, cut, dp, isPali);
+        int right = minPalindromicCut(str, cut + 1, end, dp, isPali);
+        int cost = left + right + 1;
+        min_ = min(min_, cost);
+    }
+    dp[st][end] = min_;
+    return min_;
+}
+
+int minPalindromicCut_DP(string &str, int st, int end, vvi &dp, vvb &isPali)
+{
+
+    for (int gap = 0; gap < str.length(); gap++)
+    {
+        for (int i = 0, j = gap; j < str.length(); j++, i++)
+        {
+            if (st == end || isPali[st][end])
+            {
+                 dp[st][end] = 0;
+                continue;
+            }
+
+            int min_ = 1e8;
+            for (int cut = st; cut < end; cut++)
+            {
+                int left = dp[st][cut];
+                int right = dp[cut + 1][end];
+
+                int cost = left + right + 1;
+                min_ = min(min_, cost);
+            }
+            dp[st][end] = min_;
+            return min_;
+        }
+    }
+}
+
+void set3()
+{
+    // vi row{40, 20, 30, 10};
+    // vi col{20, 30, 10, 30};
+    // vvi dp(row.size(), vi(row.size(), 0));
+
+    // cout << mcm_rec(0, row.size() - 1, row, col, dp) << endl;
+    // cout << mcm_dp(row, col, dp) << endl;
+    string str = "aacccccdef";
+    vvb ispali = isPali(str);
+    vvi dp(str.size(), vi(str.size(), 0));
+    cout << minPalindromicCut(str, 0, str.length() - 1, dp, ispali) << endl;
 }
 
 void set2()
@@ -601,7 +732,8 @@ void solve()
 
     // pathType();
     // minType();
-    set2();
+    // set2();
+    set3();
 }
 
 int main()

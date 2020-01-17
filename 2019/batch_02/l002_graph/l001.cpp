@@ -196,6 +196,7 @@ void bfs(int src)
     que.push(-1);
     int cycle = 0, level = 0;
     int dest = 6;
+    bool isDest = false;
 
     while (que.size() != 1)
     {
@@ -208,16 +209,17 @@ void bfs(int src)
             que.push(-1);
             continue;
         }
-        
+
         if (vis[rvtx])
         {
             cout << "cycle: " << ++cycle << " @ " << rvtx << endl;
             continue;
         }
 
-        if (rvtx == dest)
+        if (rvtx == dest && !isDest)
         {
             cout << "ypiee! i got destination at lowest no of edges from src: " << level << endl;
+            isDest = true;
         }
 
         vis[rvtx] = true;
