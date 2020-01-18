@@ -513,7 +513,7 @@ public class BTree {
 
         count += pathSum_III(node.left, prefixSum, tar, map);
         count += pathSum_III(node.right, prefixSum, tar, map);
-
+    
         if (map.get(prefixSum) == 1) {
             map.remove(prefixSum);
         } else {
@@ -551,7 +551,7 @@ public class BTree {
 
         boolean right = LCA_02(node.left, data1, data2);
         if(LCA_node!=null) return true;
-        
+
         if ((left && right) || (left && selfDone) || (right && selfDone)) {
             LCA_node = node;
             return true;
