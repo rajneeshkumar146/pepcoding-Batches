@@ -1,5 +1,5 @@
 /* To linearize a given tree.
-    1. to left-oriented tree in pre-order
+    1. to left-oriented tree in post-order
     2. to its inorder as Doubly Linked List
 */
 
