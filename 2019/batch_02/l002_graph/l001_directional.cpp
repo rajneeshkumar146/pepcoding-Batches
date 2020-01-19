@@ -47,9 +47,9 @@ void constructGraph()
     addEdge(1, 2, 10);
     addEdge(2, 3, 40);
     addEdge(3, 4, 2);
-    addEdge(4, 5, 2);
-    addEdge(4, 6, 3);
-    addEdge(5, 6, 8);
+    addEdge(5, 4, 2);
+    addEdge(6, 4, 3);
+    addEdge(6, 5, 8);
 
     // addEdge(0, 6, 8);
     // addEdge(2, 5, 8);
