@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.HashMap;
 
 public class BTree {
 
@@ -14,6 +15,20 @@ public class BTree {
     public static void solve(Node root) {
         // LCA(root);
         // basic(root);
+
+        // linearTree(root);
+        // display(root);
+
+        DLL(root);
+        while (head_ != null) {
+            System.out.print(head_.data + " -> ");
+            head_ = head_.right;
+        }
+        System.out.println();
+        while (prev_ != null) {
+            System.out.print(prev_.data + " -> ");
+            prev_ = prev_.left;
+        }
     }
 
     public static void basic(Node root) {
@@ -308,7 +323,7 @@ public class BTree {
             return;
 
         sol.size++;
-        sol.height = Math.max(sol.height, levle);
+        sol.height = Math.max(sol.height, level);
         sol.find = sol.find || node.data == data;
 
         if (node.data > data && node.data < sol.ceil)
@@ -321,8 +336,8 @@ public class BTree {
             sol.pred = sol.prev;
         }
 
-        if (sol.prev != null && sol.succ == null && prev.data == data) {
-            sol.suc = node;
+        if (sol.prev != null && sol.succ == null && sol.prev.data == data) {
+            sol.succ = node;
         }
 
         sol.prev = node;
@@ -350,6 +365,199 @@ public class BTree {
             return false;
 
         return true;
+    }
+
+    public static class BSTpair {
+        boolean isBst = true;
+        int count = 0;
+        int lBSTsize = 0;
+        Node lBstRoot = null;
+
+        int min = (int) 1e8;
+        int max = (int) -1e8;
+
+    }
+
+    public static BSTpair BSTSol_(Node node) {
+        if (node == null) {
+            return new BSTpair();
+        }
+
+        BSTpair lp = BSTSol_(node.left);
+        BSTpair rp = BSTSol_(node.right);
+
+        BSTpair myPair = new BSTpair();
+        myPair.count = lp.count + rp.count;
+
+        if (lp.isBst && rp.isBst && lp.max < node.data && node.data <= rp.min) {
+            myPair.count++;
+            myPair.lBSTsize = myPair.count;
+            myPair.lBstRoot = node;
+        } else {
+            myPair.isBst = false;
+            if (lp.lBSTsize > rp.lBSTsize) {
+                myPair.lBSTsize = lp.lBSTsize;
+                myPair.lBstRoot = lp.lBstRoot;
+            } else {
+                myPair.lBSTsize = rp.lBSTsize;
+                myPair.lBstRoot = rp.lBstRoot;
+            }
+        }
+
+        myPair.min = Math.min(Math.min(lp.min, rp.min), node.data);
+        myPair.max = Math.max(Math.max(lp.max, rp.max), node.data);
+
+        return myPair;
+    }
+
+    public static Node linearTree(Node node) {
+        if (node == null)
+            return null;
+        if (node.left == null && node.right == null)
+            return node;
+
+        Node leftTail = linearTree(node.left);
+        Node rightTail = linearTree(node.right);
+
+        if (leftTail == null)
+            node.left = node.right;
+        else {
+            leftTail.left = node.right;
+        }
+        node.right = null;
+        return rightTail != null ? rightTail : leftTail;
+    }
+
+    static Node prev_ = null;
+    static Node head_ = null;
+
+    public static void DLL(Node node) {
+        if (node == null)
+            return;
+
+        DLL(node.left);
+
+        prev_ = node;
+        DLL(node.right);
+    }
+
+    public static boolean sumPathI(Node node, int tar, String ans) {
+        if (node == null)
+            return false;
+        if (node.left == null && node.right == null && tar - node.data == 0) {
+            System.out.println(ans + " " + node.data);
+            return true;
+        }
+
+        boolean res = false;
+        res = res || sumPathI(node.left, tar - node.data, ans + node.data + " ");
+        res = res || sumPathI(node.right, tar - node.data, ans + node.data + " ");
+        return res;
+    }
+
+    public static ArrayList<ArrayList<Integer>> pathSum_II_01(Node node, int tar) {
+        if (node == null)
+            return null;
+        if (node.left == null && node.right == null && tar - node.data == 0) {
+            ArrayList<ArrayList<Integer>> base = new ArrayList<>();
+            ArrayList<Integer> small = new ArrayList<>();
+            small.add(node.data);
+            base.add(small);
+            return base;
+        }
+
+        ArrayList<ArrayList<Integer>> myans = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> left = pathSum_II_01(node.left, tar - node.data);
+        if (left != null) {
+            for (ArrayList<Integer> small : left) {
+                small.add(0, node.data);
+                myans.add(small);
+            }
+        }
+
+        ArrayList<ArrayList<Integer>> right = pathSum_II_01(node.right, tar - node.data);
+        if (right != null) {
+            for (ArrayList<Integer> small : right) {
+                small.add(0, node.data);
+                myans.add(small);
+            }
+        }
+
+        return myans;
+    }
+
+    public static void pathSum_II_02(Node node, int tar, ArrayList<Integer> small, ArrayList<ArrayList<Integer>> ans) {
+        if (node == null)
+            return;
+        if (node.left == null && node.right == null && tar - node.data == 0) {
+            ArrayList<Integer> baseAns = new ArrayList<Integer>(small);
+            baseAns.add(node.data);
+            ans.add(baseAns);
+            return;
+        }
+
+        small.add(node.data);
+        pathSum_II_02(node.left, tar - node.data, small, ans);
+        pathSum_II_02(node.right, tar - node.data, small, ans);
+        small.remove(small.size() - 1);
+    }
+
+    public static int pathSum_III(Node node, int prefixSum, int tar, HashMap<Integer, Integer> map) {
+        if (node == null)
+            return 0;
+
+        prefixSum += node.data;
+        int count = map.getOrDefault(prefixSum - tar, 0);
+
+        map.put(prefixSum, map.getOrDefault(prefixSum, 0) + 1);
+
+        count += pathSum_III(node.left, prefixSum, tar, map);
+        count += pathSum_III(node.right, prefixSum, tar, map);
+    
+        if (map.get(prefixSum) == 1) {
+            map.remove(prefixSum);
+        } else {
+            map.put(prefixSum, map.get(prefixSum) - 1);
+        }
+        return count;
+    }
+
+    static int Max_leaftoleaf = -1e8;
+
+    public static int leafToLeafSum(Node node) {
+        if (node == null)
+            return 0;
+
+        int leftNodeToLeaf = leafToLeafSum(node.left);
+        int rightNodeToLeaf = leafToLeafSum(node.right);
+        if (node.left != null && node.right != null) {
+            Max_leaftoleaf = Math.max(Max_leaftoleaf, leftNodeToLeaf + rightNodeToLeaf + node.data);
+        }
+        Max_leaftoleaf = Math.max(Max_leaftoleaf, Math.max(leftNodeToLeaf, rightNodeToLeaf) + node.data);
+
+        return Math.max(Math.max(leftNodeToLeaf, rightNodeToLeaf) + node.data, node.data);
+    }
+
+    static Node LCA_node = null;
+
+    public static boolean LCA_02(Node node, int data1, int data2) {
+        if (node == null)
+            return false;
+
+        boolean selfDone = node.data == data1 || node.data == data2;
+   
+        boolean left = LCA_02(node.left, data1, data2);
+        if(LCA_node!=null) return true; 
+
+        boolean right = LCA_02(node.left, data1, data2);
+        if(LCA_node!=null) return true;
+
+        if ((left && right) || (left && selfDone) || (right && selfDone)) {
+            LCA_node = node;
+            return true;
+        }
+        
+        return left || right || selfDone;
 
     }
 

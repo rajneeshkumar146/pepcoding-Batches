@@ -16,7 +16,7 @@ public:
     }
 };
 
-int n = 10;
+int n = 7;
 vector<vector<Edge *>> graph(n, vector<Edge *>());
 
 void display()
@@ -52,10 +52,10 @@ void constructGraph()
     addEdge(4, 6, 3);
     addEdge(5, 6, 8);
 
-    addEdge(2, 7, 8);
-    addEdge(7, 8, 8);
-    addEdge(8, 9, 8);
-    addEdge(7, 9, 8);
+    // addEdge(0, 6, 8);
+    // addEdge(2, 5, 8);
+    // addEdge(8, 9, 8);
+    // addEdge(7, 9, 8);
 
     display();
     cout << endl;
@@ -196,6 +196,7 @@ void bfs(int src)
     que.push(-1);
     int cycle = 0, level = 0;
     int dest = 6;
+    bool isDest = false;
 
     while (que.size() != 1)
     {
@@ -208,16 +209,17 @@ void bfs(int src)
             que.push(-1);
             continue;
         }
-        
+
         if (vis[rvtx])
         {
             cout << "cycle: " << ++cycle << " @ " << rvtx << endl;
             continue;
         }
 
-        if (rvtx == dest)
+        if (rvtx == dest && !isDest)
         {
             cout << "ypiee! i got destination at lowest no of edges from src: " << level << endl;
+            isDest = true;
         }
 
         vis[rvtx] = true;
@@ -267,18 +269,130 @@ void bfs2(int src)
     }
 }
 
+int hamintonainPath(int vtx, int osrc, int vtxCount, vector<bool> &vis, string ans)
+{
+    if (vtxCount == graph.size() - 1)
+    {
+        bool flag = false;
+        for (Edge *e : graph[vtx])
+        {
+            if (e->v == osrc)
+            {
+                cout << "cycle: " + ans + to_string(vtx) << endl;
+                flag = true;
+            }
+        }
+
+        if (!flag)
+            cout << "path: " + ans + to_string(vtx) << endl;
+        return 1;
+    }
+
+    vis[vtx] = true;
+    int count = 0;
+
+    for (Edge *e : graph[vtx])
+        if (!vis[e->v])
+            count += hamintonainPath(e->v, osrc, vtxCount + 1, vis, ans + to_string(vtx) + " ");
+
+    vis[vtx] = false;
+    return count;
+}
+
+bool isBipartite_(int i, vector<int> &vis)
+{
+    queue<pair<int, int>> que;
+    bool flag = true;
+    que.push({i, 0});
+
+    while (que.size() != 0)
+    {
+        pair<int, int> rvtx = que.front();
+        que.pop();
+
+        if (vis[rvtx.first] != -1)
+        {
+            if (vis[rvtx.first] != rvtx.second)
+            {
+                cout << "conflict: " << endl;
+                flag = false;
+            }
+            continue;
+        }
+
+        vis[rvtx.first] = rvtx.second;
+        for (Edge *e : graph[rvtx.first])
+        {
+            if (vis[e->v] == -1)
+                que.push({e->v, (rvtx.second + 1) % 2});
+        }
+    }
+
+    return flag;
+}
+
+void isBipartite()
+{
+    vector<int> vis(graph.size(), -1);
+    int count = 0;
+
+    for (int i = 0; i < graph.size(); i++)
+    {
+        if (vis[i] == -1)
+        {
+
+            cout << count << " " << (boolalpha) << isBipartite_(i, vis) << endl;
+            count++;
+        }
+    }
+}
+
+void topologicalSort_(int src, vector<bool> &vis, vector<int> &stack)
+{
+    vis[src] = true;
+    for (Edge *e : graph[src])
+        if (!vis[e->v])
+            topologicalSort_(e->v, vis, stack);
+
+    stack.push_back(src);
+}
+
+void topologicalSort()
+{
+    vector<bool> vis(graph.size(), false);
+    vector<int> stack;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (!vis[i])
+            topologicalSort_(i, vis, stack);
+    }
+
+    while (stack.size() != 0)
+    {
+        cout << stack.back() << " ";
+        stack.pop_back();
+    }
+}
+
 void solve()
 {
     constructGraph();
     //    removeEdge(3,4);
-    // vector<bool> vis(n, false);
+
+    vector<bool> vis(n, false);
+
     //    hasPath(0,6,vis,to_string(0) + "");
     // cout << allPath(0, 6, vis, 0, to_string(0) + "") << endl;
 
     // allSolutions(0, 6, vis, 0, "");
     // cout << spsf << " @ " << swsf << endl;
     // cout << lpsf << " @ " << lwsf << endl;
-    bfs(0);
+    // bfs(0);
+
+    // cout << hamintonainPath(0, 0, 0, vis, "") << endl;
+    // isBipartite();
+    topologicalSort();
 }
 
 int main()
