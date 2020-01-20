@@ -19,16 +19,22 @@ public class BTree {
         // linearTree(root);
         // display(root);
 
-        DLL(root);
-        while (head_ != null) {
-            System.out.print(head_.data + " -> ");
-            head_ = head_.right;
-        }
-        System.out.println();
-        while (prev_ != null) {
-            System.out.print(prev_.data + " -> ");
-            prev_ = prev_.left;
-        }
+        // DLL(root);
+        // while (head_ != null) {
+        // System.out.print(head_.data + " -> ");
+        // head_ = head_.right;
+        // }
+        // System.out.println();
+        // while (prev_ != null) {
+        // System.out.print(prev_.data + " -> ");
+        // prev_ = prev_.left;
+        // }
+
+        idx = 0;
+        int[] arr = { 50, 25, 20, 30, 75, 65 };
+        // root = BSTFromPreOder(arr, (int) -1e8, 0, (int) 1e8);
+        // display(root);
+        System.out.println(HeightOfBSTFromPreOder(arr, (int) -1e8, 0, (int) 1e8));
     }
 
     public static void basic(Node root) {
@@ -513,7 +519,7 @@ public class BTree {
 
         count += pathSum_III(node.left, prefixSum, tar, map);
         count += pathSum_III(node.right, prefixSum, tar, map);
-    
+
         if (map.get(prefixSum) == 1) {
             map.remove(prefixSum);
         } else {
@@ -522,7 +528,7 @@ public class BTree {
         return count;
     }
 
-    static int Max_leaftoleaf = -1e8;
+    static int Max_leaftoleaf = (int) -1e8;
 
     public static int leafToLeafSum(Node node) {
         if (node == null)
@@ -532,10 +538,25 @@ public class BTree {
         int rightNodeToLeaf = leafToLeafSum(node.right);
         if (node.left != null && node.right != null) {
             Max_leaftoleaf = Math.max(Max_leaftoleaf, leftNodeToLeaf + rightNodeToLeaf + node.data);
+            return Math.max(leftNodeToLeaf, leftNodeToLeaf) + node.data;
         }
-        Max_leaftoleaf = Math.max(Max_leaftoleaf, Math.max(leftNodeToLeaf, rightNodeToLeaf) + node.data);
+        return (node.left == null ? rightNodeToLeaf : leftNodeToLeaf) + node.data;
+    }
 
-        return Math.max(Math.max(leftNodeToLeaf, rightNodeToLeaf) + node.data, node.data);
+    static int Max_nodeToNode = (int) -1e8;
+
+    public static int nodeToNodeSum(Node node) {
+        if (node == null)
+            return (int) -1e8;
+
+        int leftNodeToNode = nodeToNodeSum(node.left);
+        int rightNodeToNode = nodeToNodeSum(node.right);
+
+        int max_ = Math.max(leftNodeToNode, rightNodeToNode) + node.data;
+
+        Max_nodeToNode = Math.max(Math.max(leftNodeToNode + rightNodeToNode + node.data, Max_nodeToNode),
+                Math.max(max_, node.data));
+        return Math.max(max_, node.data);
     }
 
     static Node LCA_node = null;
@@ -545,19 +566,118 @@ public class BTree {
             return false;
 
         boolean selfDone = node.data == data1 || node.data == data2;
-   
+
         boolean left = LCA_02(node.left, data1, data2);
-        if(LCA_node!=null) return true; 
+        if (LCA_node != null)
+            return true;
 
         boolean right = LCA_02(node.left, data1, data2);
-        if(LCA_node!=null) return true;
+        if (LCA_node != null)
+            return true;
 
         if ((left && right) || (left && selfDone) || (right && selfDone)) {
             LCA_node = node;
             return true;
         }
-        
+
         return left || right || selfDone;
+
+    }
+
+    public static boolean find_BST(Node node, int data) {
+        if (node == null)
+            return false;
+
+        if (node.data == data)
+            return true;
+
+        if (data < node.data)
+            return find_BST(node.left, data);
+        else
+            return find_BST(node.right, data);
+    }
+
+    static Node x, y, z;
+
+    public static boolean recoverBST(Node node) {
+        if (node == null)
+            return false;
+
+        boolean res = false;
+        res = res || recoverBST(node.left);
+        if (z != null && node.data < z.data) {
+            y = node;
+            if (x == null)
+                x = z;
+            else
+                return true;
+        }
+
+        z = node;
+        res = res || recoverBST(node.right);
+        return res;
+    }
+
+    public static Node BSTFromPreOder(int[] arr, int lb, int ele, int ub) {
+        if (ele < lb || ele > ub || idx == arr.length)
+            return null;
+
+        Node node = new Node(arr[idx], null, null);
+        idx++;
+        if (idx < arr.length) {
+            node.left = BSTFromPreOder(arr, lb, arr[idx], node.data);
+        }
+        if (idx < arr.length) {
+            node.right = BSTFromPreOder(arr, node.data, arr[idx], ub);
+        }
+        return node;
+
+    }
+
+    public static int HeightOfBSTFromPreOder(int[] arr, int lb, int ele, int ub) {
+        if (ele < lb || ele > ub || idx == arr.length)
+            return -1;
+
+        int ele_ = arr[idx];
+        idx++;
+
+        int lh = -1, rh = -1;
+        if (idx < arr.length)
+            lh = HeightOfBSTFromPreOder(arr, lb, arr[idx], ele_);
+        if (idx < arr.length)
+            rh = HeightOfBSTFromPreOder(arr, ele_, arr[idx], ub);
+
+        return Math.max(lh, rh) + 1;
+
+    }
+
+    static int leftLevel = -1;
+
+    public static void leftView(Node node, int level) {
+        if (node == null)
+            return;
+
+        if (leftLevel < level) {
+            System.out.println(node.data + " ");
+            leftLevel = level;
+        }
+        leftView(node.left, level + 1);
+        leftView(node.right, level + 1);
+    }
+
+    public static class verticalPair {
+        Node node;
+        int level = 0;
+
+        verticalPair(Node node, int level) {
+            this.node = node;
+            this.level = level;
+        }
+    }
+
+    public static void verticalOder(Node node) {
+        LinkedList<verticalPair> que = new LinkedList<>();
+        que.addLast(new verticalPair(node, 0));
 
     }
 

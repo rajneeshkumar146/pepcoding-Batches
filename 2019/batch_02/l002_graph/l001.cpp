@@ -347,34 +347,6 @@ void isBipartite()
     }
 }
 
-void topologicalSort_(int src, vector<bool> &vis, vector<int> &stack)
-{
-    vis[src] = true;
-    for (Edge *e : graph[src])
-        if (!vis[e->v])
-            topologicalSort_(e->v, vis, stack);
-
-    stack.push_back(src);
-}
-
-void topologicalSort()
-{
-    vector<bool> vis(graph.size(), false);
-    vector<int> stack;
-
-    for (int i = 0; i < n; i++)
-    {
-        if (!vis[i])
-            topologicalSort_(i, vis, stack);
-    }
-
-    while (stack.size() != 0)
-    {
-        cout << stack.back() << " ";
-        stack.pop_back();
-    }
-}
-
 void solve()
 {
     constructGraph();
@@ -392,7 +364,7 @@ void solve()
 
     // cout << hamintonainPath(0, 0, 0, vis, "") << endl;
     // isBipartite();
-    topologicalSort();
+
 }
 
 int main()
