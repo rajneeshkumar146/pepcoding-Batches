@@ -1,37 +1,23 @@
-gjw
-gjx
-gjy
-gjz
-gkw
-gkx
-gky
-gkz
-glw
-glx
-gly
-glz
-hjw
-hjx
-hjy
-hjz
-hkw
-hkx
-hky
-hkz
-hlw
-hlx
-hly
-hlz
-ijw
-ijx
-ijy
-ijz
-ikw
-ikx
-iky
-ikz
-ilw
-ilx
-ily
-ilz
-36
+H1 H1 V1 V1 
+H1 H1 V2 
+H1 V1 H1 V1 
+H1 V1 V1 H1 
+H1 V1 D1 
+H1 V2 H1 
+H1 D1 V1 
+H2 V1 V1 
+H2 V2 
+V1 H1 H1 V1 
+V1 H1 V1 H1 
+V1 H1 D1 
+V1 H2 V1 
+V1 V1 H1 H1 
+V1 V1 H2 
+V1 D1 H1 
+V2 H1 H1 
+V2 H2 
+D1 H1 V1 
+D1 V1 H1 
+D1 D1 
+D2 
+22

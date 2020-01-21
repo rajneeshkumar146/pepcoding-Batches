@@ -11,8 +11,8 @@ public class l00 {
         // subsequence("abc", "");
         // System.out.println(subseq("abc"));
 
-        // System.out.println(nokiaKeyPad("459"));
-        System.out.println(nokiaKeyPad_01("459",""));
+        System.out.println(nokiaKeyPad("1111"));
+        // System.out.println(nokiaKeyPad_01("101101", ""));
     }
 
     public static int[] allIndex(int[] arr, int idx, int data, int count) {
@@ -132,6 +132,20 @@ public class l00 {
             }
         }
 
+        if (str.length() > 1) {
+            idx = idx * 10 + (str.charAt(1) - '0');
+            if (idx >= 10 && idx <= 11) {
+                word = words[idx];
+                recAns = nokiaKeyPad(str.substring(2));
+                for (int i = 0; i < word.length(); i++) {
+                    for (String s : recAns) {
+                        myAns.add(word.charAt(i) + s);
+                    }
+                }
+            }
+
+        }
+
         return myAns;
     }
 
@@ -148,6 +162,17 @@ public class l00 {
         int count = 0;
         for (int i = 0; i < word.length(); i++) {
             count += nokiaKeyPad_01(nstr, ans + word.charAt(i));
+        }
+
+        if (str.length() > 1) {
+            idx = idx * 10 + (str.charAt(1) - '0');
+            if (idx >= 10 && idx <= 11) {
+                word = words[idx];
+                for (int i = 0; i < word.length(); i++) {
+                    count += nokiaKeyPad_01(str.substring(2), ans + word.charAt(i));
+                }
+
+            }
         }
 
         return count;
