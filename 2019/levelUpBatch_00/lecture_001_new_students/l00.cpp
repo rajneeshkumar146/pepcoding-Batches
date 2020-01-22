@@ -211,7 +211,7 @@ void rottenOranges(vector<vector<int>> &board, int sr, int sc, string ans)
 void floodFillSet()
 {
     vector<vector<int>> board(3, vector<int>(3, 0));
-    cout << floodFill(board, 0, 0,2,2, "");
+    cout << floodFill(board, 0, 0, 2, 2, "");
 
     // int count = 0;
     // for (int i = 0; i < oranges.size(); i++)
@@ -229,10 +229,173 @@ void floodFillSet()
     // cout << count << endl;
 }
 
+//========================================================
+
+int combination(int tm, int members, string ans)
+{
+    if (members == tm)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = members; i <= tm; i++)
+    {
+        count += combination(tm, i + 1, ans + to_string(i) + " ");
+    }
+
+    return count;
+}
+
+int CoinInfiniteCombination(vector<int> &coins, int idx, int tar, string ans)
+{
+    if (tar == 0)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = idx; i < coins.size(); i++)
+    {
+        if (tar - coins[i] >= 0)
+        {
+            count += CoinInfiniteCombination(coins, i + 1, tar - coins[i], ans + to_string(coins[i]) + " ");
+        }
+    }
+
+    return count;
+}
+
+int CoinInfinitePermutation(vector<int> &coins, vector<bool> &vis, int tar, string ans)
+{
+    if (tar == 0)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = 0; i < coins.size(); i++)
+    {
+        if (tar - coins[i] >= 0 && !vis[i])
+        {
+            vis[i] = true;
+            count += CoinInfinitePermutation(coins, vis, tar - coins[i], ans + to_string(coins[i]) + " ");
+            vis[i] = false;
+        }
+    }
+
+    return count;
+}
+
+int queenCombination(vector<bool> boxes, int bn, int qpsf, int tnq, string ans)
+{
+    if (qpsf == tnq)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+    int count = 0;
+    for (int i = bn; i < boxes.size(); i++)
+    {
+        count += queenCombination(boxes, i + 1, qpsf + 1, tnq,
+                                  ans + "b" + to_string(i) + "q" + to_string(qpsf) + " ");
+    }
+    return count;
+}
+
+int queenpermutation(vector<bool> boxes, int bn, int qpsf, int tnq, string ans)
+{
+    if (qpsf == tnq)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+    int count = 0;
+    for (int i = bn; i < boxes.size(); i++)
+    {
+        if (!boxes[i])
+        {
+            boxes[i] = true;
+            count += queenpermutation(boxes, i + 1, qpsf + 1, tnq,
+                                      ans + "b" + to_string(i) + "q" + to_string(qpsf) + " ");
+            boxes[i] = false;
+        }
+    }
+
+    return count;
+}
+
+vector<vector<int>> q_dir = {{0, -1}, {-1, 0}, {-1, -1}, {-1, 1}, {0, 1}, {1, 0}, {1, 1}, {1, -1}};
+
+bool isQueenSafe(vector<vector<bool>> &boxes, int r, int c)
+{
+
+    for (int d = 0; d < q_dir.size(); d++)
+    {
+        for (int jump = 1; jump <= boxes.size(); jump++)
+        {
+            int nr = r + jump * q_dir[d][0];
+            int nc = c + jump * q_dir[d][1];
+
+            if (nr >= 0 && nc >= 0 && nr < boxes.size() && nc < boxes[0].size())
+            {
+                if (boxes[nr][nc])
+                    return false;
+            }
+            else
+                break;
+        }
+    }
+
+    return true;
+}
+
+int queen2DCombination(vector<vector<bool>> &boxes, int bn, int qpsf, int tnq, string ans)
+{
+    if (qpsf == tnq)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+    int count = 0;
+    for (int i = 0; i < boxes.size() * boxes[0].size(); i++)
+    {
+        int r = i / boxes[0].size();
+        int c = i % boxes[0].size();
+        if (!boxes[r][c] && isQueenSafe(boxes, r, c))
+        {
+            boxes[r][c] = true;
+            count += queen2DCombination(boxes, i + 1, qpsf + 1, tnq,
+                                        ans + "(" + to_string(r) + ", " + to_string(c) + ") ");
+            boxes[r][c] = false;
+        }
+    }
+
+    return count;
+}
+
+void PandC()
+{
+    // vector<int> coins{1, 1, 1, 1, 1};
+    // vector<bool> vis(coins.size(), false);
+    // cout << combination(5, 0, "") << endl;
+    // cout << CoinInfiniteCombination(coins, 0, 3, "") << endl;
+    // cout << CoinInfinitePermutation(coins, vis, 10, "") << endl;
+
+    // cout << queenCombination(vis, 0, 0, 3, "") << endl;
+
+    vector<vector<bool>> box(4, vector<bool>(4, false));
+    cout << queen2DCombination(box, 0, 0, 4, "") << endl;
+}
+
 void solve()
 {
     // basic();
-    floodFillSet();
+    // floodFillSet();
+    PandC();
 }
 
 int main()
