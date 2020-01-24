@@ -121,6 +121,7 @@ public class SNQ {
                     int he = height[idx];
                     int width = i - (st.size() == 0 ? -1 : st.peek()) - 1;
                     int currArea = he * width;
+                    
 
                     maxArea = Math.max(maxArea, currArea);
                 }
