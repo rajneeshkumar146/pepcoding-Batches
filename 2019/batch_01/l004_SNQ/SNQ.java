@@ -3,7 +3,9 @@ import java.util.Stack;
 
 public class SNQ {
     public static void main(String[] args) {
-        System.out.println(infixEval("8+4*3-9/3^(2-1)"));
+        // System.out.println(infixEval("8+4*3-9/3^(2-1)"));
+        int[] arr = { 6, 2, 5, 4, 5, 1, 6 };
+        nextGreterOnLeftSide(arr);
     }
 
     public static boolean isOperator(Character ch) {
@@ -84,6 +86,56 @@ public class SNQ {
         }
 
         return numSt.pop();
+    }
+
+    public static void nextGreterOnLeftSide(int[] arr) {
+
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < arr.length; i++) {
+
+            while (st.size() != 0 && st.peek() <= arr[i]) {
+                st.pop();
+            }
+
+            if (st.size() == 0)
+                System.out.println(arr[i] + " -> " + -1);
+            else
+                System.out.println(arr[i] + " -> " + st.peek());
+
+            st.push(arr[i]);
+        }
+    }
+
+    public static void largestArea(int[] height) {
+        int maxArea = 0;
+
+        Stack<Integer> st = new Stack<>();
+
+        for (int i = 0; i < height.length; i++) {
+            if (st.size() == 0 || height[st.peek()] <= height[i])
+                st.push(i);
+            else {
+
+                while (st.size() != 0 && height[st.peek()] > height[i]) {
+                    int idx = st.pop();
+                    int he = height[idx];
+                    int width = i - (st.size() == 0 ? -1 : st.peek()) - 1;
+                    int currArea = he * width;
+
+                    maxArea = Math.max(maxArea, currArea);
+                }
+            }
+        }
+
+        while (st.size() != 0 && height[st.peek()] > height[i]) {
+            int idx = st.pop();
+            int he = height[idx];
+            int width = i - (st.size() == 0 ? -1 : st.peek()) - 1;
+            int currArea = he * width;
+
+            maxArea = Math.max(maxArea, currArea);
+        }
+
     }
 
 }
