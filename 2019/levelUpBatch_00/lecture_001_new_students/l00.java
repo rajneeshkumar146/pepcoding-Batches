@@ -11,8 +11,10 @@ public class l00 {
         // subsequence("abc", "");
         // System.out.println(subseq("abc"));
 
-        System.out.println(nokiaKeyPad("1111"));
+        // System.out.println(nokiaKeyPad("1111"));
         // System.out.println(nokiaKeyPad_01("101101", ""));
+
+        bits();
     }
 
     public static int[] allIndex(int[] arr, int idx, int data, int count) {
@@ -177,6 +179,52 @@ public class l00 {
 
         return count;
 
+    }
+
+    // bits.==========================================
+
+    public static void bits() {
+        System.out.println(numberOf1s_01(15));
+
+    }
+
+    public static int numberOf1s_01(int a) {
+        int count = 0;
+        for (int i = 0; i < 32; i++) {
+            int mask = (1 << i);
+            if ((a & mask) != 0)
+                count++;
+        }
+
+        return count;
+
+    }
+
+    public static int numberOf1s_02(int a) {
+        int count = 0;
+        while (a != 0) {
+            if ((a & 1) != 0)
+                count++;
+            a >>>= 1;
+        }
+
+        return count;
+
+    }
+
+    public static int numberOf1s_03_best(int a) {
+        int count = 0;
+        while (a != 0) {
+            count++;
+            a &= (a - 1);
+        }
+
+        return count;
+
+    }
+
+    public static boolean is2pow(int a) {
+        return a != 0 && (a & (a - 1)) == 0;
     }
 
 }
