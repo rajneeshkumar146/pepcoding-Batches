@@ -268,6 +268,28 @@ int CoinInfiniteCombination(vector<int> &coins, int idx, int tar, string ans)
     return count;
 }
 
+int coinChangeInfiteSub(vector<int> &coins, int idx, int tar, string ans)
+{
+    if (idx == coins.size() || tar == 0)
+    {
+        if (tar == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    if (tar - coins[idx] >= 0)
+    {
+        count += coinChangeInfiteSub(coins, idx, tar - coins[idx], ans + to_string(coins[idx]));
+    }
+
+    count += coinChangeInfiteSub(coins, idx + 1, tar, ans);
+    return count;
+}
+
 int CoinInfinitePermutation(vector<int> &coins, vector<bool> &vis, int tar, string ans)
 {
     if (tar == 0)
@@ -530,11 +552,354 @@ void PandC()
     cout << calls << endl;
 }
 
+vector<vector<int>> board = {{3, 0, 6, 0, 0, 8, 4, 0, 0},
+                             {5, 2, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 8, 7, 0, 0, 0, 0, 3, 1},
+                             {0, 0, 3, 0, 1, 0, 0, 8, 0},
+                             {9, 0, 0, 8, 6, 3, 0, 0, 5},
+                             {0, 5, 0, 0, 9, 0, 6, 0, 0},
+                             {1, 3, 0, 0, 0, 0, 2, 5, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 7, 4},
+                             {0, 0, 5, 2, 0, 6, 3, 0, 0}};
+
+vector<int> rows(9, 0);
+vector<int> cols(9, 0);
+vector<vector<int>> mat(3, vector<int>(3, 0));
+
+int sudoku_01(int bno)
+{
+    // base
+    if (bno == 81)
+    {
+        for (vector<int> ar : board)
+        {
+            for (int ele : ar)
+                cout << ele << " ";
+            cout << endl;
+        }
+        cout << endl;
+        return 1;
+    }
+
+    int count = 0;
+
+    int i = bno / 9;
+    int j = bno % 9;
+    if (board[i][j] == 0)
+    {
+        for (int num = 1; num <= 9; num++)
+        {
+            int mask = 1 << num;
+            if ((rows[i] & mask) == 0 && (cols[j] & mask) == 0 && (mat[i / 3][j / 3] & mask) == 0)
+            {
+                rows[i] ^= mask;
+                cols[j] ^= mask;
+                mat[i / 3][j / 3] ^= mask;
+                board[i][j] = num;
+
+                count += sudoku_01(bno + 1);
+
+                rows[i] ^= mask;
+                cols[j] ^= mask;
+                mat[i / 3][j / 3] ^= mask;
+                board[i][j] = 0;
+            }
+        }
+    }
+    else
+    {
+        count += sudoku_01(bno + 1);
+    }
+    return count;
+}
+
+int sudoku_02(vector<int> &sudokuZeros, int bno)
+{
+    // base
+    if (bno == sudokuZeros.size())
+    {
+        for (vector<int> ar : board)
+        {
+            for (int ele : ar)
+                cout << ele << " ";
+            cout << endl;
+        }
+        cout << endl;
+        return 1;
+    }
+
+    int count = 0;
+
+    int i = sudokuZeros[bno] / 9;
+    int j = sudokuZeros[bno] % 9;
+    for (int num = 1; num <= 9; num++)
+    {
+        int mask = 1 << num;
+        if ((rows[i] & mask) == 0 && (cols[j] & mask) == 0 && (mat[i / 3][j / 3] & mask) == 0)
+        {
+            rows[i] ^= mask;
+            cols[j] ^= mask;
+            mat[i / 3][j / 3] ^= mask;
+            board[i][j] = num;
+
+            count += sudoku_02(sudokuZeros, bno + 1);
+
+            rows[i] ^= mask;
+            cols[j] ^= mask;
+            mat[i / 3][j / 3] ^= mask;
+            board[i][j] = 0;
+        }
+    }
+    return count;
+}
+
+void sudoku()
+{
+    vector<int> sudokuZeros;
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            if (board[i][j] != 0)
+            {
+                int mask = 1 << board[i][j];
+                if ((rows[i] & mask) == 0 && (cols[j] & mask) == 0 && (mat[i / 3][j / 3] & mask) == 0)
+                {
+                    rows[i] |= mask;
+                    cols[j] |= mask;
+                    mat[i / 3][j / 3] |= mask;
+                }
+                else
+                {
+                    cout << "It's not a valid sudoku!" << endl;
+                    return;
+                }
+            }
+            else
+            {
+                sudokuZeros.push_back(i * 9 + j);
+            }
+        }
+    }
+
+    cout << sudoku_02(sudokuZeros, 0) << endl;
+}
+
+string str1 = "send";
+string str2 = "more";
+string str3 = "money";
+vector<int> maping(26, 0);
+vector<bool> isTaken(10, false);
+
+int stringToNumber(string str)
+{
+    int res = 0;
+    for (int i = 0; i < str.length(); i++)
+    {
+        int idx = str[i] - 'a';
+        res = res * 10 + maping[idx];
+    }
+    return res;
+}
+
+int crypto_(string &str, int idx)
+{
+    if (idx == str.length())
+    {
+        int num1 = stringToNumber(str1);
+        int num2 = stringToNumber(str2);
+        int num3 = stringToNumber(str3);
+        if (num1 + num2 == num3)
+        {
+            return 1;
+        }
+        return 0;
+    }
+
+    // 10 options for number.
+    // check for this number is taken or not.
+    //  take that number.
+    //  recursion.
+    // untake that number.
+}
+
+void crypto()
+{
+    string str = str1 + str2 + str3;
+    vector<int> freq(26, 0);
+    for (int i = 0; i < str.length(); i++)
+    {
+        freq[str[i] - 'a']++;
+    }
+
+    str = "";
+    for (int i = 0; i < 26; i++)
+    {
+        cout << freq[i] << " " << (char)(i + 'a') << endl;
+        if (freq[i] > 0)
+            str += (char)(i + 'a');
+    }
+
+    cout << str;
+}
+
+bool canPlaceWordH(vector<vector<char>> &board, int x, int y, string word)
+{
+    if (y + word.length() > board[0].size())
+        return false;
+
+    if ((y - 1 >= 0 && board[x][y - 1] != '+') || (y + word.length() < board[0].size() && board[x][y + word.length()] != '+'))
+        return false;
+
+    for (int i = 0; i < word.length(); i++)
+    {
+        if (board[x][y + i] != '-' && board[x][y + i] != word[i])
+            return false;
+    }
+
+    return true;
+}
+
+vector<bool> placeWordH(vector<vector<char>> &board, int x, int y, string word)
+{
+    vector<bool> loc(word.length(), false);
+
+    for (int i = 0; i < word.length(); i++)
+    {
+        if (board[x][y + i] == '-')
+        {
+            loc[i] = true;
+            board[x][y + i] = word[i];
+        }
+    }
+
+    return loc;
+}
+
+void UnplaceWordH(vector<vector<char>> &board, int x, int y, vector<bool> &loc)
+{
+    for (int i = 0; i < loc.size(); i++)
+    {
+        if (loc[i])
+        {
+            board[x][y + i] = '-';
+        }
+    }
+}
+
+bool canPlaceWordV(vector<vector<char>> &board, int x, int y, string word)
+{
+    if (x + word.length() > board.size())
+        return false;
+    if ((x - 1 >= 0 && board[x - 1][y] != '+') || (x + word.length() < board.size() && board[x + word.length()][y] != '+'))
+        return false;
+
+    for (int i = 0; i < word.length(); i++)
+    {
+        if (board[x + i][y] != '-' && board[x + i][y] != word[i])
+            return false;
+    }
+
+    return true;
+}
+
+vector<bool> placeWordV(vector<vector<char>> &board, int x, int y, string word)
+{
+    vector<bool> loc(word.length(), false);
+
+    for (int i = 0; i < word.length(); i++)
+    {
+        if (board[x + i][y] == '-')
+        {
+            loc[i] = true;
+            board[x + i][y] = word[i];
+        }
+    }
+
+    return loc;
+}
+void UnplaceWordV(vector<vector<char>> &board, int x, int y, vector<bool> &loc)
+{
+    for (int i = 0; i < loc.size(); i++)
+    {
+        if (loc[i])
+        {
+            board[x + i][y] = '-';
+        }
+    }
+}
+
+int crossWord_(vector<vector<char>> &board, vector<string> &words, int idx)
+{
+    if (idx == words.size())
+    {
+        for (vector<char> ar : board)
+        {
+            for (char ch : ar)
+            {
+                cout << ch << " ";
+            }
+            cout << endl;
+        }
+        cout << endl;
+        return 1;
+    }
+
+    int count = 0;
+    string word = words[idx];
+    for (int i = 0; i < board.size(); i++)
+    {
+        for (int j = 0; j < board[0].size(); j++)
+        {
+            if (board[i][j] == '-' || board[i][j] == word[0])
+            {
+
+                if (canPlaceWordH(board, i, j, word))
+                {
+                    vector<bool> loc = placeWordH(board, i, j, word);
+                    count += crossWord_(board, words, idx + 1);
+                    UnplaceWordH(board, i, j, loc);
+                }
+
+                if (canPlaceWordV(board, i, j, word))
+                {
+                    vector<bool> loc = placeWordV(board, i, j, word);
+                    count += crossWord_(board, words, idx + 1);
+                    UnplaceWordV(board, i, j, loc);
+                }
+            }
+        }
+    }
+
+    return count;
+}
+
+void crossWord()
+{
+    vector<vector<char>> board = {
+        {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+        {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+        {'+', '-', '-', '-', '-', '-', '-', '-', '+', '+'},
+        {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+        {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+        {'+', '-', '-', '-', '-', '-', '-', '+', '+', '+'},
+        {'+', '-', '+', '+', '+', '-', '+', '+', '+', '+'},
+        {'+', '+', '+', '+', '+', '-', '+', '+', '+', '+'},
+        {'+', '+', '+', '+', '+', '-', '+', '+', '+', '+'},
+        {'+', '+', '+', '+', '+', '+', '+', '+', '+', '+'}};
+
+    vector<string> words = {"agra", "norway", "england", "gwalior"};
+    cout << crossWord_(board, words, 0) << endl;
+}
+
 void solve()
 {
     // basic();
     // floodFillSet();
-    PandC();
+    // PandC();
+    // sudoku();
+    // crypto();
+    crossWord();
 }
 
 int main()
