@@ -988,12 +988,39 @@ int minSquares(int n, int m, vector<vector<int>> &dp)
 
         minAns = min(minAns, min(fp_upside + fp_right, sp_upside + sp_right));
     }
- 
+
     if (minAns != n * m)
         minAns++;
 
     dp[n][m] = minAns;
     return minAns;
+}
+
+int burstBallon(vector<int> &arr, int st, int en, vector<vector<int>> &dp)
+{
+    if (st == en)
+        return arr[st];
+
+    if (dp[st][en] != 0)
+        return dp[st][en];
+
+    int l = st - 1 == -1 ? 1 : arr[st - 1];
+    int r = en + 1 == arr.size() ? 1 : arr[en + 1];
+    int maxAns = 0;
+
+    for (int i = st; i <= en; i++)
+    {
+        int left = i == st ? 0 : burstBallon(st, i - 1, dp);
+        int right = i == en ? 0 : burstBallon(i + 1, en, dp);
+
+        int myCost = left + l * arr[i] * r + right;
+        if (myCost > maxAns)
+            maxAns = myCost;
+    }
+
+    dp[st][en] = maxAns;
+
+    return maxAns;
 }
 
 void solve()
