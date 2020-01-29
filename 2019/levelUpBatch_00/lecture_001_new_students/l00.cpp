@@ -653,6 +653,52 @@ int sudoku_02(vector<int> &sudokuZeros, int bno)
     return count;
 }
 
+int sudoku_03(vector<int> &sudokuZeros, int num, int bno)
+{
+    // base
+    if (bno == sudokuZeros.size() || num == 10)
+    {
+        if (bno == sudokuZeros.size())
+        {
+            for (vector<int> ar : board)
+            {
+                for (int ele : ar)
+                    cout << ele << " ";
+                cout << endl;
+            }
+            cout << endl;
+
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+
+    int i = sudokuZeros[bno] / 9;
+    int j = sudokuZeros[bno] % 9;
+
+    int mask = 1 << num;
+    if ((rows[i] & mask) == 0 && (cols[j] & mask) == 0 && (mat[i / 3][j / 3] & mask) == 0)
+    {
+        rows[i] ^= mask;
+        cols[j] ^= mask;
+        mat[i / 3][j / 3] ^= mask;
+        board[i][j] = num;
+
+        count += sudoku_03(sudokuZeros, 1, bno + 1);
+
+        rows[i] ^= mask;
+        cols[j] ^= mask;
+        mat[i / 3][j / 3] ^= mask;
+        board[i][j] = 0;
+    }
+
+    count += sudoku_03(sudokuZeros, num + 1, bno);
+
+    return count;
+}
+
 void sudoku()
 {
     vector<int> sudokuZeros;
@@ -682,7 +728,8 @@ void sudoku()
         }
     }
 
-    cout << sudoku_02(sudokuZeros, 0) << endl;
+    // cout << sudoku_02(sudokuZeros, 0) << endl;
+    cout << sudoku_03(sudokuZeros, 1, 0) << endl;
 }
 
 string str1 = "send";
@@ -892,14 +939,71 @@ void crossWord()
     cout << crossWord_(board, words, 0) << endl;
 }
 
+// for n*m.
+// ek sqaure cut kiya i*i ka usse do possiblites bngyi rectangle bnane ki
+
+//upper ka cut portion ((n-i)*i) and right side pura (n*(m-i)).
+//  ---------------
+// |(n-i) |        |
+// | *i   |        |
+// |------  n*(m-i)|
+// |  cut |        |
+// | piece|        |
+// |of i*i|        |
+//  ---------------
+
+//upper ka cut portion ((n-i)*m) and right side pura (i*(m-i)).
+//  ---------------
+// |   (n-i)*m     |
+// |------ ........|
+// |  cut |        |
+// | piece| i*(m-i)|
+// |of i*i|        |
+//  ---------------
+
+int minSquares(int n, int m, vector<vector<int>> &dp)
+{
+    if (n == 0 || m == 0)
+        return 0;
+    if (n == 1 || m == 1)
+        return n == 1 ? m : n;
+    if (n == m)
+        return 1;
+
+    if ((n == 11 && m == 13) || (n == 13 && m == 11))
+        return 6;
+
+    if (dp[n][m] != 0)
+        return dp[n][m];
+
+    int minAns = n * m;
+    int loopRange = min(n, m);
+    for (int i = loopRange; i >= 1; i--)
+    {
+        int fp_upside = minSquares(n - i, i);
+        int fp_right = minSquares(n, m - i);
+
+        int sp_upside = minSquares(n - i, m);
+        int sp_right = minSquares(i, m - i);
+
+        minAns = min(minAns, min(fp_upside + fp_right, sp_upside + sp_right));
+    }
+ 
+    if (minAns != n * m)
+        minAns++;
+
+    dp[n][m] = minAns;
+    return minAns;
+}
+
 void solve()
 {
     // basic();
     // floodFillSet();
     // PandC();
-    // sudoku();
+    sudoku();
     // crypto();
-    crossWord();
+    // crossWord();
 }
 
 int main()
