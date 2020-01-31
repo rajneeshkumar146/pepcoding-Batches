@@ -684,9 +684,10 @@ int minPalindromicCut_DP(string &str, int st, int end, vvi &dp, vvb &isPali)
                 min_ = min(min_, cost);
             }
             dp[st][end] = min_;
-            return min_;
         }
     }
+
+    dp[0][str.length()-1];
 }
 
 int OBST(vi &keys, vi &freq)

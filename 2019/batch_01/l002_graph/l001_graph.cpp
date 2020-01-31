@@ -4,7 +4,7 @@
 #include <queue>
 using namespace std;
 
-class Edge
+class Edgep
 {
 public:
     int v = 0;
