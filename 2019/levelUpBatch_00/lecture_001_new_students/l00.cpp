@@ -998,9 +998,6 @@ int minSquares(int n, int m, vector<vector<int>> &dp)
 
 int burstBallon(vector<int> &arr, int st, int en, vector<vector<int>> &dp)
 {
-    if (st == en)
-        return arr[st];
-
     if (dp[st][en] != 0)
         return dp[st][en];
 

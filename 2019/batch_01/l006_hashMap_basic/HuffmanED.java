@@ -23,20 +23,12 @@ public class HuffmanED{
         // }
 
       huffman_Tree("asdgvajdvmnasvcamnsvcasdaskmndbckasjbdcmanbscmsanbcmsnbcmsnbcmsnbcdmdsncmsbcmsnbcskgymnszdcvmzcvn");
-    //   System.out.print(encode);
+      System.out.println(encode);
         
 
-    //   String str=encode("aaabcda");
-    //    System.out.print(decode(str));
+      String str=encode("aaabcda");
+      System.out.print(decode(str));
 
-    StringBuilder str1=new StringBuilder();
-    // long val=0;
-    for(long i=0;i<100000;i++){
-        //  val+=i;
-         str1.append(i);
-    }
-
-    System.out.println(str1);
 
     }
 
@@ -97,11 +89,36 @@ public class HuffmanED{
 
     }
 
-    // public static String encode(String str){
+    public static String encode(String str){
+        StringBuilder sb=new StringBuilder();
+        for(int i=0;i<str.length();i++){
+            char ch=str.charAt(i);
+            String s=ch+"";
+            
+            String res=encode.get(s);
+            sb.append(res);
 
 
+        }
 
-    // }
+        return sb.toString();
+    }
+
+    public static String decode(String str){
+        StringBuilder sb=new StringBuilder();
+        
+        int j=0;
+        for(int i=1;i<=str.length();i++){
+            String possibleStr=str.substring(j,i);
+            if(decode.containsKey(possibleStr)==true){
+                j=i;
+                sb.append(decode.get(possibleStr));
+            }
+
+        }
+        return sb.toString();
+
+    }
 
 
     
