@@ -5,6 +5,7 @@ public class l001_heap {
         int[] arr = { 10, 20, 30, -2, -3, -4, 5, 6, 7, 8, 9, 22, 11, 13 };
         priorityQueue pq = new priorityQueue(arr, false);
 
+        
         while (pq.size() != 0) {
             System.out.print(pq.remove() + " ");
         }
@@ -25,7 +26,7 @@ public class l001_heap {
             }
 
             for (int i = arr.size() - 1; i >= 0; i--) {
-                downHeapify(i);
+                downHeapify(i, arr.size() - 1);
             }
         }
 
@@ -43,7 +44,7 @@ public class l001_heap {
 
             int remove_ele = arr.get(arr.size() - 1);
             arr.remove(arr.size() - 1);
-            downHeapify(0);
+            downHeapify(0, arr.size() - 1);
 
             return remove_ele;
         }
@@ -62,7 +63,7 @@ public class l001_heap {
 
             arr.set(idx, newVal);
             upheapify(idx);
-            downHeapify(idx);
+            downHeapify(idx, arr.size() - 1);
         }
 
         public int size() {
@@ -77,22 +78,22 @@ public class l001_heap {
             }
         }
 
-        public void downHeapify(int idx) {
+        public void downHeapify(int idx, int n) {
             int maxidx = idx;
             int lci = 2 * idx + 1;
             int rci = 2 * idx + 2;
 
-            if (lci < arr.size() && compareTo(arr.get(lci), arr.get(maxidx)) > 0) {
+            if (lci <= n && compareTo(arr.get(lci), arr.get(maxidx)) > 0) {
                 maxidx = lci;
             }
 
-            if (rci < arr.size() && compareTo(arr.get(rci), arr.get(maxidx)) > 0) {
+            if (rci <= n && compareTo(arr.get(rci), arr.get(maxidx)) > 0) {
                 maxidx = rci;
             }
 
             if (maxidx != idx) {
                 swap(maxidx, idx);
-                downHeapify(maxidx);
+                downHeapify(maxidx, n);
             }
         }
 

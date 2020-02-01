@@ -5,10 +5,12 @@ import java.util.HashMap;
 public class BTree {
 
     public static void main(String[] args) {
-        int[] arr = { 10, 20, 30, -1, -1, 40, -1, -1, 50, 60, 80, -1, -1, -1, 70, 90, -1, 100, -1, -1, -1 };
-        Node root = create(arr);
-        display(root);
-        solve(root);
+        // int[] arr = { 10, 20, 30, -1, -1, 40, -1, -1, 50, 60, 80, -1, -1, -1, 70, 90, -1, 100, -1, -1, -1 };
+        // Node root = create(arr);
+        // display(root);
+        // solve(root);
+
+        BSTQuest();
 
     }
 
@@ -42,6 +44,20 @@ public class BTree {
         // System.out.println(diameter2(root)[0]);
         // levelOder_01(root);
         levelOder_02(root);
+    }
+
+    public static void BSTQuest(){
+    int[] arr={10,20,30,40,50,60,70,80};
+    Node root=createBST(arr,0,arr.length-1);
+   
+
+    addData(root,32);
+    addData(root,25);
+
+   removeData(root,25); 
+
+
+    display(root);
     }
 
     public static void LCA(Node root) {
@@ -680,5 +696,73 @@ public class BTree {
         que.addLast(new verticalPair(node, 0));
 
     }
+
+
+    //================================================
+
+
+    public static Node createBST(int[] arr,int si,int ei){
+       if(si>ei){
+           return null;
+       }
+
+       int mid=(si+ei) / 2;  // (si+ei)>>>1; si + (ei-si)/2;
+       Node node=new Node(arr[mid],null,null);
+      
+       node.left=createBST(arr,si,mid-1);
+       node.right=createBST(arr,mid+1,ei);
+
+       return node;
+    }
+
+    public static Node addData(Node root,int data){
+         if(root==null){
+             Node node=new Node(data,null,null);
+             return node;
+         }
+
+       if(data<root.data){
+           root.left=addData(root.left,data);
+       }else{
+           root.right=addData(root.right,data);
+       }
+
+       return root;
+    }
+
+    public static Node findMaxInBST_forRemovedata(Node node){
+           Node prev=null;
+           Node rnode=node;
+           while(rnode.right!=null){
+               prev=rnode;
+               rnode=rnode.right;
+           }
+           return prev;
+
+    }
+
+    public static Node removeData(Node node,int data){
+        if(data<node.data){
+            node.left=removeData(node.left,data);
+        }else if(data>node.data){
+            node.right=removeData(node.right,data);
+        }else{
+            if(node.left==null || node.right==null){
+                return node.left==null?node.right:node.left;
+            }
+
+            Node rdata_prev=findMaxInBST_forRemovedata(node.left);
+            node.data=rdata_prev.right.data;
+
+           rdata_prev.right=removeData(rdata_prev.right,rdata_prev.right.data);
+        }
+
+
+
+
+        return node;
+
+    }
+
 
 }
