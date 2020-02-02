@@ -1,2 +1,5 @@
-6
-6
+A (AB) (A(BC)) ((A(BC))D) 
+  B (BC) ((BC)D) 
+    C (CD) 
+      D 
+((A(BC))D) -> 26000
