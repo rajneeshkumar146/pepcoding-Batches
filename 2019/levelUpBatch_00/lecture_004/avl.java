@@ -144,6 +144,4 @@ public class avl {
         node=getRotate(node);
         return node;
     }
-
-
 }
