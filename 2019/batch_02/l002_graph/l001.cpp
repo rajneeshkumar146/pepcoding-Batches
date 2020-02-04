@@ -400,14 +400,65 @@ void dijikstra(int src)
     }
 
     display(dGraph);
-    cout<<endl;
-    for(int ele: dShortestPath){
-        cout<<ele<<" ";
+    cout << endl;
+    for (int ele : dShortestPath)
+    {
+        cout << ele << " ";
     }
 }
 
+vector<int> low(n, -1);
+vector<int> dis(n, -1);
+vector<bool> ApPoints(n, false);
 
- 
+int time_ = 0;
+int callsForRoot = 0;
+
+void dfs_AP(int src, int par, int osrc)
+{
+    low[src] = dis[src] = time_++;
+    for (Edge *e : graph[src])
+    {
+        if (dis[e->v] == -1)
+        { //unVisited.
+
+            if (src == osrc)
+                callsForRoot++;
+
+            dfs_AP(e->v, src, osrc);
+
+            if (dis[src] <= low[e->v]) //AP point
+                ApPoints[src] = true;
+            if (dis[src] < low[e->v]) //AP Bridge.
+                cout << "AP Edge" << src << " to " << e->v << endl;
+
+            low[src] = min(low[src], low[e->v]);
+        }
+        else if (e->v != par)
+        { //visited
+            low[src] = min(low[src], dis[e->v]);
+            // region for BackEdge.
+        }
+    }
+}
+
+void AP_pointsAnsBridges()
+{
+    dfs_AP(0, -1, 0);
+    if (callsForRoot > 1)
+    {
+        cout << 0 << endl;
+    }
+
+    for (int i = 0; i < ApPoints.size(); i++)
+    {
+        if (ApPoints[i] && i != 0)
+        {
+            cout << i << endl;
+        }
+    }
+}
+
 void solve()
 {
     constructGraph();
@@ -425,7 +476,8 @@ void solve()
 
     // cout << hamintonainPath(0, 0, 0, vis, "") << endl;
     // isBipartite();
-    dijikstra(2);
+    // dijikstra(2);
+    AP_pointsAnsBridges();
 }
 
 int main()

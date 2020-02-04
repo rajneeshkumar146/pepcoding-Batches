@@ -41,6 +41,8 @@ int findPar(int vtx, vector<int> &par)
 
     par[vtx] = findPar(par[vtx], par);
     return par[vtx];
+
+    // return ((par[vtx] != vtx) ? par[vtx] = findPar(par[vtx], par) : vtx);
 }
 
 void kruskal(vector<piii> &arr, int n, vector<int> &par, vector<int> &size)
@@ -85,14 +87,14 @@ void kruskal()
         return a.first < b.first;
     });
 
-    vector<int> par(n,0);
-    vector<int> size(n,1);
-    for(int i=0;i<n;i++){
-        par[i]=i;
+    vector<int> par(n, 0);
+    vector<int> size(n, 1);
+    for (int i = 0; i < n; i++)
+    {
+        par[i] = i;
     }
-    
 
-    kruskal(arr,n,par,size);
+    kruskal(arr, n, par, size);
 }
 
 void solve()
