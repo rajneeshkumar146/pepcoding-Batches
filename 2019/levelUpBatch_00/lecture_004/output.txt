@@ -1,12 +1,5 @@
-20 -> 10 <- 50
-30 -> 20 <- 40
-. -> 30 <- .
-. -> 40 <- .
-60 -> 50 <- 70
-80 -> 60 <- .
-. -> 80 <- .
-90 -> 70 <- .
-. -> 90 <- 100
-. -> 100 <- .
-2
-2
+{USA=0, Pakistan=-1000, China=40, Nepal=800, India=1000}
+null
+true
+{USA=0, Pakistan=-1000, China=40, Nepal=800, India=1001}
+[USA, Pakistan, China, Nepal, India]
