@@ -123,6 +123,9 @@ public:
 
     int removeLast()
     {
+        if (size == 0)
+            return -1;
+        
         Node *rn = nullptr;
         if (size == 1)
         {
@@ -188,6 +191,90 @@ public:
     }
 
     //reverse.========================================
+
+private:
+    class pairReve
+    {
+    public:
+        Node *prevNode = nullptr;
+    };
+
+    void reverseDataRec_(Node *node, pairReve *prev, int level)
+    {
+        if (node == nullptr)
+            return;
+
+        reverseDataRec_(node->next, prev, level + 1);
+        if (level > this->size / 2)
+        {
+            int temp = prev->prevNode->data;
+            prev->prevNode->data = node->data;
+            node->data = temp;
+
+            prev->prevNode = prev->prevNode->next;
+        }
+    }
+
+public:
+    void reverseDataRec()
+    {
+        pairReve *prev = new pairReve();
+        prev->prevNode = head;
+
+        reverseDataRec_(head, prev, 0);
+    }
+
+private:
+    Node *reverseList_(Node *node)
+    {
+        Node *prev = nullptr;
+        Node *curr = node;
+
+        while (curr != nullptr)
+        {
+            Node *forw = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = forw;
+        }
+
+        return prev;
+    }
+
+public:
+    void reverseList()
+    {
+        Node *prev = reverseList_(head);
+
+        tail = head;
+        head = prev;
+    }
+
+    bool isPlaindrome()
+    {
+        Node *midNode = mid();
+        Node *nhead = midNode->next;
+        midNode->next = nullptr;
+
+        Node *prev = reverseList_(nhead);
+
+        Node *list1 = prev;
+        Node *list2 = head;
+        bool flag = true;
+        while (list1 != nullptr && list2 != nullptr)
+        {
+            if (list1->data != list2->data)
+                flag = false;
+
+            list1 = list1->next;
+            list2 = list2->next;
+        }
+
+        prev = reverseList_(prev);
+        midNode->next = nhead;
+
+        return flag;
+    }
 };
 
 void solve()
@@ -195,11 +282,22 @@ void solve()
     LinkedList ll;
     for (int i = 1; i <= 10; i++)
     {
-        ll.addFirst(i * 10);
+        ll.addLast(i * 10);
     }
 
-    ll.removeLast();
+    for (int i = 10; i >= 1; i--)
+    {
+        ll.addLast(i * 10);
+    }
+
+    // ll.removeLast();
     ll.display();
+
+    // ll.reverseDataRec();
+    // ll.reverseList();
+
+    cout << ll.isPlaindrome() << endl;
+    // ll.display();
 }
 
 int main()

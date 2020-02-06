@@ -7,11 +7,11 @@ public class BTree {
     public static void main(String[] args) {
         int[] arr = { 10, 20, 30, -1, -1, 40, -1, -1, 50, 60, 80, -1, -1, -1, 70, 90, -1, 100, -1, -1, -1 };
         Node root = create(arr);
-        display(root);
-        // solve(root);
+        // display(root);
+        solve(root);
 
-        System.out.println(width(root, true));
-        System.out.println(width(root, false));
+        // System.out.println(width(root, true));
+        // System.out.println(width(root, false));
 
         // BSTQuest();
 
@@ -35,11 +35,12 @@ public class BTree {
         // prev_ = prev_.left;
         // }
 
-        idx = 0;
-        int[] arr = { 50, 25, 20, 30, 75, 65 };
+        // idx = 0;
+        // int[] arr = { 50, 25, 20, 30, 75, 65 };
         // root = BSTFromPreOder(arr, (int) -1e8, 0, (int) 1e8);
         // display(root);
-        System.out.println(HeightOfBSTFromPreOder(arr, (int) -1e8, 0, (int) 1e8));
+        // System.out.println(HeightOfBSTFromPreOder(arr, (int) -1e8, 0, (int) 1e8));
+        set3();
     }
 
     public static void basic(Node root) {
@@ -463,7 +464,7 @@ public class BTree {
             return;
 
         DLL(node.left);
-
+        
         prev_ = node;
         DLL(node.right);
     }
@@ -804,6 +805,92 @@ public class BTree {
         int max2 = LCseq(node.right, node.data + 1, currLen);
 
         return Math.max(currLen, Math.max(max1, max2));
+    }
+
+    // set3========================================
+
+    public static void set3() {
+        HashMapTest();
+    }
+
+    public static void HashMapTest() {
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("India", 1000);
+        map.put("China", 40);
+        map.put("Nepal", 800);
+        map.put("Pakistan", -1000);
+        map.put("USA", 0);
+
+        System.out.println(map);
+
+        System.out.println(map.get("UE"));
+        System.out.println(map.containsKey("India"));
+        map.put("India", map.getOrDefault("India", 10) + 1);
+        System.out.println(map);
+        ArrayList<String> keys = new ArrayList<>(map.keySet());
+        System.out.println(keys);
+    }
+
+    static HashMap<Integer,Integer> map=new HashMap<>();\
+    static int maxFreq = 0;
+
+    public static int[] mostFrequentSum(Node node) {
+        if (node == null)
+            return new int[];
+
+        mostFrequentSum_(node);
+        int size = 0;
+        for (Integer key : map.keySet()) {
+            if (map.get(key) == maxFreq)
+                size++;
+        }
+
+        int[] ans = new int[size];
+        int i = 0;
+        for (Integer key : map.keySet()) {
+            if (map.get(key) == maxFreq) {
+                ans[i] = key;
+                i++;
+            }
+        }
+
+        return ans;
+
+    }
+
+    public static int mostFrequentSum_(Node node) {
+        if (node == null)
+            return 0;
+
+        int sum = mostFrequentSum_(node.left) + mostFrequentSum_(node.right) + node.data;
+        map.put(sum, map.getOrDefault(sum, 0) + 1);
+        maxFreq = Math.max(maxFreq, map.get(sum));
+        return sum;
+    }
+
+    static Node succ = null;
+
+    public static boolean BTSucc(Node node, int data) {
+        if (node == null)
+            return false;
+
+        if (node.data == data) {
+            if (node.right != null) {
+                Node curr = node.right;
+                while (curr.left != null) {
+                    curr = curr.left;
+                }
+                succ = curr;
+            }
+            return true;
+        }
+
+        succ = node;
+        boolean res = false;
+        res = res || BTSucc(node.left, data);
+        res = res || BTSucc(node.right, data);
+
+        return res;
     }
 
 }
