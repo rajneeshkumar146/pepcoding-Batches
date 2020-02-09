@@ -1,5 +1,50 @@
 #include <iostream>
+#include <list>
+#include <unordered_map>
+
 using namespace std;
+
+class LRU
+{
+    list<int> ll;
+    unordered_map<int, int> map;
+    int defaultSize = 4;
+
+    void set(int key, int val)
+    {
+        if (map.find(key) == map.end())
+        {
+            if (ll.size() == defaultSize)
+            {
+                int lastKey = ll.back();
+                ll.pop_back();
+                map.erase(lastKey);
+            }
+
+            ll.push_front(key);
+            map[key] = val;
+        }
+        else
+        {
+            ll.remove(key);
+            ll.push_front(key);
+            map[key] = val;
+        }
+    }
+
+    int get(int key)
+    {
+        if (map.find(key) == map.end())
+            return -1;
+        else
+        {
+            ll.remove(key);
+            ll.push_front(key);
+            return map[key];
+        }
+    }
+};
+
 class LinkedList
 {
 
@@ -35,9 +80,9 @@ public:
         }
     }
 
-    void addFirst(int data)
+private:
+    void addFirstNode(Node *node)
     {
-        Node *node = new Node(data);
         if (head == nullptr)
         {
             head = node;
@@ -51,9 +96,8 @@ public:
         size++;
     }
 
-    void addLast(int data)
+    void addLastNode(Node *data)
     {
-        Node *node = new Node(data);
         if (tail == nullptr)
         {
             head = node;
@@ -67,7 +111,7 @@ public:
         size++;
     }
 
-    int removefirst()
+    Node *removeFirstNode()
     {
         Node *rn = nullptr;
         if (head != nullptr)
@@ -80,8 +124,28 @@ public:
             head = head->next;
         }
 
-        int data = rn != nullptr ? rn->data : -1;
         size--;
+        return rn;
+    }
+
+public:
+    void addFirst(int data)
+    {
+        Node *node = new Node(data);
+        addFirstNode(node);
+    }
+
+    void addLast(int data)
+    {
+        Node *node = new Node(data);
+        addLastNode(node);
+    }
+
+    int removeFirst()
+    {
+        Node *rn = removeFirstNode();
+        if (rn == nullptr)
+            return -1;
         delete rn;
         return data;
     }
@@ -125,7 +189,7 @@ public:
     {
         if (size == 0)
             return -1;
-        
+
         Node *rn = nullptr;
         if (size == 1)
         {
@@ -275,6 +339,78 @@ public:
 
         return flag;
     }
+
+    void fold()
+    {
+        Node *midNode = mid();
+        Node *nhead = midNode->next;
+        midNode->next = nullptr;
+
+        Node *prev = reverseList_(nhead);
+
+        Node *curr1 = head;
+        Node *curr2 = prev;
+
+        while (curr2 != nullptr)
+        {
+            Node *cn1 = curr1->next;
+            Node *cn2 = curr2->next;
+
+            curr1->next = curr2;
+            curr2->next = cn1;
+
+            curr1 = cn1;
+            curr2 = cn2;
+        }
+
+        if (curr1 == nullptr)
+            tail = nhead;
+        else
+            tail = curr1;
+    }
+
+private:
+    Node *detectCycle_()
+    {
+
+        Node *slow = head;
+        Node *fast = head;
+
+        while (fast != nullptr && fast->next != nullptr)
+        {
+            slow = slow->next;
+            fast = fast->next->next;
+
+            if (slow == fast)
+                return slow;
+        }
+
+        return nullptr;
+    }
+
+public:
+    bool detectCycle()
+    {
+        return detectCycle_() != nullptr;
+    }
+
+    int intersectionPoint()
+    {
+        Node *node1 = detectCycle_();
+
+        if (node1 != nullptr)
+        {
+            Node *node2 = head;
+            while (node2 != slow)
+            {
+                node1 = node1->next;
+                node2 = node2->next;
+            }
+
+            return slow->data;
+        }
+        return -1;
+    }
 };
 
 void solve()
@@ -285,10 +421,10 @@ void solve()
         ll.addLast(i * 10);
     }
 
-    for (int i = 10; i >= 1; i--)
-    {
-        ll.addLast(i * 10);
-    }
+    // for (int i = 10; i >= 1; i--)
+    // {
+    //     ll.addLast(i * 10);
+    // }
 
     // ll.removeLast();
     ll.display();
@@ -296,8 +432,12 @@ void solve()
     // ll.reverseDataRec();
     // ll.reverseList();
 
-    cout << ll.isPlaindrome() << endl;
+    // cout << ll.isPlaindrome() << endl;
     // ll.display();
+
+    ll.fold();
+    ll.addLast(100);
+    ll.display();
 }
 
 int main()

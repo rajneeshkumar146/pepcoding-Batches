@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.HashMap;
+import java.util.Stack;
 
 public class BTree {
 
@@ -8,12 +9,12 @@ public class BTree {
         int[] arr = { 10, 20, 30, -1, -1, 40, -1, -1, 50, 60, 80, -1, -1, -1, 70, 90, -1, 100, -1, -1, -1 };
         Node root = create(arr);
         // display(root);
-        solve(root);
+        // solve(root);
 
         // System.out.println(width(root, true));
         // System.out.println(width(root, false));
 
-        // BSTQuest();
+        BSTQuest();
 
     }
 
@@ -40,7 +41,7 @@ public class BTree {
         // root = BSTFromPreOder(arr, (int) -1e8, 0, (int) 1e8);
         // display(root);
         // System.out.println(HeightOfBSTFromPreOder(arr, (int) -1e8, 0, (int) 1e8));
-        set3();
+        set3(root);
     }
 
     public static void basic(Node root) {
@@ -59,9 +60,9 @@ public class BTree {
 
         // removeData(root, 25);
 
-        if (find_BST(root, 20) && find_BST(root, 70)) {
-            System.out.println(LCA_InBST(root, 20, 70));
-        }
+        // if (find_BST(root, 20) && find_BST(root, 70)) {
+        //     System.out.println(LCA_InBST(root, 20, 70));
+        // }
 
         display(root);
     }
@@ -464,7 +465,7 @@ public class BTree {
             return;
 
         DLL(node.left);
-        
+
         prev_ = node;
         DLL(node.right);
     }
@@ -809,8 +810,12 @@ public class BTree {
 
     // set3========================================
 
-    public static void set3() {
-        HashMapTest();
+    public static void set3(Node node) {
+        // HashMapTest();
+        // morrisIn(node);
+        // System.out.println();
+        // morrisPre(node);
+        traverse(node);
     }
 
     public static void HashMapTest() {
@@ -831,12 +836,12 @@ public class BTree {
         System.out.println(keys);
     }
 
-    static HashMap<Integer,Integer> map=new HashMap<>();\
+    static HashMap<Integer, Integer> map = new HashMap<>();
     static int maxFreq = 0;
 
     public static int[] mostFrequentSum(Node node) {
         if (node == null)
-            return new int[];
+            return new int[0];
 
         mostFrequentSum_(node);
         int size = 0;
@@ -891,6 +896,98 @@ public class BTree {
         res = res || BTSucc(node.right, data);
 
         return res;
+    }
+
+    public static Node rightMost(Node node, Node curr) {
+        while (node.right != null && node.right != curr) {
+            node = node.right;
+        }
+        return node;
+    }
+
+    public static void morrisIn(Node node) {
+        Node curr = node;
+        while (curr != null) {
+            Node nextLeft = curr.left;
+            if (nextLeft == null) {
+                System.out.print(curr.data + " "); // print.
+                curr = curr.right;
+                continue;
+            }
+
+            Node rightMost = rightMost(nextLeft, curr);
+
+            if (rightMost.right == null) {
+                rightMost.right = curr; // thread.
+                curr = curr.left;
+            } else {
+                rightMost.right = null; // break thread.
+                System.out.print(curr.data + " "); // print.
+                curr = curr.right;
+            }
+
+        }
+    }
+
+    public static void morrisPre(Node node) {
+        Node curr = node;
+        while (curr != null) {
+            Node nextLeft = curr.left;
+            if (nextLeft == null) {
+                System.out.print(curr.data + " "); // print.
+                curr = curr.right;
+                continue;
+            }
+
+            Node rightMost = rightMost(nextLeft, curr);
+
+            if (rightMost.right == null) {
+                rightMost.right = curr; // thread.
+                System.out.print(curr.data + " "); // print.
+                curr = curr.left;
+            } else {
+                rightMost.right = null; // break thread.
+                curr = curr.right;
+            }
+
+        }
+    }
+
+    public static class Tpair {
+        Node node = null;
+        boolean sd = false;
+        boolean ld = false;
+        boolean rd = false;
+
+        Tpair(Node node) {
+            this.node = node;
+        }
+    }
+
+    public static void traverse(Node root) {
+        Stack<Tpair> st = new Stack<>();
+        st.push(new Tpair(root));
+        while (st.size() != 0) {
+            Tpair gnode = st.peek();
+            if (!gnode.ld) {
+                gnode.ld = true;
+                if (gnode.node.left != null) {
+                    st.push(new Tpair(gnode.node.left));
+                }
+
+            } else if (!gnode.rd) {
+                gnode.rd = true;
+                if (gnode.node.right != null) {
+                    st.push(new Tpair(gnode.node.right));
+                }
+            } else if (!gnode.sd) {
+                System.out.print(gnode.node.data + " ");
+                gnode.sd = true;
+            } else {
+                st.pop();
+            }
+        }
+
     }
 
 }
