@@ -1,5 +1,8 @@
-{USA=0, Pakistan=-1000, China=40, Nepal=800, India=1000}
-null
-true
-{USA=0, Pakistan=-1000, China=40, Nepal=800, India=1001}
-[USA, Pakistan, China, Nepal, India]
+20 -> 40 <- 60
+10 -> 20 <- 30
+. -> 10 <- .
+. -> 30 <- .
+50 -> 60 <- 70
+. -> 50 <- .
+. -> 70 <- 80
+. -> 80 <- .
