@@ -1,5 +1,50 @@
 #include <iostream>
+#include <list>
+#include <unordered_map>
+
 using namespace std;
+
+class LRU
+{
+    list<int> ll;
+    unordered_map<int, int> map;
+    int defaultSize = 4;
+
+    void set(int key, int val)
+    {
+        if (map.find(key) == map.end())
+        {
+            if (ll.size() == defaultSize)
+            {
+                int lastKey = ll.back();
+                ll.pop_back();
+                map.erase(lastKey);
+            }
+
+            ll.push_front(key);
+            map[key] = val;
+        }
+        else
+        {
+            ll.remove(key);
+            ll.push_front(key);
+            map[key] = val;
+        }
+    }
+
+    int get(int key)
+    {
+        if (map.find(key) == map.end())
+            return -1;
+        else
+        {
+            ll.remove(key);
+            ll.push_front(key);
+            return map[key];
+        }
+    }
+};
+
 class LinkedList
 {
 
@@ -51,7 +96,7 @@ private:
         size++;
     }
 
-    void addLast(Node *data)
+    void addLastNode(Node *data)
     {
         if (tail == nullptr)
         {
@@ -344,15 +389,15 @@ private:
     }
 
 public:
-
-    bool detectCycle(){
-        return detectCycle_()!=nullptr; 
+    bool detectCycle()
+    {
+        return detectCycle_() != nullptr;
     }
 
     int intersectionPoint()
     {
         Node *node1 = detectCycle_();
-       
+
         if (node1 != nullptr)
         {
             Node *node2 = head;
@@ -366,8 +411,6 @@ public:
         }
         return -1;
     }
-
-    
 };
 
 void solve()
