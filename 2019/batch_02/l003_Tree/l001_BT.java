@@ -211,9 +211,119 @@ public class l001_BT {
         return -1;
     }
 
+    int diameter_01(Node node) {
+        if (node == null)
+            return 0;
+
+        int ld = diameter_01(node.left);
+        int rd = diameter_01(node.right);
+
+        int lh = height(node.left);
+        int rh = height(node.right);
+
+        return Math.max(Math.max(ld, rd), lh + rh + 2);
+    }
+
+    int[] diameter_02(Node node) {
+        if (node == null)
+            return new int[] { 0, -1 };
+
+        int[] ld = diameter_02(node.left);
+        int[] rd = diameter_02(node.right);
+
+        int[] myAns = new int[2];
+        myAns[0] = Math.max(Math.max(ld[0], rd[0]), ld[1] + rd[1] + 2);
+        myAns[1] = Math.max(ld[1], rd[1]) + 1;
+
+        return myAns;
+    }
+
+    static int maxDia = 0;
+
+    int diameter_03(Node node) {
+        if (node == null)
+            return -1;
+
+        int lh = diameter_03(node.left);
+        int rh = diameter_03(node.right);
+
+        maxDia = Math.max(maxDia, lh + rh + 2);
+        return Math.max(lh, rh) + 1;
+
+    }
+
+    static int MaxSum = Integer.MIN_VALUE;
+
+    public static int leafToLeafSum(Node node) {
+        if (node == null)
+            return Integer.MIN_VALUE;
+
+        if (node.left == null && node.right == null) { // leaf
+            return node.data;
+        }
+
+        int lmaxSum = leafToLeafSum(node.left);
+        int rmaxSum = leafToLeafSum(node.right);
+
+        if (node.left != null && node.right != null)
+            MaxSum = Math.max(MaxSum, lmaxSum + rmaxSum + node.data);
+
+        return Math.max(lmaxSum, rmaxSum) + node.data;
+    }
+
+    static int MaxSum1 = Integer.MIN_VALUE;
+
+    public static int nodeToNodeSum(Node node) {
+        if (node == null)
+            return 0;
+
+        int lmaxSum = nodeToNodeSum(node.left);
+        int rmaxSum = nodeToNodeSum(node.right);
+
+        int maxbranch = Math.max(lmaxSum, rmaxSum);
+
+        MaxSum1 = Math.max(Math.max(MaxSum1, node.data),
+                Math.max(maxbranch + node.data, lmaxSum + rmaxSum + node.data));
+
+        return Math.max(maxbranch + node.data, node.data);
+    }
+
+    // -1 : i need a camera.
+    // 0 : i already covered.
+    // 1 : im a camera
+    static int cameras = 0;
+
+    public static int minCameras_(Node node) {
+        if (node == null)
+            return 0;
+
+        int left = minCameras_(node.left);
+        int right = minCameras_(node.right);
+
+        if (left == -1 || right == -1) {
+            camera++;
+            return 1;
+        }
+
+        if (left == 1 || right == 1) {
+            return 0;
+        }
+
+        return -1;
+    }
+
+    public static int minCameras(Node node) {
+        int val = minCameras_(node);
+        if (val == -1)
+            camera++;
+        return camera;
+    }
+
     public static void set1(Node node) {
         // System.out.println(LCA_01(node, 40, 70));
         // KAway_01(node, 60, 2);
+        leafToLeafSum(node);
+        System.out.println(MaxSum);
     }
 
     public static void solve() {
@@ -221,7 +331,7 @@ public class l001_BT {
                 110, -1, -1, 140, -1, -1 };
 
         Node root = createTree(arr);
-        // System.out.println(root);
+        System.out.println(root);
         set1(root);
     }
 
