@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class l001_BT {
 
@@ -414,6 +415,7 @@ public class l001_BT {
                 node = node.left;
             else
                 node = node.right;
+
         }
         return false;
     }
@@ -454,6 +456,120 @@ public class l001_BT {
 
     }
 
+    public static int minInTree(Node root) {
+        if (root == null)
+            return Integer.MAX_VALUE;
+
+        Node rnode = root;
+        while (rnode.left != null) {
+            rnode = rnode.left;
+        }
+
+        return rnode.data;
+    }
+
+    public static int maxInTree(Node root) {
+        if (root == null)
+            return Integer.MIN_VALUE;
+
+        Node rnode = root;
+        while (rnode.right != null) {
+            rnode = rnode.right;
+        }
+
+        return rnode.data;
+    }
+
+    public static Node removeNode(Node node, int data) {
+        if (node == null)
+            return null;
+
+        if (node.data == data) {
+            if (node.left == null || node.right == null) {
+                return node.left == null ? node.right : node.left;
+            }
+
+            int maxdata = maxInTree(node.left);
+            node.data = maxdata;
+
+            node.left = removeNode(node.left, maxdata);
+        } else if (data < node.data)
+            node.left = removeNode(node.left, data);
+        else
+            node.right = removeNode(node.right, data);
+
+        return node;
+    }
+
+    public static Node rightMostOfNextleft(Node leftNode, Node curr) {
+        while (leftNode.right != null && leftNode.right != curr) {
+            leftNode = leftNode.right;
+        }
+        return leftNode;
+    }
+
+    public static void morrisInOder(Node node) {
+        Node curr = node;
+        while (curr != null) {
+            Node nextLeft = curr.left;
+            if (nextLeft == null) {
+                System.out.print(curr.data + " ");
+                curr = curr.right;
+            } else {
+
+                Node rightMost = rightMostOfNextleft(nextLeft, curr);
+                if (rightMost.right == null) {
+                    rightMost.right = curr; // create thread.
+                    curr = curr.left;
+                } else {
+                    System.out.print(curr.data + " ");
+                    rightMost.right = null; // break thread.
+                    curr = curr.right;
+                }
+            }
+
+        }
+
+    }
+
+    public static class Tpair {
+        Node node = null;
+        boolean sd = false;
+        boolean ld = false;
+        boolean rd = false;
+
+        Tpair(Node node) {
+            this.node = node;
+        }
+    }
+
+    public static void preOrder(Node node) {
+        Stack<Tpair> st = new Stack<>();
+        st.add(new Tpair(node));
+
+        while (st.size() != 0) {
+            Tpair tnode = st.peek();
+
+            if (!tnode.ld) {
+                tnode.ld = true;
+                if (tnode.node.left != null) {
+                    st.add(new Tpair(tnode.node.left));
+                }
+            } else if (!tnode.sd) {
+                tnode.sd = true;
+                System.out.print(tnode.node.data + " ");
+            } else if (!tnode.rd) {
+                tnode.rd = true;
+                if (tnode.node.right != null) {
+                    st.add(new Tpair(tnode.node.right));
+                }
+            } else {
+                st.pop();
+            }
+        }
+
+    }
+
     public static void BST() {
         int[] arr = new int[10];
         for (int i = 0; i < 10; i++) {
@@ -466,9 +582,17 @@ public class l001_BT {
         // root = addData(root, 220);
         // root = addData(root, 230);
         // root = addData(root, 240);
+
+        // root = removeNode(root, 200);
+        // root = removeNode(root, 50);
+        // root = removeNode(root, 40);
+
         System.out.println(root);
-        predSuccForBSt(root, 100);
+        // morrisInOder(root);
+        preOrder(root);
+        // predSuccForBSt(root, 100);
         // System.out.println(find_02(root,130));
+
     }
 
     public static void solve() {
