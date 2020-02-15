@@ -61,7 +61,7 @@ public class BTree {
         // removeData(root, 25);
 
         // if (find_BST(root, 20) && find_BST(root, 70)) {
-        //     System.out.println(LCA_InBST(root, 20, 70));
+        // System.out.println(LCA_InBST(root, 20, 70));
         // }
 
         display(root);
