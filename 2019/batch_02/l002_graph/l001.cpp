@@ -16,7 +16,8 @@ public:
     }
 };
 
-int n = 7;
+int n = 23;
+// int n = 7;
 vector<vector<Edge *>> graph(n, vector<Edge *>());
 vector<vector<Edge *>> dGraph(n, vector<Edge *>());
 vector<int> dShortestPath(n, 0);
@@ -45,14 +46,49 @@ void addEdge(vector<vector<Edge *>> &gp, int u, int v, int w)
 
 void constructGraph()
 {
-    addEdge(graph, 0, 1, 11);
-    addEdge(graph, 0, 3, 10);
-    addEdge(graph, 1, 2, 20);
-    addEdge(graph, 2, 3, 40);
-    addEdge(graph, 3, 4, 2);
-    addEdge(graph, 4, 5, 2);
-    addEdge(graph, 4, 6, 3);
-    addEdge(graph, 5, 6, 8);
+    //  graph 1
+    // addEdge(graph, 0, 1, 11);
+    // addEdge(graph, 0, 3, 10);
+    // addEdge(graph, 1, 2, 20);
+    // addEdge(graph, 2, 3, 40);
+    // addEdge(graph, 3, 4, 2);
+    // addEdge(graph, 4, 5, 2);
+    // addEdge(graph, 4, 6, 3);
+    // addEdge(graph, 5, 6, 8);
+
+    //  graph 2
+    addEdge(graph, 0, 2, 0);
+    addEdge(graph, 1, 3, 0);
+    addEdge(graph, 0, 1, 0);
+    addEdge(graph, 1, 2, 0);
+    addEdge(graph, 2, 3, 0);
+    addEdge(graph, 0, 3, 0);
+    addEdge(graph, 3, 6, 0);
+    addEdge(graph, 4, 6, 0);
+    addEdge(graph, 4, 5, 0);
+    addEdge(graph, 5, 6, 0);
+    addEdge(graph, 6, 7, 0);
+    addEdge(graph, 6, 8, 0);
+    addEdge(graph, 8, 7, 0);
+    addEdge(graph, 8, 9, 0);
+    addEdge(graph, 6, 10, 0);
+    addEdge(graph, 10, 11, 0);
+    addEdge(graph, 10, 13, 0);
+    addEdge(graph, 11, 12, 0);
+    addEdge(graph, 13, 12, 0);
+    addEdge(graph, 12, 14, 0);
+    addEdge(graph, 14, 16, 0);
+    addEdge(graph, 14, 18, 0);
+    addEdge(graph, 16, 15, 0);
+    addEdge(graph, 16, 17, 0);
+    addEdge(graph, 15, 17, 0);
+    addEdge(graph, 15, 18, 0);
+    addEdge(graph, 16, 18, 0);
+    addEdge(graph, 18, 22, 0);
+    addEdge(graph, 18, 19, 0);
+    addEdge(graph, 22, 20, 0);
+    addEdge(graph, 22, 21, 0);
+    addEdge(graph, 20, 21, 0);
 
     // addEdge(0, 6, 8);
     // addEdge(2, 5, 8);
@@ -60,7 +96,7 @@ void constructGraph()
     // addEdge(7, 9, 8);
 
     // display(graph);
-    cout << endl;
+    // cout << endl;
 }
 
 void removeEdge(int u, int v)
