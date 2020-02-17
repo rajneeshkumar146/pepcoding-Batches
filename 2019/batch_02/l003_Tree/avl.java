@@ -6,7 +6,9 @@ public class avl {
         Node left = null;
         Node right = null;
 
-        int height = -1;
+//         int height = -1;
+        int height = 0;     //  originally it has value of -1, but its giving wrong answer for that
+        //  with 0 as height of leaf node, answer is correct
         int bal = 0;
 
         public Node() {
