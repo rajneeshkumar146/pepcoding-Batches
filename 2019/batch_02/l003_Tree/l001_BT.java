@@ -570,6 +570,53 @@ public class l001_BT {
 
     }
 
+    static int leftMost = -1;
+    static int rightMost = -1;
+
+    public static void width(Node node, int level) {
+        if (node == null)
+            return;
+        leftMost = Math.min(leftMost, level);
+        rightMost = Math.max(rightMost, level);
+
+        width(node.left, level - 1);
+        width(node.right, level + 1);
+    }
+
+    public static void VerticalOder(Node node) {
+        LinkedList<Node> que1 = new LinkedList<>();
+        LinkedList<Integer> que2 = new LinkedList<>();
+
+        width(node, 0);
+        ArrayList<Integer>[] list = new ArrayList[rightMost - leftMost];
+        int[] sumList = new int[rightMost - leftMost];
+
+        que1.addLast(node);
+        que2.addLast(-leftMost);
+
+        while (que1.size() != 0) {
+            int size = que1.size();
+            while (size-- > 0) {
+                Node rn = que1.removeFirst();
+                int rd = que2.removeFirst();
+
+                list[rd].add(rn.data);
+                sumList[rd] += rn.data;
+
+                if (node.left != null) {
+                    que1.addLast(rn.left);
+                    que2.addLast(rd - 1);
+                }
+
+                if (node.right != null) {
+                    que1.addLast(rn.right);
+                    que2.addLast(rd + 1);
+                }
+            }
+        }
+
+    }
+
     public static void BST() {
         int[] arr = new int[10];
         for (int i = 0; i < 10; i++) {
