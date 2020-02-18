@@ -302,6 +302,8 @@ public class l001 {
 
         if (p.prev != null && prev.data == data && p.succ == null) {
             p.succ = node;
+
+            
         }
 
         p.prev = node;
