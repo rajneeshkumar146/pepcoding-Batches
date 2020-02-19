@@ -350,8 +350,6 @@ public class l001_BT {
             pair.floor = Math.max(pair.floor, node.data);
         }
 
-        allSolution(node.left, data, level + 1, pair);
-
         if (node.data == data && pair.pred == null) {
             pair.pred = pair.prev;
         } else if (pair.prev != null && pair.succ == null && pair.prev.data == data) {
@@ -359,6 +357,8 @@ public class l001_BT {
         }
 
         pair.prev = node;
+
+        allSolution(node.left, data, level + 1, pair);
         allSolution(node.right, data, level + 1, pair);
 
     }

@@ -665,7 +665,7 @@ public class BTree {
         idx++;
 
         int lh = -1, rh = -1;
-        if (idx < arr.length)
+        if (idx < arr.node->datalength)
             lh = HeightOfBSTFromPreOder(arr, lb, arr[idx], ele_);
         if (idx < arr.length)
             rh = HeightOfBSTFromPreOder(arr, ele_, arr[idx], ub);
