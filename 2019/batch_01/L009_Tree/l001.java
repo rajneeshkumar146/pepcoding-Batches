@@ -453,11 +453,192 @@ public class l001 {
         System.out.println();
     }
 
+    public static void verticalOrderPrint(Node node) {
+        LinkedList<Node> queN = new LinkedList<>();
+        LinkedList<Integer> queI = new LinkedList<>();
+
+        queN.addLast(node);
+        queI.addLast(0);
+
+        HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+        int min = 0;
+        int max = 0;
+
+        while (queN.size() != 0) {
+            int size = queN.size();
+            while (size-- > 0) {
+                Node rnode = queN.removeFirst();
+                Integer verticalLevel = queI.removeFirst();
+
+                min = Math.min(verticalLevel, min);
+                max = Math.max(verticalLevel, max);
+
+                if (!map.containsKey(verticalLevel))
+                    map.put(verticalLevel, new ArrayList<>());
+
+                map.get(verticalLevel).add(rnode.data);
+
+                if (rnode.left != null) {
+                    queN.addLast(rnode.left);
+                    queI.addLast(verticalLevel - 1);
+                }
+
+                if (rnode.right != null) {
+                    queN.addLast(rnode.right);
+                    queI.addLast(verticalLevel + 1);
+                }
+            }
+        }
+
+        for (int i = min; i <= max; i++) {
+            System.out.println(map.get(i));
+        }
+
+        System.out.println();
+    }
+
+    public static void verticalOrderPrint_02(Node node) {
+        LinkedList<Node> queN = new LinkedList<>();
+        LinkedList<Integer> queI = new LinkedList<>();
+
+        int[] widthA = new int[2];
+        width(node, 0, widthA);
+
+        queN.addLast(node);
+        queI.addLast(-widthA[0]);
+
+        ArrayList<Integer>[] ans = new ArrayList[widthA[1] - widthA[0] + 1];
+        for (int i = 0; i < ans.length; i++) {
+            ans[i] = new ArrayList<>();
+        }
+
+        while (queN.size() != 0) {
+            int size = queN.size();
+            while (size-- > 0) {
+                Node rnode = queN.removeFirst();
+                Integer verticalLevel = queI.removeFirst();
+
+                ans[verticalLevel].add(rnode.data);
+
+                if (rnode.left != null) {
+                    queN.addLast(rnode.left);
+                    queI.addLast(verticalLevel - 1);
+                }
+
+                if (rnode.right != null) {
+                    queN.addLast(rnode.right);
+                    queI.addLast(verticalLevel + 1);
+                }
+            }
+        }
+
+        for (int i = 0; i < ans.length; i++) {
+            System.out.println(ans[i]);
+        }
+
+        System.out.println();
+    }
+
+    public static void verticalOrderSum_02(Node node) {
+        LinkedList<Node> queN = new LinkedList<>();
+        LinkedList<Integer> queI = new LinkedList<>();
+
+        int[] widthA = new int[2];
+        width(node, 0, widthA);
+
+        queN.addLast(node);
+        queI.addLast(-widthA[0]);
+
+        int[] ans = new int[widthA[1] - widthA[0] + 1];
+
+        while (queN.size() != 0) {
+            int size = queN.size();
+            while (size-- > 0) {
+                Node rnode = queN.removeFirst();
+                Integer verticalLevel = queI.removeFirst();
+
+                ans[verticalLevel] += rnode.data;
+
+                if (rnode.left != null) {
+                    queN.addLast(rnode.left);
+                    queI.addLast(verticalLevel - 1);
+                }
+
+                if (rnode.right != null) {
+                    queN.addLast(rnode.right);
+                    queI.addLast(verticalLevel + 1);
+                }
+            }
+        }
+
+        for (int i = 0; i < ans.length; i++) {
+            System.out.println(ans[i]);
+        }
+
+        System.out.println();
+    }
+
+    public static void BottomView(Node node) {
+        LinkedList<Node> queN = new LinkedList<>();
+        LinkedList<Integer> queI = new LinkedList<>();
+
+        int[] widthA = new int[2];
+        width(node, 0, widthA);
+
+        queN.addLast(node);
+        queI.addLast(-widthA[0]);
+
+        int[] ans = new int[widthA[1] - widthA[0] + 1];
+
+        while (queN.size() != 0) {
+            int size = queN.size();
+            while (size-- > 0) {
+                Node rnode = queN.removeFirst();
+                Integer verticalLevel = queI.removeFirst();
+
+                ans[verticalLevel] = rnode.data;
+
+                if (rnode.left != null) {
+                    queN.addLast(rnode.left);
+                    queI.addLast(verticalLevel - 1);
+                }
+
+                if (rnode.right != null) {
+                    queN.addLast(rnode.right);
+                    queI.addLast(verticalLevel + 1);
+                }
+            }
+        }
+
+        for (int i = 0; i < ans.length; i++) {
+            System.out.println(ans[i]);
+        }
+
+        System.out.println();
+    }
+
+   
+
+    public static void width(Node node, int level, int[] ans) {
+        if (node == null)
+            return;
+        ans[0] = Math.min(ans[0], level);
+        ans[1] = Math.max(ans[1], level);
+
+        width(node.left, level - 1, ans);
+        width(node.right, level + 1, ans);
+
+    }
+
     public static void viewSet(Node node) {
-        lineWiseLevelOrder(node);
+        // lineWiseLevelOrder(node);
         // leftView(node);
         // rightView(node);
         // topView(node);
+        // verticalOrderPrint(node);
+        verticalOrderPrint_02(node);
+        // verticalOrderSum_02(node);
+        BottomView(node);
     }
 
     public static void main(String[] args) {
