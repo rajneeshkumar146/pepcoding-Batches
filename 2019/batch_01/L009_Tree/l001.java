@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class l001 {
 
@@ -285,7 +286,7 @@ public class l001 {
         if (node == null)
             return;
 
-        p.height = math.max(p.height, level);
+        p.height = Math.max(p.height, level);
         p.size++;
         p.find = p.find || node.data == data;
 
@@ -300,16 +301,163 @@ public class l001 {
             p.pred = p.prev;
         }
 
-        if (p.prev != null && prev.data == data && p.succ == null) {
+        if (p.prev != null && p.prev.data == data && p.succ == null) {
             p.succ = node;
-
-            
         }
 
         p.prev = node;
 
         allSolution(node.left, level + 1, data, p);
         allSolution(node.right, level + 1, data, p);
+    }
+
+    public static void BSTPredSucc(Node node, int data) {
+        Node pred = null;
+        Node succ = null;
+
+        while (node != null) {
+            if (node.data > data) {
+                succ = node;
+                node = node.left;
+            } else if (node.data < data) {
+                pred = node;
+                node = node.right;
+            } else {
+                Node temp = node;
+                if (node.right != null) {
+                    node = node.right;
+                    while (node.left != null) {
+                        node = node.left;
+                    }
+                    succ = node;
+                }
+
+                node = temp;
+                if (node.left != null) {
+                    node = node.left;
+                    while (node.right != null) {
+                        node = node.right;
+                    }
+                    pred = node;
+                }
+
+                break;
+            }
+        }
+    }
+
+    // view Set.==================================
+
+    public static void lineWiseLevelOrder(Node node) {
+        LinkedList<Node> que = new LinkedList<>();
+        que.addLast(node);
+
+        int level = 0;
+        while (que.size() != 0) {
+            int size = que.size();
+            System.out.print("Level: " + level + " -> ");
+
+            while (size-- > 0) {
+                Node rnode = que.removeFirst();
+                System.out.print(rnode.data + ", ");
+
+                if (rnode.left != null) {
+                    que.addLast(rnode.left);
+                }
+
+                if (rnode.right != null) {
+                    que.addLast(rnode.right);
+                }
+            }
+
+            level++;
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    public static void leftView(Node node) {
+        LinkedList<Node> que = new LinkedList<>();
+        que.addLast(node);
+
+        while (que.size() != 0) {
+            int size = que.size();
+            System.out.print(que.getFirst().data + " ");
+            while (size-- > 0) {
+                Node rnode = que.removeFirst();
+
+                if (rnode.left != null) {
+                    que.addLast(rnode.left);
+                }
+
+                if (rnode.right != null) {
+                    que.addLast(rnode.right);
+                }
+            }
+
+        }
+        System.out.println();
+    }
+
+    public static void rightView(Node node) {
+        LinkedList<Node> que = new LinkedList<>();
+        que.addLast(node);
+
+        while (que.size() != 0) {
+            int size = que.size();
+            Node prev = null;
+            while (size-- > 0) {
+                Node rnode = que.removeFirst();
+                prev = rnode;
+                if (rnode.left != null) {
+                    que.addLast(rnode.left);
+                }
+
+                if (rnode.right != null) {
+                    que.addLast(rnode.right);
+                }
+            }
+
+            System.out.print(prev.data + " ");
+
+        }
+        System.out.println();
+    }
+
+    public static void topView(Node node) {
+        LinkedList<Node> que = new LinkedList<>();
+        que.addLast(node);
+
+        while (que.size() != 0) {
+            int size = que.size();
+            System.out.print(que.getFirst().data + " ");
+            Node prev = null;
+            int count = 0;
+            while (size-- > 0) {
+                Node rnode = que.removeFirst();
+                prev = rnode;
+                count++;
+                if (rnode.left != null) {
+                    que.addLast(rnode.left);
+                }
+
+                if (rnode.right != null) {
+                    que.addLast(rnode.right);
+                }
+            }
+            if (count > 1)
+                System.out.print(prev.data + " ");
+            System.out.println();
+
+        }
+        System.out.println();
+    }
+
+    public static void viewSet(Node node) {
+        lineWiseLevelOrder(node);
+        // leftView(node);
+        // rightView(node);
+        // topView(node);
     }
 
     public static void main(String[] args) {
@@ -320,7 +468,8 @@ public class l001 {
         // int[] arr = { 2, 6, 10, 25, 36, 37, 39, 40, 52, 68, 72 };
         // Node node = ConstructBST(arr, 0, arr.length - 1);
 
-        display(node);
+        // display(node);
+        viewSet(node);
     }
 
 }
