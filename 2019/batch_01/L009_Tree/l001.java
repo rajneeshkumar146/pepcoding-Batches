@@ -617,7 +617,91 @@ public class l001 {
         System.out.println();
     }
 
-   
+    public static void diagonalOrder(Node node, int level, ArrayList<Integer>[] ans) {
+        if (node == null)
+            return;
+
+        ans[level].add(node.data);
+        diagonalOrder(node.left, level - 1, ans);
+        diagonalOrder(node.right, level, ans);
+    }
+
+    public static void diagonalSum_01(Node node, int level, int[] ans) {
+        if (node == null)
+            return;
+
+        ans[level] += node.data;
+        diagonalSum_01(node.left, level - 1, ans);
+        diagonalSum_01(node.right, level, ans);
+
+    }
+
+    public static void diagonalOrder(Node node) {
+        int[] widthAns = new int[2];
+        width(node, 0, widthAns);
+
+        ArrayList<Integer>[] ans = new ArrayList[-widthAns[0] + 1];
+        for (int i = 0; i < ans.length; i++) {
+            ans[i] = new ArrayList();
+        }
+
+        diagonalOrder(node, -widthAns[0], ans);
+
+        int[] ansSum = new int[-widthAns[0] + 1];
+        diagonalSum_01(node, -widthAns[0], ansSum);
+
+    }
+
+    public static class LLNode {
+        int data = 0;
+        LLNode next = null;
+        LLNode prev = null;
+
+        LLNode(int data) {
+            this.data = data;
+        }
+    }
+
+    static LLNode head = null;
+    static LLNode tail = null;
+
+    public static void verticalSum_03(Node node, LLNode lnode) {
+
+        lnode.data += node.data;
+        if (node.left != null) {
+            if (lnode.prev == null) {
+                lnode.prev = new LLNode(0);
+                lnode.prev.next = lnode;
+                head = lnode.prev;
+            }
+            verticalSum_03(node.left, lnode.prev);
+        }
+
+        if (node.right != null) {
+            if (lnode.next == null) {
+                lnode.next = new LLNode(0);
+                lnode.next.prev = lnode;
+                tail = lnode.next;
+            }
+            verticalSum_03(node.right, lnode.next);
+        }
+    }
+
+    public static void verticalSum_03(Node node) {
+        LLNode lnode = new LLNode(0);
+        head = lnode;
+        tail = lnode;
+
+        verticalSum_03(node, lnode);
+
+        LLNode curr = head;
+        while (curr != null) {
+            System.out.print(curr.data + " ");
+            curr = curr.next;
+        }
+        System.out.println();
+
+    }
 
     public static void width(Node node, int level, int[] ans) {
         if (node == null)
@@ -636,9 +720,10 @@ public class l001 {
         // rightView(node);
         // topView(node);
         // verticalOrderPrint(node);
-        verticalOrderPrint_02(node);
-        // verticalOrderSum_02(node);
-        BottomView(node);
+        // verticalOrderPrint_02(node);
+        verticalOrderSum_02(node);
+        // BottomView(node);
+        verticalSum_03(node);
     }
 
     public static void main(String[] args) {
