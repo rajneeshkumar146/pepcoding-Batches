@@ -255,6 +255,51 @@ void GCC()
     cout << "GCC: " << count << endl;
 }
 
+bool bipartite(int src, vector<int> vis)
+{
+    queue<pair<int, int>> que;
+    que.push({src, 0});
+
+    while (que.size() != 0)
+    {
+        pair<int, int> rpair = que.front();
+        que.pop();
+
+        int u = rpair.first;
+        int c = rpair.second;
+
+        if (vis[u] != -1)
+        {
+            if (vis[u] != c) //conflict.
+                return false;
+            else
+                continue;
+        }
+
+        vis[u] = c;
+        for (Edge *e : graph[u])
+        {
+            if (vis[e->v] == -1)
+            {
+                que.push({e->v, (c + 1) % 2});
+            }
+        }
+    }
+
+    return true;
+}
+
+void bipartite()
+{
+    vector<int> vis(n, -1);
+    for (int i = 0; i < n; i++)
+    {
+        if (vis[i] == -1)
+        {
+            cout << (boolalpha) << bipartite(i, vis) << endl;
+        }
+    }
+}
 
 void createGraph()
 {

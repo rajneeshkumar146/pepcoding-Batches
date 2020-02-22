@@ -43,7 +43,7 @@ public class Mystack {
         }
 
         idx++;
-        this.st[                                                                                                                                                     idx] = data;
+        this.st[idx] = data;
     }
 
     public int pop() {

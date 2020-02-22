@@ -172,6 +172,30 @@ public class l001 {
         return Math.max(lh, rh) + 1;
     }
 
+    public static void kaway(Node node, Node avoid, int level) {
+        if (node == null || node == avoid)
+            return;
+
+        if (level == 0) {
+            System.out.print(node.data + " ");
+            return;
+        }
+
+        kaway(node.left, avoid, level - 1);
+        kaway(node.right, avoid, level - 1);
+
+    }
+
+    public static void kfar(Node node, int k) {
+        ArrayList<Node> list = nodeToRootPath(node, data);
+        Node avoid = null;
+
+        for (int i = 0; i < list.size(); i++) {
+            kaway(list.get(i), avoid, k - i);
+            avoid = list.get(i);
+        }
+    }
+
     static int maxSum = (int) -1e7;
 
     public static int leafToLeafMaxSum(Node node) {

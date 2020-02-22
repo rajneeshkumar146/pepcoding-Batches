@@ -1,0 +1,4 @@
+30
+hello Dynamic Stack
+10
+20
