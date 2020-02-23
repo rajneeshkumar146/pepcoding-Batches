@@ -232,11 +232,68 @@ bool isMirror(Node *node1, Node *node2)
     return true;
 }
 
+Node *getTail(Node *node)
+{
+    if (node->childs.size() == 0)
+        return node;
+
+    return getTail(node->childs[0]);
+}
+
+void linearize(Node *node)
+{
+    for (Node *child : node->childs)
+    {
+        linearize(child);
+    }
+
+    for (int i = node->childs.size() - 2; i >= 0; i--)
+    {
+        Node *tail = getTail(node->childs[i]);
+        tail->childs.push_back(node->childs[i + 1]);
+        node->childs.pop_back();
+    }
+}
+
+Node *linearizeAndReturnTail(Node *node)
+{
+    if (node->childs.size() == 0)
+        return node;
+
+    int n = node->childs.size();
+    Node *oTail = linearizeAndReturnTail(node->childs[n - 1]);
+    for (int i = n - 2; i >= 0; i--)
+    {
+        Node *tail = linearizeAndReturnTail(node->childs[i]);
+        tail->childs.push_back(node->childs[i + 1]);
+        node->childs.pop_back();
+    }
+
+    return oTail;
+}
+
+void removeLeafs(Node *node)
+{
+
+    vector<Node *> nchilds;
+    for (Node *child : node->childs)
+    {
+        if (child->childs.size() != 0)
+            nchilds.push_back(child);
+    }
+    node->childs = nchilds;
+
+    for (Node *child : node->childs)
+    {
+        removeLeafs(child);
+    }
+}
+
 void solve()
 {
     vector<int> arr{10, 20, 50, -1, 60, -1, -1, 30, 70, -1, 80, 100, -1, 110, -1, -1, 90, -1, -1, 40, -1, -1};
     // vector<int> arr{10, 20, 50, -1, 60, -1, -1, 30, 70, -1, 80, 100, -1, 110, -1, -1, 90, -1, -1, 40,50,-1,60,-1, -1, -1};
-    vector<int> arr1{10, 40, -1, 30, 90, -1, 80, 110, -1, 100, -1,-1, 70, -1, -1, 20, 60, -1, 50, -1, -1, -1};
+    vector<int> arr1{10, 40, -1, 30, 90, -1, 80, 110, -1, 100, -1, -1, 70, -1, -1, 20, 60, -1, 50, -1, -1, -1};
 
     Node *node = createTree(arr);
     // display(node);
@@ -246,7 +303,11 @@ void solve()
     // levelOrderLineWise(node);
     // isSymmetricTree(node);
 
-    cout << isMirror(createTree(arr), createTree(arr1))<<endl;
+    // cout << isMirror(createTree(arr), createTree(arr1)) << endl;
+    // linearize(node);
+    // linearizeAndReturnTail(node);
+    removeLeafs(node);
+    display(node);
 }
 
 int main()

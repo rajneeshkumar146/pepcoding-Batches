@@ -6,7 +6,7 @@ public class avl {
         Node left = null;
         Node right = null;
 
-        int height = -1;
+        int height = 0;
         int bal = 0;
 
         public Node() {
@@ -155,12 +155,12 @@ public class avl {
     public static void display(Node node) {
         if (node == null)
             return;
-        String str = "";
+        String ans = "";
 
-        str += node.left == null ? "." : node.left.data;
-        str += " -> " + node.data + " <- ";
-        str += node.right == null ? "." : node.right.data;
-        System.out.println(str);
+        ans += node.left != null ? node.left.data : ".";
+        ans += " -> " + node.data + "(" + node.bal + ")" + " <- ";
+        ans += node.right != null ? node.right.data : ".";
+        System.out.println(ans);
 
         display(node.left);
         display(node.right);
@@ -168,12 +168,11 @@ public class avl {
 
     public static void main(String[] args) {
         Node root = null;
-        for (int i = 1; i <= 20; i++) {
+        for (int i = 1; i <= 6; i++) {
             root = addData(root, i * 10);
 
         }
-        // root = removeNode(root, 80);
-        // root = removeNode(root, 70);
+
         display(root);
 
     }

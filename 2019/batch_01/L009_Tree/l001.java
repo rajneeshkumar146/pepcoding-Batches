@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Stack;
 
 public class l001 {
 
@@ -172,6 +173,17 @@ public class l001 {
         return Math.max(lh, rh) + 1;
     }
 
+    public static Node removeLeafs(Node node) {
+        if (node == null)
+            return null;
+        if (node.left == null && node.right == null)
+            return null;
+
+        node.left = removeLeafs(node.left);
+        node.right = removeLeafs(node.right);
+        return node;
+    }
+
     public static void kaway(Node node, Node avoid, int level) {
         if (node == null || node == avoid)
             return;
@@ -186,7 +198,7 @@ public class l001 {
 
     }
 
-    public static void kfar(Node node, int k) {
+    public static void kfar(Node node, int data, int k) {
         ArrayList<Node> list = nodeToRootPath(node, data);
         Node avoid = null;
 
@@ -750,6 +762,154 @@ public class l001 {
         verticalSum_03(node);
     }
 
+    // traversalSet.==============================
+
+    class BSTIterator {
+        Stack<Node> st = new Stack<>();
+
+        public BSTIterator(Node root) {
+            rightAndLeft(root);
+        }
+
+        public void rightAndLeft(Node node) {
+            while (node != null) {
+                st.push(node);
+                node = node.left;
+            }
+        }
+
+        public int next() {
+            Node rn = st.pop();
+            rightAndLeft(rn.right);
+            return rn.data;
+
+        }
+
+        public boolean hasNext() {
+            return st.size() != 0;
+        }
+    }
+
+    public static Node prev = new Node(-10000);
+
+    public static boolean isBST(Node node) {
+        if (node == null)
+            return true;
+
+        if (!isBST(node.left))
+            return false;
+
+        if (prev.data > node.data)
+            return false;
+        prev = node;
+
+        if (!isBST(node.right))
+            return false;
+
+        return true;
+    }
+
+    Node a = null;
+    Node b = null;
+
+    public boolean recoverTree_(Node root) {
+        if (root == null)
+            return false;
+
+        if (recoverTree_(root.left))
+            return true;
+        if (prev.data > root.data) {
+            b = root;
+            if (a == null) {
+                a = prev;
+            } else {
+                return true;
+            }
+
+        }
+        prev = root;
+        if (recoverTree_(root.right))
+            return true;
+
+        return false;
+    }
+
+    public void recoverTree(Node root) {
+        recoverTree_(root);
+        if (a != null) {
+            int temp = a.data;
+            a.data = b.data;
+            b.data = temp;
+        }
+    }
+
+    public static class itrPair {
+        Node node = null;
+        boolean sd = false;
+        boolean ld = false;
+        boolean rd = false;
+
+        itrPair(Node node) {
+            this.node = node;
+        }
+    }
+
+    public static void itrOrders(Node node) {
+        Stack<itrPair> st = new Stack<>();
+        st.push(new itrPair(node));
+
+        while (st.size() != 0) {
+            itrPair pair = st.peek();
+
+            if (!pair.ld) {
+                pair.ld = true;
+                if (pair.node.left != null)
+                    st.push(new itrPair(pair.node.left));
+
+            } else if (!pair.sd) {
+                pair.sd = true;
+                System.out.print(pair.node.data + " ");
+            } else if (!pair.rd) {
+                pair.rd = true;
+                if (pair.node.right != null)
+                    st.push(new itrPair(pair.node.right));
+            } else {
+                st.pop();
+            }
+        }
+    }
+
+    public static Node rightMostOfLeft(Node left, Node curr) {
+        while (left.right != null && left.right != curr) {
+            left = left.right;
+        }
+        return left;
+    }
+
+    public static void preOrderMorris(Node node) {
+        Node curr = node;
+        while (curr != null) {
+            Node left = curr.left;
+            if (left == null) {
+                System.out.print(curr.data + " ");
+                curr = curr.right;
+            } else {
+
+                Node rightMost = rightMostOfLeft(left, curr);
+                if (rightMost.right == null) {
+                    rightMost.right = curr; // thread create
+                    curr = curr.left;
+                } else {
+                    System.out.print(curr.data + " ");
+                    rightMost.right = null;
+
+                    curr = curr.right;
+                }
+            }
+        }
+
+    }
+
     public static void main(String[] args) {
         int[] arr = { 10, 20, 40, 60, -1, -1, 70, -1, -1, 50, 80, -1, -1, -1, 30, 90, -1, 110, 150, -1, -1, -1, 100,
                 120, -1, -1, -1 };
@@ -758,8 +918,9 @@ public class l001 {
         // int[] arr = { 2, 6, 10, 25, 36, 37, 39, 40, 52, 68, 72 };
         // Node node = ConstructBST(arr, 0, arr.length - 1);
 
-        // display(node);
-        viewSet(node);
+        display(node);
+        // viewSet(node);
+        itrOrders(node);
     }
 
 }

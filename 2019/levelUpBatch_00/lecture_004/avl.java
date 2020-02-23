@@ -15,7 +15,7 @@ public class avl {
         Node left = null;
         Node right = null;
 
-        int height = -1;
+        int height = 0;
         int bal = 0;
 
         Node(int data, Node left, Node right) {
