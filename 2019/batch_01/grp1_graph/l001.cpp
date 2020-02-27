@@ -36,7 +36,81 @@ void display(vector<vector<Edge *>> &g)
         }
         cout << endl;
     }
+
+    cout << endl;
 }
+
+int searchVtx(int u, int v)
+{
+
+    int idx = -1;
+    for (int i = 0; i < graph[u].size(); i++)
+    {
+        Edge *e = graph[u][i];
+        if (e->v == v)
+        {
+            idx = i;
+            break;
+        }
+    }
+
+    return idx;
+}
+
+void removeEdge(int u, int v)
+{
+    int vidx = searchVtx(u, v);
+    int uidx = searchVtx(v, u);
+
+    graph[u].erase(graph[u].begin() + vidx);
+    graph[v].erase(graph[v].begin() + uidx);
+}
+
+void removeVtx(int u)
+{
+    while (graph[u].size() != 0)
+    {
+        Edge *e = graph[u].back(); //graph[u][graph[u].size()-1];
+        removeEdge(u, e->v);
+    }
+}
+
+bool hasPath(int src, int desti, vector<bool> &vis)
+{
+    if (src == desti)
+        return true;
+
+    bool res = false;
+    vis[src] = true; //mark
+
+    for (Edge *e : graph[src])
+        if (!vis[e->v])
+            res = res || hasPath(e->v, desti, vis);
+
+    return res;
+}
+
+int allPath(int src, int desti, vector<bool> &vis, string ans)
+{
+     if (src == desti)
+    {
+        cout << ans << desti << endl;
+        return 1;
+    }
+
+
+    vis[src] = true; //mark
+    int count = 0;
+
+    for (Edge *e : graph[src])
+        if (!vis[e->v])
+            count += allPath(e->v, desti, vis, ans + to_string(src));
+
+    vis[src] = false; //unMark
+    return count;
+}
+
+
 
 void constructGraph()
 {
@@ -58,6 +132,14 @@ void solve()
 {
     constructGraph();
     display(graph);
+
+    // removeEdge(4, 3);
+    // removeVtx(2);
+    // display(graph);
+
+    vector<bool> vis(n, false);
+    // cout << hasPath(0, 6, vis);
+    cout << allPath(0, 6, vis, "") << endl;
 }
 
 int main()
