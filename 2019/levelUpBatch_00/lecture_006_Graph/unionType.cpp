@@ -49,6 +49,7 @@ vector<int> findRedundantConnection(vector<vector<int>> &edges)
         if (p1 != p2)
         {
             merge(p1, p2);
+            
         }
         else
         {

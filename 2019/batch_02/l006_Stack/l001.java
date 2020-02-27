@@ -93,4 +93,54 @@ public class l001 {
         String ans = sb.toString();
         return ans.length() != 0 ? ans : "0";
     }
+
+    public static int maxAreaInHistogram(int[] arr) {
+        int maxArea = 0;
+        Stack<Integer> st = new Stack<>();
+        st.push(-1);
+
+        for (int i = 0; i < arr.length; i++) {
+            while (st.peek() != -1 && arr[st.peek()] >= arr[i]) {
+                int height = arr[st.pop()];
+                int leftb = st.peek();
+                int width = (i - leftb - 1);
+                int area = width * height;
+
+                if (area > maxArea)
+                    maxArea = area;
+            }
+            st.push(i);
+        }
+
+        while (st.peek() != -1) {
+            int height = arr[st.pop()];
+            int leftb = st.peek();
+            int width = (arr.length - leftb - 1);
+            int area = width * height;
+
+            if (area > maxArea)
+                maxArea = area;
+        }
+
+        return maxArea;
+    }
+
+    public static int maximalRectangle(char[][] matrix) {
+        int[] height = new int[matrix[0].length];
+        int area = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                int val = matrix[i][j] - '0';
+                if (val == 1) {
+                    height[j] += val;
+                } else {
+                    height[j] = 0;
+                }
+            }
+
+            area = Math.max(area, maxAreaInHistogram(height));
+        }
+        return area;
+    }
+
 }

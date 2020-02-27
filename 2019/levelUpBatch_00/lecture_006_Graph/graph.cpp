@@ -19,6 +19,7 @@ public:
 
 const int n = 9;
 vector<Edge *> graph[n];
+vector<Edge *> Newgraph[n];
 // vector<vector<Edge *>> graph(7, vector<Edge *>()); //
 // ArrayList<Integer>[] graph=new ArrayList[7];
 
@@ -301,20 +302,94 @@ void bipartite()
     }
 }
 
+class dPair
+{
+public:
+    int src = 0;
+    int par = 0;
+    int w = 0;
+    int wsf = 0;
+    string psf = "";
+
+    dPair(int src, int par, int w, int wsf, string psf)
+    {
+        this->src = src;
+        this->par = par;
+        this->w = w;
+        this->wsf = wsf;
+        this->psf = psf;
+    }
+
+    bool operator<(dPair const &o) const // dijikstra
+    {
+        return this->wsf < o.wsf;
+    }
+
+    // bool operator<(dpair_ const &o) const // prims
+    // {
+    //     return this->w > o.w;
+    // }
+};
+
+void dijikstraAlgo(int src)
+{
+    vector<bool> vis(n, false);
+    priority_queue<dPair> que;
+    que.push(dPair(src, -1, 0, 0, to_string(src)));
+
+    while (que.size() != 0)
+    {
+        dPair pair = que.top();
+        que.pop();
+
+        if (!vis[pair.src])
+        {
+            if (pair.par != -1)
+            {
+                Newgraph[pair.src].push_back(new Edge(pair.par, pair.w));
+                Newgraph[pair.par].push_back(new Edge(pair.src, pair.w));
+            }
+        }
+        else
+            continue;
+
+        vis[pair.src] = true;
+        for (Edge *e : graph[pair.src])
+        {
+            if (!vis[e->v])
+                que.push(dPair(e->v, pair.src, e->w, pair.wsf + e->w, pair.psf + to_string(e->v)));
+        }
+    }
+
+    //display.
+    for (int i = 0; i < n; i++)
+    {
+        cout << i << " -> ";
+        for (Edge *e : graph[i])
+        {
+            cout << "(" << e->v << ", " << e->w << ") ";
+        }
+        cout << endl;
+    }
+
+    cout << endl;
+}
+
 void createGraph()
 {
+
     addEdge(0, 1, 10);
     addEdge(0, 3, 10);
     addEdge(1, 2, 10);
     addEdge(2, 3, 40);
-    // addEdge(3, 4, 2);
+    addEdge(3, 4, 2);
     addEdge(4, 5, 2);
     addEdge(4, 6, 8);
     addEdge(5, 6, 3);
 
     addEdge(7, 8, 3);
-    // addEdge(2, 7, 3);
-    // addEdge(2, 8, 3);
+    addEdge(2, 7, 3);
+    addEdge(2, 8, 3);
 
     // display();
     // removeEdge(3, 2);
@@ -331,7 +406,8 @@ void solve()
     // cout << allPath(0, 6, vis, "") << endl;
     // BFS(0, vis);
 
-    GCC();
+    // GCC();
+    // dijikstraAlgo(0);
 }
 
 main()

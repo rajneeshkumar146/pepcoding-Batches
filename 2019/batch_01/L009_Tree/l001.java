@@ -632,7 +632,7 @@ public class l001 {
                 Node rnode = queN.removeFirst();
                 Integer verticalLevel = queI.removeFirst();
 
-                ans[verticalLevel] = rnode.data;
+                ans[verticalLe vel] = rnode.data;
 
                 if (rnode.left != null) {
                     queN.addLast(rnode.left);

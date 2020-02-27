@@ -24,5 +24,10 @@ public class PQ {
             this.age = age;
             this.wt = wt;
         }
+
+        @Override
+        public int compareTo(pair o) {
+            return o.age-this.age;
+        }
     }
 }
