@@ -6,8 +6,16 @@ public class l001 {
     }
 
     public static void solve() {
-        int[] arr = { 9, 1, 7, 3, 11, -2, 25, 20, 2, -4 };
-        nextGreaterOnRight(arr);
+        // int[] arr = { 9, 1, 7, 3, 11, -2, 25, 20, 2, -4 };
+        // nextGreaterOnRight(arr);
+
+        MinStack2 st = new MinStack2();
+        st.push(-2);
+        st.push(0);
+        st.push(-3);
+        System.out.println(st.pop());
+        System.out.println(st.getMin());
+
     }
 
     public static void nextGreaterOnRight(int[] arr) {
@@ -141,6 +149,132 @@ public class l001 {
             area = Math.max(area, maxAreaInHistogram(height));
         }
         return area;
+    }
+
+    static class MinStack {
+        Stack<Integer> st;
+        Stack<Integer> minSt;
+        int min = Integer.MAX_VALUE;
+
+        public MinStack() {
+            st = new Stack<>();
+            minSt = new Stack<>();
+        }
+
+        public void push(int x) {
+            st.push(x);
+            minSt.push(Math.min(min, x));
+            min = minSt.peek();
+        }
+
+        public void pop() {
+            if (st.size() == 0)
+                return;
+
+            st.pop();
+            minSt.pop();
+
+            if (minSt.size() != 0)
+                min = minSt.peek();
+            else
+                min = Integer.MAX_VALUE;
+        }
+
+        public int top() {
+            return st.peek();
+        }
+
+        public int getMin() {
+            return minSt.peek();
+        }
+    }
+
+    static class MinStack2 {
+        Stack<Long> st;
+        long minsf = 0;
+
+        public MinStack2() {
+            st = new Stack<>();
+        }
+
+        public void push(int x) {
+            long val = x;
+            if (st.size() == 0) {
+                minsf = val;
+                st.push(val);
+                return;
+            }
+
+            if (val > minsf) {
+                st.push(val);
+            } else {
+                st.push(val - minsf + val);
+                minsf = val;
+            }
+        }
+
+        public void pop() {
+            if (st.peek() <= minsf) {
+                minsf = minsf - st.peek() + minsf;
+            }
+            st.pop();
+        }
+
+        public int top() {
+            if (st.peek() <= minsf)
+                return minsf;
+
+            long val = st.peek();
+            return (int) val;
+        }
+
+        public int getMin() {
+            return (int) minsf;
+        }
+    }
+
+    public static boolean balanceBrackets(char[] arr) {
+        Stack<Character> st = new Stack<>();
+        for (int i = 0; i < arr.length; i++) {
+            char ch = arr[i];
+            if (ch == '(' || ch == '{' || ch == '[' || ch == '<')
+                st.push(ch);
+            else {
+                if (st.size() == 0)
+                    return false;
+                else if (st.peek() == '(' && ch != ')')
+                    return false;
+                else if (st.peek() == '{' && ch != '}')
+                    return false;
+                else if (st.peek() == '[' && ch != ']')
+                    return false;
+                else if (st.peek() == '<' && ch != '>')
+                    return false;
+
+                st.pop();
+            }
+        }
+
+        return st.size() == 0;
+    }
+
+    public static int rainWater(int[] arr) {
+        Stack<Integer> st = new Stack<>();
+        int ans = 0;
+        st.push(-1);
+
+        for (int i = 0; i < arr.length; i++) {
+            while (st.peek() != -1 && arr[i] > arr[st.peek()]) {
+                int h = arr[st.pop()];
+                int width = i - st.peek() - 1;
+
+                int height = (Math.min(arr[st.peek()], arr[i]) - h);
+                ans += width * height;
+            }
+
+            st.push(i);
+        }
+
     }
 
 }

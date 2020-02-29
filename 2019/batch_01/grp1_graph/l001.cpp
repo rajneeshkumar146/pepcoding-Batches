@@ -90,27 +90,63 @@ bool hasPath(int src, int desti, vector<bool> &vis)
     return res;
 }
 
-int allPath(int src, int desti, vector<bool> &vis, string ans)
+int allPath(int src, int desti, int wsf, vector<bool> &vis, string ans)
 {
-     if (src == desti)
+    if (src == desti)
     {
-        cout << ans << desti << endl;
+        cout << ans << desti << " @ " << wsf << endl;
         return 1;
     }
-
 
     vis[src] = true; //mark
     int count = 0;
 
     for (Edge *e : graph[src])
         if (!vis[e->v])
-            count += allPath(e->v, desti, vis, ans + to_string(src));
+            count += allPath(e->v, desti, wsf + e->w, vis, ans + to_string(src));
 
     vis[src] = false; //unMark
     return count;
 }
 
+class allPair
+{
+public:
+    int ceil = 1e7;
+    int floor = -1e7;
 
+    int heavyPath = -1e8;
+    int lightPath = 1e8;
+
+};
+
+void dfs_allSolu(int src, int desti, int data, int wsf, vector<bool> &vis, allPair &pair)
+{
+    if (src == desti)
+    {
+        pair.heavyPath = max(pair.heavyPath, wsf);
+        pair.lightPath = min(pair.lightPath, wsf);
+
+        //ceil
+        if (wsf > data)
+            pair.ceil = min(pair.ceil, wsf);
+
+        //floor
+        if (wsf < data)
+            pair.floor = max(pair.floor, wsf);
+
+        return;
+    }
+
+    vis[src] = true;
+    for (Edge *e : graph[src])
+    {
+        if (!vis[e->v])
+            dfs_allSolu(e->v, desti, data, wsf + e->w, vis, pair);
+    }
+
+    vis[src] = false;
+}
 
 void constructGraph()
 {
@@ -139,7 +175,14 @@ void solve()
 
     vector<bool> vis(n, false);
     // cout << hasPath(0, 6, vis);
-    cout << allPath(0, 6, vis, "") << endl;
+    cout << allPath(0, 6, 0, vis, "") << endl;
+
+    allPair pair;
+    dfs_allSolu(0, 6, 20, 0, vis, pair);
+    cout << "heavyWeight: " << pair.heavyPath << endl;
+    cout << "lightWeight: " << pair.lightPath << endl;
+    cout << "ceil: " << pair.ceil << endl;
+    cout << "floor: " << pair.floor << endl;
 }
 
 int main()

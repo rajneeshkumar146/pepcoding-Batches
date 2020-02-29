@@ -1,10 +1,2 @@
-1 -> 7
-3 -> 11
-7 -> 11
-9 -> 11
--2 -> 25
-11 -> 25
--4 -> no such ele
-2 -> no such ele
-20 -> no such ele
-25 -> no such ele
+-4
+-2
