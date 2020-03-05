@@ -49,7 +49,7 @@ vector<int> findRedundantConnection(vector<vector<int>> &edges)
         if (p1 != p2)
         {
             merge(p1, p2);
-            
+
         }
         else
         {
@@ -58,10 +58,6 @@ vector<int> findRedundantConnection(vector<vector<int>> &edges)
     }
     return ans;
 }
-
-// void kruskalAlgoForMST(vector<vector<int>> &graph)
-// {
-// }
 
 string smallestEquivalentString(string A, string B, string S)
 {
@@ -217,6 +213,131 @@ int islandPerimeter(vector<vector<int>> &grid)
     }
 
     return islands * 4 - 2 * nbrs;
+}
+
+int minCostToSupplyWater_leet1168(int n, vector<int> &wells, vector<vector<int>> &pipes)
+{
+    for (int i = 0; i < wells.size(); i++)
+    {
+        vector<int> ar{0, i + 1, wells[i]};
+        pipes.push_back(ar);
+    }
+
+    sort(pipes.begin(), pipes.end(), [](vector<int> a, vector<int> b) {
+        return a[2] < b[2];
+    });
+
+    for (int i = 0; i <= wells.size(); i++)
+    {
+        par.push_back(i);
+        size.push_back(1);
+    }
+
+    int ans = 0;
+    for (int i = 0; i < pipes.size(); i++)
+    {
+        vector<int> rp = pipes[i];
+
+        int p1 = findParent(rp[0]);
+        int p2 = findParent(rp[1]);
+
+        if (p1 != p2)
+        {
+            merge(p1, p2);
+            ans += rp[2];
+        }
+    }
+
+    return ans;
+}
+
+int fastSpeed = []() {
+    std::ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    std::cout.tie(nullptr);
+}();
+
+int mr_president()
+{
+    int n, edges, cost;
+    cin >> n >> edges >> cost;
+
+    vector<vector<int>> arr, myGraph;
+    for (int i = 0; i < edges; i++)
+    {
+        int a, b, c;
+        cin >> a >> b >> c;
+        vector<int> ar{a, b, c};
+
+        arr.push_back(ar);
+    }
+
+    sort(arr.begin(), arr.end(), (vector<int> a, vector<int> b) {
+        return a[2] < b[2];
+    });
+
+    for (int i = 1; i <= edges; i++)
+    {
+        par.push_back(i);
+        size.push_back(1);
+    }
+
+    for (vector<int> ar : arr)
+    {
+        int p1 = findParent(ar[0]);
+        int p2 = findParent(ar[1]);
+        if (p1 != p2)
+        {
+            merge(p1, p2);
+            myGraph.push_back(ar);
+        }
+    }
+
+    int count = 0;
+    for (int i = 1; i <= edges; i++)
+    {
+        if (par[i] == i)
+            count++;
+    }
+    if (count > 1)
+        return -1;
+
+    sort(myGraph.begin(), myGraph.end(), (vector<int> a, vector<int> b) {
+        return a[2] > b[2];
+    });
+
+    int amount = 0;
+    for (vector<int> ar : myGraph)
+    {
+        amount += ar[2];
+    }
+
+    int roads = 0;
+
+    for (vector<int> ar : myGraph)
+    {
+        if (amount < cost)
+            break;
+        amount -= ar[2] + 1;
+        roads++;
+    }
+
+    return amount < cost ? roads : -1;
+}
+
+void topologicalHashMap()
+{
+
+    unordered_map<string, vector<string>> maping;
+    for (int i = 0; i < n; i++)
+    {
+        string str1, str2;
+        cin >> str1 >> str2;
+
+        string[str1].push_back(str2);
+    }
+
+    
 }
 
 int main()

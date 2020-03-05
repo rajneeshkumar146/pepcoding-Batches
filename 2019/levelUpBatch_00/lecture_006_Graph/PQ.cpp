@@ -15,7 +15,7 @@ public:
         this->wt = wt;
     }
 
-    bool operator > (pair_ const &p1) const
+    bool operator < (pair_ const &p1) const
     {
         return this->age > p1.age;
     }
