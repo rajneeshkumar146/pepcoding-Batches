@@ -15,9 +15,10 @@ public:
         this->wt = wt;
     }
 
-    bool operator < (pair_ const &p1) const
+    bool operator<(pair_ const &p1) const
     {
-        return this->age > p1.age;
+        return p1.age > this->age; //min
+        // return this->age > p1.>age; //max
     }
 };
 
@@ -44,7 +45,7 @@ int main()
     {
         cout << pq.top().age << " " << pq.top().wt;
         pq.pop();
-        cout<<endl;
+        cout << endl;
     }
 
     return 0;

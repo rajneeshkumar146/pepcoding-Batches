@@ -27,7 +27,7 @@ public class PQ {
 
         @Override
         public int compareTo(pair o) {
-            return o.age-this.age;
+            return this.age-o.age;
         }
     }
 }

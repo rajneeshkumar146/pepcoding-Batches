@@ -322,7 +322,7 @@ public:
 
     bool operator<(dPair const &o) const // dijikstra
     {
-        return this->wsf < o.wsf;
+        return this->wsf > o.wsf;
     }
 
     // bool operator<(dpair_ const &o) const // prims

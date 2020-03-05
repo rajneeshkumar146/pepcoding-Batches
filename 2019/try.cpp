@@ -2,79 +2,52 @@
 #include <queue>
 #include <vector>
 #include <string>
+#include <algorithm>
 using namespace std;
 
-class node
+
+class pair_
 {
 public:
-    int freq = 0;
-    string data = "";
-    node *left = NULL;
-    node *right = NULL;
-    node(int freq, string data, node *left, node *right)
+    int age;
+    int wt;
+
+    pair_(int age, int wt)
     {
-        this->data = data;
-        this->freq = freq;
-        this->left = left;
-        this->right = right;
+        this->age = age;
+        this->wt = wt;
+    }
+
+    bool operator < (pair_ const &p1) const
+    {
+        
+        return this->age < p1.age;
     }
 };
-
-class MyCompare
-{
-public:
-    bool operator()(node *a, node *b)
-    {
-        return (*a).freq > (*b).freq;
-    }
-};
-
-void tree(priority_queue<node *, vector<node *>, MyCompare> &pq)
-{
-    while (pq.size() != 1)
-    {
-        node *n1 = pq.top();
-        cout << n1->freq << " ";
-        pq.pop();
-        node *n2 = pq.top();
-        cout << n2->freq << " ";
-        pq.pop();
-        int f1 = n1->freq;
-        int f2 = n2->freq;
-        int tot_ = f1 + f2;
-        string final = n1->data + n2->data;
-        node *f = new node(tot_, final, n1, n2);
-        pq.push(f);
-        cout << endl;
-    }
-}
-void initialise(string s)
-{
-    priority_queue<node *, vector<node *>, MyCompare> pq;
-    vector<int> freq(26, 0);
-    for (int i = 0; i < s.size(); i++)
-    {
-        int idx = s[i] - 'a';
-        freq[idx]++;
-    }
-
-    for (int j = 0; j < freq.size(); j++)
-    {
-        if (freq[j] > 0)
-        {
-            // cout<<"freq"<<j<<" ";
-            // cout<<freq[j]<<" ";
-            string d = "";
-            d += char(j + 'a');
-            //cout<<char(j+'a')<<" ";
-            // cout<<d<<" ";
-            node *g = new node(freq[j], d, NULL, NULL);
-            pq.push(g);
-        }
-    }
-    tree(pq);
-}
 
 int main()
 {
+    vector<pair_> pq;
+    
+    pair_ p1(10, 10);
+    pq.push_back(p1);
+
+    pair_ p2(2, 16);
+    pq.push_back(p2);
+
+    pair_ p3(5, 560);
+    pq.push_back(p3);
+
+    pair_ p4(20, 2340);
+    pq.push_back(p4);
+
+    pair_ p5(-8, 340);
+    pq.push_back(p5);
+
+    sort(pq.begin(),pq.end());
+
+    for(pair_ p:pq){
+       cout << p.age << " " << p.wt<<endl;
+    }
+
 }
