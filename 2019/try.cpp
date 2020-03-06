@@ -3,51 +3,60 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <unordered_map>
+#include <sstream>
+
 using namespace std;
 
-
-class pair_
-{
-public:
-    int age;
-    int wt;
-
-    pair_(int age, int wt)
-    {
-        this->age = age;
-        this->wt = wt;
-    }
-
-    bool operator < (pair_ const &p1) const
-    {
-        
-        return this->age < p1.age;
-    }
-};
+unordered_map<string, vector<int>> map;
 
 int main()
 {
-    vector<pair_> pq;
-    
-    pair_ p1(10, 10);
-    pq.push_back(p1);
+    int n = 4;
+    int arr1[] = {1, 1, 2, 2, 2};
+    int arr2[] = {2, 2, 3, 3, 4};
+    int arr3[] = {2, 3, 1, 3, 4};
 
-    pair_ p2(2, 16);
-    pq.push_back(p2);
-
-    pair_ p3(5, 560);
-    pq.push_back(p3);
-
-    pair_ p4(20, 2340);
-    pq.push_back(p4);
-
-    pair_ p5(-8, 340);
-    pq.push_back(p5);
-
-    sort(pq.begin(),pq.end());
-
-    for(pair_ p:pq){
-       cout << p.age << " " << p.wt<<endl;
+    for (int i = 1; i <= n; i++)
+    {
+        string edge = to_string(arr1[i]) + "@" + to_string(arr2[i]);
+        map[edge].push_back(arr2[i]);
     }
 
+    string edge = "";
+    int maxIntrest = 0;
+    for (auto &p : map)
+    {
+        if (map[p.first].size() > maxIntrest)
+        {
+            edge = p.first;
+            maxIntrest = map[p.first].size();
+        }
+    }
+
+    int ans = 1;
+    string s = "";
+    for (int i = 0; i < edge.length(); i++)
+    {
+        if (edge[i] != '@')
+            s += edge[i];
+        else
+        {
+            stringstream val_(s);
+            int val = 0;
+            val_ >> val;
+            ans *= val;
+
+            s = "";
+        }
+    }
+
+    stringstream val_(s);
+    int val = 0;
+    val_ >> val;
+    ans *= val;
+
+    cout << ans << endl;
+
+    return 0;
 }
