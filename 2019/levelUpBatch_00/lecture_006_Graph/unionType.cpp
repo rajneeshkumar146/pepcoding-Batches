@@ -34,13 +34,13 @@ void merge(int p1, int p2)
 
 vector<int> findRedundantConnection(vector<vector<int>> &edges)
 {
-    vector<int> par, size;
+    // vector<int> par, size;
     for (int i = 1; i <= edges.size(); i++)
     {
         par.push_back(i);
         size.push_back(1);
     }
-    vector<int> ans;
+   
     for (vector<int> ar : edges)
     {
         int p1 = findParent(ar[0]);
@@ -55,6 +55,8 @@ vector<int> findRedundantConnection(vector<vector<int>> &edges)
             return ar;
         }
     }
+    
+    vector<int> ans;
     return ans;
 }
 

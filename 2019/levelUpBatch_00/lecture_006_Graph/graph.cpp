@@ -130,11 +130,11 @@ void hamintonianPath(int src, int osrc, vector<bool> &vis, int count, string ans
         int vtx = serachVertex(src, osrc);
         if (vtx != -1)
         {
-            cout << "Cycle: " + ans << endl;
+            cout << "Cycle: " + ans + to_string(src) << endl;
         }
         else
         {
-            cout << "Path: " + ans << endl;
+            cout << "Path: " + ans + to_string(src) << endl;
         }
 
         return;

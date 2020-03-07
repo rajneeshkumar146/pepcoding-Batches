@@ -24,13 +24,13 @@ int minCostToSupplyWater(int n, vector<int> &wells, vector<vector<int>> &pipes)
         pipes.push_back({0, i + 1, wells[i]});
     }
 
-    sort(pipes.begin(), pipes.end(), (auto &a, auto &b) {
+    sort(pipes.begin(), pipes.end(), [](auto &a, auto &b) {
         return a[2] < b[2];
     });
 
     for (int i = 0; i <= n; i++)
     {
-        par[i] = i;
+        par.push_back(i);
     }
 
     int ans = 0;

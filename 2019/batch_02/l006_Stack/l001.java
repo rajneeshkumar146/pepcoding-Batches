@@ -131,6 +131,7 @@ public class l001 {
         }
 
         return maxArea;
+
     }
 
     public static int maximalRectangle(char[][] matrix) {
