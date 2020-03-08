@@ -375,6 +375,50 @@ void dijikstraAlgo(int src)
     cout << endl;
 }
 
+vector<int> dis(n, 0);
+vector<int> low(n, 0);
+vector<int> par(n, -1);
+vector<int> AP(n, 0);
+vector<bool> vis(n, false);
+
+int countTime = 0;
+int rootCount = 0;
+
+void dfs(int u)
+{
+    dis[u] = low[u] = countTime++;
+    vis[u] = true;
+    for (int nbr : graph[u])
+    {
+        if (!vis[nbr]) //unvisited
+        {
+            if (par[u] == -1)
+                rootCount++;
+            par[nbr] = u;
+            dfs(nbr);
+
+            if (dis[u] <= low[nbr])
+                AP[u]++;
+            // if (low[u] < low[nbr])
+            //     cout << "AP Edge: " << u << " -> " << nbr << endl;
+            low[u] = min(low[u], low[nbr]);
+        }
+        else if (par[u] != nbr) //visited
+        {
+            low[u] = min(low[u], dis[nbr]);
+        }
+    }
+}
+
+void APAndB()
+{
+
+    int src = 0;
+    dfs(src)
+
+        if (rootCount == 1) AP[src]--;
+}
+
 void createGraph()
 {
 
