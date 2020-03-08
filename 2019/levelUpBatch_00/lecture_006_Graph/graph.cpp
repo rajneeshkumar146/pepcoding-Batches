@@ -365,7 +365,7 @@ void dijikstraAlgo(int src)
     for (int i = 0; i < n; i++)
     {
         cout << i << " -> ";
-        for (Edge *e : graph[i])
+        for (Edge *e : Newgraph[i])
         {
             cout << "(" << e->v << ", " << e->w << ") ";
         }
@@ -388,8 +388,9 @@ void dfs(int u)
 {
     dis[u] = low[u] = countTime++;
     vis[u] = true;
-    for (int nbr : graph[u])
+    for (Edge *e : graph[u])
     {
+        int nbr = e->v;
         if (!vis[nbr]) //unvisited
         {
             if (par[u] == -1)
@@ -399,8 +400,8 @@ void dfs(int u)
 
             if (dis[u] <= low[nbr])
                 AP[u]++;
-            // if (low[u] < low[nbr])
-            //     cout << "AP Edge: " << u << " -> " << nbr << endl;
+            if (dis[u] < low[nbr])
+                cout << "AP Edge: " << u << " -> " << nbr << endl;
             low[u] = min(low[u], low[nbr]);
         }
         else if (par[u] != nbr) //visited
@@ -414,9 +415,17 @@ void APAndB()
 {
 
     int src = 0;
-    dfs(src)
+    dfs(src);
+    if (rootCount == 1)
+        AP[src]--;
 
-        if (rootCount == 1) AP[src]--;
+    for (int i = 0; i < n; i++)
+    {
+        if (AP[i] > 0)
+        {
+            cout << "AP: " << i << "@" << AP[i] << endl;
+        }
+    }
 }
 
 void createGraph()
@@ -452,6 +461,7 @@ void solve()
 
     // GCC();
     // dijikstraAlgo(0);
+    APAndB();
 }
 
 main()

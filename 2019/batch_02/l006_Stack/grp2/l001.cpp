@@ -73,6 +73,117 @@ int maxAreaInHistogram(string &str)
 
         st.push(i);
     }
-
     return maxLeng;
 }
+
+bool balanceBrackets(string &str)
+{
+    stack<int> st;
+    for (int i = 0; i < str.length; i++)
+    {
+        if (str[i] == '(' || str[i] == '[' || str[i] == '{' || str[i] == '>')
+            st.push(i);
+        else
+        {
+            if (st.size() == 0)
+                return false;
+            else if (str[i] == ')' && str[st.top()] != '(')
+                return false;
+            else if (str[i] == ']' && str[st.top()] != '[')
+                return false;
+            else if (str[i] == '}' && str[st.top()] != '{')
+                return false;
+            else if (str[i] == '>' && str[st.top()] != '<')
+                return false;
+            else
+                st.pop();
+        }
+    }
+
+    return st.size() == 0;
+}
+
+vector<int> asteroidCollision(vector<int> &arr)
+{
+    stack<int> st;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        if (arr[i] > 0)
+            st.push(arr[i]);
+        else
+        {
+            while (st.size() != 0 && st.top() > 0 && st.top() < -arr[i])
+            {
+                st.pop();
+            }
+
+            if (st.size() != 0 && st.top() == -arr[i])
+                st.pop();
+            else if (st.size() == 0 || st.top() < 0)
+            {
+                st.push(arr[i]);
+            }
+        }
+    }
+
+    vector<int> ans(st.size(), 0);
+    int k = st.size() - 1;
+    while (st.size() != 0)
+    {
+        ans[k--] = st.top();
+        st.pop();
+    }
+    return ans;
+}
+
+class MinStack
+{
+public:
+    stack<int> st;
+    int minVal = 0;
+
+    MinStack()
+    {
+        st.clear();
+        minVal = 0;
+    }
+
+    void push(int x)
+    {
+        if (st.size() == 0)
+        {
+            st.push(x);
+            minVal = x;
+            return;
+        }
+
+        if (x > minVal)
+            st.push(x);
+        else
+        {
+            st.push(2 * x - minVal);
+            minVal = x;
+        }
+    }
+
+    void pop()
+    {
+        if (st.top() <= minVal)
+            minVal = minVal - st.top() + minVal;
+
+        st.pop();
+    }
+
+    int top()
+    {
+        if (st.top() <= minVal)
+            return minVal;
+
+        return st.top();
+    }
+
+    int getMin()
+    {
+        return minVal;
+    }
+};

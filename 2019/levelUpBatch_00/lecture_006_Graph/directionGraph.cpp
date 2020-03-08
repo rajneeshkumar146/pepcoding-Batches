@@ -78,8 +78,7 @@ void khansAlso()
         int vtx = que.front();
         que.pop();
 
-        ans.push(vtx);
-
+        
         for (int nbr : graph[vtx])
         {
             if (--incidentEdges[nbr] == 0)
