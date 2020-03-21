@@ -1,19 +1,30 @@
 import java.util.ArrayList;
+
 public class heap {
     private ArrayList<Integer> arr;
+    private boolean isMax = false;
 
     public heap() {
         this.arr = new ArrayList<>();
     }
 
-    public heap(int[] ar) { // heap creation from array O(n)
+    public void createHeap(int[] ar) {
         this.arr = new ArrayList<>();
         for (int ele : ar)
             this.arr.add(ele);
-       
+
         for (int i = arr.size() - 1; i >= 0; i--) { // seen to be nlogn, but it is o(n)
-            downheapify(i);   //logn
+            downheapify(i); // logn
         }
+    }
+
+    public heap(int[] ar) { // heap creation from array O(n)
+        createHeap(ar);
+    }
+
+    public heap(int[] ar, boolean isMax) { // heap creation from array O(n)
+        this.isMax = isMax;
+        createHeap(ar);
     }
 
     // API.==============================================
@@ -41,9 +52,13 @@ public class heap {
 
     // util.==============================================
 
+    public int size() {
+        return arr.size();
+    }
+
     public void upheapify(int cidx) { // logn
         int pi = (cidx - 1) / 2;
-        if (pi >= 0 && arr.get(pi) < arr.get(cidx)) {
+        if (pi >= 0 && comapreTo(cidx, pi) > 0) {
             swap(pi, cidx);
             upheapify(pi);
         }
@@ -54,11 +69,11 @@ public class heap {
         int lci = 2 * idx + 1;
         int rci = 2 * idx + 2;
 
-        if (lci < arr.size() && arr.get(lci) > arr.get(maxidx)) {
+        if (lci < arr.size() && comapreTo(lci, maxidx) > 0) {
             maxidx = lci;
         }
 
-        if (rci < arr.size() && arr.get(rci) > arr.get(maxidx)) {
+        if (rci < arr.size() && comapreTo(rci, maxidx) > 0) {
             maxidx = rci;
         }
 
@@ -75,6 +90,15 @@ public class heap {
 
         arr.set(i, val2);
         arr.set(j, val1);
+    }
+
+    public int comapreTo(int child, int par) {
+        if (isMax) {
+            return arr.get(child) - arr.get(par);
+        } else {
+            return arr.get(par) - arr.get(child);
+        }
+
     }
 
 }
