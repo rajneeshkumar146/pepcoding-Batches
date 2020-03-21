@@ -29,14 +29,54 @@ void ngor(vector<int> &arr)
         st.push(i);
     }
 
-    while (st.size() != 0)
-    {
-        int idx = st.top();
-        st.pop();
-        ans[idx] = -1;
-    }
+    // while (st.size() != 0)
+    // {
+    //     int idx = st.top();
+    //     st.pop();
+    //     ans[idx] = -1;
+    // }
 
-    display(ans);
+    // display(ans);
+}
+
+vector<int> nsor(vector<int> &arr)
+{
+    int n = arr.size();
+    vector<int> ans(n, n);
+    stack<int> st;
+
+    for (int i = 0; i < n; i++) //for(int i=n-1;i>=0;i--) -> ngol
+    {
+        while (st.size() != 0 && arr[st.top()] > arr[i]) // for right <  , for left >
+        {
+            int idx = st.top();
+            st.pop();
+            ans[idx] = i;
+        }
+
+        st.push(i);
+    }
+    return ans;
+}
+
+vector<int> nsol(vector<int> &arr)
+{
+    int n = arr.size();
+    vector<int> ans(n, -1);
+    stack<int> st;
+
+    for (int i = n - 1; i >= 0; i--) //for(int i=n-1;i>=0;i--) -> ngol
+    {
+        while (st.size() != 0 && arr[st.top()] > arr[i]) // for right <  , for left >
+        {
+            int idx = st.top();
+            st.pop();
+            ans[idx] = i;
+        }
+
+        st.push(i);
+    }
+    return ans;
 }
 
 bool validBrackets_leet20(string &str)
@@ -99,6 +139,118 @@ int longestValidParentheses(string str)
             st.push(i);
     }
     return max_;
+}
+
+int largestRectangleArea(vector<int> &arr)
+{
+    if (arr.size() == 0)
+        return 0;
+    int n = arr.size();
+    stack<int> st;
+    st.push(-1);
+    int maxArea = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        while (st.top() != -1 && arr[st.top()] >= arr[i])
+        {
+
+            int h = arr[st.top()];
+            st.pop();
+            int w = i - st.top() - 1;
+            int area = h * w;
+            maxArea = max(maxArea, area);
+        }
+        st.push(i);
+    }
+
+    while (st.top() != -1)
+    {
+
+        int h = arr[st.top()];
+        st.pop();
+        int w = n - st.top() - 1;
+        int area = h * w;
+        maxArea = max(maxArea, area);
+    }
+
+    return maxArea;
+}
+
+int largestRectangleArea_02(vector<int> &arr)
+{
+    vector<int> left = nsol(arr);
+    vector<int> right = nsor(arr);
+    int n = arr.size();
+    int maxArea = 0;
+    for (int i = 0; i < n; i++)
+    {
+        int w = right[i] - left[i] - 1;
+        int h = arr[i];
+        int area = h * w;
+        maxArea = max(maxArea, area);
+    }
+
+    return maxArea;
+}
+
+int maximalRectangle(vector<vector<char>> &arr)
+{
+    int n = arr.size();
+    if (n == 0 || arr[0].size() == 0)
+        return 0;
+
+    int m = arr[0].size();
+    int maxArea = 0;
+    vector<int> height(m, 0);
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++) // O(m)
+        {
+            int val = arr[i][j] - '0';
+            if (val == 1)
+                height[i] += 1;
+            else
+                height[i] = 0;
+        }
+
+        int area = largestRectangleArea(height);
+        maxArea = max(maxArea, area);
+    }
+
+    return maxArea;
+}
+
+vector<int> asteroidCollision(vector<int> &arr)
+{
+    stack<int> st;
+    for (int ele : arr)
+    {
+        if (ele > 0)
+            st.push(ele);
+        else
+        {
+            while (st.size() != 0 && st.top() > 0 && st.top() < -ele)
+            {
+                st.pop();
+            }
+
+            if (st.size() != 0 && st.top() == -ele)
+                st.pop();
+            else if (st.size() == 0 || st.top() < 0)
+                st.push(ele);
+            else if(st.size() != 0 && st.top()>-ele) {
+                // do nothing. because ele will vanished.
+            }
+        }
+    }
+
+    vector<int> ans(st.size(), 0);
+    for (int i = st.size() - 1; i >= 0; i--)
+    {
+        ans[i] = st.top();
+        st.pop();
+    }
 }
 
 void solve()
