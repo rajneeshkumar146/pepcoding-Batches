@@ -239,7 +239,8 @@ vector<int> asteroidCollision(vector<int> &arr)
                 st.pop();
             else if (st.size() == 0 || st.top() < 0)
                 st.push(ele);
-            else if(st.size() != 0 && st.top()>-ele) {
+            else if (st.size() != 0 && st.top() > -ele)
+            {
                 // do nothing. because ele will vanished.
             }
         }
@@ -251,6 +252,54 @@ vector<int> asteroidCollision(vector<int> &arr)
         ans[i] = st.top();
         st.pop();
     }
+}
+
+int trap01(vector<int> &arr)
+{
+    int n = arr.size();
+    vector<int> left(n, 0);
+    vector<int> right(n, 0);
+
+    int prev = -1;
+    for (int i = 0; i < n; i++)
+    {
+        left[i] = max(prev, arr[i]);
+        prev = left[i];
+    }
+
+    prev = -1;
+    for (int i = n - 1; i >= 0; i--)
+    {
+        right[i] = max(prev, arr[i]);
+        prev = right[i];
+    }
+
+    int water = 0;
+    for (int i = 0; i < n; i++)
+    {
+        int minH = min(left[i], right[i]);
+        water += minH - arr[i];
+    }
+    return water;
+}
+
+
+int trap(vector<int> &arr)
+{
+    stack<int> st;
+    int water=0;
+    for(int i=0;i<arr.size();i++){
+        while(st.size()!=0 && arr[i]>=arr[st.top()]){
+            int h=arr[st.top()]; st.pop();
+            if(st.size()==0) break;
+
+            int oh=min(arr[st.top()],arr[i])-h;
+            water+=oh*(i-st.top()-1);
+        }
+        st.push(i);
+    }
+
+    return water;
 }
 
 void solve()
