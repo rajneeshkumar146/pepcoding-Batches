@@ -1,12 +1,13 @@
 import java.util.LinkedList;
+import java.util.ArrayList;
 
-public class HashMap_{
+public class HashMap_<K,V>{
 
     public class Node{
-        Integer key;
-        Integer value;
+        K key;
+        V value;
 
-        public Node(Integer key,Integer value){
+        public Node(K key,V value){
             this.key=key;
             this.value=value;
         }
@@ -59,8 +60,12 @@ public class HashMap_{
         return this.size;
     }
 
+    public boolean isEmpty(){
+        return this.size==0;
+    }
 
-    public void put(Integer key,Integer value){
+
+    public void put(K key,V value){
          int code=myGroup(key);
          LinkedList<Node> group=buckets[code];
 
@@ -103,7 +108,7 @@ public class HashMap_{
         }
     }
 
-    public Integer get(Integer key){
+    public V get(K key){
          int code=myGroup(key);
          LinkedList<Node> group=buckets[code];
          Node rn=foundInGroup(group,key);
@@ -111,7 +116,7 @@ public class HashMap_{
          return rn==null?null:rn.value;
     }
 
-    public Node remove(Integer key){
+    public Node remove(K key){
      int code=myGroup(key);
      LinkedList<Node> group=buckets[code];
      Node rn=foundInGroup(group,key);
@@ -126,7 +131,7 @@ public class HashMap_{
      return null;
     }
 
-    public boolean containsKey(Integer key){
+    public boolean containsKey(K key){
      int code=myGroup(key);
      LinkedList<Node> group=buckets[code];
      Node rn=foundInGroup(group,key);
@@ -135,7 +140,7 @@ public class HashMap_{
 
     }
 
-    private Node foundInGroup(LinkedList<Node> group,Integer key){
+    private Node foundInGroup(LinkedList<Node> group,K key){
      if(group==null) return null;
      Node rn=null;
      int size=group.size();
@@ -150,10 +155,37 @@ public class HashMap_{
      }
 
      return rn;
-
     }
 
-    public int myGroup(Integer key){
+    public ArrayList<K> keySet(){
+       ArrayList<K> ans=new ArrayList<>();
+        for(int i=0;i<buckets.length;i++){
+            if(buckets[i].size()>0){
+                
+                LinkedList<Node> group=buckets[i];
+                int size=group.size();
+
+                while(size-->0){
+                    Node tempNode=group.getFirst();
+                    ans.add(tempNode.key);
+                    group.addLast(group.removeFirst());
+                }
+            }
+        }
+
+        return ans;
+    }
+
+    public V getOrDefault(K key,V defaultValue){
+        int code=myGroup(key);
+        LinkedList<Node> group=buckets[code];
+        Node rn=foundInGroup(group,key);
+
+        return rn!=null?rn.value:defaultValue;
+    }
+
+
+    public int myGroup(K key){
         int val=key.hashCode();
         return Math.abs(val)%buckets.length;
     }
