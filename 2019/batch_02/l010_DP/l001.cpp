@@ -24,6 +24,8 @@ void display2D(vii &dp)
     cout << endl;
 }
 
+//set01.============================================================
+
 int fibo_01(int n, vector<int> &dp)
 {
     if (n <= 1)
@@ -162,21 +164,223 @@ int mazePathMulti_02(int er, int ec, vii &dp)
     return dp[0][0];
 }
 
+int boardPath_01(int st, int end, vector<int> &dp)
+{
+    if (st == end)
+    {
+        dp[st] = 1;
+        return 1;
+    }
+
+    if (dp[st] != 0)
+        return dp[st];
+
+    int count = 0;
+    for (int dice = 1; dice <= 6 && st + dice <= end; dice++)
+    {
+        count += boardPath_01(st + dice, end, dp);
+    }
+
+    dp[st] = count;
+    return count;
+}
+
+int boardPath_02(int st, int end, vector<int> &dp)
+{
+    for (int i = end; i >= st; i--)
+    {
+
+        if (i == end)
+        {
+            dp[i] = 1;
+            continue;
+        }
+
+        int count = 0;
+        for (int dice = 1; dice <= 6 && i + dice <= end; dice++)
+        {
+            count += dp[i + dice];
+        }
+
+        dp[i] = count;
+    }
+
+    return dp[0];
+}
+
+int boardPath_01_giveOutcomes(int st, int end, vector<int> &outcomes, vector<int> &dp)
+{
+    if (st == end)
+    {
+        dp[st] = 1;
+        return 1;
+    }
+
+    if (dp[st] != 0)
+        return dp[st];
+
+    int count = 0;
+    for (int i = 0; i < outcomes.size(); i++)
+    {
+        if (st + outcomes[i] <= end)
+            count += boardPath_01_giveOutcomes(st + outcomes[i], end, outcomes, dp);
+    }
+
+    dp[st] = count;
+    return count;
+}
+
+int boardPath_02_giveOutcomes(int stP, int end, vector<int> &outcomes, vector<int> &dp)
+{
+
+    for (int st = end; st >= stP; st--)
+    {
+        if (st == end)
+        {
+            dp[st] = 1;
+            continue;
+        }
+
+        int count = 0;
+        for (int i = 0; i < outcomes.size(); i++)
+        {
+            if (st + outcomes[i] <= end)
+                count += dp[st + outcomes[i]];
+        }
+
+        dp[st] = count;
+    }
+    return dp[0];
+}
+
+//set02.=========================================================
+
+//leetode 70
+int climbStairs(int n)
+{
+    if (n <= 1)
+        return 1;
+
+    int a = 1, b = 1, ans = 0;
+    for (int i = 2; i <= n; i++)
+    {
+        ans = a + b;
+        a = b;
+        b = ans;
+    }
+    return ans;
+}
+
+// leetcode 746
+int minCostClimbingStairs(vector<int> &cost)
+{
+    cost.push_back(0);
+    int n = cost.size();
+
+    vector<int> dp(n, 0);
+    return minCostClimbingStairs_01(n - 1, cost, dp);
+}
+
+int minCostClimbingStairs_01(int n, vector<int> &cost, vector<int> &dp)
+{
+    if (n <= 1)
+        return cost[n];
+    if (dp[n] != 0)
+        return dp[n];
+    int c1 = minCostClimbingStairs_01(n - 1, cost, dp);
+    int c2 = minCostClimbingStairs_01(n - 2, cost, dp);
+
+    return dp[n] = min(c1, c2) + cost[n];
+}
+
+int minCostClimbingStairs_02(int n, vector<int> &cost, vector<int> &dp)
+{
+
+    for (int i = 0; i <= n; i++)
+    {
+        if (i <= 1)
+        {
+            dp[i] = cost[i];
+            continue;
+        }
+
+        int c1 = dp[i - 1];
+        int c2 = dp[i - 2];
+
+        dp[i] = min(c1, c2) + cost[i];
+    }
+
+    return dp[n];
+}
+
+int minCostClimbingStairs_03(vector<int> &cost)
+{
+
+    if (cost.size() == 1)
+        return cost[0];
+    if (cost.size() == 2)
+        return min(cost[0], cost[1]);
+
+    int a = cost[0];
+    int b = cost[1];
+    for (int i = 2; i < cost.size(); i++)
+    {
+        int ans = cost[i] + min(a, b);
+        a = b;
+        b = ans;
+    }
+
+    return min(a, b);
+}
+
+int minPathSum(vector<vector<int>> &arr)
+{
+    int n = arr.size();
+    int m = arr[0].size();
+    for (int i = n - 1; i >= 0; i--)
+    {
+        for (int j = m - 1; j >= 0; j--)
+        {
+            if (i == n - 1 && j == m - 1)
+            {
+                continue;
+            }
+
+            int c1 = j + 1 < m ? arr[i][j + 1] : 1e6;
+            int c2 = i + 1 < n ? arr[i + 1][j] : 1e6;
+
+            int minCost = min(c1, c2);
+            arr[i][j] += minCost;
+        }
+    }
+
+    return arr[0][0];
+}
+
 void set1()
 {
-    int n = 3;
-    // vector<int> dp(n + 1, 0);
-    // cout << fibo_01(n, dp) << endl;
-    // display(dp);
+    int n = 10;
+    // int m=3;
+    vector<int> dp(n + 1, 0);
+    // vii dp(n, vi(m, 0));
 
-    vii dp(n, vi(n, 0));
+    // cout << fibo_01(n, dp) << endl;
+
     // cout << mazePathHV_01(0, 0, n - 1, n - 1, dp) << endl;
     // cout << mazePathHV_02(n - 1, n - 1, dp) << endl;
 
     // cout << mazePathMulti_01(0, 0, n - 1, n - 1, dp) << endl;
-    cout << mazePathMulti_02( n - 1, n - 1, dp) << endl;
-    
-    display2D(dp);
+    // cout << mazePathMulti_02( n - 1, n - 1, dp) << endl;
+
+    // cout << boardPath_01(0, n, dp) << endl;
+    // cout << boardPath_02(0, n, dp) << endl;
+
+    vi outcomes = {2, 3, 7, 5};
+    // cout << boardPath_01_giveOutcomes(0, n, outcomes, dp) << endl;
+    cout << boardPath_02_giveOutcomes(0, n, outcomes, dp) << endl;
+
+    display(dp);
+    // display2D(dp);
 }
 
 void solve()
