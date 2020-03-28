@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <climits>
+
 
 #define vi vector<int>
 #define vii vector<vi>
@@ -271,16 +273,6 @@ int climbStairs(int n)
     return ans;
 }
 
-// leetcode 746
-int minCostClimbingStairs(vector<int> &cost)
-{
-    cost.push_back(0);
-    int n = cost.size();
-
-    vector<int> dp(n, 0);
-    return minCostClimbingStairs_01(n - 1, cost, dp);
-}
-
 int minCostClimbingStairs_01(int n, vector<int> &cost, vector<int> &dp)
 {
     if (n <= 1)
@@ -333,6 +325,16 @@ int minCostClimbingStairs_03(vector<int> &cost)
     return min(a, b);
 }
 
+// leetcode 746
+int minCostClimbingStairs(vector<int> &cost)
+{
+    cost.push_back(0);
+    int n = cost.size();
+
+    vector<int> dp(n, 0);
+    return minCostClimbingStairs_01(n - 1, cost, dp);
+}
+
 int minPathSum(vector<vector<int>> &arr)
 {
     int n = arr.size();
@@ -355,6 +357,139 @@ int minPathSum(vector<vector<int>> &arr)
     }
 
     return arr[0][0];
+}
+
+//set2.====================================================
+
+int pairAndSingle_01(int n, vi &dp)
+{
+    if (n <= 1)
+    {
+        dp[n] = n;
+        return 1;
+    }
+
+    if (dp[n] != 0)
+        return dp[n];
+
+    int singleWays = pairAndSingle_01(n - 1, dp);
+    int pairUpWays = pairAndSingle_01(n - 2, dp) * (n - 1);
+
+    dp[n] = singleWays + pairUpWays;
+    return dp[n];
+}
+
+int pairAndSingle_02(int n, vi &dp)
+{
+
+    for (int i = 0; i <= n; i++)
+    {
+        if (i <= 1)
+        {
+            dp[i] = 1;
+            continue;
+        }
+
+        int singleWays = dp[i - 1];
+        int pairUpWays = dp[i - 2] * (i - 1);
+
+        dp[i] = singleWays + pairUpWays;
+    }
+
+    return dp[n];
+}
+
+int pairAndSingle_03(int n)
+{
+    if (n <= 1)
+        return 1;
+
+    int a = 1; // n=0
+    int b = 1; //n=1;
+    int ans = 0;
+    for (int i = 2; i <= n; i++)
+    {
+        ans = b + a * (i - 1);
+        a = b;
+        b = ans;
+    }
+
+    return ans;
+}
+
+int Minjump_01(int idx, vi &arr, vector<int> &dp)
+{
+    if (idx == arr.size() - 1)
+        return 0;
+
+    int Minjump_01(int idx, vi &arr, vector<int> &dp)
+    {
+        if (idx == arr.size() - 1)
+            return 0;
+
+        // if (arr[idx] == 0)
+        //     return (int)1e7;
+
+        if (dp[idx] != 0)
+            return dp[idx];
+
+        int minAns = (int)1e7;
+        for (int jump = 1; jump <= arr[idx] && idx + jump < arr.size(); jump++)
+        {
+            int minJump = Minjump_01(idx + jump, arr);
+            if (minJump != (int)1e7)
+              minAns = min(minJump + 1,minAns)
+        }
+
+        dp[idx] = minAns;
+        return minAns;
+    }
+
+    int Minjump_02(int idx, vi &arr, vector<int> &dp)
+    {
+        int n = arr.size();
+        dp[n - 1] = 0;
+        for (int i = n - 2; i >= 0; i--)
+        {
+            int minAns = INT_MAX;
+            for (int jump = 1; jump <= arr[i] && i + jump < n; jump++)
+            {
+                int minJump = dp[i + jump];
+                if (minJump != INT_MAX)
+                    minAns = min(minJump + 1,minAns);
+            }
+
+            dp[i] = minAns;
+        }
+
+        return dp[0];
+    }
+
+    int jump(vector<int> & nums)
+    {
+        vector<int> dp(nums.size(), 0);
+        return Minjump_01(0, nums, dp);
+    }
+
+    if (dp[idx] != 0)
+        return dp[idx];
+
+    int minAns = INT_MAX;
+    for (int jump = 1; jump <= arr[idx] && idx + jump < arr.size(); jump++)
+    {
+        int minJump = Minjump_01(idx + jump, arr);
+        if (minJump != INT_MAX && minJump + 1 < minAns)
+            minAns = minJump + 1;
+    }
+
+    dp[idx] = minAns;
+    return minAns;
+}
+
+int jump(vector<int> &nums)
+{
+    vector<int> dp(nums.size(), 0);
+    return Minjump_01(0, nums, dp);
 }
 
 void set1()
@@ -383,9 +518,25 @@ void set1()
     // display2D(dp);
 }
 
+void set2()
+{
+    int n = 15;
+    // int m=3;
+    vector<int> dp(n + 1, 0);
+    // vii dp(n, vi(m, 0));
+
+    // cout << pairAndSingle_01(n, dp) << endl;
+    cout << pairAndSingle_02(n, dp) << endl;
+    cout << pairAndSingle_03(n) << endl;
+
+    display(dp);
+    // display2D(dp);
+}
+
 void solve()
 {
-    set1();
+    // set1();
+    set2();
 }
 
 int main()
