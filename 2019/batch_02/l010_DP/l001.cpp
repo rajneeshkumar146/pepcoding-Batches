@@ -2,7 +2,6 @@
 #include <vector>
 #include <climits>
 
-
 #define vi vector<int>
 #define vii vector<vi>
 
@@ -422,74 +421,177 @@ int Minjump_01(int idx, vi &arr, vector<int> &dp)
     if (idx == arr.size() - 1)
         return 0;
 
-    int Minjump_01(int idx, vi &arr, vector<int> &dp)
-    {
-        if (idx == arr.size() - 1)
-            return 0;
-
-        // if (arr[idx] == 0)
-        //     return (int)1e7;
-
-        if (dp[idx] != 0)
-            return dp[idx];
-
-        int minAns = (int)1e7;
-        for (int jump = 1; jump <= arr[idx] && idx + jump < arr.size(); jump++)
-        {
-            int minJump = Minjump_01(idx + jump, arr);
-            if (minJump != (int)1e7)
-              minAns = min(minJump + 1,minAns)
-        }
-
-        dp[idx] = minAns;
-        return minAns;
-    }
-
-    int Minjump_02(int idx, vi &arr, vector<int> &dp)
-    {
-        int n = arr.size();
-        dp[n - 1] = 0;
-        for (int i = n - 2; i >= 0; i--)
-        {
-            int minAns = INT_MAX;
-            for (int jump = 1; jump <= arr[i] && i + jump < n; jump++)
-            {
-                int minJump = dp[i + jump];
-                if (minJump != INT_MAX)
-                    minAns = min(minJump + 1,minAns);
-            }
-
-            dp[i] = minAns;
-        }
-
-        return dp[0];
-    }
-
-    int jump(vector<int> & nums)
-    {
-        vector<int> dp(nums.size(), 0);
-        return Minjump_01(0, nums, dp);
-    }
+    // if (arr[idx] == 0)
+    //     return (int)1e7;
 
     if (dp[idx] != 0)
         return dp[idx];
 
-    int minAns = INT_MAX;
+    int minAns = (int)1e7;
     for (int jump = 1; jump <= arr[idx] && idx + jump < arr.size(); jump++)
     {
-        int minJump = Minjump_01(idx + jump, arr);
-        if (minJump != INT_MAX && minJump + 1 < minAns)
-            minAns = minJump + 1;
+        int minJump = Minjump_01(idx + jump, arr, dp);
+        if (minJump != (int)1e7)
+            minAns = min(minJump + 1, minAns);
     }
 
     dp[idx] = minAns;
     return minAns;
 }
 
+int Minjump_02(int idx, vi &arr, vector<int> &dp)
+{
+    int n = arr.size();
+    dp[n - 1] = 0;
+    for (int i = n - 2; i >= 0; i--)
+    {
+        int minAns = INT_MAX;
+        for (int jump = 1; jump <= arr[i] && i + jump < n; jump++)
+        {
+            int minJump = dp[i + jump];
+            if (minJump != INT_MAX)
+                minAns = min(minJump + 1, minAns);
+        }
+
+        dp[i] = minAns;
+    }
+
+    return dp[0];
+}
+
 int jump(vector<int> &nums)
 {
     vector<int> dp(nums.size(), 0);
     return Minjump_01(0, nums, dp);
+}
+int divideInKGroups(int n, int k, vii &dp)
+{
+    if (n < k)
+        return 0;
+    if (n == k || k == 1)
+    {
+        dp[n][k] = 1;
+        return 1;
+    }
+
+    if (dp[n][k] != 0)
+        return dp[n][k];
+
+    int startingOfNewSet = divideInKGroups(n - 1, k - 1, dp);
+    int totalGroups = divideInKGroups(n - 1, k, dp); // n-1, number will divide in k sets and generate some x group.
+
+    int totalSets = totalGroups * k; //total set avilable for me.
+
+    dp[n][k] = startingOfNewSet + totalSets;
+    return dp[n][k];
+}
+
+int divideInKGroups_02(int n, int k, vii &dp)
+{
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= k; j++)
+        {
+            if (i < j)
+            {
+                dp[i][j] = 0;
+                continue;
+            }
+            if (i == j || j == 1)
+            {
+                dp[i][j] = 1;
+                continue;
+            }
+
+            int startingOfNewSet = dp[i - 1][j - 1];
+            int totalGroups = dp[i - 1][j]; // n-1, number will divide in k sets and generate some x group.
+
+            int totalSets = totalGroups * j; //total set avilable for me.
+
+            dp[i][j] = startingOfNewSet + totalSets;
+        }
+    }
+    return dp[n][k];
+}
+
+vii dirArr = {{0, 1}, {-1, 1}, {1, 1}};
+int goldMine_01(int x, int y, vii &arr, vii &dp)
+{
+    if (y == arr[0].size() - 1)
+    {
+        dp[x][y] = arr[x][y];
+        return arr[x][y];
+    }
+
+    if (dp[x][y] != 0)
+        return dp[x][y];
+
+    int maxAns = -1e6;
+    for (int d = 0; d < 3; d++)
+    {
+        int r = x + dirArr[d][0];
+        int c = y + dirArr[d][1];
+
+        if (r >= 0 && c >= 0 && r < arr.size() && c < arr[0].size())
+            maxAns = max(maxAns, goldMine_01(r, c, arr, dp));
+    }
+
+    dp[x][y] = maxAns + arr[x][y];
+    return dp[x][y];
+}
+
+int goldMine_02(vii &arr, vii &dp)
+{
+
+    for (int y = arr[0].size() - 1; y >= 0; y--)
+    {
+        for (int x = arr.size() - 1; x >= 0; x--)
+        {
+            if (y == arr[0].size() - 1)
+            {
+                dp[x][y] = arr[x][y];
+                continue;
+            }
+
+            int maxAns = -1e6;
+            for (int d = 0; d < 3; d++)
+            {
+                int r = x + dirArr[d][0];
+                int c = y + dirArr[d][1];
+
+                if (r >= 0 && c >= 0 && r < arr.size() && c < arr[0].size())
+                    maxAns = max(maxAns, dp[r][c]);
+            }
+
+            dp[x][y] = maxAns + arr[x][y];
+        }
+    }
+
+    int maxAns = -1e6;
+    for (int row = 0; row < arr.size(); row++)
+    {
+        maxAns = max(maxAns, dp[row][0]);
+    }
+
+    return maxAns;
+}
+
+int goldMine()
+{
+    vii arr = {{1, 3, 3},
+               {2, 1, 4},
+               {0, 6, 4}};
+    vii dp(arr.size(), vi(arr[0].size(), 0));
+
+    // int maxAns = -1e6;
+    // for (int row = 0; row < arr.size(); row++)
+    // {
+    //     maxAns = max(maxAns, goldMine_01(row, 0, arr, dp));
+    // }
+    // cout << maxAns << endl;
+
+    cout << goldMine_02(arr, dp) << endl;
+    display2D(dp);
 }
 
 void set1()
@@ -520,16 +622,21 @@ void set1()
 
 void set2()
 {
-    int n = 15;
-    // int m=3;
-    vector<int> dp(n + 1, 0);
-    // vii dp(n, vi(m, 0));
+    int n = 5;
+    int m = 3;
+    // vector<int> dp(n + 1, 0);
+    vii dp(n + 1, vi(m + 1, 0));
 
     // cout << pairAndSingle_01(n, dp) << endl;
-    cout << pairAndSingle_02(n, dp) << endl;
-    cout << pairAndSingle_03(n) << endl;
+    // cout << pairAndSingle_02(n, dp) << endl;
+    // cout << pairAndSingle_03(n) << endl;
 
-    display(dp);
+    // cout << divideInKGroups(n, m, dp) << endl;
+    // cout << divideInKGroups_02(n, m, dp) << endl;
+
+    goldMine();
+
+    // display(dp);
     // display2D(dp);
 }
 
