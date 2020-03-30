@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <climits>
+#include <list>
 
 #define vi vector<int>
 #define vii vector<vi>
@@ -594,6 +595,110 @@ int goldMine()
     display2D(dp);
 }
 
+int maxSquareAns = 0;
+int maxSquareOf1s(int r, int c, vii &arr, vii &dp)
+{
+    if (r == arr.size() || c == arr[0].size())
+    {
+        return 0;
+    }
+
+    if (dp[r][c] != -1)
+        return dp[r][c];
+
+    int down = maxSquareOf1s(r + 1, c, arr, dp);
+    int diag = maxSquareOf1s(r + 1, c + 1, arr, dp);
+    int right = maxSquareOf1s(r, c + 1, arr, dp);
+
+    int minPossibleSqaure = 0;
+    if (arr[r][c] == 1)
+        minPossibleSqaure = min(down, min(diag, right)) + 1;
+
+    dp[r][c] = minPossibleSqaure;
+    maxSquareAns = max(dp[r][c], maxSquareAns);
+
+    return dp[r][c];
+}
+
+int maxSquareOf1s_DP(vii &arr, vii &dp)
+{
+    int n = arr.size() - 1;
+    int m = arr[0].size() - 1;
+    int maxSquareAns_ = 0;
+
+    for (int r = n; r >= 0; r--)
+    {
+        for (int c = m; c >= 0; c--)
+        {
+            if (arr[r][c] == 1)
+                dp[r][c] = min(dp[r + 1][c], min(dp[r + 1][c + 1], dp[r][c + 1])) + 1;
+            else
+                dp[r][c] = 0;
+
+            maxSquareAns_ = max(dp[r][c], maxSquareAns_);
+        }
+    }
+
+    return maxSquareAns_;
+}
+
+int tileFloor(int n, int m, vi &dp)
+{
+    if (n <= m)
+    {
+        dp[n] = ((n == m) ? 2 : 1);
+        return dp[n];
+    }
+
+    if (dp[n] != 0)
+        return dp[n];
+
+    int horizontal = tileFloor(n - 1, m, dp);
+    int vertical = tileFloor(n - m, m, dp);
+
+    dp[n] = horizontal + vertical;
+    return dp[n];
+}
+
+int tileFloor_01(int n, int m, vi &dp)
+{
+    for (int i = 0; i <= n; i++)
+    {
+        if (i <= m)
+        {
+            dp[i] = ((i == m) ? 2 : 1);
+            continue;
+        }
+
+        int horizontal = dp[i - 1];
+        int vertical = dp[i - m];
+
+        dp[i] = horizontal + vertical;
+    }
+    return dp[n];
+}
+
+int tileFloor_02(int n, int m)
+{
+    if (n <= m)
+        return ((n == m) ? 2 : 1);
+
+    list<int> ll;
+    for (int i = 1; i <= m; i++)
+        ll.push_back(1);
+
+    for (int i = m; i <= n; i++)
+    {
+        int horizontal = ll.back(); //dp[i - 1];
+        int vertical = ll.front();  //dp[i - m];
+
+        ll.push_back(horizontal + vertical);
+        ll.pop_front();
+    }
+    
+    return ll.back();
+}
+
 void set1()
 {
     int n = 10;
@@ -612,20 +717,20 @@ void set1()
     // cout << boardPath_01(0, n, dp) << endl;
     // cout << boardPath_02(0, n, dp) << endl;
 
-    vi outcomes = {2, 3, 7, 5};
+    // vi outcomes = {2, 3, 7, 5};
     // cout << boardPath_01_giveOutcomes(0, n, outcomes, dp) << endl;
-    cout << boardPath_02_giveOutcomes(0, n, outcomes, dp) << endl;
+    // cout << boardPath_02_giveOutcomes(0, n, outcomes, dp) << endl;
 
-    display(dp);
+    // display(dp);
     // display2D(dp);
 }
 
 void set2()
 {
-    int n = 5;
-    int m = 3;
-    // vector<int> dp(n + 1, 0);
-    vii dp(n + 1, vi(m + 1, 0));
+    int n = 170;
+    int m = 6;
+    vector<int> dp(n + 1, 0);
+    // vii dp(n + 1, vi(m + 1, 0));
 
     // cout << pairAndSingle_01(n, dp) << endl;
     // cout << pairAndSingle_02(n, dp) << endl;
@@ -634,9 +739,13 @@ void set2()
     // cout << divideInKGroups(n, m, dp) << endl;
     // cout << divideInKGroups_02(n, m, dp) << endl;
 
-    goldMine();
+    // goldMine();
 
-    // display(dp);
+    // cout << tileFloor(n, m, dp) << endl; //(7,4) -> 5
+    cout << tileFloor_01(n, m, dp) << endl;  // increase size of dp by 1(n+1, m+1).
+    cout << tileFloor_02(n, m) << endl;
+
+    display(dp);
     // display2D(dp);
 }
 
