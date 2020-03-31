@@ -695,8 +695,135 @@ int tileFloor_02(int n, int m)
         ll.push_back(horizontal + vertical);
         ll.pop_front();
     }
-    
+
     return ll.back();
+}
+
+//TargetType.====================================================
+
+int coinChangePermutation(vi &arr, int tar, vi &dp)
+{
+    if (tar == 0)
+    {
+        return dp[tar] = 1;
+    }
+
+    if (dp[tar] != 0)
+        return dp[tar];
+
+    int count = 0;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        if (tar - arr[i] >= 0)
+            count += coinChangePermutation(arr, tar - arr[i], dp);
+    }
+
+    return dp[tar] = count;
+}
+
+int coinChangePermutation_DP(vi &arr, int tar, vi &dp)
+{
+    dp[0] = 1;
+    for (int t = 1; t <= tar; t++)
+    {
+        int count = 0;
+        for (int i = 0; i < arr.size(); i++)
+        {
+            if (t - arr[i] >= 0)
+                dp[t] += dp[t - arr[i]];
+        }
+    }
+
+    return dp[tar];
+}
+
+int coinChangeCombination_DP(vi &arr, int tar, vi &dp)
+{
+    dp[0] = 1;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        for (int t = 1; t <= tar; t++)
+        {
+            if (t - arr[i] >= 0)
+                dp[t] += dp[t - arr[i]];
+        }
+    }
+
+    return dp[tar];
+}
+
+//leetcode 377
+int combinationSum4(vector<int> &nums, int target) //same as permuation
+{
+    vector<unsigned int> dp(target + 1, 0);
+    dp[0] = 1;
+    for (int i = 1; i <= target; i++)
+    {
+        for (int coin : nums)
+        {
+            if (i - coin >= 0)
+                dp[i] += dp[i - coin];
+        }
+    }
+    return dp[target];
+}
+
+//leetcode 322
+
+int minCoinsHeight(vector<int> &arr, int tar, vector<int> &dp)
+{
+    if (tar == 0)
+        return 0;
+
+    if (dp[tar] != 0)
+        return dp[tar];
+
+    int height = 1e8;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        if (tar - arr[i] >= 0)
+        {
+            int recAns = minCoinsHeight(arr, tar - arr[i], dp);
+            if (recAns < height)
+                height = recAns + 1;
+        }
+    }
+
+    dp[tar] = height;
+    return height;
+}
+
+int minCoinsHeight_dp(vector<int> &arr, int tar, vector<int> &dp)
+{
+
+    // for (int i = 0; i < dp.size(); i++)
+    //     dp[i] = 1e8;
+
+    dp[0] = 0;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        for (int t = 1; t <= tar; t++)
+        {
+
+            if (t - arr[i] >= 0)
+            {
+                dp[t] = min(dp[t], dp[t - arr[i]] + 1);
+            }
+        }
+    }
+    return dp[tar];
+}
+
+int coinChange(vector<int> &arr, int tar)
+{
+    if (arr.size() == 0 || tar <= 0)
+        return 0;
+    vector<int> dp(tar + 1, 1e8); // Arrays.fill(dp,(int)1e8);
+
+    // int ans = minCoinsHeight(arr, tar, dp);
+    int ans = minCoinsHeight_dp(arr, tar, dp);
+
+    return ans != 1e8 ? ans : -1;
 }
 
 void set1()
@@ -742,17 +869,32 @@ void set2()
     // goldMine();
 
     // cout << tileFloor(n, m, dp) << endl; //(7,4) -> 5
-    cout << tileFloor_01(n, m, dp) << endl;  // increase size of dp by 1(n+1, m+1).
+    cout << tileFloor_01(n, m, dp) << endl; // increase size of dp by 1(n+1, m+1).
     cout << tileFloor_02(n, m) << endl;
 
     display(dp);
     // display2D(dp);
 }
 
+void targetType()
+{
+    vi arr{2, 3, 5, 7};
+    int tar = 12;
+
+    vector<int> dp(tar + 1, 0);
+    // cout << coinChangePermutation(arr, tar, dp) << endl;
+    // cout << coinChangePermutation_DP(arr, tar, dp) << endl;
+
+    // cout << coinChangeCombination_DP(arr, tar, dp) << endl;
+
+    display(dp);
+}
+
 void solve()
 {
     // set1();
-    set2();
+    // set2();
+    targetType();
 }
 
 int main()
