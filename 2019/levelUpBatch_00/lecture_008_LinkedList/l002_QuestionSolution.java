@@ -97,15 +97,151 @@ public class l002_QuestionSolution {
 
     //Leetcode 142
     public ListNode detectCycle(ListNode head) {
-        
+        if(head==null || head.next==null) return null;
+
+        ListNode slow=head;
+        ListNode fast=head;
+        while(fast!=null && fast.next!=null){
+            slow=slow.next;
+            fast=fast.next.next;
+            if(slow==fast) break;  // means cycle.
+        }
+
+        if(fast!=slow) return null;  //no cycle.
+
+        slow=head;
+        while(slow!=fast){
+            slow=slow.next;
+            fast=fast.next;
+        }
+
+        return slow;  // intersection point.
     }
 
 
 
     //leetcode 160
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+
+        Node tail=null;
+        Node curr=headA;
+        while(curr!=null){
+            tail=curr;
+            curr=curr.next;
+        }
+
+        tail.next=headB;
+        return detectCycle(headA);
+    }
+
+    //leetcode 148
+    public ListNode sortList(ListNode head) {
+        if(head==null || head.next==null) return head;
+
+        ListNode mid=mid_(head);
+        ListNode nhead=mid.next;
+        mid.next=null;
+
+        return mergeTwoList(sortList(head),sortList(head2));
         
     }
+
+    //leetcode 21
+    public ListNode mergeTwoList(ListNode A,ListNode B){
+        if(A==null) return B;
+        else if(B==null) return A;
+
+        ListNode head=new ListNode(-1); // dummyNode.
+        ListNode curr=head;
+
+        while(A!=null && B!=null){
+            if(A.val<=B.val){
+                curr.next=A; //connection.
+                
+                curr=A;    // move forward.
+                A=A.next;
+            }else{
+                curr.next=B;//connection
+
+                curr=B;  // move forward.
+                B=B.next;
+            }
+        }
+        if(A!=null)
+            curr.next=A;
+        else if(B!=null)
+            curr.next=B;
+
+       return head.next;
+    }
+
+    //leetcode 138
+    public Node copyRandomList(Node head) {
+        //First: we try to make new nodes and link them next to each other.
+        Node curr=head,forw=null;
+        while(curr!=null){
+            forw=curr.next;
+
+            Node copyNode=new Node(curr.val);
+            curr.next=copyNode;
+            copyNode.next=forw;
+
+            curr=forw;
+        }
+
+        //second: set random pointers.
+        curr=head;
+        while(curr!=null){
+            if(curr.random!=null)
+                curr.next.random=curr.random.next;  
+            curr=curr.next.next;
+        }
+
+        //Third: extract copy List.
+        curr=head;
+        Node newList=new Node(-1);  // dummy Node.
+        Node newCurr=newList;
+        Node copyNode=null;
+
+        while(curr!=null){
+            forw=curr.next.next;
+
+            copyNode=curr.next;
+            newCurr.next=copyNode;
+            curr.next=forw;
+
+            curr=forw;
+            newCurr=copyNode;
+        }
+
+        return newList.next;
+    }
+
+    //leetcode 19
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        if(n==0 || head==null) return null;
+        if(n==1 && head.next==null) return null;
+
+        ListNode slow=head,fast=head;
+        while(n-->0){
+            fast=fast.next;
+        }
+
+        if(fast==null) return head.next;
+
+        while(fast.next!=null){
+            slow=slow.next;
+            fast=fast.next;
+        }
+
+        ListNode temp=slow.next;
+        slow.next=slow.next.next;
+        temp.next=null;
+
+        return head;
+    }
+
+
 
 
 
