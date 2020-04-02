@@ -826,6 +826,104 @@ int coinChange(vector<int> &arr, int tar)
     return ans != 1e8 ? ans : -1;
 }
 
+int targetSum_01(vi &arr, int idx, int tar, vii &dp)
+{
+    if (tar == 0 || idx < 0)
+    {
+        return tar == 0 ? 1 : 0;
+    }
+
+    if (dp[idx][tar] != 0)
+        return dp[idx][tar];
+
+    int count = 0;
+    if (tar - arr[idx] >= 0)
+        count += targetSum_01(arr, idx - 1, tar - arr[idx], dp);
+    count += targetSum_01(arr, idx - 1, tar, dp);
+
+    return dp[idx][tar] = count;
+}
+
+int targetSum_02(vi &arr, int tar, vii &dp)
+{
+
+    dp[0][0] = 1; //if zero append at 0 index of coins array.
+    for (int idx = 1; idx < arr.size(); idx++)
+    {
+        for (int t = 0; t <= tar; t++)
+        {
+            if (t == 0)
+            {
+                dp[idx][t] = 1;
+                continue;
+            }
+
+            if (t - arr[idx] >= 0)
+                dp[idx][t] += dp[idx - 1][t - arr[idx]];
+            dp[idx][t] += dp[idx - 1][t];
+        }
+    }
+    return dp[arr.size() - 1][tar];
+}
+
+int knapSack_01(vi &weight, vi &cost, int idx, int cap, vii &dp)
+{
+    if (cap == 0 || idx == -1)
+    {
+        return 0;
+    }
+
+    if (dp[idx][cap] != 0)
+        return dp[idx][cap];
+
+    int picked = 0, unpicked = 0;
+    if (cap - weight[idx] >= 0)
+        picked = knapSack_01(weight, cost, idx - 1, cap - weight[idx], dp) + cost[idx];
+    unpicked = knapSack_01(weight, cost, idx - 1, cap, dp);
+
+    return dp[idx][cap] = max(picked, unpicked);
+}
+
+int knapSack_02(vi &weight, vi &cost, int capacity, vii &dp)
+{
+
+    for (int idx = 1; idx < dp.size(); idx++)
+    {
+        int weightIdx = idx - 1;
+        for (int cap = 0; cap <= capacity; cap++)
+        {
+            int picked = 0, unpicked = 0;
+            if (cap - weight[weightIdx] >= 0)
+                picked = dp[idx - 1][cap - weight[weightIdx]] + cost[weightIdx];
+            unpicked = dp[idx - 1][cap];
+
+            dp[idx][cap] = max(picked, unpicked);
+        }
+    }
+
+    return dp[dp.size() - 1][dp[0].size() - 1];
+}
+
+int unboundedKnapSack(vi &weight, vi &cost, int capacity)
+{
+    vi dp(capacity + 1, 0);
+    dp[0] = 0;
+    for (int idx = 0; idx < weight.size(); idx++)
+    {
+        for (int cap = 1; cap <= capacity; cap++)
+        {
+            if (cap - weight[idx] >= 0)
+            {
+                int picked = dp[cap - weight[idx]] + cost[idx];
+                int unpicked = dp[cap];
+                dp[cap] = max(picked, unpicked);
+            }
+        }
+    }
+    display(dp);
+    return dp[capacity];
+}
+
 void set1()
 {
     int n = 10;
@@ -878,16 +976,30 @@ void set2()
 
 void targetType()
 {
-    vi arr{2, 3, 5, 7};
-    int tar = 12;
+    // vi arr{0, 2, 3, 5, 7};
+    // int tar = 10;
 
-    vector<int> dp(tar + 1, 0);
+    // vector<int> dp(tar + 1, 0);
+    // vii dp(arr.size(), vi(tar + 1, 0));
     // cout << coinChangePermutation(arr, tar, dp) << endl;
     // cout << coinChangePermutation_DP(arr, tar, dp) << endl;
 
     // cout << coinChangeCombination_DP(arr, tar, dp) << endl;
 
-    display(dp);
+    // cout << targetSum_01(arr, arr.size() - 1, tar, dp) << endl;
+    // cout << targetSum_02(arr, tar, dp) << endl;
+
+    vi weight = {2, 5, 1, 3, 4};
+    vi cost = {15, 14, 10, 45, 30};
+    int cap = 7;
+    vii dp(weight.size() + 1, vi(cap + 1, 0));
+    // cout << knapSack_01(weight, cost, cost.size() - 1, cap, dp) << endl;
+    // cout << knapSack_02(weight, cost, cap, dp) << endl;
+
+    cout << unboundedKnapSack(weight, cost, cap) << endl;
+
+    // display(dp);
+    // display2D(dp);
 }
 
 void solve()
