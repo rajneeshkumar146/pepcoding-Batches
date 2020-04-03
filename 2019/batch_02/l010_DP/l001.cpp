@@ -6,6 +6,9 @@
 #define vi vector<int>
 #define vii vector<vi>
 
+#define vb vector<bool>
+#define vbb vector<vb>
+
 using namespace std;
 
 void display(vi &dp)
@@ -924,6 +927,96 @@ int unboundedKnapSack(vi &weight, vi &cost, int capacity)
     return dp[capacity];
 }
 
+// stringSet.====================================================
+
+vbb isPlaindromeSubstring(string str)
+{
+
+    vbb dp(str.length(), vb(str.length(), false));
+
+    for (int gap = 0; gap < str.length(); gap++)
+    {
+        for (int i = 0, j = gap; j < str.length(); j++, i++)
+        {
+            if (gap == 0)
+                dp[i][j] = true;
+            else if (str[i] == str[j])
+            {
+                if (gap == 1)
+                    dp[i][j] = true;
+                else if (dp[i + 1][j - 1])
+                    dp[i][j] = true;
+            }
+        }
+    }
+
+    return dp;
+}
+
+int LongestPlaindromeSubstring(string str, vii &dp)
+{
+
+    vbb isPlai = isPlaindromeSubstring(str);
+
+    for (int gap = 0; gap < str.length(); gap++)
+    {
+        for (int i = 0, j = gap; j < str.length(); j++, i++)
+        {
+            if (gap == 0)
+                dp[i][j] = 1;
+            else if (str[i] == str[j] && gap == 1)
+                dp[i][j] = 2;
+            else if (str[i] == str[j] && isPlai[i + 1][j - 1])
+                dp[i][j] = dp[i + 1][j - 1] + 2;
+            else
+                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]);
+        }
+    }
+
+    return dp[0][str.length() - 1];
+}
+
+int LongestPlaindromeSubsequence(string str, vii &dp)
+{
+    for (int gap = 0; gap < str.length(); gap++)
+    {
+        for (int i = 0, j = gap; j < str.length(); j++, i++)
+        {
+            if (gap == 0)
+                dp[i][j] = 1;
+            else if (str[i] == str[j])
+                dp[i][j] = dp[i + 1][j - 1] + 2;
+            else
+                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1]);
+        }
+    }
+
+    return dp[0][str.length() - 1];
+}
+
+int countPlaindromeSubsequence(string str, vii &dp)
+{
+    for (int gap = 0; gap < str.length(); gap++)
+    {
+        for (int i = 0, j = gap; j < str.length(); j++, i++)
+        {
+            if (gap == 0)
+                dp[i][j] = 1;
+            else if (str[i] == str[j])
+            {
+                dp[i][j] += dp[i + 1][j - 1] + 1;                           // when both first and last character is inclded.
+                dp[i][j] += dp[i + 1][j] + dp[i][j - 1] - dp[i + 1][j - 1]; // when one character is included from first and last at a time.
+
+                // dp[i][j] = dp[i + 1][j] + dp[i][j - 1] + 1;
+            }
+            else
+                dp[i][j] = dp[i + 1][j] + dp[i][j - 1] - dp[i + 1][j - 1];
+        }
+    }
+
+    return dp[0][str.length() - 1];
+}
+
 void set1()
 {
     int n = 10;
@@ -1002,11 +1095,23 @@ void targetType()
     // display2D(dp);
 }
 
+void stringSet()
+{
+    string str = "efabcbadd";
+    int n = str.length();
+    vii dp(n, vi(n, 0));
+
+    cout << LongestPlaindromeSubstring(str, dp) << endl;
+
+    display2D(dp);
+}
+
 void solve()
 {
     // set1();
     // set2();
-    targetType();
+    // targetType();
+    stringSet();
 }
 
 int main()
