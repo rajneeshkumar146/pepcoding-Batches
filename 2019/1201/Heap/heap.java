@@ -5,7 +5,7 @@ public class heap{
 
     public static void createHeap(int[] dataSet,boolean isMax){
         for(int ele:dataSet) arr.add(ele);
-        // isMax_=isMax;
+        isMax_=isMax;
         
         int ei=arr.size()-1;
         for(int i=ei;i>=0;i--){
@@ -37,8 +37,8 @@ public class heap{
         int lci=2*parIdx+1;
         int rci=2*parIdx+2;
 
-        if(lci<=ei && arr.get(lci)>arr.get(maxidx)) maxidx=lci;
-        if(rci<=ei&& arr.get(rci)>arr.get(maxidx)) maxidx=rci;
+        if(lci<=ei && compareTo(lci,maxidx)) maxidx=lci;
+        if(rci<=ei && compareTo(lci,maxidx)) maxidx=rci;
         
         if(parIdx!=maxidx){
             swap(parIdx,maxidx);
@@ -48,7 +48,7 @@ public class heap{
 
     public static void uphepify(int ci){   // logn
         int pi=(ci-1)/2;
-        if(pi>=0 && arr.get(ci)>arr.get(pi)){
+        if(pi>=0 && compareTo(ci,pi)){
             swap(ci,pi);
             uphepify(pi);
         }
@@ -60,6 +60,11 @@ public class heap{
 
         arr.set(a,val2);
         arr.set(b,val1);
+    }
+
+    public static boolean compareTo(int ci,int pi){
+        if(isMax) return arr.get(ci)>arr.get(pi);
+        else return arr.get(ci)<arr.get(pi);
     }
 
 

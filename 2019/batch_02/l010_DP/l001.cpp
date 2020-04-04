@@ -1017,6 +1017,129 @@ int countPlaindromeSubsequence(string str, vii &dp)
     return dp[0][str.length() - 1];
 }
 
+//LIS Set.=====================================================================
+
+int LISmax_ = 0;
+int LIS_Rec(vi &arr, int ei, vi &dp)
+{
+    if (ei == 0)
+        return 1;
+
+    int max_ = 1;
+    for (int i = ei - 1; i >= 0; i--)
+    {
+        int recAns = LIS_Rec(arr, i, dp);
+        if (arr[i] < arr[ei])
+        {
+            LISmax_ = max(LISmax_, recAns + 1);
+            max_ = max(max_, recAns + 1);
+        }
+    }
+    
+    // dp[ei]=max_;
+    return max_;
+}
+
+vector<int> LIS_DP(vi &arr)
+{
+    vi dp(arr.size(), 1);
+    int max_ = 1;
+    for (int i = 1; i < arr.size(); i++)
+    {
+        for (int j = 0; j < i; j++) // har ek j cell uss tak ka maximum increasing subsequence store krke apne pass rakhta hai.
+        {
+            if (arr[i] > arr[j]) // agar i cell j se bada hoga to length ek se increase hojayegi.
+            {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+        max_ = max(max_, dp[i]);
+    }
+
+    cout << max_ << endl;
+    return dp;
+}
+
+vector<int> LDS_DP(vi &arr)
+{
+    vi dp(arr.size(), 1);
+    int max_ = 1;
+    for (int i = arr.size() - 2; i >= 0; i--)
+    {
+        for (int j = i + 1; j < arr.size(); j++)
+        {
+            if (arr[i] > arr[j])
+            {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+        max_ = max(max_, dp[i]);
+    }
+
+    // cout << max_ << endl;
+    return dp;
+}
+
+vector<int> LBS_DP(vi &arr)
+{
+    vi LIS = LIS_DP(arr);
+    vi LDS = LDS_DP(arr);
+
+    vi LBS(arr.size(), 1);
+
+    int max_ = 1;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        LBS[i] = LIS[i] + LDS[i] - 1;
+        max_ = max(max_, LBS[i]);
+    }
+}
+
+vector<int> maximumSumSubsequnece(vi &arr)
+{
+    vi dp(arr.size(), 1);
+    int max_ = 1;
+    for (int i = 1; i < arr.size(); i++)
+    {
+        dp[i] = arr[i];
+        for (int j = 0; j < i; j++) // har ek j cell uss tak ka maximum increasing subsequence store krke apne pass rakhta hai.
+        {
+            if (arr[i] > arr[j]) // agar i cell j se bada hoga to length ek se increase hojayegi.
+            {
+                dp[i] = max(dp[i], dp[j] + arr[i]);
+            }
+        }
+        max_ = max(max_, dp[i]);
+    }
+
+    // cout << max_ << endl;
+    return dp;
+}
+
+// Minimum number of deletion to make sorted sequence.
+int minimumDeletion(vi &arr)
+{
+    vi dp(arr.size(), 1);
+    int max_ = 1;
+    for (int i = 1; i < arr.size(); i++)
+    {
+        for (int j = 0; j < i; j++)
+        {
+            if (arr[i] >= arr[j]) // for equal numbers.
+            {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
+        }
+        max_ = max(max_, dp[i]);
+    }
+
+    return arr.size() - max_;
+}
+
+// non - verlapping bridges.
+// russian doll.
+// activity selection.
+
 void set1()
 {
     int n = 10;
@@ -1106,12 +1229,29 @@ void stringSet()
     display2D(dp);
 }
 
+void LISset()
+{
+    vi arr = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
+    display(arr);
+
+    vector<int> dp;
+    LIS_Rec(arr, arr.size() - 1, dp);
+    cout<<LISmax_<<endl;
+
+    vi LIS = LIS_DP(arr);
+    // display(LIS);
+
+    // vi LDS = LDS_DP(arr);
+    // display(LDS);
+}
+
 void solve()
 {
     // set1();
     // set2();
     // targetType();
-    stringSet();
+    // stringSet();
+    // LISset();
 }
 
 int main()
