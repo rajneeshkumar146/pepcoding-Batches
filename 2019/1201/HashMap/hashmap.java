@@ -1,12 +1,12 @@
 import java.util.LinkedList;
 import java.util.ArrayList;
-public class hashmap{
+public class hashmap<K,V>{
   
     public class Node{
-       Integer key=null;
-       Integer value=null;
+       K key=null;
+       V value=null;
        
-       Node(Integer key,Integer value){
+       Node(K key,V value){
            this.key=key;
            this.value=value;
        }
@@ -52,7 +52,7 @@ public class hashmap{
     System.out.println(ans);
   }
 
-   public void put(Integer key,Integer value){
+   public void put(K key,V value){
          Node node=foundNodeInGroup(key);
          if(node!=null){
              node.value=value;  //update
@@ -63,15 +63,36 @@ public class hashmap{
             Node  nnode=new Node(key,value);
             group.addLast(nnode);
             nodeCount++;
+
+            double lambda=(group.size()*1.0) / nodeCount;
+            if(lambda>0.6){
+                rehash();
+            }
+
          }
    }
 
-    public Integer get(Integer key){
+   public void rehash(){
+    LinkedList<Node>[] oldData=groupArray;
+    reAssign(oldData.length*2);
+
+    for(int i=0;i<oldData.length;i++){
+        LinkedList<Node> group=oldData[i];
+
+        int size=group.size();
+        while(size--> 0){
+           put(group.removeFirst());
+        }
+    }
+
+   }
+
+    public V get(K key){
       Node node=foundNodeInGroup(key);
       return node!=null?node.value:null;
     }
 
-    public Integer remove(int key){
+    public V remove(K key){
         Node node=foundNodeInGroup(key);
         if(node!=null){
             int myGroupIdx=getHashCode(key);
@@ -84,14 +105,14 @@ public class hashmap{
         return node!=null?node.value:null;
     }
 
-    public boolean containsKey(Integer key){
+    public boolean containsKey(K key){
         Node node=foundNodeInGroup(key);
         return node!=null?true:false;
     }
 
 
-    public ArrayList<Integer> keySet(){
-         ArrayList<Integer> ans=new ArrayList<>();
+    public ArrayList<K> keySet(){
+         ArrayList<K> ans=new ArrayList<>();
          for(int i=0;i<groupArray.length;i++){
              LinkedList<Node> group=groupArray[i];
 
@@ -106,7 +127,7 @@ public class hashmap{
          return ans;
     }
 
-    public Node foundNodeInGroup(Integer key){
+    public Node foundNodeInGroup(K key){
         int myGroupIdx=getHashCode(key);
         LinkedList<Node> group=groupArray[myGroupIdx];
 
@@ -127,7 +148,7 @@ public class hashmap{
     }
 
 
-    public int getHashCode(Integer key){
+    public int getHashCode(K key){
         int hc=key.hashCode();
         return Math.abs(hc)%groupArray.length;
     } 
