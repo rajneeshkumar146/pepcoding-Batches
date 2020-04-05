@@ -1035,7 +1035,7 @@ int LIS_Rec(vi &arr, int ei, vi &dp)
             max_ = max(max_, recAns + 1);
         }
     }
-    
+
     // dp[ei]=max_;
     return max_;
 }
@@ -1140,6 +1140,148 @@ int minimumDeletion(vi &arr)
 // russian doll.
 // activity selection.
 
+//cutType.=========================================================
+
+int MCM_memo(vi &arr, int si, int ei, vii &dp)
+{
+    if (si + 1 == ei) //cost of multiplication of a single matrix is zero.
+        return 0;
+
+    if (dp[si][ei] != 0)
+        return dp[si][ei];
+
+    int minAns = 1e7;
+    for (int cut = si + 1; cut < ei; cut++)
+    {
+        int left = MCM_memo(arr, si, cut, dp);
+        int right = MCM_memo(arr, cut, ei, dp);
+
+        int myCost = left + arr[si] * arr[cut] * arr[ei] + right;
+        minAns = min(minAns, myCost);
+    }
+
+    dp[si][ei] = minAns;
+    return minAns;
+}
+
+pair<int, string> MCM_memoString(vi &arr, int si, int ei, vector<vector<pair<int, string>>> &dp)
+{
+    if (si + 1 == ei) //cost of multiplication of a single matrix is zero.
+    {
+        string str = string(1, (char)(si + 'A'));
+        dp[si][ei] = {0, str};
+        return dp[si][ei];
+    }
+
+    if (dp[si][ei].first != 0)
+        return dp[si][ei];
+
+    pair<int, string> minAns = {1e7, ""};
+    for (int cut = si + 1; cut < ei; cut++)
+    {
+        pair<int, string> left = MCM_memoString(arr, si, cut, dp);
+        pair<int, string> right = MCM_memoString(arr, cut, ei, dp);
+
+        int myCost = left.first + arr[si] * arr[cut] * arr[ei] + right.first;
+        if (myCost < minAns.first)
+        {
+            minAns.first = myCost;
+            minAns.second = "(" + left.second + right.second + ")";
+        }
+    }
+
+    dp[si][ei] = minAns;
+    return minAns;
+}
+
+int mcm_DP(vi &arr, vii &dp)
+{
+
+    int n = arr.size();
+    vector<vector<string>> sdp(n, vector<string>(n, ""));
+
+    for (int gap = 1; gap < arr.size(); gap++)
+    {
+        for (int si = 0, ei = gap; ei < arr.size(); si++, ei++)
+        {
+            if (si + 1 == ei) //cost of multiplication of a single matrix is zero.
+            {
+                sdp[si][ei] = string(1, char(si + 'A'));
+                continue;
+            }
+
+            int minAns = 1e7;
+            for (int cut = si + 1; cut < ei; cut++)
+            {
+                int left = dp[si][cut];
+                int right = dp[cut][ei];
+
+                int myCost = left + arr[si] * arr[cut] * arr[ei] + right;
+                if (myCost < minAns)
+                {
+                    dp[si][ei] = myCost;
+                    minAns = myCost;
+                    sdp[si][ei] = "(" + sdp[si][cut] + sdp[cut][ei] + ")";
+                }
+            }
+        }
+    }
+
+    cout << sdp[0][arr.size() - 1] << " -> " << dp[0][arr.size() - 1] << endl;
+    return dp[0][arr.size() - 1];
+}
+
+int minimumPalindromicCut_rec(string str, int si, int ei, vii &dp, vbb &isPali)
+{
+    if (isPali[si][ei])
+    {
+        dp[si][ei] = 0;
+        return 0;
+    }
+    if (dp[si][ei] != 0)
+        return dp[si][ei];
+
+    int min_ = 1e7;
+    for (int cut = si; cut < ei; cut++)
+    {
+        int left = minimumPalindromicCut_rec(str, si, cut, dp, isPali);
+        int right = minimumPalindromicCut_rec(str, cut + 1, ei, dp  , isPali);
+
+        min_ = min(min_, left + 1 + right);
+    }
+
+    dp[si][ei] = min_;
+    return min_;
+}
+
+int minimumPalindromicCut_DP(string str, vii &dp, vbb &isPali)
+{
+
+    for (int gap = 1; gap < str.length(); gap++)
+    {
+        for (int si = 0, ei = gap; ei < str.length(); si++, ei++)
+        {
+            if (isPali[si][ei])
+            {
+                dp[si][ei] = 0;
+                continue;
+            }
+
+            int min_ = 1e7;
+            for (int cut = si; cut < ei; cut++)
+            {
+                int left = dp[si][cut];
+                int right = dp[cut + 1][ei];
+                min_ = min(min_, left + 1 + right);
+            }
+
+            dp[si][ei] = min_;
+        }
+    }
+
+    return dp[0][str.length() - 1];
+}
+
 void set1()
 {
     int n = 10;
@@ -1236,13 +1378,36 @@ void LISset()
 
     vector<int> dp;
     LIS_Rec(arr, arr.size() - 1, dp);
-    cout<<LISmax_<<endl;
+    cout << LISmax_ << endl;
 
     vi LIS = LIS_DP(arr);
     // display(LIS);
 
     // vi LDS = LDS_DP(arr);
     // display(LDS);
+}
+
+void cutType()
+{
+    // vi arr = {10, 20, 30, 40, 30};
+    // int n=arr.size();
+    string str = "abcbddf";
+    int n = str.length();
+
+    vii dp(n, vi(n, 0));
+
+    // vector<vector<pair<int, string>>> ndp(arr.size(), vector<pair<int, string>>(arr.size(), {0, ""}));
+
+    // cout << MCM_memo(arr, 0, arr.size() - 1, dp) << endl;
+    // cout << mcm_DP(arr, dp) << endl;
+    // pair<int, string> ans = MCM_memoString(arr, 0, arr.size() - 1, ndp);
+    // cout << ans.second << " -> " << ans.first << endl;
+
+    vbb isPali = isPlaindromeSubstring(str);
+    cout << minimumPalindromicCut_rec(str, 0, n - 1, dp, isPali) << endl;
+    // cout << minimumPalindromicCut_DP(str, dp, isPali) << endl;
+
+    display2D(dp);
 }
 
 void solve()
@@ -1252,6 +1417,7 @@ void solve()
     // targetType();
     // stringSet();
     // LISset();
+    cutType();
 }
 
 int main()
