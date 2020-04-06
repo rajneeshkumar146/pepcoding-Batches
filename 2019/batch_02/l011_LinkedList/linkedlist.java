@@ -201,5 +201,50 @@ public class linkedlist<K>{
         return removeAtNode(idx).data;
     }
 
+    //other functions.=====================================================
+
+    public void reverseDataItr(){  //O(n2)  
+        int si=0;
+        int ei=this.nodeCount-1;
+
+        while(si<ei){
+            Node first=getNodeAt(si);
+            Node second=getNodeAt(ei);
+
+            K temp=first.data;
+            first.data=second.data;
+            second.data=temp;
+            
+            si++;
+            ei--;
+        }
+    }
+
+    private void reverseList(Node node){
+        Node prev=null;
+        Node curr=node;
+        Node forw=null;
+
+        while(curr!=null){
+            forw=curr.next;
+
+            curr.next=prev;
+
+            prev=curr;
+            curr=forw;
+        }
+
+        return prev;
+    }
+    
+    public void revserseList(){
+
+        Node prev=reverseList(this.head);
+        this.tail=this.head;
+        this.head=prev;
+    }
+
+    
+
 
 }
