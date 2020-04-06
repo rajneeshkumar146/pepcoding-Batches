@@ -21,17 +21,19 @@ public class linkedlist<K>{
 
     @Override
     public String toString(){
+        if(this.nodeCount==0) return "[]";
+
         StringBuilder sb=new StringBuilder();
         Node curr=this.head;
        
         sb.append("[");
 
         while(curr.next!=null){
-            sb.append(curr.data+ ", ");
+            sb.append(curr+ ", ");
             curr=curr.next;
         }
         
-        if (curr!=null) sb.append(curr.data);
+        sb.append(curr.data);
         sb.append("]");
 
         return sb.toString();
