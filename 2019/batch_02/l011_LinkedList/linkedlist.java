@@ -1,11 +1,11 @@
 import java.util.NoSuchElementException;
-public class linkedlist{
+public class linkedlist<K>{
 
     private class Node{
-        int data=0;
+        K data=null;
         Node next=null;
 
-        Node(int data){
+        Node(K data){
             this.data=data;
         }
 
@@ -18,6 +18,24 @@ public class linkedlist{
     private Node head=null;
     private Node tail=null;
     private int nodeCount=0;
+
+    @Override
+    public String toString(){
+        StringBuilder sb=new StringBuilder();
+        Node curr=this.head;
+       
+        sb.append("[");
+
+        while(curr.next!=null){
+            sb.append(curr.data+ ", ");
+            curr=curr.next;
+        }
+        
+        if (curr!=null) sb.append(curr.data);
+        sb.append("]");
+
+        return sb.toString();
+    }
 
     //basic funtions.========================================
 
@@ -55,7 +73,7 @@ public class linkedlist{
           this.nodeCount++;
     }
 
-    public void addFirst(int data){
+    public void addFirst(K data){
         Node node=new Node(data);
         addFirstNode(node);
     }
@@ -65,7 +83,7 @@ public class linkedlist{
         if(this.nodeCount==0){
             this.head=node;
             this.tail=node;
-        }else
+        }else{
             this.tail.next=node;
             this.tail=node;
         }
@@ -73,34 +91,44 @@ public class linkedlist{
         this.nodeCount++;
     }
 
-    public void addLast(int data){
+    public void addLast(K data){
        Node node=new Node(data);
        addLastNode(node);
     }
 
     private void addAtNode(Node node,int idx){
+         if(idx==0) addFirstNode(node);
+         else if(idx==this.nodeCount) addLastNode(node);
+         else{
+             Node prev=getNodeAt(idx-1);
+             Node forw=prev.next;
 
+             prev.next=node;
+             node.next=forw;
+         }
     }
 
-    public void addAt(int data,int idx){
-
+    public void addAt(K data,int idx){
+        if(idx<0 || idx > this.nodeCount)  throw new NullPointerException();
+        Node node=new Node(data);
+        addAtNode(node,idx);
     }
 
     //get.=================================================
 
-    public int getFirst(){
+    public K getFirst(){
         if(this.nodeCount==0) throw new NoSuchElementException();
         return this.head.data;
     }
 
     
-    public int getLast(){
+    public K getLast(){
         if(this.nodeCount==0) throw new NoSuchElementException();
         return this.tail.data;
     }
 
     
-    public int getAt(int idx){
+    public K getAt(int idx){
         return getNodeAt(idx).data; 
     }
 
@@ -121,7 +149,7 @@ public class linkedlist{
        return rn;
     }
 
-    public int removeFirst(){
+    public K removeFirst(){
         if(this.nodeCount==0) throw new NoSuchElementException();
         return removeFirstNode().data;
     }
@@ -144,20 +172,32 @@ public class linkedlist{
        return rn;
     }
 
-    public int removeLast(){
+    public K removeLast(){
         if(this.nodeCount==0) throw new NoSuchElementException();
         return removeLastNode().data;
     }
 
-    private Node removeAtNode(){
+    private Node removeAtNode(int idx){
+        if(idx==0) return removeFirstNode();
+        else if(idx==this.nodeCount-1) return removeLastNode();
+        else{
+            //backup
+            Node prev=getNodeAt(idx-1);
+            Node forw=prev.next.next;
+            
+            Node rn=prev.next;
+            
+            rn.next=null;
+            prev.next=forw;
 
-
-     }
+            return rn;
+        }
+    }
  
-     public int removeAt(int idx){
-         if(this.nodeCount==0) throw new NoSuchElementException();
-         return removeAtNode().data;
-     }
+     public K removeAt(int idx){
+        if(idx<0 || idx>=this.nodeCount) throw new NullPointerException();
+        return removeAtNode(idx).data;
+    }
 
 
 }
