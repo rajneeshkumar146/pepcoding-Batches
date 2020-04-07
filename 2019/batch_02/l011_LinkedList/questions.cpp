@@ -198,13 +198,163 @@ ListNode *mergeTwoLists(ListNode *A, ListNode *B)
 
 ListNode *sortList(ListNode *head)
 {
-    if(head==nullptr || head->next==nullptr) return head;
+    if (head == nullptr || head->next == nullptr)
+        return head;
 
-    ListNode* mid=middleNodeByINDEX(head);
-    ListNode* nhead=mid->next;
-    mid->next=nullptr;
+    ListNode *mid = middleNodeByINDEX(head);
+    ListNode *nhead = mid->next;
+    mid->next = nullptr;
 
-    ListNode* a=sortList(head);
-    ListNode* b=sortList(nhead);
-    return mergeTwoLists(a,b);
+    ListNode *a = sortList(head);
+    ListNode *b = sortList(nhead);
+    return mergeTwoLists(a, b);
+}
+
+//leetcode 23==================================================
+
+ListNode *mergeKLists_(vector<ListNode *> &lists, int si, int ei)
+{
+    if (si == ei)
+        return lists[si]; // only one list.
+    if (si + 1 == ei)
+        return mergeTwoLists(lists[si], lists[ei]); // by merging two list we get one sorted list.
+
+    int mid = (si + ei) / 2;
+    ListNode *a = mergeKLists_(lists, si, mid);
+    ListNode *b = mergeKLists_(lists, mid + 1, ei);
+
+    return mergeTwoLists(a, b);
+}
+
+struct compare
+{
+    bool operator()(const ListNode *a, const ListNode *b) const
+    {
+        return a->val > b->val;
+    }
+};
+
+ListNode *mergeKListsPQ_(vector<ListNode *> &lists)
+{
+    priority_queue<ListNode *, vector<ListNode *>, compare> pq; //java : PriorityQueue<Node> pq=new PriorityQueue<>((Node a,Node b)->{return a.val - b.val;});
+    for (ListNode *l : lists)
+    {
+        if (l != nullptr)
+            pq.push(l);
+    }
+
+    if (pq.empty())
+        return nullptr;
+
+    ListNode *head = new ListNode(-1);
+    ListNode *curr = head;
+
+    while (!pq.empty())
+    {
+        ListNode *l = pq.top();
+        pq.pop();
+
+        curr->next = l;
+        curr = curr->next;
+
+        if (l->next != nullptr)
+            pq.push(l->next);
+    }
+
+    return head->next;
+}
+
+ListNode *mergeKLists(vector<ListNode *> &lists)
+{
+    if (lists.size() == 0)
+        return nullptr;
+
+    return mergeKLists_(lists, 0, lists.size() - 1);
+    // return mergeKListsPQ_(lists);
+}
+
+//1290.==============================================================
+
+int getDecimalValue(ListNode *head)
+{
+    head = reverse(head);
+    int ans = 0;
+    int mul = 1;
+    while (head != nullptr)
+    {
+        ans += mul * head->val;
+        head = head->next;
+        mul *= 2;
+    }
+
+    return ans;
+}
+
+// leetcode 143.==========================================================
+
+void reorderList(ListNode *head)
+{
+    if (head == nullptr || head->next == nullptr)
+        return;
+
+    ListNode *mid = middleNodeByINDEX(head);
+    ListNode *nhead = mid->next;
+    mid->next = nullptr;
+
+    nhead = reverseList(nhead);
+
+    ListNode *curr1 = head;
+    ListNode *forw1 = nullptr;
+
+    ListNode *curr2 = nhead;
+    ListNode *forw2 = nullptr;
+
+    while (curr1 != nullptr && curr2 != nullptr)
+    {
+        forw1 = curr1->next;
+        forw2 = curr2->next;
+
+        curr1->next = curr2;
+        curr2->next = forw1;
+
+        curr1 = forw1;
+        curr2 = forw2;
+    }
+}
+
+void againReorderList(ListNode *head)
+{
+    if (head == nullptr || head->next == nullptr)
+        return;
+
+    ListNode *c1 = head;
+
+    ListNode *nhead = head->next;
+    ListNode *c2 = head->next;
+
+    while (c1 != nullptr && c2 != nullptr)
+    {
+        if (c2->next != nullptr)
+        {
+            c1->next = c2->next;
+            c1 = c1->next;
+        }
+        else
+            break;
+
+        if (c1->next != nullptr)
+        {
+            c2->next = c1->next;
+            c2 = c2->next;
+        }
+        else
+            break;
+    }
+
+    c1->next = nullptr;
+    c2->next = nullptr;
+
+    nhead = reverseList(nhead);
+    c1->next = nhead;
+    nhead = reverseList(nhead);
 }
