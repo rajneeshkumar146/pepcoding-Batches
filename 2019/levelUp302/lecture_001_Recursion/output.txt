@@ -1,14 +1,9 @@
-HHVV
-HDV
-HVHV
-HVD
-HVVH
-DHV
-DD
-DVH
-VHHV
-VHD
-VHVH
-VDH
-VVHH
-13
+2 3 5 
+2 5 3 
+3 2 5 
+3 5 2 
+3 7 
+5 2 3 
+5 3 2 
+7 3 
+8

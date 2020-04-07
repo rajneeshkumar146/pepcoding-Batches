@@ -151,8 +151,6 @@ int mazepath_multiHVD_02(int sr, int sc, int er, int ec, string ans)
     return count;
 }
 
-
-
 vector<vector<int>> dir = {{0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}};
 vector<string> dirN = {"R", "E", "U", "N", "L", "W", "D", "S"};
 
@@ -185,7 +183,8 @@ int floodFill(int sr, int sc, int er, int ec, vector<vector<int>> &board, int ra
             int r = sr + mag * dir[d][0];
             int c = sc + mag * dir[d][1];
             if (isValid(r, c, board))
-                count += floodFill(r, c, er, ec, board, rad, ans + dirN[d] + to_string(mag));
+                // count += floodFill(r, c, er, ec, board, rad, ans + dirN[d] + to_string(mag));
+                count += floodFill(r, c, er, ec, board, rad, ans + dirN[d]);
         }
     }
 
@@ -204,7 +203,7 @@ int numIslands(vector<vector<char>> &arr)
             if (arr[r][c] == '1')
             {
                 count++;
-                floodFill(r, c, arr, 1);
+                // floodFill(r, c, arr, 1);
             }
         }
     }
@@ -213,7 +212,6 @@ int numIslands(vector<vector<char>> &arr)
 }
 
 vector<vector<int>> dir_ = {{0, 1}, {-1, 0}, {0, -1}, {1, 0}};
-
 bool isValid_(int r, int c, vector<vector<char>> &board)
 {
     if (r < 0 || c < 0 || r >= board.size() || c >= board[0].size() || board[r][c] == '0' || board[r][c] == '2')
@@ -244,7 +242,7 @@ int dfs(int sr, int sc, vector<vector<char>> &board, int rad)
 
 void mazePathSet()
 {
-    int sr = 0, sc = 0, er = 2, ec = 2;
+    int sr = 0, sc = 0, er = 3, ec = 3;
     // vector<string> ans;
 
     // ans= mazepath_HV_01(sr, sc, er, ec);

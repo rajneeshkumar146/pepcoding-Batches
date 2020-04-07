@@ -36,7 +36,7 @@ ListNode *middleNode(ListNode *head) // second middle node is our mid in even si
 }
 
 //leetcode 206=======================================================
-ListNode* reverseList(ListNode* head)
+ListNode *reverseList(ListNode *head)
 {
     ListNode *prev = nullptr;
     ListNode *curr = head;
@@ -80,11 +80,131 @@ bool isPalindrome(ListNode *head)
     }
 
     nhead = reverseList(nhead);
-    mid->next=nhead;
+    mid->next = nhead;
 
     return true;
 }
 
 //leetcode 141.================================================
 
+bool hasCycle(ListNode *head)
+{
+    if (head == nullptr || head->next == nullptr)
+        return false;
 
+    ListNode *slow = head;
+    ListNode *fast = head;
+    while (fast != nullptr && fast->next != nullptr)
+    {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast)
+            break;
+    }
+
+    return slow == fast;
+}
+
+//leetcode 142.====================================================
+
+ListNode *detectCycle(ListNode *head)
+{
+    if (head == nullptr || head->next == nullptr)
+        return nullptr;
+
+    ListNode *slow = head;
+    ListNode *fast = head;
+    while (fast != nullptr && fast->next != nullptr)
+    {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast)
+            break;
+    }
+
+    if (slow == fast)
+    {
+        slow = head;
+        while (slow != fast)
+        {
+            slow = slow->next;
+            fast = fast->next;
+        }
+        return slow;
+    }
+
+    return nullptr;
+}
+
+//leetcode 160.========================================
+
+ListNode *getIntersectionNode(ListNode *headA, ListNode *headB)
+{
+
+    if (headA == nullptr || headB == nullptr)
+        return nullptr;
+    if (headA->next == nullptr && headB->next == nullptr && headA->val == headB->val)
+        return headA;
+
+    ListNode *tail = nullptr;
+    ListNode *curr = headA;
+    while (curr != nullptr)
+    {
+        tail = curr;
+        curr = curr->next;
+    }
+
+    tail->next = headB; //cycle
+    ListNode *ans = detectCycle(headA);
+    tail->next = nullptr;
+
+    return ans;
+}
+
+ListNode *mergeTwoLists(ListNode *A, ListNode *B)
+{
+    if (A == nullptr)
+        return B;
+    if (B == nullptr)
+        return A;
+
+    ListNode *head = new ListNode(0); // dummyNode;
+    ListNode *curr = head;
+
+    while (A != nullptr && B != nullptr)
+    {
+        if (A->val <= B->val)
+        {
+            curr->next = A;
+            A = A->next;
+        }
+        else
+        {
+            curr->next = B;
+            B = B->next;
+        }
+        curr = curr->next;
+    }
+
+    if (A != nullptr)
+        curr->next = A;
+    else if (B != nullptr)
+        curr->next = B;
+
+    return head->next;
+}
+
+//leetcode 148.===========================================
+
+ListNode *sortList(ListNode *head)
+{
+    if(head==nullptr || head->next==nullptr) return head;
+
+    ListNode* mid=middleNodeByINDEX(head);
+    ListNode* nhead=mid->next;
+    mid->next=nullptr;
+
+    ListNode* a=sortList(head);
+    ListNode* b=sortList(nhead);
+    return mergeTwoLists(a,b);
+}
