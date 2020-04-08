@@ -226,8 +226,29 @@ public class l002{
         count+=coinChangePermuINFI_02(arr,idx+1,tar,ans);
         
         return count;
+    }
 
+    public static int coinChangePermu_02(int[] arr,boolean[] vis,int idx,int tar,String ans){
+        if(idx==arr.length || tar==0){
+            if(tar==0) 
+            {
+              System.out.println(ans);
+              return 1; 
+            }
 
+            return 0;
+         }
+
+        int count=0;
+        if(tar-arr[idx]>=0 && !vis[idx]){
+            vis[idx]=true;
+            count+=coinChangePermuINFI_02(arr,vis,0,tar-arr[idx],ans+ arr[idx]+ " ");
+            vis[idx]=false;
+        }
+        
+        count+=coinChangePermuINFI_02(arr,vis,idx+1,tar,ans);
+        
+        return count;
     }
 
 
