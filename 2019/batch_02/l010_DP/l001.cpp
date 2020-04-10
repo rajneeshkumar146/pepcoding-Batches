@@ -1017,6 +1017,221 @@ int countPlaindromeSubsequence(string str, vii &dp)
     return dp[0][str.length() - 1];
 }
 
+int longestCommonSubsequence(string str1, int i, string str2, int j, vii &dp)
+{
+    if (i == str1.length() || j == str2.length())
+        return 0;
+
+    if (dp[i][j] != 0)
+        return dp[i][j];
+    int ans = 0;
+    if (str1[i] == str2[j])
+        ans = longestCommonSubsequence(str1, i + 1, str2, j + 1, dp) + 1;
+    else
+        ans = max(longestCommonSubsequence(str1, i + 1, str2, j, dp), longestCommonSubsequence(str1, i, str2, j + 1, dp));
+
+    return dp[i][j] = ans;
+}
+
+int longestCommonSubsequence_DP(string str1, int i, string str2, int j, vii &dp)
+{
+    for (i = str1.length() - 1; i >= 0; i--)
+    {
+        for (int j = str2.length() - 1; j >= 0; j--)
+        {
+            int ans = 0;
+            if (str1[i] == str2[j])
+                ans = dp[i + 1][j + 1] + 1;
+            else
+                ans = max(dp[i + 1][j], dp[i][j + 1]);
+
+            dp[i][j] = ans;
+        }
+    }
+
+    return dp[0][0];
+}
+
+int maxLen = 0;
+int longestCommonSubstring(string str1, int i, string str2, int j, vii &dp)
+{
+    if (i == str1.length() || j == str2.length())
+        return 0;
+
+    if (dp[i][j] != -1)
+        return dp[i][j];
+
+    if (str1[i] == str2[j])
+    {
+        dp[i][j] = longestCommonSubstring(str1, i + 1, str2, j + 1, dp) + 1;
+        maxLen = max(maxLen, dp[i][j]);
+        return dp[i][j];
+    }
+
+    longestCommonSubstring(str1, i + 1, str2, j, dp);
+    longestCommonSubstring(str1, i, str2, j + 1, dp);
+
+    return dp[i][j] = 0;
+}
+
+int longestCommonSubstring_DP(string str1, int i, string str2, int j, vii &dp)
+{
+    int max_ = 0;
+    for (i = str1.length() - 1; i >= 0; i--)
+    {
+        for (int j = str2.length() - 1; j >= 0; j--)
+        {
+            if (str1[i] == str2[j])
+            {
+                dp[i][j] = dp[i + 1][j + 1] + 1;
+                max_ = max(dp[i][j], max_);
+            }
+        }
+    }
+
+    return max_;
+}
+
+int editDistance(string str1, int i, string str2, int j, vii &dp) // str1 ->  str2, i and j are length.
+{
+    if (i == 0)
+        return j; //insert.
+    else if (j == 0)
+        return i; //deletion.
+    int ans = 0;
+    if (str1[i - 1] == str2[j - 1]) // both are equal.
+        ans = editDistance(str1, i - 1, str2, j - 1, dp);
+    else
+    {
+        int insertion = editDistance(str1, i, str2, j - 1, dp);
+        int deletion = editDistance(str1, i - 1, str2, j, dp);
+        int replace = editDistance(str1, i - 1, str2, j - 1, dp);
+        ans = min(insertion, min(deletion, replace)) + 1;
+    }
+
+    return dp[i][j] = ans;
+}
+
+int editDistance_01(string str1, int i, string str2, int j, vii &dp) // str1 ->  str2, i and j both are 0.
+{
+    if (i == str1.length())
+        return str2.length() - j; //insert.
+    else if (j == str2.length())
+        return str1.length() - i; //deletion.
+    int ans = 0;
+    if (str1[i] == str2[j]) // both are equal.
+        ans = editDistance_01(str1, i + 1, str2, j + 1, dp);
+    else
+    {
+        int insertion = editDistance_01(str1, i, str2, j + 1, dp);
+        int deletion = editDistance_01(str1, i + 1, str2, j, dp);
+        int replace = editDistance_01(str1, i + 1, str2, j + 1, dp);
+        ans = min(insertion, min(deletion, replace)) + 1;
+    }
+
+    return dp[i][j] = ans;
+}
+
+int editDistance_DP(string str1, int i, string str2, int j, vii &dp) // str1 ->  str2
+{
+
+    for (i = 0; i < dp.size(); i++)
+    {
+        for (j = 0; j < dp[0].size(); j++)
+        {
+
+            if (i == 0)
+            {
+                dp[i][j] = j; //insert.
+                continue;
+            }
+            else if (j == 0)
+            {
+                dp[i][j] = i; //deletion.
+                continue;
+            }
+            int ans = 0;
+            if (str1[i - 1] == str2[j - 1]) // both are equal.
+                ans = dp[i - 1][j - 1];
+            else
+            {
+                int insertion = dp[i][j - 1];
+                int deletion = dp[i - 1][j];
+                int replace = dp[i - 1][j - 1];
+                ans = min(insertion, min(deletion, replace)) + 1;
+            }
+
+            dp[i][j] = ans;
+        }
+    }
+
+    return dp[str1.length()][str2.length()];
+}
+
+int editDistance_variation(string str1, int i, string str2, int j, vii &dp)
+{
+    // Question
+    // a variation of edit distance where we are allowed only two operations
+    // insert and delete, find edit distance in this variation.
+
+    //Solution.
+    // 1) Find LCS of two strings. Let length of LCS be x.
+    // 2) Let length of first string be m and length of second string be n. Our result
+    // is (m – x) + (n – x). We basically need to do (m – x) delete operations and (n – x) insert operations.
+
+    //for replace case see example: saturday/sunday and saturday/sudayn.
+
+    int lcs = longestCommonSubsequence_DP(str1, i, str2, j, dp);
+    return (str1.length() - lcs) + (str2.length() - lcs); // m+n - 2*lcs
+}
+
+int stringOccurAsSubsequneceInAnotherString(string str1, int i, string str2, int j, vii &dp)
+{
+    if (j == str2.length() || (i == str1.length() && j == str2.length()))
+        return dp[i][j] = 1;
+
+    if (i == str1.length())
+        return 0;
+
+    if (dp[i][j] != 0)
+        return dp[i][j];
+    int recAns = 0;
+    if (str1[i] == str2[j]) // first we want count of "ks" in "eeksforgeeks" + second we want count of "gks" in "eeksforgeeks".
+        recAns = stringOccurAsSubsequneceInAnotherString(str1, i + 1, str2, j + 1, dp) + stringOccurAsSubsequneceInAnotherString(str1, i + 1, str2, j, dp);
+    else
+        recAns += stringOccurAsSubsequneceInAnotherString(str1, i + 1, str2, j, dp); // if char didn't match, we want count of "gks" in "eeksforgeeks".
+
+    return dp[i][j] = recAns;
+}
+
+int stringOccurAsSubsequneceInAnotherString_DP(string str1, int i, string str2, int j, vii &dp)
+{
+
+    for (int i = str1.length(); i >= 0; i--)
+    {
+        for (int j = str2.length(); j >= 0; j--)
+        {
+            if (j == str2.length() || (i == str1.length() && j == str2.length()))
+            {
+                dp[i][j] = 1;
+                continue;
+            }
+            if (i == str1.length())
+                continue;
+
+            int recAns = 0;
+            if (str1[i] == str2[j]) // first we want count of "ks" in "eeksforgeeks" + second we want count of "gks" in "eeksforgeeks".
+                recAns = dp[i + 1][j + 1] + dp[i + 1][j];
+            else
+                recAns += dp[i + 1][j];
+
+            dp[i][j] = recAns;
+        }
+    }
+
+    return dp[0][0];
+}
+
 //LIS Set.=====================================================================
 
 int LISmax_ = 0;
@@ -1447,11 +1662,38 @@ void targetType()
 
 void stringSet()
 {
-    string str = "efabcbadd";
-    int n = str.length();
-    vii dp(n, vi(n, 0));
+    // string str = "efabcbadd";
+    // int n = str.length();
+    // vii dp(n, vi(n, 0));
 
-    cout << LongestPlaindromeSubstring(str, dp) << endl;
+    // cout << LongestPlaindromeSubstring(str, dp) << endl;
+
+    // string str1 = "saturday";
+    // string str2 = "sunday";
+    // int n = str1.length();
+    // int m = str2.length();
+    // vii dp(n + 1, vi(m + 1, 0));
+    // cout << longestCommonSubsequence(str1, 0, str2, 0, dp) << endl;
+    // cout << longestCommonSubsequence_DP(str1, 0, str2, 0, dp) << endl;
+
+    // vii dp(n + 1, vi(m + 1, -1));  //GeeksforGeeks, GeeksQuiz  -> 5
+    // longestCommonSubstring(str1, 0, str2, 0, dp);
+    // cout << maxLen << endl;
+    // cout<<longestCommonSubstring_DP(str1, 0, str2, 0, dp) << endl;
+
+    // vii dp(n + 1, vi(m + 1, 0));
+    // cout << editDistance(str1, str1.length(), str2, str2.length(), dp) << endl;
+    // cout << editDistance_01(str1, 0, str2, 0, dp)<<endl;
+    // cout << editDistance_DP(str1, 0, str2, 0, dp) << endl;
+
+    string str1 = "geeksforgeeks";
+    string str2 = "gks";
+    int n = str1.length();
+    int m = str2.length();
+    vii dp(n + 1, vi(m + 1, 0));
+    // cout << stringOccurAsSubsequneceInAnotherString(str1, 0, str2, 0, dp) << endl;
+    cout << stringOccurAsSubsequneceInAnotherString_DP(str1, 0, str2, 0, dp) << endl;
+
 
     display2D(dp);
 }
@@ -1520,9 +1762,9 @@ void solve()
     // set1();
     // set2();
     // targetType();
-    // stringSet();
+    stringSet();
     // LISset();
-    cutType();
+    // cutType();
 }
 
 int main()
