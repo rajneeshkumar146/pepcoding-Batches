@@ -280,6 +280,101 @@ public class l001 {
 		return ll.getFirst();
 	}
 
+	//leetcode 70.
+	public static int climbStairs(int n) {
+		if(n<=1) return 1;
+		
+		int count=climbStairs(n-1) + climbStairs(n-2);
+		return count;
+	}
+	
+	
+	public static int climbStairs_DP(int n) {
+		int[] dp=new int[n+1];
+		
+		for(int i=0;i<=n;i++){
+			if(i<=1){
+				dp[i]=1;
+				continue;
+			}
+		
+			dp[i]=dp[i-1]+dp[i-2];
+		}
+		
+		display(dp);
+		return dp[n];
+	}
+	
+
+	public static int climbStairs_fast(int n) {
+		int a=1;
+		int b=1;
+		int ans=1;
+		for(int i=2;i<=n;i++){
+			ans=a+b;
+			a=b;
+			b=ans;
+		}
+
+		return ans;
+	}
+
+	//leetcode 746
+	public static int minCostClimbingStairs_(int i,int[] cost,int[] dp) {
+		if(i<=1) return cost[i];
+		
+		if(dp[i]!=0) return dp[i];
+		int c1=minCostClimbingStairs_(i-1,cost,dp);
+		int c2=minCostClimbingStairs_(i-2,cost,dp);
+
+		return dp[i]=Math.min(c1,c2)+((i!=cost.length)?cost[i]:0);
+	}
+	
+	public static void minCostClimbingStairs_DP(int i,int[] cost,int[] dp) {
+		
+		for(i=0;i<=cost.length;i++){
+			if(i<=1) {
+				dp[i] = cost[i];
+				continue;
+			}
+
+			int c1=dp[i-1];
+			int c2=dp[i-2];
+	
+			 dp[i]=Math.min(c1,c2)+((i!=cost.length)?cost[i]:0);
+		}
+	}
+	
+	public static int minCostClimbingStairs_fast(int[] cost) {
+		int a=cost[0];
+		int b=cost[1];	
+		int sum=0;
+		for(int i=2;i<cost.length;i++){
+
+			sum=cost[i]+ Math.min(a,b);
+			// sum=Math.min(a,b) + ((i!=cost.length)?cost[i]:0);
+			a=b;
+			b=sum;
+		}
+
+		return Math.min(a,b);
+    }
+	
+
+	public int minCostClimbingStairs(int[] cost) {    
+        int[] dp=new int[cost.length+1];
+		// minCostClimbingStairs_(cost.length,cost,dp);
+		// minCostClimbingStairs_DP(cost.length,cost,dp);
+		
+		return minCostClimbingStairs_fast(cost);
+		
+		
+		// return dp[dp.length-1];
+		
+
+    }
+    
+
 
 
 
@@ -300,15 +395,16 @@ public class l001 {
         // ans = mazePathMulti_rec(sr, sc, er, ec, dp);
 		// ans = mazePathMulti_DP(sr, sc, er, ec, dp);
 		
-		int si=0;
-		int ei=10;
-		int[] dp=new int[ei+1];
+		// int si=0;
+		// int ei=10;
+		// int[] dp=new int[ei+1];
 		// ans=boradPath(si,ei,dp);
 		// ans=boradPath_DP(si,ei,dp);
-		ans=boradPath_opti(si,ei,dp);
+		// ans=boradPath_opti(si,ei,dp);
 		
+		climbStairs_DP(8);
 		
-		display(dp);
+		// display(dp);
 		// display2D(dp);
 		System.out.println(ans);
 
