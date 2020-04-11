@@ -1,3 +1,4 @@
+import java.util.LinkedList;
 public class l001 {
 
 	public static void main(String[] args) {
@@ -199,7 +200,90 @@ public class l001 {
         }
 
         return dp[0][0];
-    }
+	}
+	
+	
+	public static int boradPath(int si,int ei,int[] dp){
+		if(si==ei) return dp[si]=1;
+		
+		if(dp[si]!=0) return dp[si];
+
+		int count=0;
+		for(int dice=1;dice<=6;dice++){
+			if(si+dice<=ei){
+               count+=boradPath(si+dice,ei,dp);
+			}
+		}
+
+		return dp[si]=count;
+	}
+
+	public static int boradPath_DP(int si,int ei,int[] dp){
+		
+		for(int i=ei;i>=si;i--){
+			if(i==ei) {
+				dp[i]=1;
+                continue;
+			}
+
+			int count=0;
+			for(int dice=1;dice<=6;dice++){
+				if(i+dice<=ei){
+				   count+=dp[i+dice];
+				}
+			}
+	
+			dp[i]=count;
+		}
+
+		return dp[0];
+	}
+
+	public static int boradPath_02_DP(int si,int ei,int[] steps,int[] dp){
+		
+		for(int i=ei;i>=si;i--){
+			if(i==ei) {
+				dp[i]=1;
+                continue;
+			}
+
+			int count=0;
+			for(int j=0;j<steps.length;j++){
+				if(i+steps[j]<=ei){
+				   count+=dp[i+steps[j]];
+				}
+			}
+	
+			dp[i]=count;
+		}
+
+		return dp[0];
+	}
+
+
+	public static int boradPath_opti(int si,int ei,int[] dp){
+		LinkedList<Integer> ll=new LinkedList<>();
+
+		for(int i=ei;i>=si;i--){
+			if(i>ei-2){
+				ll.addFirst(1);
+				continue;		
+			}
+
+			ll.addFirst(2*ll.getFirst());
+			if(ll.size()==8){
+				int lastValue=ll.removeLast();
+				ll.addFirst(ll.removeFirst()-lastValue);
+			}
+		}
+
+		return ll.getFirst();
+	}
+
+
+
+
+
     
     
 	public static void PathSeries() {
@@ -209,14 +293,23 @@ public class l001 {
 		int sc = 0;
 
 		int ans = 0;
-		int[][] dp = new int[er + 1][ec + 1];
+		// int[][] dp = new int[er + 1][ec + 1];
         
         // ans = mazePathHV_rec(sr, sc, er, ec, dp);
 
         // ans = mazePathMulti_rec(sr, sc, er, ec, dp);
-        ans = mazePathMulti_DP(sr, sc, er, ec, dp);
-
-		display2D(dp);
+		// ans = mazePathMulti_DP(sr, sc, er, ec, dp);
+		
+		int si=0;
+		int ei=10;
+		int[] dp=new int[ei+1];
+		// ans=boradPath(si,ei,dp);
+		// ans=boradPath_DP(si,ei,dp);
+		ans=boradPath_opti(si,ei,dp);
+		
+		
+		display(dp);
+		// display2D(dp);
 		System.out.println(ans);
 
 	}
