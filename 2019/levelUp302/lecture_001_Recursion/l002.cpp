@@ -335,6 +335,26 @@ int permutationQueen1D(vector<bool> &boxes, int qpsf, int tnq, string ans)
     return count;
 }
 
+int permutationQueen1D_sub(vector<bool> &boxes, int idx, int qpsf, int tnq, string ans)
+{ //qpsf : queen place so far, tnq: total no of queen
+    if (qpsf == tnq)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    if (!boxes[idx])
+    {
+        boxes[idx] = true;
+        count += permutationQueen1D_sub(boxes, 0, qpsf + 1, tnq, ans + "B" + to_string(i) + "Q" + to_string(qpsf) + " ");
+        boxes[idx] = false;
+    }
+    count += permutationQueen1D_sub(boxes, idx + 1, qpsf, tnq, ans);
+
+    return count;
+}
+
 int combinationQueen2D(vector<vector<bool>> &boxes, int qpsf, int tnq, int idx, string ans)
 { //qpsf : queen place so far, tnq: total no of queen
     if (qpsf == tnq)
@@ -471,7 +491,6 @@ int rowA_ = 0;
 int colA_ = 0;
 int diag_ = 0;
 int adiag_ = 0;
-
 
 int Nqueen_03(int n, int m, int tnq, int idx, string ans)
 { //qpsf : queen place so far, tnq: total no of queen
@@ -643,8 +662,7 @@ void Nqueen()
     // cout << Nqueen_03(n, m, n, 0, "") << endl;
     // cout << Nqueen_04(n, m, 4, 0, "") << endl;
     // cout << Nqueen_03_sub(n, m, 4, 0, "") << endl;
-    cout<<Nqueen_04_sub(n, m, 4, 0, "") << endl;
-
+    cout << Nqueen_04_sub(n, m, 4, 0, "") << endl;
 }
 
 int main()
