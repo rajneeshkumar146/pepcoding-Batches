@@ -543,6 +543,135 @@ public class l001 {
 
 	}
 
+	//stringSet.=================================================
+
+	public static boolean[][] isPalindromicSubString(String str){
+		boolean[][] dp=new boolean[str.length()][str.length()];
+
+		for(int gap=0;gap<str.length();gap++){
+			for(int si=0,ei=gap;ei<str.length();si++,ei++){
+				if(gap==0) dp[si][ei]=true;
+				else if(str.charAt(si)==str.charAt(ei) && gap==1) dp[si][ei]=true;
+				else dp[si][ei]= str.charAt(si)==str.charAt(ei) && dp[si+1][ei-1];
+			}
+		}
+
+		return dp;
+	}
+
+	public static int longestPalindromicSubstring(String str){
+	  int[][] dp=new int[str.length()][str.length()];
+	  int maxLength=0;
+
+	  for(int gap=0;gap<str.length();gap++){
+		for(int si=0,ei=gap;ei<str.length();si++,ei++){
+	
+			if(gap==0) dp[si][ei]=1;
+			else if(str.charAt(si)==str.charAt(ei) && gap==1) dp[si][ei]=2;
+			else if(str.charAt(si)==str.charAt(ei) && dp[si+1][ei-1]!=0) {
+				dp[si][ei]=dp[si+1][ei-1]+2;
+			}
+			maxLength=Math.max(maxLength,dp[si][ei]);
+		}
+	}
+
+	   return maxLength;
+
+	}
+
+	public static int longestPalindromicSubsubsequence_Rec(String str,int si,int ei,int[][] dp){
+		if(si>ei) return 0;
+		if(si==ei) return dp[si][ei]=1;
+
+		if(dp[si][ei]!=0) return dp[si][ei];
+			
+		if(str.charAt(si)==str.charAt(ei)){
+          return dp[si][ei]=longestPalindromicSubsubsequence_Rec(str,si+1,ei-1,dp)+2;
+		}
+
+		int strA=longestPalindromicSubsubsequence_Rec(str,si+1,ei,dp);
+		int strB=longestPalindromicSubsubsequence_Rec(str,si,ei-1,dp);
+
+		return dp[si][ei]=Math.max(strA,strB);
+	}
+
+	public static int longestPalindromicSubsubsequence(String str){
+		int[][] dp=new int[str.length()][str.length()];
+		
+		for(int gap=0;gap<str.length();gap++){
+			for(int si=0,ei=gap;ei<str.length();si++,ei++){
+		
+				if(gap==0) dp[si][ei]=1;  //length 1
+				else if(str.charAt(si)==str.charAt(ei)) dp[si][ei]=dp[si+1][ei-1]+2;
+				else dp[si][ei]=Math.max(dp[si+1][ei],dp[si][ei-1]);
+			}
+		}
+
+		return dp[0][str.length()-1];
+	}
+
+	public static String longestPalindromicSubsubsequence_String(String str){
+		String[][] dp=new String[str.length()][str.length()];
+		
+		for(int gap=0;gap<str.length();gap++){
+			for(int si=0,ei=gap;ei<str.length();si++,ei++){
+		
+				if(gap==0) dp[si][ei]=str.charAt(si)+"";  //length 1
+				else if(gap==1 && str.charAt(si) == str.charAt(ei)) dp[si][ei]=str.substring(si,ei+1);
+				else if(str.charAt(si) == str.charAt(ei)) dp[si][ei]=str.charAt(si) + dp[si+1][ei-1]+str.charAt(ei);
+				else dp[si][ei]=dp[si+1][ei].length()>=dp[si][ei-1].length()?dp[si+1][ei]:dp[si][ei-1];
+			}
+		}
+
+		return dp[0][str.length()-1];
+	}
+
+	public static int countOfPalindromicSubstring(String str){
+		boolean[][] dp=new boolean[str.length()][str.length()];
+        int count=0;
+		for(int gap=0;gap<str.length();gap++){
+			for(int si=0,ei=gap;ei<str.length();si++,ei++){
+				if(gap==0) dp[si][ei]=true;
+				else if(str.charAt(si)==str.charAt(ei) && gap==1) dp[si][ei]=true;
+				else dp[si][ei]= str.charAt(si)==str.charAt(ei) && dp[si+1][ei-1];
+
+				count=dp[si][ei]?count+1:count;
+			}
+		}
+
+		return count;
+
+	}
+
+	public static int countOfPalindromicSubsubsequence_Rec(String str,int si,int ei,int[][] dp){
+	   if(si>ei) return 0;
+	   if(si==ei) return dp[si][ei]=1;
+
+       if(dp[si][ei]!=0) return dp[si][ei];
+
+		int middleString=countOfPalindromicSubsubsequence_Rec(str,si+1,ei-1,dp);
+		int withoutFirstCharString=countOfPalindromicSubsubsequence_Rec(str,si+1,ei,dp);
+		int withoutLastCharString=countOfPalindromicSubsubsequence_Rec(str,si,ei-1,dp);
+
+		int rAns=withoutFirstCharString + withoutLastCharString;
+		
+		return dp[si][ei]= (str.charAt(si)==str.charAt(ei)? rAns + 1 : rAns - middleString);
+	}
+
+	public static int countOfPalindromicSubsubsequence_DP(String str,int si,int ei,int[][] dp){
+	
+		for(int gap=0;gap<str.length();gap++){
+			for(si=0,ei=gap;ei<str.length();si++,ei++){
+				if(gap==0) dp[si][ei]=1;  //length 1
+				else if(str.charAt(si)==str.charAt(ei)) dp[si][ei]=dp[si+1][ei] + dp[si][ei-1] + 1;
+				else dp[si][ei]=dp[si+1][ei] + dp[si][ei-1] - dp[si+1][ei-1]; 
+			}
+		}
+
+		return dp[0][str.length()-1];
+	}
+
+	
 	public static void PathSeries() {
 		int er = 3;
 		int ec = 3;
@@ -584,6 +713,22 @@ public class l001 {
 
 	}
 
+	public static void stringSet(){
+		// String str="geeksse";
+		// int[][] dp=new int[str.length()][str.length()];
+		// System.out.println(longestPalindromicSubsubsequence_Rec(str,0,str.length()-1,dp));
+		// System.out.println(longestPalindromicSubsubsequence(str));
+		// System.out.println(longestPalindromicSubsubsequence_String(str));
+		
+		String str="baccbab";
+		int[][] dp=new int[str.length()][str.length()];
+		// System.out.println(countOfPalindromicSubsubsequence_Rec(str,0,str.length()-1,dp));
+		System.out.println(countOfPalindromicSubsubsequence_DP(str,0,str.length()-1,dp));
+        
+		
+        display2D(dp);
+	}
+
 	//util.=================================================================
 
 	public static void display2D(int[][] arr) {
@@ -603,6 +748,7 @@ public class l001 {
 
 	public static void solve() {
 		// basic();
-		PathSeries();
+		// PathSeries();
+		stringSet();
 	}
 }
