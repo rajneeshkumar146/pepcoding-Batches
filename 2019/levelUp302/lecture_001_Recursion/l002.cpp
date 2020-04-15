@@ -632,6 +632,7 @@ int Nqueen_04_sub(int n, int m, int tnq, int r, string ans) // n means houses an
     return count;
 }
 
+
 //===================================================================
 
 void queenSet()
@@ -664,6 +665,7 @@ void Nqueen()
     // cout << Nqueen_03_sub(n, m, 4, 0, "") << endl;
     cout << Nqueen_04_sub(n, m, 4, 0, "") << endl;
 }
+
 
 int main()
 {
