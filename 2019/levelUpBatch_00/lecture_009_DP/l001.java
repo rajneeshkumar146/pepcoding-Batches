@@ -671,7 +671,124 @@ public class l001 {
 		return dp[0][str.length()-1];
 	}
 
+	public static int longestCommonSubsequnece_Rec(String str1,String str2,int i,int j,int[][] dp){
+		if(i==str1.length() || j==str2.length()) return 0;
+
+		if(dp[i][j]!=0) return dp[i][j];
+
+		if(str1.charAt(i)==str2.charAt(j)) return dp[i][j]=longestCommonSubsequnece_Rec(str1,str2,i+1,j+1,dp)+1;
+
+		int a=longestCommonSubsequnece_Rec(str1,str2,i+1,j,dp);
+		int b=longestCommonSubsequnece_Rec(str1,str2,i,j+1,dp);
+        return dp[i][j]=Math.max(a,b);
+	}
+
+	static int maxAnsSubstring=0;
+	public static int longestCommonSubstring_Rec(String str1,String str2,int i,int j,int[][] dp){
+		if(i==str1.length() || j==str2.length()) return 0;
+
+		if(dp[i][j]!=-1) return dp[i][j];
+
+		int a=0;
+		if(str1.charAt(i)==str2.charAt(j)) {
+			a=longestCommonSubsequnece_Rec(str1,str2,i+1,j+1,dp)+1;
+		    maxAnsSubstring=Math.max(maxAnsSubstring,a);
+		}
+		longestCommonSubsequnece_Rec(str1,str2,i+1,j,dp);
+		longestCommonSubsequnece_Rec(str1,str2,i,j+1,dp);
+		
+		return dp[i][j]=a;
+	}
+
+	public static int longestCommonSubsequnece_DP(String str1,String str2,int i,int j,int[][] dp){
+		
+		for(i=str1.length()-1;i>=0;i--){
+			for( j=str2.length()-1;j>=0;j--){
+
+				if(str1.charAt(i)==str2.charAt(j)) dp[i][j] = dp[i+1][j+1]+1;
+				else dp[i][j] = Math.max(dp[i+1][j] , dp[i][j+1]);
+			}
+		}
+
+		return dp[0][0];
+	}
+
 	
+	public static int longestCommonSubstring_DP(String str1,String str2,int i,int j,int[][] dp){
+		int max=0;
+		for(i=str1.length()-1;i>=0;i--){
+			for( j=str2.length()-1;j>=0;j--){
+
+				if(str1.charAt(i)==str2.charAt(j)) {
+					dp[i][j] = dp[i+1][j+1]+1;
+				    max=Math.max(dp[i][j],max);
+				}
+			}
+		}
+
+		return max;
+	}
+
+	public static int editDistance(String str1,String str2){
+		int[][] dp=new int[str1.length()+1][str2.length()+1];
+
+		for(int i=0;i<dp.length;i++){
+			for(int j=0;j<dp[0].length;j++){
+				if(i==0) dp[i][j]=j;
+				else if(j==0) dp[i][j]=i;
+				else if(str1.charAt(i-1)==str2.charAt(j-1)) dp[i][j]=dp[i-1][j-1];
+				else dp[i][j] = Math.min(dp[i-1][j-1],Math.min(dp[i-1][j],dp[i][j-1])) + 1 ;
+			}
+		}
+
+		return dp[str1.length()][str2.length()];
+	}
+
+	public static int string_occurs_given_string(String str1,String str2,int n,int m,int[][] dp){
+		 if(m==0) return dp[n][m]=1;
+		 if(m>n) return 0;
+
+		 if(dp[n][m]!=0) return dp[n][m];
+
+		 if(str1.charAt(n-1)== str2.charAt(m-1)) 
+		 return dp[n][m] = string_occurs_given_string(str1,str2,n-1,m-1,dp) + 
+						   string_occurs_given_string(str1,str2,n-1,m,dp);
+
+		return dp[n][m]=string_occurs_given_string(str1,str2,n-1,m,dp);
+	}
+
+	public static int string_occurs_given_string_02(String str1,String str2,int i,int j,int[][] dp){
+		if(j==str2.length() || (i==str1.length() && j==str2.length())) return dp[i][j]=1;
+		if(i==str1.length() || (str2.length()-j)>(str1.length()-i)) return 0;
+
+		if(dp[i][j]!=0) return dp[i][j];
+
+		if(str1.charAt(i)== str2.charAt(j)) 
+		   return dp[i][j] = string_occurs_given_string_02(str1,str2,i+1,j+1,dp) + 
+		   string_occurs_given_string_02(str1,str2,i+1,j,dp);
+
+		return dp[i][j]=string_occurs_given_string_02(str1,str2,i+1,j,dp);
+   }
+
+   public static int string_occurs_given_string_DP(String str1,String str2,int i,int j,int[][] dp){
+	for(i=str1.length();i>=0;i--){
+		for( j=str2.length();j>=0;j--){
+			if(j==str2.length() || (i==str1.length() && j==str2.length())){
+				   dp[i][j]=1;
+				   continue;
+			   }
+			if(i==str1.length() || (str2.length()-j)>(str1.length()-i)) continue;
+			
+			if(str1.charAt(i)== str2.charAt(j)) 
+			  dp[i][j] = dp[i+1][j+1] + dp[i+1][j];
+			else
+		      dp[i][j]=dp[i+1][j];
+		}
+	}
+
+	return dp[0][0];
+}
+
 	public static void PathSeries() {
 		int er = 3;
 		int ec = 3;
@@ -720,11 +837,25 @@ public class l001 {
 		// System.out.println(longestPalindromicSubsubsequence(str));
 		// System.out.println(longestPalindromicSubsubsequence_String(str));
 		
-		String str="baccbab";
-		int[][] dp=new int[str.length()][str.length()];
-		// System.out.println(countOfPalindromicSubsubsequence_Rec(str,0,str.length()-1,dp));
-		System.out.println(countOfPalindromicSubsubsequence_DP(str,0,str.length()-1,dp));
-        
+		// String str="baccbab";
+		// int[][] dp=new int[str.length()][str.length()];
+		// // System.out.println(countOfPalindromicSubsubsequence_Rec(str,0,str.length()-1,dp));
+		// System.out.println(countOfPalindromicSubsubsequence_DP(str,0,str.length()-1,dp));
+		
+		// String str1="abcde";
+		// String str2="ace";
+		// int[][] dp=new int[str1.length()+1][str2.length()+1];
+		// System.out.println(longestCommonSubsequnece_Rec(str1,str2,0,0,dp));
+		// System.out.println(longestCommonSubstring_Rec(str1,str2,0,0,dp));
+
+
+		String str1="aabbcc";
+		String str2="abc";
+		int[][] dp=new int[str1.length()+1][str2.length()+1];
+		// System.out.println(string_occurs_given_string_DP(str1,str2,0,0,dp));
+		// System.out.println(string_occurs_given_string_02(str1,str2,0,0,dp));
+		System.out.println(string_occurs_given_string(str1,str2,str1.length(),str2.length(),dp));
+
 		
         display2D(dp);
 	}
