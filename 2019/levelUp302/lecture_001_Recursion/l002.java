@@ -387,8 +387,44 @@ public class l002 {
 		return count;
     }
 
-    //leetcode 36.
-    //leetcode 37.
+    //leet`.
+	
+	//wordBreak and Crypto.=============================================
+
+static HashSet<String> map=new HashSet<>();
+public static int wordBreak_(String str, String ans)
+{
+    if (str.length() == 0)
+    {
+        System.out.println(ans);
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = 1; i <= str.length(); i++)
+    {
+        String smallstr = str.substring(0, i);
+        if (map.conatins(smallstr))
+        {
+            count += wordBreak_(str.substr(i), ans + smallstr + " ");
+        }
+    }
+
+    return count;
+}
+
+void wordBreak()
+{
+    String[] words{"like", "samsung", "i", "ilike", "sam", "sung", "and", "man", "go", "mango"};
+    String word = "ilikesamsungandmango";
+
+    for (String word : words)
+        map.add(word);
+
+	int ans=wordBreak_(word, "");
+	System.out.println(ans);
+
+}
     
     //===========================================================
 
