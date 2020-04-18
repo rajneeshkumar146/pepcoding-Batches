@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.Arrays;
 public class l001 {
 
 	public static void main(String[] args) {
@@ -789,6 +790,207 @@ public class l001 {
 	return dp[0][0];
 }
 
+//coin Change.===================================================================
+
+
+public static int coinChangePermuatation_Rec(int[] coins,int tar){
+	if(tar==0) return 1;
+	
+	int count=0;
+	for(int c: coins){
+		if(tar-c>=0)
+		   count+=coinChangePermuatation_Rec(coins,tar-c);
+	}
+
+	return count;
+}
+
+public static int coinChangePermuatation(int[] coins,int tar){
+
+	int[] dp=new int[tar+1];
+	dp[0]=1;
+	
+	for(int t=0;t<=tar;t++){
+		for(int c: coins){
+			if(t-c>=0){
+              dp[t]+=dp[t-c];
+			}
+		}
+	}
+
+	return dp[tar];
+}
+
+
+public static int coinChangeCombination(int[] coins,int tar){
+
+	int[] dp=new int[tar+1];
+	dp[0]=1;
+	for(int c: coins){
+	  for(int t=0;t<=tar;t++){
+			if(t-c>=0){
+              dp[t]+=dp[t-c];
+			}
+		}
+	}
+
+	return dp[tar];
+}
+
+public static int linearEquationOfNvariables(int[] coeff,int y){
+	return coinChangeCombination(coeff,y);
+}
+
+//leetcode 322
+public int coinChangeMinHeight_rec(int[] coins, int tar,int[] dp) {
+	if(tar==0) return 0;
+	
+	if(dp[tar]!=0) return dp[tar];
+
+	int height=(int)1e8;	
+	for(int c: coins){
+		if(tar-c>=0){
+		   int recH=coinChangeMinHeight_rec(coins,tar-c,dp);
+		   if(recH!=(int)1e8)
+		     height=Math.min(height,recH+1);
+		}
+	}
+
+	return dp[tar] = height;
+}
+
+public int coinChangeMinHeight_DP(int[] coins, int tar,int[] dp) {
+	Arrays.fill(dp,100000000);
+	dp[0]=0;
+	
+	for(int t=1;t<=tar;t++){
+		for(int c:coins){
+			if(t-c>=0){
+				// dp[t]=Math.min(dp[t],dp[t-c]+1);
+				int recH=dp[t-c];
+		        if(recH!=(int)1e8)
+				  dp[t]=Math.min(dp[t],recH+1);
+			}
+		}
+	}
+
+	return dp[tar];
+}
+
+public int coinChange(int[] coins, int tar) {
+	int[] dp=new int[tar+1];
+	int ans=0; 
+	// ans=coinChangeMinHeight_rec(coins,tar,dp);
+	ans=coinChangeMinHeight_DP(coins,tar,dp);
+	
+	return ans != (int)1e8 ? ans : -1;    
+}
+
+public static int targetSum(int[] arr,int tar,int idx,int[][] dp){  // dp: arr X tar
+	if(tar==0 || idx==arr.length){
+		return dp[idx][tar]=tar==0?1:0;
+	}
+
+	if(dp[idx][tar]!=0) return dp[idx][tar];
+	
+	int count=0;
+	if(tar-arr[idx]>=0)
+	  count+=targetSum(arr,tar-arr[idx],idx+1,dp); 
+	
+	count+=targetSum(arr,tar,idx+1,dp); 
+	
+	return dp[idx][tar]=count;
+}
+
+public static int targetSum_DP(int[] arr,int tar,int[][] dp){  // dp: arr X tar
+	dp[0][0]=1;
+
+	for(int idx=1;idx<dp.length;idx++){
+		for(int t=0;t<=tar;t++){
+			   
+			int count=0;
+			if(t-arr[idx-1]>=0){
+				count+=dp[idx-1][t-arr[idx-1]];
+			}
+			count+=dp[idx-1][t];
+			
+			dp[idx][t]=count;
+		}
+	}
+
+	return dp[dp.length-1][dp[0].length-1];
+}
+
+int knapsack_01_rec(int[] weight,int[] value,int w,int idx,int[][] dp){  // dp: weight X W
+	if(w==0 || idx==weight.length){
+		return 0;
+	}
+	if(dp[idx][w]!=0) return dp[idx][w];
+	 
+    int pick=0;
+	if(w-weight[idx]>=0){
+       pick=knapsack_01_rec(weight,value,w-weight[idx],idx+1,dp) + value[idx];
+	}
+
+	int notPicked=knapsack_01_rec(weight,value,w,idx+1,dp);
+
+	return  dp[idx][w]=Math.max(pick,notPicked);
+}
+
+
+int knapsack_01_rec_01(int[] weight,int[] value,int w,int n,int[][] dp){  // dp: weight X W, n is size of weight
+	if(w==0 || n==0){
+		return 0;
+	}
+	if(dp[idx][w]!=0) return dp[idx][w];
+	 
+    int pick=0;
+	if(w-weight[n-1]>=0){
+       pick=knapsack_01_rec(weight,value,w-weight[n-1],n-1,dp) + value[n-1];
+	}
+	
+	int notPicked=knapsack_01_rec(weight,value,w,n-1,dp);
+
+	return  dp[n][w]=Math.max(pick,notPicked);
+}
+
+int knapsack_01_rec_DP(int[] weight,int[] value,int W,int[][] dp){  // dp: weight X W, n is size of weight
+	dp[0][0]=0;
+	for(int idx=1;idx<dp.length;idx++){
+		for(int w=0;w<=W;w++){
+			
+			int pick=0;
+			if(w-weight[idx-1]>=0){
+				pick=dp[idx-1][w-weight[idx-1]] + value[idx-1];
+			 }
+			 
+			 int notPicked=dp[idx-1][w];
+			
+			 dp[idx][w]=Math.max(pick,notPicked);
+		}
+	}
+
+	return dp[dp.length-1][dp[0].length-1];
+}
+
+int unBoundedKnapsack(int[] weight,int[] value,int W){
+
+	int[] dp=new int[W+1];
+	
+	for(int idx=0;idx<weight.length;idx++){
+       for(int w=1;w<=W;w++){
+
+		if(w-weight[idx]>=0)
+		   int picked=dp[w-weight[idx]] + value[idx];
+		   int unPicked=dp[w];
+
+		   dp[w]=Math.max(picked,unPicked);
+	   }
+	}
+
+	return dp[W];
+}
+
 	public static void PathSeries() {
 		int er = 3;
 		int ec = 3;
@@ -860,6 +1062,22 @@ public class l001 {
         display2D(dp);
 	}
 
+	public static void targetSet(){
+		// int[] arr={2,3,1,5,6};
+		int[] arr={1, 1, 1, 1, 1};
+		int tar=3;
+		int ans=0;
+		
+		int[][] dp=new int[arr.length+1][tar+1];
+		// ans=targetSum(arr,tar,0,dp);
+		ans+=targetSum_DP(arr,tar,dp);
+
+
+		// display(dp);
+		display2D(dp);
+		System.out.println(ans);
+	}
+
 	//util.=================================================================
 
 	public static void display2D(int[][] arr) {
@@ -880,6 +1098,7 @@ public class l001 {
 	public static void solve() {
 		// basic();
 		// PathSeries();
-		stringSet();
+		// stringSet();
+		targetSet();
 	}
 }
