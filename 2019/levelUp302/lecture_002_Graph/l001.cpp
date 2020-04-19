@@ -165,7 +165,7 @@ void preOrder(int src, vector<bool> &vis, int w, string ans)
         if (!vis[e.v])
             preOrder(e.v, vis, w + e.w, ans + to_string(e.v) + " ");
 
-    vis[src] = false;
+    vis[src] = false; 
 }
 
 //Basic.========================================================

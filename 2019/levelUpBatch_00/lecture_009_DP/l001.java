@@ -546,97 +546,97 @@ public class l001 {
 
 	//stringSet.=================================================
 
-	public static boolean[][] isPalindromicSubString(String str){
-		boolean[][] dp=new boolean[str.length()][str.length()];
+	public static boolean[][] isPalindromicSubString(String str) {
+		boolean[][] dp = new boolean[str.length()][str.length()];
 
-		for(int gap=0;gap<str.length();gap++){
-			for(int si=0,ei=gap;ei<str.length();si++,ei++){
-				if(gap==0) dp[si][ei]=true;
-				else if(str.charAt(si)==str.charAt(ei) && gap==1) dp[si][ei]=true;
-				else dp[si][ei]= str.charAt(si)==str.charAt(ei) && dp[si+1][ei-1];
+		for (int gap = 0; gap < str.length(); gap++) {
+			for (int si = 0, ei = gap; ei < str.length(); si++, ei++) {
+				if (gap == 0) dp[si][ei] = true;
+				else if (str.charAt(si) == str.charAt(ei) && gap == 1) dp[si][ei] = true;
+				else dp[si][ei] = str.charAt(si) == str.charAt(ei) && dp[si + 1][ei - 1];
 			}
 		}
 
 		return dp;
 	}
 
-	public static int longestPalindromicSubstring(String str){
-	  int[][] dp=new int[str.length()][str.length()];
-	  int maxLength=0;
+	public static int longestPalindromicSubstring(String str) {
+		int[][] dp = new int[str.length()][str.length()];
+		int maxLength = 0;
 
-	  for(int gap=0;gap<str.length();gap++){
-		for(int si=0,ei=gap;ei<str.length();si++,ei++){
-	
-			if(gap==0) dp[si][ei]=1;
-			else if(str.charAt(si)==str.charAt(ei) && gap==1) dp[si][ei]=2;
-			else if(str.charAt(si)==str.charAt(ei) && dp[si+1][ei-1]!=0) {
-				dp[si][ei]=dp[si+1][ei-1]+2;
-			}
-			maxLength=Math.max(maxLength,dp[si][ei]);
-		}
-	}
+		for (int gap = 0; gap < str.length(); gap++) {
+			for (int si = 0, ei = gap; ei < str.length(); si++, ei++) {
 
-	   return maxLength;
-
-	}
-
-	public static int longestPalindromicSubsubsequence_Rec(String str,int si,int ei,int[][] dp){
-		if(si>ei) return 0;
-		if(si==ei) return dp[si][ei]=1;
-
-		if(dp[si][ei]!=0) return dp[si][ei];
-			
-		if(str.charAt(si)==str.charAt(ei)){
-          return dp[si][ei]=longestPalindromicSubsubsequence_Rec(str,si+1,ei-1,dp)+2;
-		}
-
-		int strA=longestPalindromicSubsubsequence_Rec(str,si+1,ei,dp);
-		int strB=longestPalindromicSubsubsequence_Rec(str,si,ei-1,dp);
-
-		return dp[si][ei]=Math.max(strA,strB);
-	}
-
-	public static int longestPalindromicSubsubsequence(String str){
-		int[][] dp=new int[str.length()][str.length()];
-		
-		for(int gap=0;gap<str.length();gap++){
-			for(int si=0,ei=gap;ei<str.length();si++,ei++){
-		
-				if(gap==0) dp[si][ei]=1;  //length 1
-				else if(str.charAt(si)==str.charAt(ei)) dp[si][ei]=dp[si+1][ei-1]+2;
-				else dp[si][ei]=Math.max(dp[si+1][ei],dp[si][ei-1]);
+				if (gap == 0) dp[si][ei] = 1;
+				else if (str.charAt(si) == str.charAt(ei) && gap == 1) dp[si][ei] = 2;
+				else if (str.charAt(si) == str.charAt(ei) && dp[si + 1][ei - 1] != 0) {
+					dp[si][ei] = dp[si + 1][ei - 1] + 2;
+				}
+				maxLength = Math.max(maxLength, dp[si][ei]);
 			}
 		}
 
-		return dp[0][str.length()-1];
+		return maxLength;
+
 	}
 
-	public static String longestPalindromicSubsubsequence_String(String str){
-		String[][] dp=new String[str.length()][str.length()];
-		
-		for(int gap=0;gap<str.length();gap++){
-			for(int si=0,ei=gap;ei<str.length();si++,ei++){
-		
-				if(gap==0) dp[si][ei]=str.charAt(si)+"";  //length 1
-				else if(gap==1 && str.charAt(si) == str.charAt(ei)) dp[si][ei]=str.substring(si,ei+1);
-				else if(str.charAt(si) == str.charAt(ei)) dp[si][ei]=str.charAt(si) + dp[si+1][ei-1]+str.charAt(ei);
-				else dp[si][ei]=dp[si+1][ei].length()>=dp[si][ei-1].length()?dp[si+1][ei]:dp[si][ei-1];
+	public static int longestPalindromicSubsubsequence_Rec(String str, int si, int ei, int[][] dp) {
+		if (si > ei) return 0;
+		if (si == ei) return dp[si][ei] = 1;
+
+		if (dp[si][ei] != 0) return dp[si][ei];
+
+		if (str.charAt(si) == str.charAt(ei)) {
+			return dp[si][ei] = longestPalindromicSubsubsequence_Rec(str, si + 1, ei - 1, dp) + 2;
+		}
+
+		int strA = longestPalindromicSubsubsequence_Rec(str, si + 1, ei, dp);
+		int strB = longestPalindromicSubsubsequence_Rec(str, si, ei - 1, dp);
+
+		return dp[si][ei] = Math.max(strA, strB);
+	}
+
+	public static int longestPalindromicSubsubsequence(String str) {
+		int[][] dp = new int[str.length()][str.length()];
+
+		for (int gap = 0; gap < str.length(); gap++) {
+			for (int si = 0, ei = gap; ei < str.length(); si++, ei++) {
+
+				if (gap == 0) dp[si][ei] = 1; //length 1
+				else if (str.charAt(si) == str.charAt(ei)) dp[si][ei] = dp[si + 1][ei - 1] + 2;
+				else dp[si][ei] = Math.max(dp[si + 1][ei], dp[si][ei - 1]);
 			}
 		}
 
-		return dp[0][str.length()-1];
+		return dp[0][str.length() - 1];
 	}
 
-	public static int countOfPalindromicSubstring(String str){
-		boolean[][] dp=new boolean[str.length()][str.length()];
-        int count=0;
-		for(int gap=0;gap<str.length();gap++){
-			for(int si=0,ei=gap;ei<str.length();si++,ei++){
-				if(gap==0) dp[si][ei]=true;
-				else if(str.charAt(si)==str.charAt(ei) && gap==1) dp[si][ei]=true;
-				else dp[si][ei]= str.charAt(si)==str.charAt(ei) && dp[si+1][ei-1];
+	public static String longestPalindromicSubsubsequence_String(String str) {
+		String[][] dp = new String[str.length()][str.length()];
 
-				count=dp[si][ei]?count+1:count;
+		for (int gap = 0; gap < str.length(); gap++) {
+			for (int si = 0, ei = gap; ei < str.length(); si++, ei++) {
+
+				if (gap == 0) dp[si][ei] = str.charAt(si) + ""; //length 1
+				else if (gap == 1 && str.charAt(si) == str.charAt(ei)) dp[si][ei] = str.substring(si, ei + 1);
+				else if (str.charAt(si) == str.charAt(ei)) dp[si][ei] = str.charAt(si) + dp[si + 1][ei - 1] + str.charAt(ei);
+				else dp[si][ei] = dp[si + 1][ei].length() >= dp[si][ei - 1].length() ? dp[si + 1][ei] : dp[si][ei - 1];
+			}
+		}
+
+		return dp[0][str.length() - 1];
+	}
+
+	public static int countOfPalindromicSubstring(String str) {
+		boolean[][] dp = new boolean[str.length()][str.length()];
+		int count = 0;
+		for (int gap = 0; gap < str.length(); gap++) {
+			for (int si = 0, ei = gap; ei < str.length(); si++, ei++) {
+				if (gap == 0) dp[si][ei] = true;
+				else if (str.charAt(si) == str.charAt(ei) && gap == 1) dp[si][ei] = true;
+				else dp[si][ei] = str.charAt(si) == str.charAt(ei) && dp[si + 1][ei - 1];
+
+				count = dp[si][ei] ? count + 1 : count;
 			}
 		}
 
@@ -644,85 +644,84 @@ public class l001 {
 
 	}
 
-	public static int countOfPalindromicSubsubsequence_Rec(String str,int si,int ei,int[][] dp){
-	   if(si>ei) return 0;
-	   if(si==ei) return dp[si][ei]=1;
+	public static int countOfPalindromicSubsubsequence_Rec(String str, int si, int ei, int[][] dp) {
+		if (si > ei) return 0;
+		if (si == ei) return dp[si][ei] = 1;
 
-       if(dp[si][ei]!=0) return dp[si][ei];
+		if (dp[si][ei] != 0) return dp[si][ei];
 
-		int middleString=countOfPalindromicSubsubsequence_Rec(str,si+1,ei-1,dp);
-		int withoutFirstCharString=countOfPalindromicSubsubsequence_Rec(str,si+1,ei,dp);
-		int withoutLastCharString=countOfPalindromicSubsubsequence_Rec(str,si,ei-1,dp);
+		int middleString = countOfPalindromicSubsubsequence_Rec(str, si + 1, ei - 1, dp);
+		int withoutFirstCharString = countOfPalindromicSubsubsequence_Rec(str, si + 1, ei, dp);
+		int withoutLastCharString = countOfPalindromicSubsubsequence_Rec(str, si, ei - 1, dp);
 
-		int rAns=withoutFirstCharString + withoutLastCharString;
-		
-		return dp[si][ei]= (str.charAt(si)==str.charAt(ei)? rAns + 1 : rAns - middleString);
+		int rAns = withoutFirstCharString + withoutLastCharString;
+
+		return dp[si][ei] = (str.charAt(si) == str.charAt(ei) ? rAns + 1 : rAns - middleString);
 	}
 
-	public static int countOfPalindromicSubsubsequence_DP(String str,int si,int ei,int[][] dp){
-	
-		for(int gap=0;gap<str.length();gap++){
-			for(si=0,ei=gap;ei<str.length();si++,ei++){
-				if(gap==0) dp[si][ei]=1;  //length 1
-				else if(str.charAt(si)==str.charAt(ei)) dp[si][ei]=dp[si+1][ei] + dp[si][ei-1] + 1;
-				else dp[si][ei]=dp[si+1][ei] + dp[si][ei-1] - dp[si+1][ei-1]; 
+	public static int countOfPalindromicSubsubsequence_DP(String str, int si, int ei, int[][] dp) {
+
+		for (int gap = 0; gap < str.length(); gap++) {
+			for (si = 0, ei = gap; ei < str.length(); si++, ei++) {
+				if (gap == 0) dp[si][ei] = 1; //length 1
+				else if (str.charAt(si) == str.charAt(ei)) dp[si][ei] = dp[si + 1][ei] + dp[si][ei - 1] + 1;
+				else dp[si][ei] = dp[si + 1][ei] + dp[si][ei - 1] - dp[si + 1][ei - 1];
 			}
 		}
 
-		return dp[0][str.length()-1];
+		return dp[0][str.length() - 1];
 	}
 
-	public static int longestCommonSubsequnece_Rec(String str1,String str2,int i,int j,int[][] dp){
-		if(i==str1.length() || j==str2.length()) return 0;
+	public static int longestCommonSubsequnece_Rec(String str1, String str2, int i, int j, int[][] dp) {
+		if (i == str1.length() || j == str2.length()) return 0;
 
-		if(dp[i][j]!=0) return dp[i][j];
+		if (dp[i][j] != 0) return dp[i][j];
 
-		if(str1.charAt(i)==str2.charAt(j)) return dp[i][j]=longestCommonSubsequnece_Rec(str1,str2,i+1,j+1,dp)+1;
+		if (str1.charAt(i) == str2.charAt(j)) return dp[i][j] = longestCommonSubsequnece_Rec(str1, str2, i + 1, j + 1, dp) + 1;
 
-		int a=longestCommonSubsequnece_Rec(str1,str2,i+1,j,dp);
-		int b=longestCommonSubsequnece_Rec(str1,str2,i,j+1,dp);
-        return dp[i][j]=Math.max(a,b);
+		int a = longestCommonSubsequnece_Rec(str1, str2, i + 1, j, dp);
+		int b = longestCommonSubsequnece_Rec(str1, str2, i, j + 1, dp);
+		return dp[i][j] = Math.max(a, b);
 	}
 
-	static int maxAnsSubstring=0;
-	public static int longestCommonSubstring_Rec(String str1,String str2,int i,int j,int[][] dp){
-		if(i==str1.length() || j==str2.length()) return 0;
+	static int maxAnsSubstring = 0;
+	public static int longestCommonSubstring_Rec(String str1, String str2, int i, int j, int[][] dp) {
+		if (i == str1.length() || j == str2.length()) return 0;
 
-		if(dp[i][j]!=-1) return dp[i][j];
+		if (dp[i][j] != -1) return dp[i][j];
 
-		int a=0;
-		if(str1.charAt(i)==str2.charAt(j)) {
-			a=longestCommonSubsequnece_Rec(str1,str2,i+1,j+1,dp)+1;
-		    maxAnsSubstring=Math.max(maxAnsSubstring,a);
+		int a = 0;
+		if (str1.charAt(i) == str2.charAt(j)) {
+			a = longestCommonSubsequnece_Rec(str1, str2, i + 1, j + 1, dp) + 1;
+			maxAnsSubstring = Math.max(maxAnsSubstring, a);
 		}
-		longestCommonSubsequnece_Rec(str1,str2,i+1,j,dp);
-		longestCommonSubsequnece_Rec(str1,str2,i,j+1,dp);
-		
-		return dp[i][j]=a;
+		longestCommonSubsequnece_Rec(str1, str2, i + 1, j, dp);
+		longestCommonSubsequnece_Rec(str1, str2, i, j + 1, dp);
+
+		return dp[i][j] = a;
 	}
 
-	public static int longestCommonSubsequnece_DP(String str1,String str2,int i,int j,int[][] dp){
-		
-		for(i=str1.length()-1;i>=0;i--){
-			for( j=str2.length()-1;j>=0;j--){
+	public static int longestCommonSubsequnece_DP(String str1, String str2, int i, int j, int[][] dp) {
 
-				if(str1.charAt(i)==str2.charAt(j)) dp[i][j] = dp[i+1][j+1]+1;
-				else dp[i][j] = Math.max(dp[i+1][j] , dp[i][j+1]);
+		for (i = str1.length() - 1; i >= 0; i--) {
+			for (j = str2.length() - 1; j >= 0; j--) {
+
+				if (str1.charAt(i) == str2.charAt(j)) dp[i][j] = dp[i + 1][j + 1] + 1;
+				else dp[i][j] = Math.max(dp[i + 1][j], dp[i][j + 1]);
 			}
 		}
 
 		return dp[0][0];
 	}
 
-	
-	public static int longestCommonSubstring_DP(String str1,String str2,int i,int j,int[][] dp){
-		int max=0;
-		for(i=str1.length()-1;i>=0;i--){
-			for( j=str2.length()-1;j>=0;j--){
+	public static int longestCommonSubstring_DP(String str1, String str2, int i, int j, int[][] dp) {
+		int max = 0;
+		for (i = str1.length() - 1; i >= 0; i--) {
+			for (j = str2.length() - 1; j >= 0; j--) {
 
-				if(str1.charAt(i)==str2.charAt(j)) {
-					dp[i][j] = dp[i+1][j+1]+1;
-				    max=Math.max(dp[i][j],max);
+				if (str1.charAt(i) == str2.charAt(j)) {
+					dp[i][j] = dp[i + 1][j + 1] + 1;
+					max = Math.max(dp[i][j], max);
 				}
 			}
 		}
@@ -730,266 +729,443 @@ public class l001 {
 		return max;
 	}
 
-	public static int editDistance(String str1,String str2){
-		int[][] dp=new int[str1.length()+1][str2.length()+1];
+	public static int editDistance(String str1, String str2) {
+		int[][] dp = new int[str1.length() + 1][str2.length() + 1];
 
-		for(int i=0;i<dp.length;i++){
-			for(int j=0;j<dp[0].length;j++){
-				if(i==0) dp[i][j]=j;
-				else if(j==0) dp[i][j]=i;
-				else if(str1.charAt(i-1)==str2.charAt(j-1)) dp[i][j]=dp[i-1][j-1];
-				else dp[i][j] = Math.min(dp[i-1][j-1],Math.min(dp[i-1][j],dp[i][j-1])) + 1 ;
+		for (int i = 0; i < dp.length; i++) {
+			for (int j = 0; j < dp[0].length; j++) {
+				if (i == 0) dp[i][j] = j;
+				else if (j == 0) dp[i][j] = i;
+				else if (str1.charAt(i - 1) == str2.charAt(j - 1)) dp[i][j] = dp[i - 1][j - 1];
+				else dp[i][j] = Math.min(dp[i - 1][j - 1], Math.min(dp[i - 1][j], dp[i][j - 1])) + 1;
 			}
 		}
 
 		return dp[str1.length()][str2.length()];
 	}
 
-	public static int string_occurs_given_string(String str1,String str2,int n,int m,int[][] dp){
-		 if(m==0) return dp[n][m]=1;
-		 if(m>n) return 0;
+	public static int string_occurs_given_string(String str1, String str2, int n, int m, int[][] dp) {
+		if (m == 0) return dp[n][m] = 1;
+		if (m > n) return 0;
 
-		 if(dp[n][m]!=0) return dp[n][m];
+		if (dp[n][m] != 0) return dp[n][m];
 
-		 if(str1.charAt(n-1)== str2.charAt(m-1)) 
-		 return dp[n][m] = string_occurs_given_string(str1,str2,n-1,m-1,dp) + 
-						   string_occurs_given_string(str1,str2,n-1,m,dp);
+		if (str1.charAt(n - 1) == str2.charAt(m - 1)) return dp[n][m] = string_occurs_given_string(str1, str2, n - 1, m - 1, dp) + string_occurs_given_string(str1, str2, n - 1, m, dp);
 
-		return dp[n][m]=string_occurs_given_string(str1,str2,n-1,m,dp);
+		return dp[n][m] = string_occurs_given_string(str1, str2, n - 1, m, dp);
 	}
 
-	public static int string_occurs_given_string_02(String str1,String str2,int i,int j,int[][] dp){
-		if(j==str2.length() || (i==str1.length() && j==str2.length())) return dp[i][j]=1;
-		if(i==str1.length() || (str2.length()-j)>(str1.length()-i)) return 0;
+	public static int string_occurs_given_string_02(String str1, String str2, int i, int j, int[][] dp) {
+		if (j == str2.length() || (i == str1.length() && j == str2.length())) return dp[i][j] = 1;
+		if (i == str1.length() || (str2.length() - j) > (str1.length() - i)) return 0;
 
-		if(dp[i][j]!=0) return dp[i][j];
+		if (dp[i][j] != 0) return dp[i][j];
 
-		if(str1.charAt(i)== str2.charAt(j)) 
-		   return dp[i][j] = string_occurs_given_string_02(str1,str2,i+1,j+1,dp) + 
-		   string_occurs_given_string_02(str1,str2,i+1,j,dp);
+		if (str1.charAt(i) == str2.charAt(j)) return dp[i][j] = string_occurs_given_string_02(str1, str2, i + 1, j + 1, dp) + string_occurs_given_string_02(str1, str2, i + 1, j, dp);
 
-		return dp[i][j]=string_occurs_given_string_02(str1,str2,i+1,j,dp);
-   }
-
-   public static int string_occurs_given_string_DP(String str1,String str2,int i,int j,int[][] dp){
-	for(i=str1.length();i>=0;i--){
-		for( j=str2.length();j>=0;j--){
-			if(j==str2.length() || (i==str1.length() && j==str2.length())){
-				   dp[i][j]=1;
-				   continue;
-			   }
-			if(i==str1.length() || (str2.length()-j)>(str1.length()-i)) continue;
-			
-			if(str1.charAt(i)== str2.charAt(j)) 
-			  dp[i][j] = dp[i+1][j+1] + dp[i+1][j];
-			else
-		      dp[i][j]=dp[i+1][j];
-		}
+		return dp[i][j] = string_occurs_given_string_02(str1, str2, i + 1, j, dp);
 	}
 
-	return dp[0][0];
-}
+	public static int string_occurs_given_string_DP(String str1, String str2, int i, int j, int[][] dp) {
+		for (i = str1.length(); i >= 0; i--) {
+			for (j = str2.length(); j >= 0; j--) {
+				if (j == str2.length() || (i == str1.length() && j == str2.length())) {
+					dp[i][j] = 1;
+					continue;
+				}
+				if (i == str1.length() || (str2.length() - j) > (str1.length() - i)) continue;
 
-//coin Change.===================================================================
-
-
-public static int coinChangePermuatation_Rec(int[] coins,int tar){
-	if(tar==0) return 1;
-	
-	int count=0;
-	for(int c: coins){
-		if(tar-c>=0)
-		   count+=coinChangePermuatation_Rec(coins,tar-c);
-	}
-
-	return count;
-}
-
-public static int coinChangePermuatation(int[] coins,int tar){
-
-	int[] dp=new int[tar+1];
-	dp[0]=1;
-	
-	for(int t=0;t<=tar;t++){
-		for(int c: coins){
-			if(t-c>=0){
-              dp[t]+=dp[t-c];
+				if (str1.charAt(i) == str2.charAt(j)) dp[i][j] = dp[i + 1][j + 1] + dp[i + 1][j];
+				else dp[i][j] = dp[i + 1][j];
 			}
 		}
+
+		return dp[0][0];
 	}
 
-	return dp[tar];
-}
+	//targetSet.===================================================================
 
+	public static int coinChangePermuatation_Rec(int[] coins, int tar) {
+		if (tar == 0) return 1;
 
-public static int coinChangeCombination(int[] coins,int tar){
+		int count = 0;
+		for (int c: coins) {
+			if (tar - c >= 0) count += coinChangePermuatation_Rec(coins, tar - c);
+		}
 
-	int[] dp=new int[tar+1];
-	dp[0]=1;
-	for(int c: coins){
-	  for(int t=0;t<=tar;t++){
-			if(t-c>=0){
-              dp[t]+=dp[t-c];
+		return count;
+	}
+
+	public static int coinChangePermuatation(int[] coins, int tar) {
+
+		int[] dp = new int[tar + 1];
+		dp[0] = 1;
+
+		for (int t = 0; t <= tar; t++) {
+			for (int c: coins) {
+				if (t - c >= 0) {
+					dp[t] += dp[t - c];
+				}
 			}
 		}
+
+		return dp[tar];
 	}
 
-	return dp[tar];
-}
+	public static int coinChangeCombination(int[] coins, int tar) {
 
-public static int linearEquationOfNvariables(int[] coeff,int y){
-	return coinChangeCombination(coeff,y);
-}
-
-//leetcode 322
-public int coinChangeMinHeight_rec(int[] coins, int tar,int[] dp) {
-	if(tar==0) return 0;
-	
-	if(dp[tar]!=0) return dp[tar];
-
-	int height=(int)1e8;	
-	for(int c: coins){
-		if(tar-c>=0){
-		   int recH=coinChangeMinHeight_rec(coins,tar-c,dp);
-		   if(recH!=(int)1e8)
-		     height=Math.min(height,recH+1);
-		}
-	}
-
-	return dp[tar] = height;
-}
-
-public int coinChangeMinHeight_DP(int[] coins, int tar,int[] dp) {
-	Arrays.fill(dp,100000000);
-	dp[0]=0;
-	
-	for(int t=1;t<=tar;t++){
-		for(int c:coins){
-			if(t-c>=0){
-				// dp[t]=Math.min(dp[t],dp[t-c]+1);
-				int recH=dp[t-c];
-		        if(recH!=(int)1e8)
-				  dp[t]=Math.min(dp[t],recH+1);
+		int[] dp = new int[tar + 1];
+		dp[0] = 1;
+		for (int c: coins) {
+			for (int t = 0; t <= tar; t++) {
+				if (t - c >= 0) {
+					dp[t] += dp[t - c];
+				}
 			}
 		}
+
+		return dp[tar];
 	}
 
-	return dp[tar];
-}
-
-public int coinChange(int[] coins, int tar) {
-	int[] dp=new int[tar+1];
-	int ans=0; 
-	// ans=coinChangeMinHeight_rec(coins,tar,dp);
-	ans=coinChangeMinHeight_DP(coins,tar,dp);
-	
-	return ans != (int)1e8 ? ans : -1;    
-}
-
-public static int targetSum(int[] arr,int tar,int idx,int[][] dp){  // dp: arr X tar
-	if(tar==0 || idx==arr.length){
-		return dp[idx][tar]=tar==0?1:0;
+	public static int linearEquationOfNvariables(int[] coeff, int y) {
+		return coinChangeCombination(coeff, y);
 	}
 
-	if(dp[idx][tar]!=0) return dp[idx][tar];
-	
-	int count=0;
-	if(tar-arr[idx]>=0)
-	  count+=targetSum(arr,tar-arr[idx],idx+1,dp); 
-	
-	count+=targetSum(arr,tar,idx+1,dp); 
-	
-	return dp[idx][tar]=count;
-}
+	//leetcode 322
+	public int coinChangeMinHeight_rec(int[] coins, int tar, int[] dp) {
+		if (tar == 0) return 0;
 
-public static int targetSum_DP(int[] arr,int tar,int[][] dp){  // dp: arr X tar
-	dp[0][0]=1;
+		if (dp[tar] != 0) return dp[tar];
 
-	for(int idx=1;idx<dp.length;idx++){
-		for(int t=0;t<=tar;t++){
-			   
-			int count=0;
-			if(t-arr[idx-1]>=0){
-				count+=dp[idx-1][t-arr[idx-1]];
+		int height = (int) 1e8;
+		for (int c: coins) {
+			if (tar - c >= 0) {
+				int recH = coinChangeMinHeight_rec(coins, tar - c, dp);
+				if (recH != (int) 1e8) height = Math.min(height, recH + 1);
 			}
-			count+=dp[idx-1][t];
-			
-			dp[idx][t]=count;
 		}
+
+		return dp[tar] = height;
 	}
 
-	return dp[dp.length-1][dp[0].length-1];
-}
+	public int coinChangeMinHeight_DP(int[] coins, int tar, int[] dp) {
+		Arrays.fill(dp, 100000000);
+		dp[0] = 0;
 
-int knapsack_01_rec(int[] weight,int[] value,int w,int idx,int[][] dp){  // dp: weight X W
-	if(w==0 || idx==weight.length){
-		return 0;
+		for (int t = 1; t <= tar; t++) {
+			for (int c: coins) {
+				if (t - c >= 0) {
+					// dp[t]=Math.min(dp[t],dp[t-c]+1);
+					int recH = dp[t - c];
+					if (recH != (int) 1e8) dp[t] = Math.min(dp[t], recH + 1);
+				}
+			}
+		}
+
+		return dp[tar];
 	}
-	if(dp[idx][w]!=0) return dp[idx][w];
-	 
-    int pick=0;
-	if(w-weight[idx]>=0){
-       pick=knapsack_01_rec(weight,value,w-weight[idx],idx+1,dp) + value[idx];
+
+	public int coinChange(int[] coins, int tar) {
+		int[] dp = new int[tar + 1];
+		int ans = 0;
+		// ans=coinChangeMinHeight_rec(coins,tar,dp);
+		ans = coinChangeMinHeight_DP(coins, tar, dp);
+
+		return ans != (int) 1e8 ? ans: -1;
 	}
 
-	int notPicked=knapsack_01_rec(weight,value,w,idx+1,dp);
+	public static int targetSum(int[] arr, int tar, int idx, int[][] dp) { // dp: arr X tar
+		if (tar == 0 || idx == arr.length) {
+			return dp[idx][tar] = tar == 0 ? 1 : 0;
+		}
 
-	return  dp[idx][w]=Math.max(pick,notPicked);
-}
+		if (dp[idx][tar] != 0) return dp[idx][tar];
 
+		int count = 0;
+		if (tar - arr[idx] >= 0) count += targetSum(arr, tar - arr[idx], idx + 1, dp);
 
-int knapsack_01_rec_01(int[] weight,int[] value,int w,int n,int[][] dp){  // dp: weight X W, n is size of weight
-	if(w==0 || n==0){
-		return 0;
+		count += targetSum(arr, tar, idx + 1, dp);
+
+		return dp[idx][tar] = count;
 	}
-	if(dp[idx][w]!=0) return dp[idx][w];
-	 
-    int pick=0;
-	if(w-weight[n-1]>=0){
-       pick=knapsack_01_rec(weight,value,w-weight[n-1],n-1,dp) + value[n-1];
+
+	public static int targetSum_DP(int[] arr, int tar, int[][] dp) { // dp: arr X tar
+		dp[0][0] = 1;
+
+		for (int idx = 1; idx < dp.length; idx++) {
+			for (int t = 0; t <= tar; t++) {
+
+				int count = 0;
+				if (t - arr[idx - 1] >= 0) {
+					count += dp[idx - 1][t - arr[idx - 1]];
+				}
+				count += dp[idx - 1][t];
+
+				dp[idx][t] = count;
+			}
+		}
+
+		return dp[dp.length - 1][dp[0].length - 1];
+	}
+
+	int knapsack_01_rec(int[] weight, int[] value, int w, int idx, int[][] dp) { // dp: weight X W
+		if (w == 0 || idx == weight.length) {
+			return 0;
+		}
+		if (dp[idx][w] != 0) return dp[idx][w];
+
+		int pick = 0;
+		if (w - weight[idx] >= 0) {
+			pick = knapsack_01_rec(weight, value, w - weight[idx], idx + 1, dp) + value[idx];
+		}
+
+		int notPicked = knapsack_01_rec(weight, value, w, idx + 1, dp);
+
+		return dp[idx][w] = Math.max(pick, notPicked);
+	}
+
+	int knapsack_01_rec_01(int[] weight, int[] value, int w, int n, int[][] dp) { // dp: weight X W, n is size of weight
+		if (w == 0 || n == 0) {
+			return 0;
+		}
+		if (dp[n][w] != 0) return dp[n][w];
+
+		int pick = 0;
+		if (w - weight[n - 1] >= 0) {
+			pick = knapsack_01_rec(weight, value, w - weight[n - 1], n - 1, dp) + value[n - 1];
+		}
+
+		int notPicked = knapsack_01_rec(weight, value, w, n - 1, dp);
+
+		return dp[n][w] = Math.max(pick, notPicked);
+	}
+
+	int knapsack_01_rec_DP(int[] weight, int[] value, int W, int[][] dp) { // dp: weight X W, n is size of weight
+		dp[0][0] = 0;
+		for (int idx = 1; idx < dp.length; idx++) {
+			for (int w = 0; w <= W; w++) {
+
+				int pick = 0;
+				if (w - weight[idx - 1] >= 0) {
+					pick = dp[idx - 1][w - weight[idx - 1]] + value[idx - 1];
+				}
+
+				int notPicked = dp[idx - 1][w];
+
+				dp[idx][w] = Math.max(pick, notPicked);
+			}
+		}
+
+		return dp[dp.length - 1][dp[0].length - 1];
+	}
+
+	int unBoundedKnapsack(int[] weight, int[] value, int W) {
+		int[] dp = new int[W + 1];
+
+		for (int idx = 0; idx < weight.length; idx++) {
+			for (int w = 1; w <= W; w++) {
+                int picked=0;
+				if (w - weight[idx] >= 0) picked = dp[w - weight[idx]] + value[idx];
+				int unPicked = dp[w];
+
+				dp[w] = Math.max(picked, unPicked);
+			}
+		}
+
+		return dp[W];
+	}
+
+	//LIS_Type.=================================================================
+
+	// LIS from left to right
+	public static int LIS_DP(int[] arr, int[] dp) {
+
+		dp[0] = 1;
+		int maxLen = 0;
+		for (int i = 1; i < arr.length; i++) {
+			dp[i] = 1;
+			for (int j = 0; j < i; j++) { // har ek j cell apne ko include krke apne tak ka maximum Increasing subsequnece store krke rakhta hai.
+				if (arr[i] > arr[j]) { // if i'th cell element is grater than j'th cell element than length will increase by 1.
+					dp[i] = Math.max(dp[i], dp[j] + 1);
+				}
+			}
+			maxLen = Math.max(maxLen, dp[i]);
+		}
+
+		return maxLen;
+	}
+
+
+	//LIS from right to left
+	public static int LDS_DP(int[] arr, int[] dp) {
+        int n=arr.length;
+		dp[n-1] = 1;
+		int maxLen = 0;
+		for (int i = n-2 ; i >= 0 ;i--) {
+			dp[i] = 1;
+			for (int j = i+1; j < n; j++) { // har ek j cell apne ko include krke apne tak ka maximum Increasing subsequnece store krke rakhta hai.
+				if (arr[i] > arr[j]) { // if i'th cell element is grater than j'th cell element than length will increase by 1.
+					dp[i] = Math.max(dp[i], dp[j] + 1);
+				}
+			}
+			maxLen = Math.max(maxLen, dp[i]);
+		}
+
+		return maxLen;
+	}
+
+	public static int LBS_DP(int[] arr){
+	    int n=arr.length;
+
+		int[] LIS=new int[n];
+		int[] LDS=new int[n];
+
+		LIS_DP(arr,LIS);
+		LDS_DP(arr,LDS);
+
+		int maxLen = 0;
+		for(int i=0;i<n;i++){
+			int bitonicLen=LIS[i]+LDS[i]-1;
+			maxLen=Math.max(maxLen,bitonicLen);
+		}
+
+		return maxLen;
+	}
+
+	public static int maximumSumIncreasingSubsequnece(int[] arr){
+		int n=arr.length;
+		int[] dp=new int[n];
+        int maxSum=0;
+		for(int i=0;i<n;i++){
+			  dp[i]=arr[i];
+			for(int j=0;j<i;j++){
+				if(arr[i]>arr[j]){
+					dp[i]=Math.max(dp[i],dp[j]+arr[i]);
+				}
+			}
+			maxSum=Math.max(maxSum,dp[i]);
+		}
+
+		return maxSum;
 	}
 	
-	int notPicked=knapsack_01_rec(weight,value,w,n-1,dp);
+	// minimum no of deletion to make array in sorted order in increasing order.
+	public static int minimum_No_of_deletion(int[] arr){
+		int n=arr.length;
+		int[] dp=new int[n];
 
-	return  dp[n][w]=Math.max(pick,notPicked);
-}
-
-int knapsack_01_rec_DP(int[] weight,int[] value,int W,int[][] dp){  // dp: weight X W, n is size of weight
-	dp[0][0]=0;
-	for(int idx=1;idx<dp.length;idx++){
-		for(int w=0;w<=W;w++){
-			
-			int pick=0;
-			if(w-weight[idx-1]>=0){
-				pick=dp[idx-1][w-weight[idx-1]] + value[idx-1];
-			 }
-			 
-			 int notPicked=dp[idx-1][w];
-			
-			 dp[idx][w]=Math.max(pick,notPicked);
+		dp[0] = 1;
+		int maxLen = 0;
+		for (int i = 1; i < arr.length; i++) {
+			dp[i] = 1;
+			for (int j = 0; j < i; j++) { 
+				if (arr[i] >= arr[j]) { 
+					dp[i] = Math.max(dp[i], dp[j] + 1);
+				}
+			}
+			maxLen = Math.max(maxLen, dp[i]);
 		}
+
+		return n-maxLen;
 	}
 
-	return dp[dp.length-1][dp[0].length-1];
-}
+	public static int LDS_from_left_right(int[] arr,int[] dp){
+		int n=arr.length;
+		dp[0]=1;
 
-int unBoundedKnapsack(int[] weight,int[] value,int W){
+		int maxLen = 0;
+		for(int i=1;i<n;i++){
+			dp[i]=1;
+			for(int j=0;j<i;j++){
+				if(arr[i]<arr[j])
+				dp[i] = Math.max(dp[i], dp[j] + 1);
+			}
+		   maxLen = Math.max(maxLen, dp[i]);
 
-	int[] dp=new int[W+1];
+		}
+
+		return maxLen;
+	}
+
+	public static int LDS_from_Right_left(int[] arr,int[] dp){
+		int n=arr.length;
+		dp[n-1]=1;
+        
+        int maxLen = 0;
+		for(int i=n-2;i>=0;i--){
+			dp[i]=1;
+			for(int j=i+1;j<n;j++){
+				if(arr[i]<arr[j])
+				dp[i] = Math.max(dp[i], dp[j] + 1);
+			}
+		   maxLen = Math.max(maxLen, dp[i]);
+		}
+
+		return maxLen;
+	}
+
+	public static int LBS_DP_02(int[] arr){
+	    int n=arr.length;
+
+		int[] LIS=new int[n];
+		int[] LDS=new int[n];
+
+		LDS_from_left_right(arr,LIS);
+		LDS_from_Right_left(arr,LDS);
+
+		int maxLen = 0;
+		for(int i=0;i<n;i++){
+			int bitonicLen=LIS[i]+LDS[i]-1;
+			maxLen=Math.max(maxLen,bitonicLen);
+		}
+
+		return maxLen;
+	}
 	
-	for(int idx=0;idx<weight.length;idx++){
-       for(int w=1;w<=W;w++){
 
-		if(w-weight[idx]>=0)
-		   int picked=dp[w-weight[idx]] + value[idx];
-		   int unPicked=dp[w];
+	// leetcode 673
+	public static int findNumberOfLIS(int[] arr) {
+		if(arr.length<=1) return arr.length;
+		
+		int[] dp=new int[arr.length + 1];
+		int[] count=new int[arr.length + 1];
 
-		   dp[w]=Math.max(picked,unPicked);
-	   }
+		int n=arr.length;
+		int maxLen=1;
+		dp[0]=1;
+		count[0]=1;
+		for(int i=1;i<n;i++){
+			dp[i]=1;
+			count[i]=1;
+			for(int j=0;j<i;j++){
+				if(arr[j]<arr[i]){
+					if(dp[i]==dp[j]){
+					   dp[i]=dp[j]+1;
+					   count[i]=count[j];
+					}else if(dp[j]+1==dp[i]){
+						count[i]+=count[j];
+					}
+				}
+			}
+		   maxLen = Math.max(maxLen, dp[i]);
+		}
+
+		for (int ele: dp) System.out.print(ele + " ");
+		System.out.println();
+		for (int ele: count) System.out.print(ele + " ");
+		System.out.println();
+
+		int ans=0;
+		for(int i=0;i<n;i++){
+			if(dp[i]==maxLen) ans+=count[i];
+		}
+
+		return ans;
 	}
+	
 
-	return dp[W];
-}
+	
+	//leetcode 354 , 1235 
 
 	public static void PathSeries() {
 		int er = 3;
@@ -1032,51 +1208,65 @@ int unBoundedKnapsack(int[] weight,int[] value,int W){
 
 	}
 
-	public static void stringSet(){
+	public static void stringSet() {
 		// String str="geeksse";
 		// int[][] dp=new int[str.length()][str.length()];
 		// System.out.println(longestPalindromicSubsubsequence_Rec(str,0,str.length()-1,dp));
 		// System.out.println(longestPalindromicSubsubsequence(str));
 		// System.out.println(longestPalindromicSubsubsequence_String(str));
-		
+
 		// String str="baccbab";
 		// int[][] dp=new int[str.length()][str.length()];
 		// // System.out.println(countOfPalindromicSubsubsequence_Rec(str,0,str.length()-1,dp));
 		// System.out.println(countOfPalindromicSubsubsequence_DP(str,0,str.length()-1,dp));
-		
+
 		// String str1="abcde";
 		// String str2="ace";
 		// int[][] dp=new int[str1.length()+1][str2.length()+1];
 		// System.out.println(longestCommonSubsequnece_Rec(str1,str2,0,0,dp));
 		// System.out.println(longestCommonSubstring_Rec(str1,str2,0,0,dp));
 
-
-		String str1="aabbcc";
-		String str2="abc";
-		int[][] dp=new int[str1.length()+1][str2.length()+1];
+		String str1 = "aabbcc";
+		String str2 = "abc";
+		int[][] dp = new int[str1.length() + 1][str2.length() + 1];
 		// System.out.println(string_occurs_given_string_DP(str1,str2,0,0,dp));
 		// System.out.println(string_occurs_given_string_02(str1,str2,0,0,dp));
-		System.out.println(string_occurs_given_string(str1,str2,str1.length(),str2.length(),dp));
+		System.out.println(string_occurs_given_string(str1, str2, str1.length(), str2.length(), dp));
 
-		
-        display2D(dp);
+		display2D(dp);
 	}
 
-	public static void targetSet(){
-		// int[] arr={2,3,1,5,6};
-		int[] arr={1, 1, 1, 1, 1};
-		int tar=3;
-		int ans=0;
-		
-		int[][] dp=new int[arr.length+1][tar+1];
-		// ans=targetSum(arr,tar,0,dp);
-		ans+=targetSum_DP(arr,tar,dp);
+	public static void targetSet() {
+		int[] arr={2,3,1,5,6};
+		// int[] arr = {1,1,1,1,1};
+		int tar = 3;
+		int ans = 0;
 
+		int[][] dp = new int[arr.length + 1][tar + 1];
+		// ans=targetSum(arr,tar,0,dp);
+		// ans += targetSum_DP(arr, tar, dp);
 
 		// display(dp);
 		display2D(dp);
 		System.out.println(ans);
 	}
+
+	public static void LIS_Type() {
+		// int[] arr = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
+		int[] arr={2,2,2,2,2};
+		int[] dp=new int[arr.length];
+
+		int ans=0;
+		// ans = LIS_DP(arr,dp);
+		// ans = LDS_DP(arr,dp);
+		// ans =LBS_DP(arr);
+
+		ans=findNumberOfLIS(arr);
+
+		
+		System.out.println(ans);
+		// display(dp);
+    }
 
 	//util.=================================================================
 
@@ -1099,6 +1289,7 @@ int unBoundedKnapsack(int[] weight,int[] value,int W){
 		// basic();
 		// PathSeries();
 		// stringSet();
-		targetSet();
+		// targetSet();
+		LIS_Type();
 	}
 }
