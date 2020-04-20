@@ -15,7 +15,7 @@ public:
     }
 };
 
-int N = 7;
+int N = 8;
 vector<vector<Edge>> graph(N, vector<Edge>());
 // vector<vector<pair<int,int>>> graph(N,vector<pair<int,int>>());
 
@@ -27,17 +27,18 @@ void addEdge(vector<vector<Edge>> &gp, int u, int v, int w)
 
 int findEdge(int v1, int v2)
 {
-    int i = 0;
-    for (i = 0; i < graph[v1].size(); i++)
+    int vtx = -1;
+    for (int i = 0; i < graph[v1].size(); i++)
     {
         Edge e = graph[v1][i];
         if (e.v == v2)
         {
+            vtx = i;
             break;
         }
     }
 
-    return i;
+    return vtx;
 }
 
 void removeEdge(int u, int v)
@@ -150,7 +151,7 @@ void allSolution(int src, int dest, vector<bool> &vis, int w, string ans, allSol
     for (Edge e : graph[src])
     {
         if (!vis[e.v])
-            allSolution(e.v, dest, vis, w + e.w, ans + to_string(src) + " ", pair,data);
+            allSolution(e.v, dest, vis, w + e.w, ans + to_string(src) + " ", pair, data);
     }
 
     vis[src] = false;
@@ -159,13 +160,66 @@ void allSolution(int src, int dest, vector<bool> &vis, int w, string ans, allSol
 void preOrder(int src, vector<bool> &vis, int w, string ans)
 {
     vis[src] = true;
-
     cout << ans << " @ " << w << endl;
     for (Edge e : graph[src])
         if (!vis[e.v])
             preOrder(e.v, vis, w + e.w, ans + to_string(e.v) + " ");
 
-    vis[src] = false; 
+    vis[src] = false;
+}
+
+void hamintonianPath(int src, int osrc, vector<bool> &vis, int count, string ans)
+{
+
+    if (count == vis.size() - 1)
+    {
+        int idx = findEdge(src, osrc);
+        if (idx != -1)
+            cout << "Cycle: " + ans + to_string(src) << endl;
+        else
+            cout << "Path: " + ans + to_string(src) << endl;
+        return;
+    }
+
+    vis[src] = true;
+    for (Edge e : graph[src])
+    {
+        if (!vis[e.v])
+        {
+            hamintonianPath(e.v, osrc, vis, count + 1, ans + to_string(src) + " ");
+        }
+    }
+
+    vis[src] = false;
+}
+
+int GCC_dfs(int src, vector<bool> &vis)
+{
+    vis[src] = true;
+    int count = 0;
+
+    for (Edge e : graph[src])
+        if (!vis[e.v])
+            count += GCC_dfs(e.v, vis);
+
+    return count + 1;
+}
+
+int GCC()
+{ //getConnectedComponents
+    vector<bool> vis(N, false);
+    int count = 0;
+    int maxSize = 0;
+    for (int i = 0; i < N; i++)
+    {
+        if (!vis[i])
+        {
+            count++;
+            maxSize = max(maxSize, GCC_dfs(i, vis));
+        }
+    }
+    cout << maxSize << endl;
+    return count;
 }
 
 //Basic.========================================================
@@ -176,15 +230,16 @@ void constructGraph()
     //     vector<Edge*> a;
     //     graph.push_back(a);
     // }
-
     addEdge(graph, 0, 1, 10);
     addEdge(graph, 0, 3, 10);
     addEdge(graph, 1, 2, 10);
     addEdge(graph, 2, 3, 40);
-    addEdge(graph, 3, 4, 2);
+    // addEdge(graph, 3, 4, 2);
     addEdge(graph, 4, 5, 2);
     addEdge(graph, 4, 6, 3);
     addEdge(graph, 5, 6, 8);
+
+    // addEdge(graph, 2, 5, 2);
 
     display(graph);
     cout << endl;
@@ -198,12 +253,14 @@ void set1()
     vector<bool> vis(N, false);
     // cout << hasPath(0, 6, vis)<<endl;
     // cout << allPath(0, 6, vis, 0, "") << endl;
-    // preOrder(0,vis,0,to_string(0)+ " ");
+    // preOrder(2, vis, 0, to_string(0) + " ");
 
-    allSolutionPair pair;
-    allSolution(0, 6, vis, 0, "", pair, 30);
-    cout << pair.heavyW << " -> " << pair.lightW << " -> " << pair.ceil << " -> " << pair.floor << " -> " << endl;
+    // allSolutionPair pair;
+    // allSolution(0, 6, vis, 0, "", pair, 30);
+    // cout << pair.heavyW << " -> " << pair.lightW << " -> " << pair.ceil << " -> " << pair.floor << " -> " << endl;
 
+    // hamintonianPath(2, 2, vis, 0, "");
+    cout << GCC() << endl;
     // display(graph);
 }
 

@@ -1127,19 +1127,19 @@ public class l001 {
 	public static int findNumberOfLIS(int[] arr) {
 		if(arr.length<=1) return arr.length;
 		
-		int[] dp=new int[arr.length + 1];
-		int[] count=new int[arr.length + 1];
+		int[] dp=new int[arr.length];
+		int[] count=new int[arr.length];
 
 		int n=arr.length;
 		int maxLen=1;
-		dp[0]=1;
-		count[0]=1;
-		for(int i=1;i<n;i++){
+		for(int i=0;i<n;i++){
 			dp[i]=1;
 			count[i]=1;
+			if(i==0) continue;
+
 			for(int j=0;j<i;j++){
 				if(arr[j]<arr[i]){
-					if(dp[i]==dp[j]){
+					if(dp[i] < dp[j] + 1){
 					   dp[i]=dp[j]+1;
 					   count[i]=count[j];
 					}else if(dp[j]+1==dp[i]){
@@ -1253,7 +1253,7 @@ public class l001 {
 
 	public static void LIS_Type() {
 		// int[] arr = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
-		int[] arr={2,2,2,2,2};
+		int[] arr={1,3,5,4,7};
 		int[] dp=new int[arr.length];
 
 		int ans=0;
