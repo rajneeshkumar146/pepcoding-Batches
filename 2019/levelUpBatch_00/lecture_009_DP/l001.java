@@ -783,6 +783,107 @@ public class l001 {
 		return dp[0][0];
 	}
 
+	//leetcode: decode ways 91.======================================================
+	public int numDecodings_Rec(String s,int idx,int[] dp) {
+		if(idx==s.length()) return dp[idx]=1;
+		
+		char ch=s.charAt(idx);
+		int count=0;
+		
+		if(dp[idx]!=0) return dp[idx];
+
+		if(ch!='0')
+		   count+=numDecodings_Rec(s,idx+1,dp);
+
+		if(idx+1<s.length()){
+			char ch2=s.charAt(idx+1);
+			int val=(ch-'0')*10 + (ch2-'0');
+			  if(val>=10 && val<=26)
+			    count+=numDecodings_Rec(s,idx+2,dp);
+		}
+
+		return dp[idx]=count;		
+	}
+	
+	public int numDecodings_DP(String s,int[] dp) {
+		for(int idx=s.length();idx>=0;idx--){
+
+			if(idx==s.length()){
+				dp[idx]=1;
+				continue;
+			}
+
+			char ch=s.charAt(idx);
+			int count=0;
+			if(ch!='0')
+			   count+=dp[idx+1];
+	
+			if(idx+1<s.length()){
+				char ch2=s.charAt(idx+1);
+				int val=(ch-'0')*10 + (ch2-'0');
+				  if(val>=10 && val<=26)
+					count+=dp[idx+2];
+			}
+	
+		    dp[idx]=count;	
+		}
+
+		return dp[0];
+    }
+	
+	public int numDecodings(String s) {
+		int[] dp=new int[s.length()+1];
+		
+		// return numDecodings_Rec(s,0,dp);
+		return numDecodings_DP(s,dp);
+		
+	}
+	
+    public int numDecodings(String s) {
+		long[] dp=new long[s.length()+1];
+	
+	return (int)decodeWaysII(s,0,dp);
+}
+
+	static int m=(int)1e9+7;
+public static long decodeWaysII(String s,int idx,long[] dp){
+	if(idx==s.length()) return dp[idx]=1;
+
+	if(dp[idx]!=0) return dp[idx];
+	
+	long count=0;
+	char ch=s.charAt(idx);
+	if(ch=='*'){
+		count=(count + 9*decodeWaysII(s,idx+1,dp))%m;
+		if(idx+1< s.length()){
+			char ch2=s.charAt(idx+1);
+			if(ch2 >='0' && ch2<='6') count=(count + 2 * decodeWaysII(s,idx+2,dp))%m;
+			if(ch2>='7' && ch2<='9') count=(count + decodeWaysII(s,idx+2,dp))%m;
+			if(ch2=='*') count=(count + 15 * decodeWaysII(s,idx+2,dp))%m;
+		}
+		
+
+
+	}else if(ch!='0'){
+		  count=(count + decodeWaysII(s,idx+1,dp))%m;
+		 
+		  if(idx+1< s.length()){
+			  char ch2=s.charAt(idx+1);
+			  if(ch2=='*'){
+				  if(ch =='1') count=(count + 9 * decodeWaysII(s,idx+2,dp))%m;
+				  else if(ch=='2') count=(count + 6 * decodeWaysII(s,idx+2,dp))%m;
+
+
+			  }else{
+				int val=(ch-'0')*10 + (ch2-'0');
+				if(val<=26)
+				count=(count + decodeWaysII(s,idx+2,dp))%m;
+			  }
+		  }
+	}
+	return dp[idx]=count;
+}
+
 	//targetSet.===================================================================
 
 	public static int coinChangePermuatation_Rec(int[] coins, int tar) {
@@ -1127,45 +1228,66 @@ public class l001 {
 	public static int findNumberOfLIS(int[] arr) {
 		if(arr.length<=1) return arr.length;
 		
-		int[] dp=new int[arr.length];
-		int[] count=new int[arr.length];
-
 		int n=arr.length;
-		int maxLen=1;
+		int[] dp=new int[n];
+		int[] count=new int[n];
+		
+		int maxLen=0;
+		int maxCount=0;
+		
 		for(int i=0;i<n;i++){
 			dp[i]=1;
 			count[i]=1;
-			if(i==0) continue;
-
 			for(int j=0;j<i;j++){
-				if(arr[j]<arr[i]){
-					if(dp[i] < dp[j] + 1){
-					   dp[i]=dp[j]+1;
-					   count[i]=count[j];
-					}else if(dp[j]+1==dp[i]){
-						count[i]+=count[j];
-					}
+			  if(arr[i]>arr[j]){
+                 if(dp[j] + 1 > dp[i]){
+					 dp[i]=dp[j]+1;
+					 count[i]=count[j];
+				 }else if(dp[j]+1==dp[i]){
+					 count[i]+=count[j];
+				 }
+			  }	
+			}
+
+			if(dp[i]>maxLen){
+				maxLen=dp[i];
+				maxCount=count[i];
+			}else if(dp[i]==maxLen){
+				maxCount+=count[i];
+			}
+		}
+
+		return maxCount;
+
+		
+	}
+
+	//leetcode 354 =================================================
+
+	public static int maxEnvelopes(int[][] arr) {
+
+		Arrays.sort(arr,(a, b)->{ 
+			// 0'th index-> width and 1'st index -> height, 
+			// for C++: sort(arr.begin(),arr.end(),[](vector<int>& a,vector<int>& b){ //logic });
+			if(a[0]==b[0]) return b[1] - a[1];   // reverse sort.  for c++ replace '-' with '<'
+			else return a[0]-b[0];   // default sort.  for c++ replace '-' with '<'
+		});
+
+		int n=arr.length;
+		int[] dp=new int[n];
+		int maxLen = 0;
+		for (int i =0;i<n;i++) {
+			dp[i] = 1;
+			for (int j = 0; j < i; j++) { 
+				if (arr[i][1] > arr[j][1]) { // compare height. 
+					dp[i] = Math.max(dp[i], dp[j] + 1);
 				}
 			}
-		   maxLen = Math.max(maxLen, dp[i]);
+			maxLen = Math.max(maxLen, dp[i]);
 		}
 
-		for (int ele: dp) System.out.print(ele + " ");
-		System.out.println();
-		for (int ele: count) System.out.print(ele + " ");
-		System.out.println();
-
-		int ans=0;
-		for(int i=0;i<n;i++){
-			if(dp[i]==maxLen) ans+=count[i];
-		}
-
-		return ans;
-	}
-	
-
-	
-	//leetcode 354 , 1235 
+		return maxLen;
+    }
 
 	public static void PathSeries() {
 		int er = 3;
