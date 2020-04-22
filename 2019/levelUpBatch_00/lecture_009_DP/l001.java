@@ -1364,8 +1364,8 @@ public static long decodeWaysII(String s,int idx,long[] dp){
 	public static int minCut_02(int st,int end,int[] dp,boolean[][] isPalindrome){
 		if(st>end) return -1;
 
-		if( st==end || isPalindrome[st][end] ) return dp[st][end]=0; 
-		if(dp[st]!=-1) return dp[st][end];
+		if( st==end || isPalindrome[st][end] ) return dp[st]=0; 
+		if(dp[st]!=-1) return dp[st];
 
         int min_=(int) 1e8;
 		for(int cut = st;cut <=end;cut++){
