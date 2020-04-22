@@ -1342,6 +1342,7 @@ public static long decodeWaysII(String s,int idx,long[] dp){
 	}
 
 	//leetcode 132.===========================================================
+	//Time: O(n3)
 	public static int minCut_(int st,int end,int[][] dp,boolean[][] isPalindrome){
 		if(st==end || isPalindrome[st][end]) return dp[st][end]=0; 
 		
@@ -1359,12 +1360,31 @@ public static long decodeWaysII(String s,int idx,long[] dp){
 		return dp[st][end]=min_;
 	}
 
+    //Time: O(n2)
+	public static int minCut_02(int st,int end,int[] dp,boolean[][] isPalindrome){
+		if(st>end) return -1;
+
+		if( st==end || isPalindrome[st][end] ) return dp[st][end]=0; 
+		if(dp[st]!=-1) return dp[st][end];
+
+        int min_=(int) 1e8;
+		for(int cut = st;cut <=end;cut++){
+			if(isPalindrome[st][cut]){
+				int cuts_ = minCut_02(cut+1,end,dp,isPalindrome)+1;
+				min_=Math.min(min_,cuts_);
+			}
+		}
+
+		return dp[st]=min_;
+	}
+
+
 	public static int minCut(String str) {
 		int n=str.length();
-		int[][] dp=new int[n][n];
+		int[] dp=new int[n];
 		boolean[][] isPalindrome=new boolean[n][n];
 
-		for(int i=0;i<n;i++) for(int j=0;j<n;j++) dp[i][j]=-1;
+		for(int i=0;i<n;i++) dp[i]=-1;
 
 		for (int gap = 0; gap < n; gap++) {
 			for (int si = 0, ei = gap; ei < n; si++, ei++) {
@@ -1374,7 +1394,7 @@ public static long decodeWaysII(String s,int idx,long[] dp){
 			}
 		}
 
-		return minCut_(0,n-1,dp,isPalindrome);
+		return minCut_02(0,n-1,dp,isPalindrome);
     }
 
 
