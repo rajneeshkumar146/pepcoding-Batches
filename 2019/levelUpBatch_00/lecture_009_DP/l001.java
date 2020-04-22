@@ -1363,8 +1363,6 @@ public static long decodeWaysII(String s,int idx,long[] dp){
     //Time: O(n2)
 	public static int minCut_02(int st,int end,int[] dp,boolean[][] isPalindrome){
 		if(st>end) return -1;
-
-		if( st==end || isPalindrome[st][end] ) return dp[st]=0; 
 		if(dp[st]!=-1) return dp[st];
 
         int min_=(int) 1e8;
@@ -1376,6 +1374,21 @@ public static long decodeWaysII(String s,int idx,long[] dp){
 		}
 
 		return dp[st]=min_;
+	}
+
+	public static int minCut_02_DP(int st,int end,int[] dp,boolean[][] isPalindrome){
+		for( st=end;st>=0;st--){
+			int min_=(int) 1e8;
+			for(int cut = st;cut <=end;cut++){
+				if(isPalindrome[st][cut]){
+					int cuts_ = (( cut + 1==end+1 )? -1 : dp[cut+1]) + 1;
+					min_=Math.min(min_, cuts_);
+				}
+			}
+	
+			dp[st]=min_;
+		}
+		return dp[0];
 	}
 
 
