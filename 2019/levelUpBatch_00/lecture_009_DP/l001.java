@@ -839,7 +839,7 @@ public class l001 {
 		
 	}
 	
-    public int numDecodings(String s) {
+    public int numDecodingsII(String s) {
 		long[] dp=new long[s.length()+1];
 	
 	return (int)decodeWaysII(s,0,dp);
@@ -1223,7 +1223,6 @@ public static long decodeWaysII(String s,int idx,long[] dp){
 		return maxLen;
 	}
 	
-
 	// leetcode 673
 	public static int findNumberOfLIS(int[] arr) {
 		if(arr.length<=1) return arr.length;
@@ -1287,7 +1286,97 @@ public static long decodeWaysII(String s,int idx,long[] dp){
 		}
 
 		return maxLen;
+	}
+	
+	
+	//cutTypeQuestion.=====================================================
+
+	public static int MCM_rec(int[] arr,int st,int end,int[][] dp){
+		if(st+1==end) return dp[st][end] = 0;
+		
+		if(dp[st][end]!=-1) return dp[st][end];
+
+        int min_=(int) 1e8;
+		for(int cut=st+1;cut<end;cut++){
+			int leftOptimalCost=MCM_rec(arr,st,cut,dp);
+			int rightOptimalCost=MCM_rec(arr,cut,end,dp);
+
+			int myCost=leftOptimalCost +  arr[st] * arr[cut] * arr[end]   + rightOptimalCost;
+            min_=Math.min(min_,myCost);
+		}
+
+		return dp[st][end]=min_;
+	}
+
+	public static int MCM_DP(int[] arr,int n,int[][] dp,String[][] sdp){
+		for(int gap=1;gap<n;gap++){
+			for(int st=0,end=gap;end<n;st++,end++){
+				if(st+1==end) {
+					dp[st][end] = 0;
+					sdp[st][end]=(char)(st+'A') + "";
+				    continue;
+				}
+
+				int min_=(int) 1e8;
+				String mins="";
+		        for(int cut=st+1;cut<end;cut++){
+			        int leftOptimalCost=dp[st][cut];
+			        int rightOptimalCost=dp[cut][end];
+
+			        int myCost=leftOptimalCost +  arr[st] * arr[cut] * arr[end]   + rightOptimalCost;
+					
+					if(myCost<min_){
+						min_=myCost;
+						mins=  "(" + sdp[st][cut]+sdp[cut][end] + ")";
+					}
+		        }
+
+				dp[st][end]=min_;
+				sdp[st][end]=mins;
+				
+			}
+
+		}
+		System.out.print(sdp[0][n-1] + " -> ");
+		return dp[0][n-1];
+	}
+
+	//leetcode 132.===========================================================
+	public static int minCut_(int st,int end,int[][] dp,boolean[][] isPalindrome){
+		if(st==end || isPalindrome[st][end]) return dp[st][end]=0; 
+		
+		if(dp[st][end]!=-1) return dp[st][end];
+
+        int min_=(int) 1e8;
+		for(int cut=st;cut<end;cut++){
+			int leftMinCut=isPalindrome[st][cut]?0:minCut_(st,cut,dp,isPalindrome);
+			int rightMinCut=isPalindrome[cut+1][end]?0:minCut_(cut+1,end,dp,isPalindrome);
+
+			int myCost=leftMinCut +  1   + rightMinCut;
+            min_=Math.min(min_,myCost);
+		}
+
+		return dp[st][end]=min_;
+	}
+
+	public static int minCut(String str) {
+		int n=str.length();
+		int[][] dp=new int[n][n];
+		boolean[][] isPalindrome=new boolean[n][n];
+
+		for(int i=0;i<n;i++) for(int j=0;j<n;j++) dp[i][j]=-1;
+
+		for (int gap = 0; gap < n; gap++) {
+			for (int si = 0, ei = gap; ei < n; si++, ei++) {
+				if (gap == 0) isPalindrome[si][ei] = true;
+				else if (str.charAt(si) == str.charAt(ei) && gap == 1) isPalindrome[si][ei] = true;
+				else isPalindrome[si][ei] = str.charAt(si) == str.charAt(ei) && isPalindrome[si + 1][ei - 1];
+			}
+		}
+
+		return minCut_(0,n-1,dp,isPalindrome);
     }
+
 
 	public static void PathSeries() {
 		int er = 3;
@@ -1388,7 +1477,27 @@ public static long decodeWaysII(String s,int idx,long[] dp){
 		
 		System.out.println(ans);
 		// display(dp);
-    }
+	}
+
+	public static void cutType(){
+		int[] arr={10, 20, 30, 40, 30};
+		int ans=0;
+		int n=arr.length;
+
+		int[][] dp=new int[n][n];
+		String[][] sdp=new String[n][n];
+		for(int i=0;i<n;i++) for(int j=0;j<n;j++) dp[i][j]=-1;
+
+		// ans=MCM_rec(arr,0,n-1,dp);
+		// ans=MCM_DP(arr,n,dp,sdp);
+		String str="bbbbbb";
+		ans=minCut(str);
+
+
+		System.out.println(ans);
+		display2D(dp);
+	}
+	
 
 	//util.=================================================================
 
@@ -1412,6 +1521,8 @@ public static long decodeWaysII(String s,int idx,long[] dp){
 		// PathSeries();
 		// stringSet();
 		// targetSet();
-		LIS_Type();
+		// LIS_Type();
+		cutType();
+
 	}
 }
