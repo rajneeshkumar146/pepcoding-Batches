@@ -59,6 +59,9 @@ public class l001 {
 
 	public static void BFS(int src,boolean[] vis){
 		LinkedList<pair> que=new LinkedList<>();
+		// LinkedList<int[]> que=new LinkedList<>();
+		// que.addLast(new int[]{1,0});
+
 		que.addLast(new pair(src,src+""));
 		que.addLast(null);
 		int desti=6;
