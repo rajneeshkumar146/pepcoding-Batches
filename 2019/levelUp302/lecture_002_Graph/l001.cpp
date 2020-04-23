@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 using namespace std;
 
 class Edge
@@ -222,6 +223,118 @@ int GCC()
     return count;
 }
 
+void BFS(int src, vector<bool> &vis)
+{
+
+    queue<pair<int, string>> que;
+    que.push({src, to_string(src) + ""});
+
+    int desti = 6;
+
+    while (que.size() != 0)
+    {
+        pair<int, string> vtx = que.front();
+        que.pop();
+
+        if (vis[vtx.first])
+        { //cycle.
+            cout << "Cycle: " << vtx.second << endl;
+            continue;
+        }
+
+        if (vtx.first == desti)
+        {
+            cout << "destination: " << vtx.second << endl;
+        }
+
+        vis[vtx.first] = true;
+        for (Edge e : graph[vtx.first])
+        {
+            if (!vis[e.v])
+                que.push({e.v, vtx.second + to_string(e.v)});
+        }
+    }
+}
+
+void BFS_2(int src, vector<bool> &vis)
+{
+    queue<int> que;
+    que.push(src);
+
+    int level = 0;
+    int desti = 6;
+    int cycle=0;
+
+    while (que.size() != 0)
+    {
+        int size = que.size();
+
+        while (size-- > 0)
+        {
+            int rvtx = que.front();
+            que.pop();
+
+            if (vis[rvtx])//cycle.
+            { 
+                cout << "Cycle No. " + to_string(cycle) + ": "<< rvtx <<endl;
+                cycle++;
+                continue;
+            }
+
+            if (rvtx == desti)
+            {
+                cout << "destination: " << level << endl;
+            }
+
+            vis[rvtx] = true;
+            for (Edge e : graph[rvtx])
+            {
+                if (!vis[e.v])
+                {
+                    que.push(e.v);
+                }
+            }
+        }
+        level++;
+    }
+}
+
+void BFS_3(int src, vector<bool> &vis)
+{
+    queue<int> que;
+    que.push(src);
+    vis[src]=true;
+
+    int level = 0;
+    int desti = 6;
+    int cycle=0;
+
+    while (que.size() != 0)
+    {
+        int size = que.size();
+
+        while (size-- > 0)
+        {
+            int rvtx = que.front();
+            que.pop();
+
+            if (rvtx == desti)
+                cout << "destination: " << level << endl;
+
+            
+            for (Edge e : graph[rvtx])
+            {
+                if (!vis[e.v])
+                {
+                    que.push(e.v);
+                    vis[e.v] = true;
+                }
+            }
+        }
+        level++;
+    }
+}
+
 //Basic.========================================================
 
 void constructGraph()
@@ -234,7 +347,7 @@ void constructGraph()
     addEdge(graph, 0, 3, 10);
     addEdge(graph, 1, 2, 10);
     addEdge(graph, 2, 3, 40);
-    // addEdge(graph, 3, 4, 2);
+    addEdge(graph, 3, 4, 2);
     addEdge(graph, 4, 5, 2);
     addEdge(graph, 4, 6, 3);
     addEdge(graph, 5, 6, 8);
@@ -260,7 +373,11 @@ void set1()
     // cout << pair.heavyW << " -> " << pair.lightW << " -> " << pair.ceil << " -> " << pair.floor << " -> " << endl;
 
     // hamintonianPath(2, 2, vis, 0, "");
-    cout << GCC() << endl;
+    // cout << GCC() << endl;
+
+    // BFS(0, vis);
+    // BFS_2(0,vis);
+    BFS_3(0,vis);
     // display(graph);
 }
 
