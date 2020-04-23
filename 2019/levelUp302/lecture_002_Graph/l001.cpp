@@ -335,8 +335,9 @@ void BFS_3(int src, vector<bool> &vis)
 
 bool isBipartiteBFS(int src, vector<int> &vis)
 {
-    queue<pair<int, int>> que;
+    queue<pair<int, int>> que;  //first is src and second is color.
     que.push({src, 0}); // src is red.
+    int cycle=0;
 
     while (que.size() != 0)
     {
@@ -347,8 +348,8 @@ bool isBipartiteBFS(int src, vector<int> &vis)
             que.pop();
 
             if (vis[rvtx.first] != -1) // already visited(cycle).
-            {
-                if (vis[rvtx.first] != rvtx.second)
+            {   cycle++;
+                if (vis[rvtx.first] != rvtx.second) // check for conflict.
                     return false;
             }
 
@@ -356,17 +357,17 @@ bool isBipartiteBFS(int src, vector<int> &vis)
             for (Edge e : graph[rvtx.first])
             {
                 if (vis[e.v] == -1)
-                    que.push({e.v, (rvtx.second + 1) % 2});
+                    que.push({e.v, (rvtx.second + 1) % 2}); 
             }
         }
     }
-
+    
     return true;
 }
 
 void isBipartite()
 {
-    vector<int> vis(N, -1); // -1 : nothing, 0 : red, 1 : green
+    vector<int> vis(N, -1); // -1 : unvisited, 0 : red, 1 : green
     for (int i = 0; i < N; i++)
     {
         if (vis[i] == -1)
