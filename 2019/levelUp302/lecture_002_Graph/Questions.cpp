@@ -322,4 +322,65 @@ int orangesRotting(vector<vector<int>> &grid)
     return level;
 }
 
+//leetcode 207============================================
 
+vector<int> kahnsAlgo(int n, vector<vector<int>> &graph, vector<vector<int>> &prerequisites)
+{
+
+    vector<int> indegree(n, 0);
+    for (vector<int> ar : prerequisites)
+        indegree[ar[1]]++;
+
+    queue<int> que;
+    for (int i = 0; i < n; i++)
+    {
+        if (indegree[i] == 0)
+            que.push(i);
+    }
+
+    vector<int> ans;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int rvtx = que.front();
+            que.pop();
+
+            ans.push_back(rvtx);
+            for (int e : graph[rvtx])
+            {
+                if (--indegree[e] == 0)
+                {
+                    que.push(e);
+                }
+            }
+        }
+    }
+
+    return ans;
+}
+
+bool canFinish(int numCourses, vector<vector<int>> &prerequisites)
+{
+    vector<vector<int>> graph(numCourses, vector<int>());
+    for (vector<int> ar : prerequisites)
+        graph[ar[0]].push_back(ar[1]);
+
+    vector<int> ans = kahnsAlgo(numCourses, graph, prerequisites);
+
+    return ans.size() == numCourses;
+}
+
+//Leetcode 210.=========================================================
+
+vector<int> findOrder(int numCourses, vector<vector<int>> &prerequisites)
+{
+    vector<vector<int>> graph(numCourses, vector<int>());
+    for (vector<int> ar : prerequisites)
+        graph[ar[0]].push_back(ar[1]);
+
+    vector<int> ans = kahnsAlgo(numCourses, graph, prerequisites);
+
+    return ans.size() != numCourses ? {}: ans;
+}

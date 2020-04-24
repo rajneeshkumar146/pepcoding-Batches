@@ -119,9 +119,6 @@ public class l001 {
 				   que.addLast(new pair(e.v,rvtx.psf+ e.v, rvtx.level+1));
 			}
 		}
-
-	
-
 	}
 
 

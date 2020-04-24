@@ -68,7 +68,7 @@ public class l002_directedGraph{
         for(int i=ans.size()-1;i>=0;i--) System.out.print(ans.get(i)+ " ");
     }
 
-    public static void KhansAlgo(){
+    public static void KahnsAlgo(){
         int[] indegree=new int[N];
         for(int i=0;i<N;i++){
             for(Integer e: graph[i])
@@ -99,10 +99,44 @@ public class l002_directedGraph{
         else System.out.println(ans);
     }
 
+    
+    public static boolean topologiaclSortCycle_(int src,int[] vis,ArrayList<Integer> ans){ // faith: it will detect cycle.
+        if(vis[src]==1) return true; //cycle.
+        if(vis[src]==2) return false;// already visited vertex.
+
+        vis[src]=1;
+        boolean res=false;
+        for(int e:graph[src])
+            res=res || topologiaclSortCycle_(e,vis,ans);
+
+        vis[src]=2;
+        ans.add(src);
+        return res;
+    }
+
+    public static void topologiaclSortCycle(){
+        int[] vis=new int[N];
+        ArrayList<Integer> ans=new ArrayList<>();
+        
+        boolean res=false;
+        for(int i=0;i<N && !res;i++){
+            if(vis[i]==0)
+            res=res||topologiaclSortCycle_(i,vis,ans);
+        }
+        
+        if(!res)
+           for(int i=ans.size()-1;i>=0;i--) 
+              System.out.print(ans.get(i)+ " ");
+        else 
+           System.out.print("Cycle");
+    }
+
+
+
 	public static void solve() {
         constructGraph();
         // topologiaclSort();
-        KhansAlgo();
+        KahnsAlgo();
     }
 
 
