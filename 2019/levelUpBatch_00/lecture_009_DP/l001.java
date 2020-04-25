@@ -1408,7 +1408,103 @@ public static long decodeWaysII(String s,int idx,long[] dp){
 		}
 
 		return minCut_02(0,n-1,dp,isPalindrome);
+	}
+
+	public static int totalFreqinRange(int[] freq,int si,int ei){
+		int sum=0;
+		for(int i=si;i<=ei;i++){
+			sum+=freq[i];
+		}
+		return sum;
+	}
+	
+	public static void OBST_rec(int[] keys,int[] freq,int si,int ei,int[][] dp){
+		if(dp[si][ei]!=0) dp[si][ei];
+		
+		int min=(int)1e8;
+		for(int root=si;root<=ei;root++){
+			int leftSubTree=(root==st)?0:OBST_rec(keys, freq, si, root-1,dp);
+			int rightSubTree=(root==ei)?0:OBST_rec(keys,freq, root+1, ei,dp);
+
+			int myCost=leftSubTree + totalFreqinRange(freq,si,ei) + rightSubTree;
+			
+			min=Math.min(min,myCost);
+		}
+
+		
+		return dp[si][ei]=min;
+	}
+
+	public static int OBST_DP(int[] keys,int[] freq,int si,int ei,int[][] dp){
+		for(int gap=1;gap<n;gap++){
+			for( si=0,ei=gap;end<n;si++,ei++){
+				int min=(int)1e8;
+		        for(int root=si;root<=ei;root++){
+			        int leftSubTree=(root==st)?0:dp[si][root-1];
+			        int rightSubTree=(root==ei)?0:dp[root+1][ei];
+
+			        int myCost = leftSubTree + rightSubTree;
+			
+			        min=Math.min(min,myCost);
+		        }
+
+		        dp[si][ei]=min +  (min==(int)1e8? 0 : totalFreqinRange(freq,si,ei));
+
+			}
+		}
+	}
+
+
+	public static int wildCard_rec(String s,String p,int i,int j,int[][] dp){
+		if(i==s.length() && j==p.length()) return dp[i][j]=1;
+		if(i==s.length() || j==p.length()){
+			if( i!=s.length() ) return  dp[i][j]=0;
+			
+			return dp[i][j]= (p.charAt(j)=='*' && p.length() - j == 1)?1:0;
+		}
+
+		if(dp[i][j]!=-1) return dp[i][j];
+
+		char ch1=s.charAt(i);
+		char ch2=p.charAt(j);
+		boolean res=false;
+		if(ch1 == ch2 || ch2 == '?') res = wildCard_rec(s,p,i+1,j+1,dp)==1;
+		else if(ch2=='*'){
+			res = res || wildCard_rec(s,p,i,j+1,dp)==1;  // as a empty string mapping ('*' treated as a "").
+			res = res || wildCard_rec(s,p,i+1,j,dp)==1;  // sequence mapping.("*" treated as a substring).
+		}
+
+		return dp[i][j]=res?1:0;
+	}
+
+	public static String removeStar(String str){
+	  StringBuilder sb=new StringBuilder();
+	  boolean firstStar=false;
+	  for(int i=0;i<str.length();i++){
+		char ch=str.charAt(i);  
+		if(ch=='*'){
+			if(!firstStar) sb.append(ch);
+			firstStar=true;
+		}else{
+			sb.append(ch);
+			firstStar=false;
+		}
+	  }
+
+	 return sb.toString();
+	}
+
+	public static boolean isMatch(String s, String p) {
+		
+		p=removeStar(p);
+		int[][] dp=new int[s.length()+1][p.length()+1];
+		for(int i=0;i<s.length();i++) for(int j=0;j<p.length();j++) dp[i][j]=-1;
+		return  wildCard_rec(s,p,0,0,dp)==1;
     }
+
+
+
+
 
 
 	public static void PathSeries() {

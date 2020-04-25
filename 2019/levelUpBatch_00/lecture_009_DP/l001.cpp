@@ -30,13 +30,6 @@ vector<vector<int>> fiboLogn(vector<vector<int>> &a, int n)
     return n % 2 != 0 ? multiplication(recAns, a) : recAns;
 }
 
-vector<vector<int>>* test(){
-vector<vector<int>> *ans = new vector<vector<int>>(2,vector<int>(2,0));
-    (*ans)[0][0]=100;
-
-    return ans;
-}
-
 int main()
 {
 
