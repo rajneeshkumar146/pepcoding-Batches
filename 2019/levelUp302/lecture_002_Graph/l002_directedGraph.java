@@ -131,6 +131,47 @@ public class l002_directedGraph{
            System.out.print("Cycle");
     }
 
+    public static int DFS_SCC(int src,ArrayList<Inrteger>[] ngraph,boolean[] vis,ArrayList<Integer> ans){
+       vis[src]=true;
+       int count=0;
+       for(int e: ngraph[src]){
+           if(!vis[e]){
+            count+=DFS_SCC(e,ngraph,vis,ans);
+           }
+       }
+       ans.add(src);
+       return count+1;
+    }
+
+    public static void SCC(){
+        boolean[] vis=new boolean[N];
+        ArrayList<Integer> ans=new ArrayList<>();
+
+        for(int i=0;i<N;i++){
+            if(!vis[i])
+            topologiaclSort_(i,vis,ans);
+        }
+
+        ArrayList<Inrteger>[] ngraph=new ArrayList[N];
+        for(int i=0;i<N;i++) ngraph[i]=new ArrayList<>();
+        
+        for(int i=0;i<N;i++){
+            for(int ele:graph[i]){
+                ngraph[ele].add(i);
+            }
+        }
+
+       vis=new Boolean[N];
+
+       for(int i=ans.size()-1;i>=0;i--){
+           if(!vis[ans.get(i)]){
+            ArrayList<Integer> ans_=new ArrayList<>();
+            System.out.println(DFS_SCC(ans.get(i),ngraph,vis,ans_));
+            System.out.println(ans_);
+           }
+       }
+    }
+
 
 
 	public static void solve() {
