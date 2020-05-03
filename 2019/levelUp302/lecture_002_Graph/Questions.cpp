@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <unordered_map>
+#include <unordered_set>
 using namespace std;
 
 //leetcode 130=======================================================================
@@ -426,7 +428,7 @@ int longestIncreasingPath(vector<vector<int>> &matrix)
     while (que.size() != 0)
     {
         int size = que.size();
-        while (size --> 0)
+        while (size-- > 0)
         {
             int rvtx = que.front();
             que.pop();
@@ -441,10 +443,119 @@ int longestIncreasingPath(vector<vector<int>> &matrix)
                 if (x >= 0 && x < n && y >= 0 && y < m && matrix[x][y] > matrix[i][j] && --indegree[x][y] == 0)
                     que.push(x * m + y);
             }
-            
         }
         length++;
     }
 
     return length;
+}
+
+//leetcode 815.=======================================================
+
+int numBusesToDestination(vector<vector<int>> &routes, int S, int T)
+{
+    if (routes.size() == 0)
+        return -1;
+    unordered_map<int, vector<int>> map;
+    for (int i = 0; i < routes.size(); i++)
+    {
+        for (int ele : routes[i])
+        {
+            map[ele].push_back(i);
+        }
+    }
+
+    unordered_set<int> busStandVis;
+    vector<bool> busVis(routes.size(), false);
+
+    queue<int> que;
+    que.push(S);
+    int level = 0;
+    busStandVis.insert(S);
+
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int stand = que.front();
+            que.pop();
+
+            if (stand == T)
+                return level;
+
+            for (int bus : map[stand])
+            {
+                if (busVis[bus])
+                    continue;
+
+                for (int busStand : routes[bus])
+                {
+                    if (busStandVis.count(busStand) == 0)
+                    {
+                        que.push(busStand);
+                        busStandVis.insert(busStand);
+                    }
+                }
+                busVis[bus] = true;
+            }
+        }
+        level++;
+    }
+
+    return -1;
+}
+
+vector<int> par;
+vector<int> setSize;
+
+int findPar(int vtx)
+{
+    if (par[vtx] == vtx)
+        return vtx;
+    return par[vtx] = findPar(par[vtx]);
+}
+
+void mergeSet(int p1, int p2)
+{
+    if (setSize[p1] < setSize[p2])
+    {
+        par[p1] = p2;
+        setSize[p2] += setSize[p1];
+    }
+    else
+    {
+        par[p2] = p1;
+        setSize[p1] += setSize[p2];
+    }
+}
+
+//leetcode 684.=====================================================
+
+vector<int> findRedundantConnection(vector<vector<int>> &edges)
+{
+    for (int i = 0; i <= edges.size(); i++)
+    {
+        par.push_back(i);
+        setSize.push_back(1);
+    }
+
+    for (vector<int> &ar : edges)
+    {
+        int u = ar[0];
+        int v = ar[1];
+        int p1 = findPar(u);
+        int p2 = findPar(v);
+
+        if (p1 != p2)
+        {
+            mergeSet(p1, p2);
+        }
+        else
+        {
+            return ar;
+        }
+    }
+
+    return {};
 }

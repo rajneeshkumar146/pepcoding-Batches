@@ -1,0 +1,10 @@
+1000
+0
+{USA=1000, Usa=10, china=10, UK=900, PAK=100000, India=10000}
+[USA, Usa, china, UK, PAK, India]
+USA
+Usa
+china
+UK
+PAK
+India
