@@ -540,7 +540,7 @@ vector<int> findRedundantConnection(vector<vector<int>> &edges)
         setSize.push_back(1);
     }
 
-    for (vector<int> &ar : edges)
+    for (vector<int> `ar : edges)
     {
         int u = ar[0];
         int v = ar[1];

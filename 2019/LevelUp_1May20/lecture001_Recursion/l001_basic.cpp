@@ -280,6 +280,42 @@ int floodFill(int sr, int sc, int er, int ec, vector<vector<int>> &board, string
     board[sr][sc] = 1;
     for (int d = 0; d < dirA.size(); d++)
     {
+        int x = sr + dirA[d][0];
+        int y = sc + dirA[d][1];
+        if (x >= 0 && y >= 0 && x < board.size() && y < board[0].size() && board[x][y] == 0)
+        {
+            count += floodFill(x, y, er, ec, board, ans + dirS[d]);
+        }
+    }
+    board[sr][sc] = 0; //unmark
+    return count;
+}
+
+class FFpair
+{
+public:
+    string path = "";
+    int len;
+
+    FFpair(string path_, int len_)
+    {
+        path = path_;
+        len = len_;
+    }
+};
+
+FFpair LongestHeight(int sr, int sc, int er, int ec, vector<vector<int>> &board) // 0 free cell and 1 is blocked cell
+{
+    if (sr == er && sc == ec)
+    {
+        FFpair base("", 0);
+        return base;
+    }
+
+    FFpair myAns("", 0);
+    board[sr][sc] = 1;
+    for (int d = 0; d < dirA.size(); d++)
+    {
 
         for (int rad = 1; rad <= board.size(); rad++)
         {
@@ -287,12 +323,134 @@ int floodFill(int sr, int sc, int er, int ec, vector<vector<int>> &board, string
             int y = sc + rad * dirA[d][1];
             if (x >= 0 && y >= 0 && x < board.size() && y < board[0].size() && board[x][y] == 0)
             {
-                count += floodFill(x, y, er, ec, board, ans + dirS[d]);
+                FFpair smallAns = LongestHeight(x, y, er, ec, board);
+                if (myAns.len < smallAns.len + 1)
+                {
+                    myAns.len = smallAns.len + 1;
+                    myAns.path = dirS[d] + to_string(rad) + smallAns.path;
+                }
             }
         }
     }
     board[sr][sc] = 0; //unmark
+    return myAns;
+}
+
+int ShortestHeight(int sr, int sc, int er, int ec, vector<vector<int>> &board) // 0 free cell and 1 is blocked cell
+{
+    if (sr == er && sc == ec)
+    {
+        return 0;
+    }
+
+    int myHeight = board.size() * board[0].size();
+    board[sr][sc] = 1;
+    for (int d = 0; d < dirA.size(); d++)
+    {
+        for (int rad = 1; rad <= board.size(); rad++)
+        {
+            int x = sr + rad * dirA[d][0];
+            int y = sc + rad * dirA[d][1];
+            if (x >= 0 && y >= 0 && x < board.size() && y < board[0].size() && board[x][y] == 0)
+            {
+                myHeight = min(myHeight, ShortestHeight(x, y, er, ec, board));
+            }
+        }
+    }
+    board[sr][sc] = 0; //unmark
+    return myHeight + 1;
+}
+
+//leetcode 1219.================================================
+
+int getMaximumGold(int r, int c, vector<vector<int>> &board, vector<vector<int>> &dir)
+{
+    board[r][c] = -board[r][c];
+    int res = 0;
+    for (int d = 0; d < 4; d++)
+    {
+        int x = r + dir[d][0];
+        int y = c + dir[d][1];
+
+        if (x >= 0 && y >= 0 && x < board.size() && y < board[0].size() && board[x][y] > 0)
+            res = max(res, getMaximumGold(x, y, board, dir));
+    }
+
+    board[r][c] = -board[r][c];
+    return res + board[r][c];
+}
+
+int getMaximumGold(vector<vector<int>> &board)
+{https://zoom.us/j/3020059848?pwd=Y3k5eU1jckJpc0NLaTRLZlBCdC9tUT09
+    vector<vector<int>> dir = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
+    int res = 0;
+    for (int i = 0; i < board.size(); i++)
+    {
+        for (int j = 0; j < board[0].size(); j++)
+        {
+            if (board[i][j] > 0)
+            {
+                res = max(res, getMaximumGold(i, j, board, dir));
+            }
+        }
+    }
+    return res;
+}
+
+//leetcode 980.==============================================
+
+int uniquePathsIII(int sr, int sc, int er, int ec, int freeCell, vector<vector<int>> &board, vector<vector<int>> &dir)
+{
+    freeCell--;
+    if (sr == er && sc == ec)
+    {
+        if (freeCell == 0)
+            return 1;
+        return 0;
+    }
+
+    int count = 0;
+    int temp = board[sr][sc];
+    board[sr][sc] = -2;
+
+    for (int d = 0; d < 4; d++)
+    {
+        int x = sr + dir[d][0];
+        int y = sc + dir[d][1];
+        if (x >= 0 && y >= 0 && x < board.size() && y < board[0].size() && board[x][y] >= 0)
+            count += uniquePathsIII(x, y, er, ec, freeCell, board, dir);
+    }
+
+    board[sr][sc] = temp;
     return count;
+}
+
+int uniquePathsIII(vector<vector<int>> &board)
+{
+    vector<vector<int>> dir = {{0, -1}, {-1, 0}, {0, 1}, {1, 0}};
+    int sr, sc, er, ec;
+    int freeCell = 0;
+    for (int i = 0; i < board.size(); i++)
+    {
+        for (int j = 0; j < board[0].size(); j++)
+        {
+            if (board[i][j] != -1)
+                freeCell++;
+            if (board[i][j] == 1)
+            {
+                sr = i;
+                sc = j;
+            }
+
+            if (board[i][j] == 2)
+            {
+                er = i;
+                ec = j;
+            }
+        }
+    }
+
+    return uniquePathsIII(sr, sc, er, ec, freeCell, board, dir);
 }
 
 void pathType()
@@ -300,7 +458,10 @@ void pathType()
     int n = 3, m = 5;
     // cout << mazepath_MultiHVD(0, 0, n - 1, m - 1, "") << endl;
     vector<vector<int>> board(3, vector<int>(3, 0));
-    cout << floodFill(0, 0, 2, 2, board, "") << endl;
+    // cout << floodFill(0, 0, 2, 2, board, "") << endl;
+    FFpair ans = LongestHeight(0, 0, 2, 2, board);
+    cout << ans.path << " " << ans.len << endl;
+    // cout << ShortestHeight(0, 0, 2, 2, board) << endl;
 }
 
 void questionSet()
