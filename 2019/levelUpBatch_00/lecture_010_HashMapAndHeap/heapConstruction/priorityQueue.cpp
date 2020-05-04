@@ -4,6 +4,7 @@
 using namespace std;
 
 vector<int> pq;
+bool isMax = true;
 
 void display()
 {
@@ -12,10 +13,18 @@ void display()
     cout << endl;
 }
 
+bool compareTo(int a, int b)
+{
+    if (isMax)
+        return a > b;
+    else
+        return a < b;
+}
+
 void upheapify(int ci)
 {
     int pi = (ci - 1) / 2;
-    if (pi >= 0 && pq[pi] < pq[ci])
+    if (pi >= 0 && compareTo(pq[ci], pq[pi]))
     {
         swap(pq[pi], pq[ci]);
         upheapify(pi);
@@ -28,9 +37,9 @@ void downHeapify(int pi)
     int rci = 2 * pi + 2;
     int maxi = pi;
 
-    if (lci < pq.size() && pq[lci] > pq[maxi])
+    if (lci < pq.size() && compareTo(pq[lci], pq[maxi]))
         maxi = lci;
-    if (rci < pq.size() && pq[rci] > pq[maxi])
+    if (rci < pq.size() && compareTo(pq[rci], pq[maxi]))
         maxi = rci;
 
     if (maxi != pi)
@@ -71,14 +80,14 @@ void SetPriorityQueue(vector<int> &arr)
 void set1()
 {
     vector<int> arr{10, 20, 30, -2, -3, -4, 5, 6, 7, 8, 9, 22, 11, 13};
+    isMax=false;
     SetPriorityQueue(arr);
 
     while (pq.size() != 0)
     {
-        // cout << top() << " ";
-        display();
+        cout << top() << " ";
+        // display();
         pop();
-
     }
 }
 

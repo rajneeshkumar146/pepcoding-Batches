@@ -335,9 +335,9 @@ void BFS_3(int src, vector<bool> &vis)
 
 bool isBipartiteBFS(int src, vector<int> &vis)
 {
-    queue<pair<int, int>> que;  //first is src and second is color.
-    que.push({src, 0}); // src is red.
-    int cycle=0;
+    queue<pair<int, int>> que; //first is src and second is color.
+    que.push({src, 0});        // src is red.
+    int cycle = 0;
 
     while (que.size() != 0)
     {
@@ -348,7 +348,8 @@ bool isBipartiteBFS(int src, vector<int> &vis)
             que.pop();
 
             if (vis[rvtx.first] != -1) // already visited(cycle).
-            {   cycle++;
+            {
+                cycle++;
                 if (vis[rvtx.first] != rvtx.second) // check for conflict.
                     return false;
             }
@@ -357,11 +358,11 @@ bool isBipartiteBFS(int src, vector<int> &vis)
             for (Edge e : graph[rvtx.first])
             {
                 if (vis[e.v] == -1)
-                    que.push({e.v, (rvtx.second + 1) % 2}); 
+                    que.push({e.v, (rvtx.second + 1) % 2});
             }
         }
     }
-    
+
     return true;
 }
 
@@ -375,10 +376,51 @@ void isBipartite()
     }
 }
 
-//SSC.=========================================================
+vector<int> par;
+vector<int> setSize;
 
-vector<int> dfs_topo(){
+int findPar(int vtx)
+{
+    if (par[vtx] == vtx)
+        return vtx;
+    return par[vtx] = findPar(par[vtx]);
+}
+
+void mergeSet(int p1, int p2)
+{
+    if (setSize[p1] < setSize[p2])
+    {
+        par[p1] = p2;
+        setSize[p2] += setSize[p1];
+    }
+    else
+    {
+        par[p2] = p1;
+        setSize[p1] += setSize[p2];
+    }
+}
+
+void kruskalAlgo(vector<vector<int>> &arr)
+{
+    vector<vector<Edge>> KruskalGraph(arr.size(), vector<Edge>());
+    sort(arr.begin(),arr.end(),[](vector<int>& a,vector<int>& b){
+        return a[2] < b[2] ; // this - other,default is Increasing, '-' replace with '<'
+    });
     
+    for (vector<int> &ar : arr)
+    {
+        int u = ar[0];
+        int v = ar[1];
+        int p1 = findPar(u);
+        int p2 = findPar(v);
+        if (p1 != p2)
+        {
+            mergeSet(p1, p2);
+            addEdge(KruskalGraph, u, v, ar[2]);
+        }
+    }
+
+    display(KruskalGraph);
 }
 
 //Basic.========================================================

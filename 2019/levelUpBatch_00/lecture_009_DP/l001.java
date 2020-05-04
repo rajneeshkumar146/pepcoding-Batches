@@ -1642,8 +1642,53 @@ public class l001 {
 		int[][] dp=new int[s.length()+1][p.length()+1];
 		for(int i=0;i<s.length();i++) for(int j=0;j<p.length();j++) dp[i][j]=-1;
 		return  wildCard_rec(s,p,0,0,dp)==1;
+	}
+	
+	//LEETCODE 312.===========================================
+
+	public int maxCoins(int[] nums,int si,int ei,int[][] dp) {
+		if(dp[si][ei]!=0) return dp[si][ei];
+		int l =((si-1 == -1)? 1 : nums[si-1]);
+		int r = ( (ei+1 == nums.length)? 1 : nums[ei+1]);
+		int maxCost=0;
+		for(int cut=si;cut<=ei;cut++){
+
+			int leftCost= (cut==si) ? 0 : maxCoins(nums,si,cut-1,dp);
+			int rightCost= (cut==ei) ? 0 : maxCoins(nums,cut+1,ei,dp);
+			int myCost = leftCost + (l * nums[cut] * r) + rightCost;
+			
+			maxCost=Math.max(maxCost,myCost);
+		}
+
+		return dp[si][ei]=maxCost;
     }
 
+	public int maxCoins(int[] nums) {
+		int[][] dp=new int[nums.length][nums.length];
+		return maxCoins(nums,0,nums.length-1,dp);
+	}
+
+	//leetcode 139.======================================================
+
+	public boolean wordBreak(String s, List<String> wordDict) {
+		HashSet<String> words=new HashSet(wordDict);
+		int n=s.length();
+		boolean[] dp=new boolean[n+1];
+		
+		int len=0;
+		for(String word: wordDict) len=Math.max(len,word.length());
+		
+		dp[0]=true;
+		for(int i=0;i<n;i++){
+			if(!dp[i]) continue;
+			
+			for(int l=1;i+l<=n && l <= len ; l++){
+				if(words.contains(s.substring(i,i+l))) dp[i+1]=true;
+			}
+		}
+
+		return dp[n];
+    }
 
 
 

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Arrays;
 
 public class l001 {
 
@@ -175,6 +176,58 @@ public class l001 {
 	
 		return -1;
 	}
+
+	public static int[] par;
+	public static int[] setSize;
+
+    public static int findPar(int vtx){
+       if (par[vtx] == vtx)
+         return vtx;
+      return par[vtx] = findPar(par[vtx]);
+    }
+
+	public static void mergeSet(int p1, int p2){
+    if (setSize[p1] < setSize[p2])
+    {
+        par[p1] = p2;
+        setSize[p2] += setSize[p1];
+    }
+    else
+    {
+        par[p2] = p1;
+        setSize[p1] += setSize[p2];
+    }
+    }
+
+	public static void kruskalAlgo(int[][] arr){
+		// arr->[[u,v,w]]
+
+		ArrayList < Edge > [] KGraph=new ArrayList[N];
+     	for (int i = 0; i < N; i++) {
+	     	KGraph[i] = new ArrayList < Edge > ();
+    	}
+
+	Arrays.sort(arr,(int[] a,int[] b)->{  // a: this, b: other
+	   return a[2]-b[2];   // this - other,default is Increasing.
+	//    return b[2]-a[2];   // other - this,reverse of default is decreasing.
+	});
+    
+    for (int[] ar : arr)
+    {
+        int u = ar[0];
+        int v = ar[1];
+        int p1 = findPar(u);
+        int p2 = findPar(v);
+        if (p1 != p2)
+        {
+            mergeSet(p1, p2);
+            addEdge(KruskalGraph, u, v, ar[2]);
+        }
+    }
+
+    display(KruskalGraph);
+}
+
 
 
 
