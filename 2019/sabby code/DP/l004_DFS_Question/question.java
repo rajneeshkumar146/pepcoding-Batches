@@ -60,6 +60,49 @@ public class question{
 
         return count;
      }
+
+
+     public int maxCoins(int[] nums,int si,int ei,int[][] dp) {
+       if(dp[si][ei]!=0) return dp[si][ei];
+
+       int leftMultiplier = (si-1 == -1) ? 1 : nums[si - 1];
+       int rightMultiplier = (ei+1 == nums.length) ? 1 : nums[ei + 1];
+       int max_=0;
+       for(int cut=si;cut<=ei;cut++){
+           int leftAns = si==cut?0: maxCoins(nums,si,cut-1,dp);
+           int rightAns = ei==cut?0: maxCoins(nums,cut+1,ei,dp);
+           
+           int myCost=leftAns + leftMultiplier * nums[cut] * rightMultiplier + rightAns;
+           max_=Math.max(max_,myCost);
+       }
+       return dp[si][ei]=max_;
+    }
+
+    public int maxCoins_DP(int[] nums,int si,int ei,int[][] dp) {
+        for(int gap=0;gap<nums.length;gap++){
+            for(si=0,ei=gap;ei<nums.length;si++,ei++){
+
+                int leftMultiplier = (si-1 == -1) ? 1 : nums[si - 1];
+                int rightMultiplier = (ei+1 == nums.length) ? 1 : nums[ei + 1];
+                int max_=0;
+                for(int cut=si;cut<=ei;cut++){
+                    int leftAns=si==cut?0:dp[si][cut-1];
+                    int rightAns=ei==cut?0:dp[cut+1][ei];
+                    
+                    int myCost=leftAns + leftMultiplier * nums[cut] * rightMultiplier + rightAns;
+                    max_=Math.max(max_,myCost);
+                }
+                dp[si][ei]=max_;        
+            }
+
+        }
+    }
+
+	public int maxCoins(int[] nums) {
+        if(nums.length==0) return 0;
+		int[][] dp=new int[nums.length][nums.length];
+		return maxCoins(nums,0,nums.length-1,dp);
+	}
    
 
 
