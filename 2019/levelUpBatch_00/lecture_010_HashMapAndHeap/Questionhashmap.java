@@ -93,3 +93,63 @@ public int longestArithSeqLength(int[] arr) {
     }
     return len;
 }
+
+//Leetcode: 49 group anagram.===========================================
+
+public List<List<String>> groupAnagrams(String[] strs) {
+    HashMap<String,ArrayList<String>> map=new HashMap<>();
+    for(int i=0;i<str.length;i++){
+         String s=strs[i];
+         int[] freq=new int[26];
+         for(int i=0;i<s.length();i++)
+            freq[s.charAt(i)-'a']++;
+        
+        StringBuilder sb=new StringBuilder();
+        for(int i=0;i<26;i++)
+          if(freq[i]!=0) sb.append((char)(i+'a')+(freq[i]+""));
+    
+        String RLES=sb.toString();
+        map.putIfAbsent(RLES,new ArrayList<>());
+        map.get(RLES).add(s);
+     }
+
+     List<List<String>> ans=new ArrayList<>();
+     for(String code: map.keySet()){
+         ans.add(map.get(code));
+     }
+
+     return ans;
+}
+
+public int swimInWater(int[][] grid) {
+    int n=grid.length;
+    int ans=Math.max(grid[0][0],grid[n-1][n-1]);
+
+    PriorityQueue<int[]> pq=new PriorityQueue<>((a,b)->{  // r,c,h
+        return a[2]-b[2];
+    });
+
+     boolean[][] vis=new boolean[n][n];
+     vis[0][0]=true;
+
+     int[][] dir={{-1,0},{0,-1},{1,0},{0,1}};
+     pq.add(new int[]{0,0,grid[0][0]});
+
+     while(pq.size()!=0){
+         int[] vtx=pq.poll();
+         ans=Math.max(ans,vtx[2]);
+
+         for(int d=0;d<4;d++){
+             int x = vtx[0] + dir[d][0];
+             int y = vtx[1] + dir[d][1];
+
+             if(x>=0 && y>=0 && x < n && y < n && !vis[x][y]){
+                if(x == n-1 && y == n-1) return ans;
+                pq.add(new int[]{x,y,grid[x][y]});
+                vis[x][y]=true;
+             }
+         }
+     }
+
+     return -1;
+}

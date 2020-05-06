@@ -93,15 +93,163 @@ int longestArithSeqLength(vector<int> &arr)
 
     for (int i = 0; i < n; i++)
     {
-        for (int j = i-1; j >= 0; j--)
+        for (int j = i - 1; j >= 0; j--)
         {
             int diff = arr[i] - arr[j];
             int maxEndingHere = dp[j].count(diff) > 0 ? dp[j][diff] + 1 : 2;
-            int maxPrevLen=dp[i][diff];
-            dp[i][diff]=max(maxEndingHere,maxPrevLen);
+            int maxPrevLen = dp[i][diff];
+            dp[i][diff] = max(maxEndingHere, maxPrevLen);
             len = max(len, dp[i][diff]);
         }
     }
 
     return len;
 }
+
+// https://www.geeksforgeeks.org/longest-subarray-sum-divisible-k/
+
+int longestSubstringDivisbleByK(vector<int> &arr, int k)
+{
+    if (arr.size() == 0)
+        return 0;
+
+    unordered_map<int, int> umap;
+    umap[0] = -1;
+
+    int sum = 0;
+    int len = 0;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        sum += arr[i];
+
+        int rem = sum % k;
+        if (rem < 0)
+            rem += k;
+
+        if (umap.count(rem) == 0)
+            umap[rem] = i;
+        else
+            len = max(len, i - umap[rem]);
+    }
+
+    return len;
+}
+
+//https://www.geeksforgeeks.org/largest-subarray-with-equal-number-of-0s-and-1s/
+int longestSubarrayOfEqualZeroAndOnes(vector<int> &arr)
+{
+    if (arr.size() == 0)
+        return 0;
+
+    unordered_map<int, int> umap;
+    umpa[0] = -1;
+
+    int sum = 0;
+    int len = 0;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        val = arr[i];
+        if (arr[i] == 0)
+            val = -1;
+
+        sum += val;
+        if (umap.count(sum) == 0)
+            umap[sum] = i;
+        else
+            len = max(len, i - umap[sum]);
+    }
+
+    return len;
+}
+
+// count of all subarray having equal zeros and ones.
+int countSubarrayOfEqualZeroAndOnes(vector<int> &arr)
+{
+    if (arr.size() == 0)
+        return 0;
+
+    unordered_map<int, int> umap;
+    umpa[0] = 1;
+
+    int sum = 0;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        val = arr[i];
+        if (arr[i] == 0)
+            val = -1;
+
+        sum += val;
+        umap[sum]++;
+    }
+    int ans = 0;
+
+    for (pair<int, int> m : umpa)
+        ans += (m.second * (m.second - 1)) >> 1;
+
+    return ans;
+}
+
+vector<vector<string>> groupAnagrams(vector<string> &strs)
+{
+    unordered_map<string, vector<string>> map;
+    for (string &str : strs)
+    {
+        int freq[26] = {0};
+        for (char &ch : str)
+            freq[ch - 'a']++;
+
+        string RLES = "";
+        for (int i = 0; i < 26; i++)
+            if (freq[i])
+                RLES += (char)(i + 'a') + to_string(freq[i]);
+
+        map[RLES].push_back(str);
+    }
+
+    vector<vector<string>> ans;
+    for (auto p : map)
+        ans.push_back(p.second);
+
+    return ans;
+}
+
+//Leetcode : 295 =============================================
+
+class MedianFinder
+{
+
+    priority_queue<int> smallerPQ;                            // max PQ
+    priority_queue<int, vector<int>, greater<int>> greaterPQ; // min PQ
+
+public:
+    MedianFinder()
+    {
+    }
+
+    void addNum(int num)
+    {
+        if (smallerPQ.size() == 0 || smallerPQ.top() > num)
+            smallerPQ.push(num);
+        else
+            greaterPQ.push(num);
+
+        if (smallerPQ.size() > (greaterPQ.size() + 1))
+        {
+            greaterPQ.push(smallerPQ.top());
+            smallerPQ.pop();
+        }
+        else if (smallerPQ.size() < greaterPQ.size())
+        {
+            smallerPQ.push(greaterPQ.top());
+            greaterPQ.pop();
+        }
+    }
+
+    double findMedian()
+    {
+        if (smallerPQ.size() == greaterPQ.size())
+            return smallerPQ.size() == 0 ? 0 : (smallerPQ.top() + greaterPQ.top()) / 2.0;
+        else
+            return smallerPQ.top();
+    }
+};
