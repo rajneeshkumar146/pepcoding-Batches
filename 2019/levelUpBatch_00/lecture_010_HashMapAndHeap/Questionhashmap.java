@@ -133,7 +133,7 @@ public int swimInWater(int[][] grid) {
      vis[0][0]=true;
 
      int[][] dir={{-1,0},{0,-1},{1,0},{0,1}};
-     pq.add(new int[]{0,0,grid[0][0]});
+     pq.add(new int[]{0,0,grid[0][0]}); 
 
      while(pq.size()!=0){
          int[] vtx=pq.poll();
