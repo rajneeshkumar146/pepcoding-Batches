@@ -872,3 +872,5 @@ lli JourneyToMoon_UnionFind()
 
     return ans;
 }
+
+//question link: https://leetcode.com/problems/minimize-malware-spread/discuss/614031/C++-:-Union-Find-(pepcoding.com)-reframe-the-question-on-"CORONA"-with-relatable-explanation
