@@ -143,9 +143,4 @@ public static void queenProblem()
     // System.out.println(queensPermutation2D(rooms,tnq,""));
 }
 
-
-
-
-
-
 }

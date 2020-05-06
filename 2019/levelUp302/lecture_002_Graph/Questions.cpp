@@ -699,3 +699,97 @@ int numSimilarGroups(vector<string> &A)
     }
     return groups;
 }
+
+// leetcode 1168.===================================================
+
+int minCostToSupplyWater(int n, vector<int> &wells, vector<vector<int>> &pipes)
+{
+    for (int i = 0; i < wells.size(); i++)
+    {
+        pipes.push_back({0, (i + 1), wells[i]});
+        par.push_back(i);
+    }
+    par.push_back(wells.size());
+
+    sort(pipes.begin(), pipes.end(), [](vector<int> &a, vector<int> &b) {
+        return a[2] < b[2];
+    });
+
+    int cost = 0;
+    for (vector<int> &p : pipes)
+    {
+        int p1 = findPar(p[0]);
+        int p2 = findPar(p[1]);
+
+        if (p1 != p2)
+        {
+            cost += p[2];
+            par[p1] = p2;
+        }
+    }
+
+    return cost;
+}
+
+//Hacker earth: https://www.hackerearth.com/practice/algorithms/graphs/minimum-spanning-tree/practice-problems/algorithm/mr-president/
+
+int mrPresident()
+{
+    lli n, m, k;
+    cin >> n >> m >> k;
+
+    vector<vector<int>> graph, kruskalGraph;
+    while (m--)
+    {
+        int u, v, w;
+        cin >> u >> v >> w;
+        vector<int> ar = {u, v, w};
+        graph.push_back(ar);
+    }
+
+    sort(graph.begin(), graph.end(), [](vector<int> &a, vector<int> &b) {
+        return a[2] < b[2];
+    });
+
+    for (int i = 0; i <= n; i++)
+        par.push_back(i);
+
+    lli MSTCost = 0;
+    for (vector<int> g : graph)
+    {
+        int p1 = findPar(g[0]);
+        int p2 = findPar(g[1]);
+        if (p1 != p2)
+        {
+            par[p1] = p2;
+            kruskalGraph.push_back(g);
+            MSTCost += g[2];
+        }
+    }
+
+    int componentCount = 0;
+    for (int i = 1; i <= n; i++)
+        if (par[i] == i && ++componentCount > 1)
+            return -1;
+
+    int superRoad = 0;
+    for (int i = kruskalGraph.size() - 1; i >= 0; i--)
+    {
+        if (MSTCost <= k)
+            break;
+        MSTCost = MSTCost - kruskalGraph[i][2] + 1;
+        superRoad++;
+    }
+
+    return MSTCost <= k ? superRoad: -1; 
+}
+
+auto SpeedUp = []() {
+    std::ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    return 0;
+}();
+
+
+
