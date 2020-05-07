@@ -67,7 +67,7 @@ int coinChangeCombination(vector<int> &arr, int lidx, int tar, string ans)
     int count = 0;
     for (int i = lidx; i < arr.size(); i++)
         if (tar - arr[i] >= 0)
-            count += coinChangeCombination(arr, i + 1, tar - arr[i], ans + to_string(i) + " ");
+            count += coinChangeCombination(arr, i + 1, tar - arr[i], ans + to_string(arr[i]) + " ");
 
     return count;
 }
@@ -131,7 +131,7 @@ void coinChange()
 
 int main()
 {
-    // coinChange();
-    queenProblem();
+    coinChange();
+    // queenProblem();
     return 0;
 }
