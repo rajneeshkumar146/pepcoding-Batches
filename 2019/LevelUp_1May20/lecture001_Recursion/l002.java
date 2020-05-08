@@ -125,8 +125,8 @@ public static int queensPermutation2D(boolean[][] rooms,int tnq, String ans) // 
 //NqueenProblem.==================================================
 
 public static boolean isAValidMove(boolean[][] board,int r,int c){
-    // int[][] dirA={{0,-1},{-1,-1},{-1,0},{-1,1}};
-    int[][] dirA={{0,-1},{-1,-1},{-1,0},{-1,1},{0,1},{1,1},{1,0},{1,-1}};
+    int[][] dirA={{0,-1},{-1,-1},{-1,0},{-1,1}};
+    // int[][] dirA={{0,-1},{-1,-1},{-1,0},{-1,1},{0,1},{1,1},{1,0},{1,-1}};
 
     for(int d=0;d<dirA.length;d++){
         for(int rad=1;rad<=board.length;rad++){
@@ -265,6 +265,37 @@ public static boolean nKnight(int[][] board,int r,int c,int move){
 }
 
 
+//optimised========================================================================
+
+static boolean[] ROW;
+static boolean[] COL;
+static boolean[] DIAG;
+static boolean[] ADIAG;
+
+public static int Nqueen_05(int n,int m,int idx,int tnq, String ans) // qpsf: queen place so far.
+{
+    if (tnq==0)
+    {
+        System.out.println(ans);
+        return 1;
+    }
+
+    int count = 0;
+    for (int r = idx; r < n*m; r++){
+        int x = r / m;
+        int y = r % m;
+
+        if (!ROW[x] && !COL[y] && !DIAG[x+y] && !ADIAG[x-y+m-1])
+        {
+            ROW[x]=true; COL[y]=true; DIAG[x+y]=true; ADIAG[x-y+m-1]=true;
+            count+= Nqueen_05(n,m,r+1,tnq-1,  ans + "(" + x + ", " + y + ") ");
+            ROW[x]=false; COL[y]=false; DIAG[x+y]=false; ADIAG[x-y+m-1]=false;           
+        }
+    }
+    return count;
+}
+
+
 
 // ==========================================================================
 
@@ -291,20 +322,25 @@ public static void queenProblem()
 }
 
 public static void Nqueen(){
-    // boolean[][] rooms=new boolean[4][4];
-    // int tnq=4;
-    // System.out.println(Nqueen_01(board,0,tnq,""));
+    boolean[][] board=new boolean[10][10];
+    int tnq=10;
+    System.out.println(Nqueen_01(board,0,tnq,""));
     // System.out.println(Nqueen_02(board,0,tnq,""));
     // System.out.println(Nqueen_03(board,0,tnq,""));
     // System.out.println(Nqueen_04(board,0,tnq,""));
 
+    // int[][] board=new int[8][8];
+    // for(int i=0;i<board.length;i++)
+    //   Arrays.fill(board[i],-1);
+    // System.out.println(nKnight(board,0,0,0));
 
-    int[][] board=new int[8][8];
+    // int n=10;
+    // ROW=new boolean[n];
+    // COL=new boolean[n];
+    // DIAG=new boolean[n+n-1];
+    // ADIAG=new boolean[n+n-1];
+    // System.out.println(Nqueen_05(n,n,0,n,""));
    
-    for(int i=0;i<board.length;i++)
-      Arrays.fill(board[i],-1);
-   
-    System.out.println(nKnight(board,0,0,0));
 
 }
 
