@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.PriorityQueue;
 
 public class l001 {
 
@@ -221,35 +224,114 @@ public class l001 {
         if (p1 != p2)
         {
             mergeSet(p1, p2);
-            addEdge(KruskalGraph, u, v, ar[2]);
+            addEdge(KGraph, u, v, ar[2]);
         }
     }
 
-    display(KruskalGraph);
+    display(KGraph);
 }
 
-static class dpair{ 
-	   int src;
-	   int par;
-	   int w;
-	   int wsf;
+// static class pair_ implements Comparable<pair_>{ 
+// 	   int src;
+// 	   int par;
+// 	   int w;
+// 	   int wsf;
  
-	   dpair(int src,int par,int w,int wsf){
-		   this.src=src;
-		   this.par=par;
-		   this.w=w;
-		   this.wsf=wsf;
-	   }
+// 	   pair_(int src,int par,int w,int wsf){
+// 		   this.src=src;
+// 		   this.par=par;
+// 		   this.w=w;
+// 		   this.wsf=wsf;
+// 	   }
+
+// 	   public compareTo(pair_ o){
+// 		return this.wsf - o.wsf;  // default -> min PQ.  (this - other)
+// 		// return o.wsf - this.wsf;  // max PQ.
+// 	   }
+// }
+
+static class pair_{ 
+	int src;
+	int par;
+	int w;
+	int wsf;
+
+	pair_(int src,int par,int w,int wsf){
+		this.src=src;
+		this.par=par;
+		this.w=w;
+		this.wsf=wsf;
+	}
 }
 
-void dijikstraAlgo(int src)
+public static void dijikstraAlgo(int src)
 {
+	ArrayList < Edge > [] dijikstraGraph=new ArrayList[N];
+    for (int i = 0; i < N; i++) {
+	    dijikstraGraph[i] = new ArrayList < Edge > ();
+	}
 
-    PriorityQueue<Integer> pq=new PriorityQueue<>();
-	boolean[] vis=new booelan[N];
+    PriorityQueue<pair_> pq=new PriorityQueue<>((pair_ a,pair_ b)->{
+		return a.wsf - b.wsf;  // default -> min PQ.  (this - other)
+		// return b.wsf - a.wsf;  // max PQ.
+	});
+
+	boolean[] vis=new boolean[N];
+	pq.add(new pair_(src,-1,0,0));
+
+	while(pq.size()!=0){
+		int size=pq.size();
+
+		while(size-- > 0){
+			pair_ rvtx = pq.poll();
+			if(vis[rvtx.src]) continue;
+			
+			if(rvtx.par!=-1) addEdge(dijikstraGraph, rvtx.src, rvtx.par, rvtx.w);
+
+			vis[rvtx.src]=true;
+			for(Edge e: graph[rvtx.src]){
+				if(!vis[e.v])
+				   pq.add(new pair_(e.v, rvtx.src, e.w, rvtx.wsf + e.w));
+			}
+		}
+	}
+
+	display(dijikstraGraph);
+}
+
+public static void primsAlgo(int src)
+{
+	ArrayList < Edge > [] primsGraph=new ArrayList[N];
+    for (int i = 0; i < N; i++) {
+	    primsGraph[i] = new ArrayList < Edge > ();
+	}
+
+    PriorityQueue<pair_> pq=new PriorityQueue<>((pair_ a,pair_ b)->{
+		return a.w - b.w;  // default -> min PQ.  (this - other)
+		// return b.wsf - a.wsf;  // max PQ.
+	});
+
+	boolean[] vis=new boolean[N];
+	pq.add(new pair_(src,-1,0,0));
+
+	while(pq.size()!=0){
+		int size=pq.size();
+
+		while(size-- > 0){
+			pair_ rvtx = pq.poll();
+			if(vis[rvtx.src]) continue;
+			
+			if(rvtx.par!=-1) addEdge(primsGraph, rvtx.src, rvtx.par, rvtx.w);
+
+			vis[rvtx.src]=true;
+			for(Edge e: graph[rvtx.src]){
+				if(!vis[e.v])
+				   pq.add(new pair_(e.v, rvtx.src, e.w, rvtx.wsf + e.w));
+			}
+		}
+	}
 	
-
-
+	display(primsGraph);
 }
  
 
@@ -264,7 +346,7 @@ void dijikstraAlgo(int src)
 			graph[i] = new ArrayList < Edge > ();
 		}
 
-		addEdge(graph, 0, 1, 10);
+		addEdge(graph, 0, 1, 20);
 		addEdge(graph, 0, 3, 10);
 		addEdge(graph, 1, 2, 10);
 		addEdge(graph, 2, 3, 40);
@@ -279,9 +361,11 @@ void dijikstraAlgo(int src)
 
 	public static void solve() {
 		constructGraph();
-		boolean[] vis=new boolean[N];
+		// boolean[] vis=new boolean[N];
 		// BFS(0,vis);
-		BFS_02(0,vis);
+		// BFS_02(0,vis);
+
+		dijikstraAlgo(2);
         
     }
 
