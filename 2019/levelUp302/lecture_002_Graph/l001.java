@@ -228,6 +228,31 @@ public class l001 {
     display(KruskalGraph);
 }
 
+static class dpair{ 
+	   int src;
+	   int par;
+	   int w;
+	   int wsf;
+ 
+	   dpair(int src,int par,int w,int wsf){
+		   this.src=src;
+		   this.par=par;
+		   this.w=w;
+		   this.wsf=wsf;
+	   }
+}
+
+void dijikstraAlgo(int src)
+{
+
+    PriorityQueue<Integer> pq=new PriorityQueue<>();
+	boolean[] vis=new booelan[N];
+	
+
+
+}
+ 
+
 
 
 

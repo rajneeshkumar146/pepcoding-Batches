@@ -403,10 +403,10 @@ void mergeSet(int p1, int p2)
 void kruskalAlgo(vector<vector<int>> &arr)
 {
     vector<vector<Edge>> KruskalGraph(arr.size(), vector<Edge>());
-    sort(arr.begin(),arr.end(),[](vector<int>& a,vector<int>& b){
-        return a[2] < b[2] ; // this - other,default is Increasing, '-' replace with '<'
+    sort(arr.begin(), arr.end(), [](vector<int> &a, vector<int> &b) {
+        return a[2] < b[2]; // this - other,default is Increasing, '-' replace with '<'
     });
-    
+
     for (vector<int> &ar : arr)
     {
         int u = ar[0];
@@ -421,6 +421,32 @@ void kruskalAlgo(vector<vector<int>> &arr)
     }
 
     display(KruskalGraph);
+}
+
+class dpair
+{
+public:
+    int src;
+    int par;
+    int w;
+    int wsf;
+
+    dpair(int src, int par, int w, int wsf)
+    {
+        this->src = src;
+        this->par = par;
+        this->w = w;
+        this->wsf = wsf;
+    }
+};
+
+void dijikstraAlgo(int src)
+{
+
+    priority_queue<dpair> pq;
+    vector<bool> vis(N,false);
+
+
 }
 
 //Basic.========================================================
