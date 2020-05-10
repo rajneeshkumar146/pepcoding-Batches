@@ -109,6 +109,93 @@ int queensPermutation(vector<bool> &rooms, int room, int qpsf, int tnq, string a
     return count;
 }
 
+//Sudoku.====================================================================
+
+bool isSafeToPlaceNumber(vector<vector<char>> &board, int x, int y, int num)
+{
+    //row
+    for (int i = 0; i < 9; i++)
+        if (board[x][i] - '0' == num)
+            return false;
+
+    //col
+    for (int i = 0; i < 9; i++)
+        if (board[i][y] - '0' == num)
+            return false;
+
+    //mat
+    x = (x / 3) * 3; // x-=x%3;
+    y = (y / 3) * 3; // y-=y%3;
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            if (borad[x + i][y + j] - '0' == num)
+                return false;
+
+    return true;
+}
+
+vector<int> Srow;
+vector<int> Scol;
+vector<vector<int>> Smat;
+
+bool solveSudoku_(vector<vector<char>> &board, vector<int> &calls, int idx)
+{
+    if (idx == calls.size())
+        return true;
+
+    int r = calls[idx] / 9;
+    int c = calls[idx] % 9;
+    for (int num = 1; num <= 9; num++)
+    {
+        int mask = 1 << num;
+        if ((Srow[r] & mask) == 0 && (Scol[c] & mask) == 0 && (Smat[r / 3][c / 3] & mask) == 0)
+        {
+            board[r][c] = (char)(num + '0');
+            Srow[r] ^= mask;
+            Scol[c] ^= mask;
+            Smat[r / 3][c / 3] ^= mask;
+
+            if (solveSudoku_(board, calls, idx + 1))
+                return true;
+
+            board[r][c] = '.';
+            Srow[r] ^= mask;
+            Scol[c] ^= mask;
+            Smat[r / 3][c / 3] ^= mask;
+        }
+    }
+    return false;
+}
+
+//==============================================================================
+
+void solveSudoku(vector<vector<char>> &board)
+{
+    vector<int> calls;
+    Srow.assign(9, 0);
+    Scol.assign(9, 0);
+    Smat.assign(3, vector<int>(3, 0));
+
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            if (board[i][j] == '.')
+                calls.push_back(i * 9 + j);
+            else
+            {
+                int num = board[i][j] - '0';
+                int mask = 1 << num;
+                Srow[i] ^= mask;
+                Scol[j] ^= mask;
+                Smat[i / 3][j / 3] ^= mask;
+            }
+        }
+    }
+
+    solveSudoku_(board, calls, 0);
+}
+
 void queenProblem()
 {
     vector<bool> rooms(16, false);
