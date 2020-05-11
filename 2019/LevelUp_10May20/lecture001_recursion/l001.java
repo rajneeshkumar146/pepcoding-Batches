@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.ArrayList;
+
 public class l001{
     public static Scanner scn=new Scanner(System.in);
 
@@ -7,7 +9,8 @@ public class l001{
     }
 
     public static void solve(){
-        set1();
+        // set1();
+        pathType();
     }
 
     public static void set1(){
@@ -149,11 +152,11 @@ public class l001{
         ArrayList<String> smallAns=subseq2(nstr);
         int size=smallAns.size();
         for(int i=0;i<size;i++){
-            smallAns.add(small.get(i));
-            smallAns.add(ch + small.get(i));
+            smallAns.add(smallAns.get(i));
+            smallAns.add(ch + smallAns.get(i));
         }
 
-        return ans;
+        return smallAns;
     }
 
     public static int subseq03(String que,String ans){
@@ -161,7 +164,7 @@ public class l001{
             System.out.println(ans);
             return 1;
         }
-        char ch=str.charAt(0);
+        char ch=que.charAt(0);
         String nque=que.substring(1);
 
         int count=0;
@@ -170,7 +173,7 @@ public class l001{
         return count;
     }
 
-    String[] words={":;/","abc","def","ghi","jkl","mno","pqrs","tuv","wx","yz","&*%","#@$"};
+    static String[] words={":;/","abc","def","ghi","jkl","mno","pqrs","tuv","wx","yz","&*%","#@$"};
     public static ArrayList<String> nokiaKeyPad(String str){
         if(str.length()==0){
             ArrayList<String> base=new ArrayList<>();
@@ -209,4 +212,60 @@ public class l001{
         return count;
     }
 
+    //PathType.============================================================
+
+    public static ArrayList<String> mazePath_01(int sr,int sc,int er,int ec){
+        if(sr==er && sc==ec){
+            ArrayList<String> base=new ArrayList<>();
+            base.add("");
+            return base;
+        }
+
+        ArrayList<String> ans=new ArrayList<>();
+        if(sr+1<=er){
+            ArrayList<String> Vertical=mazePath_01(sr+1,sc,er,ec);
+            for(String s: Vertical)
+                ans.add("V"+s);
+        }
+
+        if(sc+1<=ec){
+            ArrayList<String> Horizontal=mazePath_01(sr,sc+1,er,ec);
+            for(String s: Horizontal)
+                ans.add("H"+s);
+        }
+
+        if(sc+1<=ec && sr+1<=er){
+            ArrayList<String> Diagonal=mazePath_01(sr+1,sc+1,er,ec);
+            for(String s: Diagonal)
+                ans.add("D"+s);
+        }
+
+        return ans;
+    }
+
+    public static int mazePath_02(int sr,int sc,int er,int ec,String ans){
+        if(sr==er && sc==ec){
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count=0;
+        if(sr+1<=er)
+            count+=mazePath_02(sr+1,sc,er,ec,ans +"V");
+
+        if(sc+1<=ec)
+           count+=mazePath_02(sr,sc+1,er,ec,ans +"H");
+
+        if(sc+1<=ec && sr+1<=er)
+           count+=mazePath_02(sr+1,sc+1,er,ec,ans +"D");
+
+        return count;
+    }
+
+
+
+    public static void pathType(){
+        System.out.println(mazePath_01(0,0,2,2));
+        System.out.println(mazePath_02(0,0,2,2,""));
+    }
 }
