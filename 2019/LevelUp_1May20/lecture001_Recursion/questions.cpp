@@ -39,3 +39,41 @@ int numDecodings(string s)
 
     return numDecodings(s, 0);
 }
+
+//leetcode 40.==========================================
+void combinationSum2_(vector<int> &arr, int idx, int target, vector<vector<int>> &res, vector<int> &ans)
+{
+    if (target == 0)
+    {
+        vector<int> base;
+        for (int ele : ans)
+            base.push_back(ele);
+        res.push_back(base);
+        return;
+    }
+
+    int prev = -1;
+    for (int i = idx; i < arr.size(); i++)
+    {
+        if (prev == arr[i])
+            continue;
+
+        prev = arr[i];
+        if (target - arr[i] >= 0)
+        {
+            ans.push_back(arr[i]);
+            combinationSum2_(arr, i + 1, target - arr[i], res, ans);
+            ans.pop_back();
+        }
+    }
+}
+
+vector<vector<int>> combinationSum2(vector<int> &arr, int target)
+{
+    sort(arr.begin(), arr.end()); // Arrays.sort(arr); <- Java
+    vector<vector<int>> res;
+    vector<int> ans;
+    combinationSum2_(arr, 0, target, res, ans);
+     
+     return res;
+}

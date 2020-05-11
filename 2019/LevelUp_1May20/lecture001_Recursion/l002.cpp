@@ -128,7 +128,7 @@ bool isSafeToPlaceNumber(vector<vector<char>> &board, int x, int y, int num)
     y = (y / 3) * 3; // y-=y%3;
     for (int i = 0; i < 3; i++)
         for (int j = 0; j < 3; j++)
-            if (borad[x + i][y + j] - '0' == num)
+            if (board[x + i][y + j] - '0' == num)
                 return false;
 
     return true;
@@ -196,6 +196,75 @@ void solveSudoku(vector<vector<char>> &board)
     solveSudoku_(board, calls, 0);
 }
 
+//Crypto.==========================================================
+string str1 = "send";
+string str2 = "more";
+string str3 = "money";
+int isNumberUsed = 0;
+vector<int> assignedNumber(26, -1);
+
+int stringToNumber(string str)
+{
+    int res = 0;
+    for (int i = 0; i < str.length(); i++)
+        res = res * 10 + assignedNumber[str[i] - 'a'];
+    return res;
+}
+
+int cryptoSolver_(string &str, int idx)
+{
+    if (idx == str.length())
+    {
+        int num1 = stringToNumber(str1);
+        int num2 = stringToNumber(str2);
+        int num3 = stringToNumber(str3);
+
+        if (assignedNumber[str1[0]-'a']!=0 && assignedNumber[str2[0]-'a']!=0 && assignedNumber[str3[0]-'a']!=0 && num1 + num2 == num3 )
+        {
+            cout << num1 << endl
+                 << "+" << num2 << endl
+                 << "------" << endl
+                 << num3 << endl
+                 << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    for (int num = 0; num <= 9; num++)
+    {
+        int mask = 1 << num;
+        if ((isNumberUsed & mask) == 0)
+        {
+            isNumberUsed ^= mask;
+            assignedNumber[str[idx] - 'a'] = num;
+
+            count += cryptoSolver_(str, idx + 1);
+
+            isNumberUsed ^= mask;
+            assignedNumber[str[idx] - 'a'] = -1;
+        }
+    }
+    return count;
+}
+
+void crypto()
+{
+    string str = str1 + str2 + str3;
+    vector<int> freq(26, 0);
+    for (int i = 0; i < str.length(); i++)
+        freq[str[i] - 'a']++;
+
+    str = "";
+    for (int i = 0; i < 26; i++)
+        if (freq[i] > 0)
+            str += (char)(i + 'a');
+
+    // cout << str << endl;
+    cout << cryptoSolver_(str, 0) << endl;
+}
+
 void queenProblem()
 {
     vector<bool> rooms(16, false);
@@ -218,7 +287,8 @@ void coinChange()
 
 int main()
 {
-    coinChange();
+    // coinChange();
     // queenProblem();
+    crypto();
     return 0;
 }
