@@ -153,12 +153,126 @@ int permutationUnique(string str, string ans)
         char ch = str[i];
         if (!vis[ch - 'a'])
         {
-            vis[ch-'a']=true;
+            vis[ch - 'a'] = true;
             string nstr = str.substr(0, i) + str.substr(i + 1);
             count += permutationUnique(nstr, ans + ch);
         }
     }
     return count;
+}
+
+//PathType.==============================================================
+
+vector<string> mazePathMultipleJumps(int sr, int sc, int er, int ec)
+{
+    if (sr == er && sc == ec)
+    {
+        vector<string> base;
+        base.push_back("");
+        return base;
+    }
+
+    vector<string> ans;
+    for (int jump = 1; sc + jump <= ec; jump++)
+    {
+        vector<string> horizontal = mazePathMultipleJumps(sr, sc + jump, er, ec);
+        for (string s : horizontal)
+            ans.push_back("H" + to_string(jump) + s);
+    }
+
+    for (int jump = 1; sr + jump <= ec; jump++)
+    {
+        vector<string> Vertical = mazePathMultipleJumps(sr + jump, sc, er, ec);
+        for (string s : Vertical)
+            ans.push_back("V" + to_string(jump) + s);
+    }
+
+    for (int jump = 1; sr + jump <= ec && sc + jump <= ec; jump++)
+    {
+        vector<string> Diagonal = mazePathMultipleJumps(sr + jump, sc + jump, er, ec);
+        for (string s : Diagonal)
+            ans.push_back("D" + to_string(jump) + s);
+    }
+
+    return ans;
+}
+
+int mazePathMultipleJumps(int sr, int sc, int er, int ec, string ans)
+{
+    if (sr == er && sc == ec)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 1;
+    for (int jump = 1; sc + jump <= ec; jump++)
+        count += mazePathMultipleJumps(sr, sc + jump, er, ec, ans + "H" + to_string(jump));
+
+    for (int jump = 1; sr + jump <= ec; jump++)
+        count += mazePathMultipleJumps(sr + jump, sc, er, ec, ans + "V" + to_string(jump));
+
+    for (int jump = 1; sr + jump <= ec && sc + jump <= ec; jump++)
+        count += mazePathMultipleJumps(sr + jump, sc + jump, er, ec, ans + "D" + to_string(jump));
+
+    return count;
+}
+
+int dirA[8][2] = {{0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}};
+string dirS[8] = {"L", "N", "U", "E", "R", "S", "D", "W"};
+
+int floodFill(vector<vector<int>> &board, int sr, int sc, int er, int ec, string ans)
+{
+    if (sr == er && sc == ec)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    board[sr][sc] = 1;
+    int count = 0;
+    for (int d = 0; d < 8; d++)
+    {
+        int x = sr + dirA[d][0];
+        int y = sc + dirA[d][1];
+        if (x >= 0 && y >= 0 && x < board.size() && y < board[0].size() && board[x][y] == 0)
+            count += floodFill(board, x, y, er, ec, ans + dirS[d]);
+    }
+
+    board[sr][sc] = 0;
+    return count;
+}
+
+int floodFill02(vector<vector<int>> &board, int sr, int sc, int er, int ec, string ans)
+{
+    if (sr == er && sc == ec)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    board[sr][sc] = 1;
+    int count = 0;
+    for (int d = 0; d < 8; d++)
+    {
+        for(int rad=1;rad <= board.size();rad++ )
+        int x = sr + rad*dirA[d][0];
+        int y = sc + rad*dirA[d][1];
+        if (x >= 0 && y >= 0 && x < board.size() && y < board[0].size() && board[x][y] == 0)
+            count += floodFill02(board, x, y, er, ec, ans + dirS[d]);
+    }
+
+    board[sr][sc] = 0;
+    return count;
+}
+
+//=====================================================================
+
+void pathType()
+{
+    // cout << mazePathMultipleJumps(0, 0, 2, 2, "") << endl;
+    vector<vector<int>> board(3, vector<int>(3, 0));
+    cout << floodFill(board, 0, 0, 2, 2, "") << endl;
 }
 
 void set3()
@@ -190,7 +304,8 @@ void solve()
 {
     // set1();
     // set2();
-    set3();
+    // set3();
+    pathType();
 }
 
 int main()
