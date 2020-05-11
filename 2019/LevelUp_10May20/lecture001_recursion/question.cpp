@@ -45,6 +45,7 @@ int uniquePathsIII_(vector<vector<int>> &grid, int r, int c, int freeCell, int n
     if (freeCell == 1)
         return grid[r][c] == 2 ? 1 : 0;
     
+    int temp=grid[r][c];
     grid[r][c] = -1;
     int count = 0;
 
@@ -56,7 +57,7 @@ int uniquePathsIII_(vector<vector<int>> &grid, int r, int c, int freeCell, int n
             count += uniquePathsIII_(grid, x, y, freeCell - 1, n, m);
     }
 
-    grid[r][c] = 0;
+    grid[r][c] = temp;
     return count;
 }
 
