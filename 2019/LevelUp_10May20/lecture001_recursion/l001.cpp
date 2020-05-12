@@ -255,16 +255,62 @@ int floodFill02(vector<vector<int>> &board, int sr, int sc, int er, int ec, stri
     int count = 0;
     for (int d = 0; d < 8; d++)
     {
-        for(int rad=1;rad <= board.size();rad++ )
-        int x = sr + rad*dirA[d][0];
-        int y = sc + rad*dirA[d][1];
-        if (x >= 0 && y >= 0 && x < board.size() && y < board[0].size() && board[x][y] == 0)
-            count += floodFill02(board, x, y, er, ec, ans + dirS[d]);
+        for (int rad = 1; rad <= board.size(); rad++)
+        {
+            int x = sr + rad * dirA[d][0];
+            int y = sc + rad * dirA[d][1];
+            if (x >= 0 && y >= 0 && x < board.size() && y < board[0].size() && board[x][y] == 0)
+                count += floodFill02(board, x, y, er, ec, ans + dirS[d] + to_string(rad) + " ");
+        }
     }
 
     board[sr][sc] = 0;
     return count;
 }
+
+class pairPath
+{
+public:
+    string s;
+    int len;
+
+    pairPath(string s, int len)
+    {
+        this->s = s;
+        this->len = len;
+    }
+};
+
+pairPath floodFill_longestPath(vector<vector<int>> &board, int sr, int sc, int er, int ec, string ans)
+{
+    if (sr == er && sc == ec)
+    {
+        return pairPath("",0);
+    }
+
+    board[sr][sc] = 1;
+    pairPath p("",0);
+    for (int d = 0; d < 8; d++)
+    {
+        for (int rad = 1; rad <= board.size(); rad++)
+        {
+            int x = sr + rad * dirA[d][0];
+            int y = sc + rad * dirA[d][1];
+            if (x >= 0 && y >= 0 && x < board.size() && y < board[0].size() && board[x][y] == 0){
+                pairPath smallAns=floodFill02(board, x, y, er, ec);
+                if(smallAns.len + 1 > p.len){
+                    p.len=smallAns.len;
+                    p.s=smallAns.s + dirS[d] + to_string(rad);
+
+                }
+            }
+        }
+    }
+
+    board[sr][sc] = 0;
+    return pid_t;
+}
+
 
 //=====================================================================
 
@@ -272,7 +318,8 @@ void pathType()
 {
     // cout << mazePathMultipleJumps(0, 0, 2, 2, "") << endl;
     vector<vector<int>> board(3, vector<int>(3, 0));
-    cout << floodFill(board, 0, 0, 2, 2, "") << endl;
+    // cout << floodFill(board, 0, 0, 2, 2, "") << endl;
+    cout << floodFill02(board, 0, 0, 2, 2, "") << endl;
 }
 
 void set3()
