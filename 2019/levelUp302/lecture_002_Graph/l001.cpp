@@ -557,10 +557,29 @@ void bellmanFord(vector<vector<int>> &graph, int src)
                 isNegativeCycle = true;
         }
     }
+}
 
-    
+void bellmanFord_1D(vector<vector<int>> &graph, int src)
+{
+    int INF = 1e8;
+    int n=graph.size();
+    vector<int> dp(n, INF);
+    dp[src] = 0;
+    bool isNegativeCycle = false;
 
-    
+    for (int i = 1; i <= n; i++)
+    {
+        for (vector<int> &e : graph)
+        {
+            int u = e[0], v = e[1], w = e[2];
+            if (dp[u][i - 1] == INF)
+                continue;
+            int temp = dp[v][i];
+            dp[v] = min(dp[v], dp[u] + w);
+            if (i == graph.size() && dp[v][i] != temp)
+                isNegativeCycle = true;
+        }
+    }
 }
 
 //Basic.========================================================
