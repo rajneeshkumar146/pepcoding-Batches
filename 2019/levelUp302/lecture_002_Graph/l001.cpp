@@ -445,7 +445,6 @@ public:
     //     return this.wsf > o.wsf; // default min PQ.
     //     //   return o.wsf > this.wsf   // max PQ.
     // }
-    
 };
 
 struct dijikstraComp
@@ -534,6 +533,36 @@ void primsAlgo(int src)
     display(primsGraph);
 }
 
+void bellmanFord(vector<vector<int>> &graph, int src)
+{
+    int INF = 1e8;
+    vector<vector<int>> dp(graph.size(), vector<int>(graph.size() + 1), INF);
+    dp[src][0] = 0;
+    bool isNegativeCycle = false;
+
+    for (int i = 1; i <= graph.size(); i++)
+    {
+        for (int j = 0; j < graph.size(); j++)
+            dp[j][i] = dp[j][i - 1];
+
+        for (vector<int> &e : graph)
+        {
+            int u = e[0], v = e[1], w = e[2];
+            if (dp[u][i - 1] == INF)
+                continue;
+            int temp = dp[v][i];
+            dp[v][i] = min(dp[v][i], dp[u][i - 1] + w);
+
+            if (i == graph.size() && dp[v][i] != temp)
+                isNegativeCycle = true;
+        }
+    }
+
+    
+
+    
+}
+
 //Basic.========================================================
 
 void constructGraph()
@@ -583,7 +612,6 @@ void set1()
 
     // dijikstraAlgo(0);
     primsAlgo(6);
-
 }
 
 void solve()

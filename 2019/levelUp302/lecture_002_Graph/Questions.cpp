@@ -816,13 +816,13 @@ lli JourneyToMoon_UsingDFS()
         graph[u].push_back(v);
         graph[v].push_back(u);
     }
-    
+
     vector<bool> vis(n, 0);
     vector<lli> countrySize;
-    
+
     int WorldPopulation = n;
     lli ans = 0;
-    
+
     for (int i = 0; i < n; i++)
         if (!vis[i])
             countrySize.push_back((dfs_JourneyToMoon(graph, i, vis)));
@@ -874,4 +874,90 @@ lli JourneyToMoon_UnionFind()
 }
 
 //question link: https://leetcode.com/problems/minimize-malware-spread/discuss/614031/C++-:-Union-Find-(pepcoding.com)-reframe-the-question-on-"CORONA"-with-relatable-explanation
-]
+
+//leetcode: 743.======================================================================
+
+int networkDelayTime(vector<vector<int>> &times, int N, int K)
+{
+    vector<vector<pair<int, int>>> graph(N + 1); // ArrayList<int[]>[] =new ArrayList[N];
+    for (vector<int> &ar : times)
+        graph[ar[0]].push_back({ar[1], ar[2]});
+
+    vector<int> dis(N + 1, -1);
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({0, K}); // weight, vertex
+
+    while (pq.size() != 0)
+    {
+        pair<int, int> rvtx = pq.top();
+        pq.pop();
+        if (dis[rvtx.second] != -1)
+            continue;
+
+        dis[rvtx.second] = rvtx.first;
+        for (pair<int, int> &e : graph[rvtx.second])
+        {
+            if (dis[e.first] == -1)
+                pq.push({rvtx.first + e.second, e.first});
+        }
+    }
+
+    int ans = 0;
+    for (int i = 1; i <= N; i++)
+        if (dis[i] == -1)
+            return -1;
+        else
+            ans = max(ans, dis[i]);
+
+    return ans;
+}
+
+//Leetcode 787===============================================================
+
+int findCheapestPrice(int n, vector<vector<int>> &flights, int src, int dst, int K)
+{
+    vector<vector<pair<int, int>>> graph(n + 1); // ArrayList<int[]>[] =new ArrayList[N];
+    for (vector<int> &ar : flights)
+        graph[ar[0]].push_back({ar[1], ar[2]});
+
+    priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
+    pq.push({0, src, K + 1});
+    //PriorityQueue<int[]> pq =new PriorityQueue((int[] a,int[] b)->{
+    //         return a[0]-b[0]; //  this - other for default behaviour.
+    // });
+    // pq.add(new int[]{0,src,K+1});
+
+    while (pq.size() != 0)
+    {
+        vector<int> rvtx = pq.top();
+        pq.pop();
+
+        if (rvtx[1] == dst)
+            return rvtx[0];
+        if (rvtx[2] == 0)
+            continue;
+
+        for (pair<int, int> &e : graph[rvtx[1]])
+            pq.push({rvtx[0] + e.second, e.first, rvtx[2] - 1});
+    }
+
+    return -1;
+}
+
+int findCheapestPrice(int n, vector<vector<int>> &flights, int src, int dst, int K)
+{
+    int INF = 1e8;
+    K++;
+    vector<vector<int>> dp(n, vector<int>(K + 1, INF));
+    dp[src][0] = 0;
+    for (int k = 1; k <= K; k++)
+    {
+        for (int i = 0; i < n; i++)
+            dp[i][k] = dp[i][k - 1];
+
+        for (vector<int> &e : flights)
+            dp[e[1]][k] = min(dp[e[1]][k], dp[e[0]][k - 1] + e[2]); // dp[v][k]=min(dp[v][k],dp[u][k-1]+w);
+    }
+
+    return dp[dst][K] == INF ? -1 : dp[dst][K];
+}
