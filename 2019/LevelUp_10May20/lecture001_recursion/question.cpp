@@ -85,3 +85,8 @@ int uniquePathsIII(vector<vector<int>> &grid)
 
     return uniquePathsIII_(grid,sr,sc,freeCell,n,m);
 }
+
+//equi set.=============================================================
+
+
+

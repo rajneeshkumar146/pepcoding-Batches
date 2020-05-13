@@ -219,7 +219,7 @@ int cryptoSolver_(string &str, int idx)
         int num2 = stringToNumber(str2);
         int num3 = stringToNumber(str3);
 
-        if (assignedNumber[str1[0]-'a']!=0 && assignedNumber[str2[0]-'a']!=0 && assignedNumber[str3[0]-'a']!=0 && num1 + num2 == num3 )
+        if (assignedNumber[str1[0] - 'a'] != 0 && assignedNumber[str2[0] - 'a'] != 0 && assignedNumber[str3[0] - 'a'] != 0 && num1 + num2 == num3)
         {
             cout << num1 << endl
                  << "+" << num2 << endl
@@ -265,6 +265,139 @@ void crypto()
     cout << cryptoSolver_(str, 0) << endl;
 }
 
+//SetProblem.===============================================================
+
+int equiSet(vector<int> &arr, int idx, int set1, int set2, string set1S, string set2S)
+{
+    if (idx == arr.size())
+    {
+        if (set1 == set2)
+        {
+            cout << set1S + " = " + set2S << endl;
+            return 1;
+        }
+
+        return 0;
+    }
+
+    int count = 0;
+    count += equiSet(arr, idx + 1, set1 + arr[idx], set2, set1S + " " + to_string(arr[idx]), set2S);
+    count += equiSet(arr, idx + 1, set1, set2 + arr[idx], set1S, set2S + " " + to_string(arr[idx]));
+
+    return count;
+}
+
+int equiSet_02(vector<int> &arr, int idx, int set1, int set2, string set1S, string set2S)
+{
+    if (idx == arr.size())
+    {
+        if (set1 == set2 && set1 != 0)
+        {
+            cout << set1S + " = " + set2S << endl;
+            return 1;
+        }
+
+        return 0;
+    }
+    int count = 0;
+    count += equiSet_02(arr, idx + 1, set1 + arr[idx], set2, set1S + to_string(arr[idx]) + " ", set2S);
+    count += equiSet_02(arr, idx + 1, set1, set2 + arr[idx], set1S, set2S + to_string(arr[idx]) + " ");
+
+    count += equiSet_02(arr, idx + 1, set1, set2, set1S, set2S);
+
+    return count;
+}
+
+//CROSS WORD.=================================================
+vector<vector<char>> board{{'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+                           {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+                           {'+', '-', '-', '-', '-', '-', '-', '-', '+', '+'},
+                           {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+                           {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+                           {'+', '-', '-', '-', '-', '-', '-', '+', '+', '+'},
+                           {'+', '-', '+', '+', '+', '-', '+', '+', '+', '+'},
+                           {'+', '+', '+', '+', '+', '-', '+', '+', '+', '+'},
+                           {'+', '+', '+', '+', '+', '-', '+', '+', '+', '+'},
+                           {'+', '+', '+', '+', '+', '+', '+', '+', '+', '+'}};
+vector<string> words = {"agra", "norway", "england", "gwalior"};
+
+bool canPlaceHorizontal(string word, int x, int y)
+{
+}
+
+void placeWordHorizobtal(string word, int x, int y)
+{
+}
+
+void unPlaceWordHorizobtal(string word, int x, int y)
+{
+}
+
+bool canPlaceVertical(string word, int x, int y)
+{
+}
+
+void placeWordVertical(string word, int x, int y)
+{
+}
+
+void unPlaceWordVertical(string word, int x, int y)
+{
+}
+
+void crossWord_(int idx)
+{
+    if (idx == words.size())
+    {
+        for (int i = 0; i < board.size(); i++)
+        {
+            for (int j = 0; j < board[0].size(); j++)
+                cout << board[i][j] << " ";
+            cout << endl;
+        }
+
+        return 1;
+    }
+
+    string word = words[idx];
+    int count = 0;
+    for (int i = 0; i < board.size(); i++)
+    {
+        for (int j = 0; j < board[0].size(); j++)
+        {
+            if (board[i][j] == '-' || borad[i][j] == word[0])
+            {
+                if (canPlaceHorizontal(word, i, j))
+                {
+                    placeWordHorizobtal(word, i, j);
+                    count += crossWord_(idx + 1);
+                    unPlaceWordHorizobtal(word, i, j);
+                }
+
+                if (canPlaceVertical(word, i, j))
+                {
+                    placeWordVertical(word, i, j);
+                    count += crossWord_(idx + 1);
+                    unPlaceWordVertical(word, i, j);
+                }
+            }
+        }
+    }
+    return count;
+}
+
+void crossWord()
+{
+    crossWord_(0);
+}
+
+void SetProblem()
+{
+    vector<int> arr = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
+    // cout << equiSet(arr, 1, 10, 0, "10 ", "") << endl;
+    cout << equiSet_02(arr, 0, 0, 0, "", "") << endl;
+}
+
 void queenProblem()
 {
     vector<bool> rooms(16, false);
@@ -275,20 +408,21 @@ void queenProblem()
 
 void coinChange()
 {
-    vector<int> arr{2, 3, 5, 7};
+    // vector<int> arr{2, 3, 5, 7};
     // vector<int> arr{1,1,1,1,1};
     int tar = 10;
     // cout << coinChangePermutation_INF(arr,0, tar, "") << endl;
     // cout << coinChangePermutation(arr, 0, tar, "") << endl;
 
     // cout << coinChangeCombination_INF(arr,0, tar, "") << endl;
-    cout << coinChangeCombination(arr, 0, tar, "") << endl;
+    // cout << coinChangeCombination(arr, 0, tar, "") << endl;
 }
 
 int main()
 {
     // coinChange();
     // queenProblem();
-    crypto();
+    // crypto();
+    SetProblem();
     return 0;
 }

@@ -74,6 +74,6 @@ vector<vector<int>> combinationSum2(vector<int> &arr, int target)
     vector<vector<int>> res;
     vector<int> ans;
     combinationSum2_(arr, 0, target, res, ans);
-     
-     return res;
+
+    return res;
 }
