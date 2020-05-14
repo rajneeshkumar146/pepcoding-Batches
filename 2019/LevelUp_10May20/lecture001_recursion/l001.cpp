@@ -281,40 +281,183 @@ public:
     }
 };
 
-pairPath floodFill_longestPath(vector<vector<int>> &board, int sr, int sc, int er, int ec, string ans)
+pairPath floodFill_longestPath(vector<vector<int>> &board, int sr, int sc, int er, int ec)
 {
     if (sr == er && sc == ec)
     {
-        return pairPath("",0);
+        return pairPath("", 0);
     }
 
     board[sr][sc] = 1;
-    pairPath p("",0);
+    pairPath p("", 0);
     for (int d = 0; d < 8; d++)
     {
         for (int rad = 1; rad <= board.size(); rad++)
         {
             int x = sr + rad * dirA[d][0];
             int y = sc + rad * dirA[d][1];
-            if (x >= 0 && y >= 0 && x < board.size() && y < board[0].size() && board[x][y] == 0){
-                pairPath smallAns=floodFill02(board, x, y, er, ec);
-                if(smallAns.len + 1 > p.len){
-                    p.len=smallAns.len;
-                    p.s=smallAns.s + dirS[d] + to_string(rad);
-
+            if (x >= 0 && y >= 0 && x < board.size() && y < board[0].size() && board[x][y] == 0)
+            {
+                pairPath smallAns = floodFill_longestPath(board, x, y, er, ec);
+                if (smallAns.len + 1 > p.len)
+                {
+                    p.len = smallAns.len;
+                    p.s = smallAns.s + dirS[d] + to_string(rad);
                 }
             }
         }
     }
 
     board[sr][sc] = 0;
-    return pid_t;
+    return p;
 }
 
+//QueenSet.============================================================
+
+int queenCombination1D(vector<bool> &boxes, int vidx, int qpsf, int tnq, string ans) // qpsf queen place so far.
+{
+    if (qpsf == tnq)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = vidx; i < boxes.size(); i++)
+    {
+        count += queenCombination1D(boxes, i + 1, qpsf + 1, tnq, ans + "B" + to_string(i) + "Q" + to_string(qpsf) + " ");
+    }
+    return count;
+}
+
+int queenPermutation1D(vector<bool> &boxes, int vidx, int qpsf, int tnq, string ans) // qpsf queen place so far.
+{
+
+    if (qpsf == tnq)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = vidx; i < boxes.size(); i++)
+    {
+        if (!boxes[i])
+        {
+            boxes[i] = true;
+            count += queenPermutation1D(boxes, 0, qpsf + 1, tnq, ans + "B" + to_string(i) + "Q" + to_string(qpsf) + " ");
+            boxes[i] = false;
+        }
+    }
+    return count;
+}
+
+int queenCombination2D(vector<vector<bool>> &boxes, int vidx, int qpsf, int tnq, string ans) // qpsf queen place so far.
+{
+    if (qpsf == tnq)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = vidx; i < boxes.size() * boxes[0].size(); i++)
+    {
+        int r = i / boxes[0].size();
+        int c = i % boxes[0].size();
+        count += queenCombination2D(boxes, 0, qpsf + 1, tnq, ans + "(" + to_string(r) + ", " + to_string(c) + ") ");
+    }
+    return count;
+}
+
+int queenPermutation2D(vector<vector<bool>> &boxes, int vidx, int qpsf, int tnq, string ans) // qpsf queen place so far.
+{
+
+    if (qpsf == tnq)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = vidx; i < boxes.size() * boxes[0].size(); i++)
+    {
+        int r = i / boxes[0].size();
+        int c = i % boxes[0].size();
+        if (!boxes[r][c])
+        {
+            boxes[r][c] = true;
+            count += queenPermutation2D(boxes, 0, qpsf + 1, tnq, ans + "(" + to_string(r) + ", " + to_string(c) + ") ");
+            boxes[r][c] = false;
+        }
+    }
+    return count;
+}
+
+//NQueen.==============================================================
+
+bool isSafeToPlaceQueen(vector<vector<bool>> &boxes, int r, int c)
+{
+    int dir[4][2] = {{0, -1}, {-1, -1}, {-1, 0}, {-1, 1}};
+    for (int d = 0; d < 4; d++)
+        for (int rad = 1; rad <= boxes.size(); rad++)
+        {
+            int x = r + rad * dir[d][0];
+            int y = c + rad * dir[d][1];
+
+            if (x >= 0 && y >= 0 && x < boxes.size() && y < boxes[0].size())
+                if (boxes[x][y])
+                    return false;
+        }
+
+    return true;
+}
+
+int nqueen_01(vector<vector<bool>> &boxes, int vidx, int tnq, string ans) // qpsf queen place so far.
+{
+    if (tnq == 0)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = vidx; i < boxes.size() * boxes[0].size(); i++)
+    {
+        int r = i / boxes[0].size();
+        int c = i % boxes[0].size();
+        if (isSafeToPlaceQueen(boxes, r, c))
+        {
+            boxes[r][c] = true;
+            count += nqueen_01(boxes, i + 1, tnq - 1, ans + "(" + to_string(r) + ", " + to_string(c) + ") ");
+            boxes[r][c] = false;
+        }
+    }
+    return count;
+}
 
 //=====================================================================
 
+void nqueen()
+{
+    vector<vector<bool>> boxes(4, vector<bool>(4, false));
+    int tnq = 4;
+    cout << nqueen_01(boxes, 0, tnq, "") << endl;
+}
 
+void QueenSet()
+{
+    // vector<bool> boxes(5, false);
+    // int tnq = 3;
+
+    // cout << queenCombination1D(boxes, 0, 0, tnq, "") << endl;
+    // cout << queenPermutation1D(boxes, 0, 0, tnq, "") << endl;
+
+    vector<vector<bool>> boxes(4, vector<bool>(4, false));
+    int tnq = 4;
+    cout << queenCombination2D(boxes, 0, 0, tnq, "") << endl;
+    // cout << queenPermutation2D(boxes, 0, 0, tnq, "") << endl;
+}
 
 void pathType()
 {
@@ -354,7 +497,9 @@ void solve()
     // set1();
     // set2();
     // set3();
-    pathType();
+    // pathType();
+    // QueenSet();
+    nqueen();
 }
 
 int main()
