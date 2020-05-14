@@ -398,8 +398,10 @@ int queenPermutation2D(vector<vector<bool>> &boxes, int vidx, int qpsf, int tnq,
 
 bool isSafeToPlaceQueen(vector<vector<bool>> &boxes, int r, int c)
 {
-    int dir[4][2] = {{0, -1}, {-1, -1}, {-1, 0}, {-1, 1}};
-    for (int d = 0; d < 4; d++)
+    // int dir[4][2] = {{0, -1}, {-1, -1}, {-1, 0}, {-1, 1}};
+    int dir[8][2] = {{0, -1}, {-1, -1}, {-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}};
+    int len = 8;
+    for (int d = 0; d < len; d++)
         for (int rad = 1; rad <= boxes.size(); rad++)
         {
             int x = r + rad * dir[d][0];
@@ -436,13 +438,98 @@ int nqueen_01(vector<vector<bool>> &boxes, int vidx, int tnq, string ans) // qps
     return count;
 }
 
+bool nqueen_02(vector<vector<bool>> &boxes, int vidx, int tnq, string ans) // qpsf queen place so far.
+{
+    if (tnq == 0)
+    {
+        cout << ans << endl;
+        return true;
+    }
+
+    bool res = false;
+    for (int i = vidx; i < boxes.size() * boxes[0].size(); i++)
+    {
+        int r = i / boxes[0].size();
+        int c = i % boxes[0].size();
+        if (!boxes[r][c] && isSafeToPlaceQueen(boxes, r, c))
+        {
+            boxes[r][c] = true;
+            res = res || nqueen_02(boxes, 0, tnq - 1, ans + "(" + to_string(r) + ", " + to_string(c) + ") ");
+            boxes[r][c] = false;
+        }
+    }
+    return res;
+}
+
+int nqueen_03(vector<vector<bool>> &boxes, int vidx, int tnq, string ans) // qpsf queen place so far.
+{
+    if (tnq == 0 || vidx == boxes.size() * boxes[0].size())
+    {
+        if (tnq == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    int r = vidx / boxes[0].size();
+    int c = vidx % boxes[0].size();
+    if (isSafeToPlaceQueen(boxes, r, c))
+    {
+        boxes[r][c] = true;
+        count += nqueen_03(boxes, vidx + 1, tnq - 1, ans + "(" + to_string(r) + ", " + to_string(c) + ") ");
+        boxes[r][c] = false;
+    }
+
+    count += nqueen_03(boxes, vidx + 1, tnq, ans);
+
+    return count;
+}
+
+bool knightTourPath(vector<vector<int>> &board, int r, int c, int move)
+{
+    board[r][c] = move;
+    if (move == 63)
+    {
+        for (vector<int> &ar : board)
+        {
+            for (int ele : ar)
+                cout << ele << " ";
+            cout << endl;
+        }
+        return true;
+    }
+
+    int xMove[8] = {2, 1, -1, -2, -2, -1, 1, 2};
+    int yMove[8] = {1, 2, 2, 1, -1, -2, -2, -1};
+
+    bool res = false;
+    for (int d = 0; d < 8; d++)
+    {
+        int x = r + xMove[d];
+        int y = c + yMove[d];
+        if (x >= 0 && y >= 0 && x < board.size() && y < board[0].size() && board[x][y] == -1)
+            res = res || knightTourPath(board, x, y, move + 1);
+    }
+
+    board[r][c] = -1;
+    return res;
+}
+
 //=====================================================================
 
 void nqueen()
 {
-    vector<vector<bool>> boxes(4, vector<bool>(4, false));
-    int tnq = 4;
-    cout << nqueen_01(boxes, 0, tnq, "") << endl;
+    // vector<vector<bool>> boxes(4, vector<bool>(4, false));
+    // int tnq = 4;
+    // cout << nqueen_01(boxes, 0, tnq, "") << endl;
+    // cout << nqueen_02(boxes, 0, tnq, "") << endl;
+    // cout << nqueen_03(boxes, 0, tnq, "") << endl;
+
+    vector<vector<int>> board(8, vector<int>(8, -1));
+    cout << knightTourPath(board, 0, 0, 0) << endl;
 }
 
 void QueenSet()
