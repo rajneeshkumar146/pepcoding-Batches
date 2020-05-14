@@ -590,6 +590,7 @@ vector<int> AP(N, 0);
 vector<bool> vis(N, 0);
 
 int countTime = 0;
+int rootCalls = 0;
 
 void dfs_AP(int src, int par)
 {
@@ -600,9 +601,14 @@ void dfs_AP(int src, int par)
         int child = e.v;
         if (!vis[child])
         {
+            if (par == -1)
+                rootCalls++;
+
             dfs_AP(child, src);
-            if (dis[src] <= low[child])
+            if (dis[src] <= low[child]) //Articulation Point.
                 AP[src]++;
+            if (dis[src] < low[child]) //Articulation Edge.
+                cout << "AP Bridge: " << src << " to " << child << endl;
 
             low[src] = min(low[src], low[child]);
         }
@@ -616,6 +622,8 @@ void APointandBridges()
     int src = 0;
     dfs_AP(src, -1);
 
+    if (rootCalls == 1)
+        AP[src]--;
     for (int i = 0; i < N; i++)
     {
         if (AP[i])
