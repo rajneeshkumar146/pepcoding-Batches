@@ -533,52 +533,93 @@ void primsAlgo(int src)
     display(primsGraph);
 }
 
-void bellmanFord(vector<vector<int>> &graph, int src)
+// void bellmanFord(vector<vector<int>> &graph_, int src)
+// {
+//     int INF = 1e8;
+//     vector<vector<int>> dp(graph_.size(), vector<int>(graph_.size() + 1), INF);
+//     dp[src][0] = 0;
+//     bool isNegativeCycle = false;
+
+//     for (int i = 1; i <= graph_.size(); i++)
+//     {
+//         for (int j = 0; j < graph_.size(); j++)
+//             dp[j][i] = dp[j][i - 1];
+
+//         for (vector<int> &e : graph_)
+//         {
+//             int u = e[0], v = e[1], w = e[2];
+//             if (dp[u][i - 1] == INF)
+//                 continue;
+//             int temp = dp[v][i];
+//             dp[v][i] = min(dp[v][i], dp[u][i - 1] + w);
+
+//             if (i == graph_.size() && dp[v][i] != temp)
+//                 isNegativeCycle = true;
+//         }
+//     }
+// }
+
+// void bellmanFord_1D(vector<vector<int>> &graph_, int src)
+// {
+//     int INF = 1e8;
+//     int n = graph_.size();
+//     vector<int> dp(n, INF);
+//     dp[src] = 0;
+//     bool isNegativeCycle = false;
+
+//     for (int i = 1; i <= n; i++)
+//     {
+//         for (vector<int> &e : graph_)
+//         {
+//             int u = e[0], v = e[1], w = e[2];
+//             if (dp[u] == INF)
+//                 continue;
+//             int temp = dp[v];
+//             dp[v] = min(dp[v], dp[u] + w);
+//             if (i == graph_.size() && dp[v] != temp)
+//                 isNegativeCycle = true;
+//         }
+//     }
+// }
+
+//AP.===========================================================
+
+vector<int> dis(N, 0);
+vector<int> low(N, 0);
+vector<int> AP(N, 0);
+vector<bool> vis(N, 0);
+
+int countTime = 0;
+
+void dfs_AP(int src, int par)
 {
-    int INF = 1e8;
-    vector<vector<int>> dp(graph.size(), vector<int>(graph.size() + 1), INF);
-    dp[src][0] = 0;
-    bool isNegativeCycle = false;
-
-    for (int i = 1; i <= graph.size(); i++)
+    dis[src] = low[src] = countTime++;
+    vis[src] = true;
+    for (Edge e : graph[src])
     {
-        for (int j = 0; j < graph.size(); j++)
-            dp[j][i] = dp[j][i - 1];
-
-        for (vector<int> &e : graph)
+        int child = e.v;
+        if (!vis[child])
         {
-            int u = e[0], v = e[1], w = e[2];
-            if (dp[u][i - 1] == INF)
-                continue;
-            int temp = dp[v][i];
-            dp[v][i] = min(dp[v][i], dp[u][i - 1] + w);
+            dfs_AP(child, src);
+            if (dis[src] <= low[child])
+                AP[src]++;
 
-            if (i == graph.size() && dp[v][i] != temp)
-                isNegativeCycle = true;
+            low[src] = min(low[src], low[child]);
         }
+        else if (child != par)
+            low[src] = min(low[src], dis[child]);
     }
 }
 
-void bellmanFord_1D(vector<vector<int>> &graph, int src)
+void APointandBridges()
 {
-    int INF = 1e8;
-    int n=graph.size();
-    vector<int> dp(n, INF);
-    dp[src] = 0;
-    bool isNegativeCycle = false;
+    int src = 0;
+    dfs_AP(src, -1);
 
-    for (int i = 1; i <= n; i++)
+    for (int i = 0; i < N; i++)
     {
-        for (vector<int> &e : graph)
-        {
-            int u = e[0], v = e[1], w = e[2];
-            if (dp[u][i - 1] == INF)
-                continue;
-            int temp = dp[v][i];
-            dp[v] = min(dp[v], dp[u] + w);
-            if (i == graph.size() && dp[v][i] != temp)
-                isNegativeCycle = true;
-        }
+        if (AP[i])
+            cout << "AP: " << i << " @ " << AP[i] << endl;
     }
 }
 
@@ -630,7 +671,8 @@ void set1()
     // display(graph);
 
     // dijikstraAlgo(0);
-    primsAlgo(6);
+    // primsAlgo(6);
+    APointandBridges();
 }
 
 void solve()
