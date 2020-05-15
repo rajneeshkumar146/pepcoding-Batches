@@ -488,6 +488,74 @@ int nqueen_03(vector<vector<bool>> &boxes, int vidx, int tnq, string ans) // qps
     return count;
 }
 
+vector<bool> rowA;
+vector<bool> colA;
+vector<bool> diagA;
+vector<bool> adiagA;
+
+int calls = 0;
+int nqueen_04(int n, int m, int vidx, int tnq, string ans) // qpsf queen place so far.
+{
+    calls++;
+    if (tnq == 0)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = vidx; i < n * m; i++)
+    {
+        int r = i / m;
+        int c = i % m;
+        if (!rowA[r] && !colA[c] && !diagA[r + c] && !adiagA[r - c + m - 1])
+        {
+            rowA[r] = true;
+            colA[c] = true;
+            diagA[r + c] = true;
+            adiagA[r - c + m - 1] = true;
+
+            count += nqueen_04(n, m, i + 1, tnq - 1, ans + "(" + to_string(r) + ", " + to_string(c) + ") ");
+
+            rowA[r] = false;
+            colA[c] = false;
+            diagA[r + c] = false;
+            adiagA[r - c + m - 1] = false;
+        }
+    }
+    return count;
+}
+
+int nqueen_05(int n, int m, int r, int tnq, string ans) // qpsf queen place so far.
+{
+    calls++;
+    if (tnq == 0)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int c = 0; c < m; c++)
+    {
+        if (!rowA[r] && !colA[c] && !diagA[r + c] && !adiagA[r - c + m - 1])
+        {
+            rowA[r] = true;
+            colA[c] = true;
+            diagA[r + c] = true;
+            adiagA[r - c + m - 1] = true;
+
+            count += nqueen_05(n, m, r + 1, tnq - 1, ans + "(" + to_string(r) + ", " + to_string(c) + ") ");
+
+            rowA[r] = false;
+            colA[c] = false;
+            diagA[r + c] = false;
+            adiagA[r - c + m - 1] = false;
+        }
+    }
+    return count;
+}
+
 bool knightTourPath(vector<vector<int>> &board, int r, int c, int move)
 {
     board[r][c] = move;
@@ -528,8 +596,18 @@ void nqueen()
     // cout << nqueen_02(boxes, 0, tnq, "") << endl;
     // cout << nqueen_03(boxes, 0, tnq, "") << endl;
 
-    vector<vector<int>> board(8, vector<int>(8, -1));
-    cout << knightTourPath(board, 0, 0, 0) << endl;
+    int n = 13, m = 13, tnq = 13;
+    rowA.assign(n, false);
+    colA.assign(m, false);
+    diagA.assign(n + m - 1, false);
+    adiagA.assign(n + m - 1, false);
+
+    cout << nqueen_04(n, m, 0, tnq, "") << endl;
+    // cout << nqueen_05(n, m, 0, tnq, "") << endl;
+    cout << calls << endl;
+
+    // vector<vector<int>> board(8, vector<int>(8, -1));
+    // cout << knightTourPath(board, 0, 0, 0) << endl;
 }
 
 void QueenSet()
