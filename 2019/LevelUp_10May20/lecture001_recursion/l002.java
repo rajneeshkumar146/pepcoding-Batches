@@ -165,7 +165,7 @@ public class l002 {
   static String str1="send";
   static String str2="more";
   static String str3="money";
-  static boolean[] isNumberTaken=new boolean[10];
+  static int isNumberTaken = 0;
   static int[] mapping=new int[26];
 
   public static int stringToNumber(String str){
@@ -199,14 +199,15 @@ public class l002 {
 
      int count=0;
      for(int num=0 ; num < 10 ; num++){
-       if(!isNumberTaken[num]){
+		 int mask = (1 << num);
+       if((isNumberTaken&mask)==0){
         
-        isNumberTaken[num]=true;
+        isNumberTaken ^= mask;
         mapping[str.charAt(idx)-'a']=num;
         
         count+=crypto(str,idx + 1);
         
-        isNumberTaken[num]=false;
+        isNumberTaken ^= mask;
         mapping[str.charAt(idx)-'a']=0;
        }
      }
