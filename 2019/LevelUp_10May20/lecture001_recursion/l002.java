@@ -231,6 +231,121 @@ public class l002 {
 
   }
 
+  //crossword.========================================================
+static char[][] board{{'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+               {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+               {'+', '-', '-', '-', '-', '-', '-', '-', '+', '+'},
+               {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+               {'+', '-', '+', '+', '+', '+', '+', '+', '+', '+'},
+               {'+', '-', '-', '-', '-', '-', '-', '+', '+', '+'},
+               {'+', '-', '+', '+', '+', '-', '+', '+', '+', '+'},
+               {'+', '+', '+', '+', '+', '-', '+', '+', '+', '+'},
+               {'+', '+', '+', '+', '+', '-', '+', '+', '+', '+'},
+               {'+', '+', '+', '+', '+', '+', '+', '+', '+', '+'}};
+
+static String[] words = {"agra", "norway", "england", "gwalior"};
+  
+public static boolean canPlaceH(int r,int c,String word){
+	for(int i=0;i<word.length();i++){
+		if(c+i == 10) return false;
+
+		if(board[r][c+i]!='-' && board[r][c+i]!=word.charAt(i)) 
+		  return false;
+	}
+	return true;
+}
+
+public static boolean[] PlaceH(int r,int c,String word){
+	boolean[] loc=new boolean[word.length()];
+	
+	for(int i=0;i<word.length();i++){
+		if( board[r][c+i] =='.'){
+			board[r][c+i] = word.charAt(i);
+			loc[i]=true;
+		}
+	}
+	return loc;
+}
+
+public static void unPlaceH(int r,int c,String word,boolean[] loc){
+	
+	for(int i=0;i<word.length();i++){
+		if( loc[i]){
+			board[r][c+i] = '.';
+		}
+	}
+}
+
+public static boolean canPlaceH(int r,int c,String word){
+	for(int i=0;i<word.length();i++){
+		
+		if(r+i==10) return false;
+
+		if(board[r+i][c]!='-' && board[r+i][c]!=word.charAt(i)) 
+		  return false;
+	}
+	return true;
+}
+
+public static boolean[] PlaceV(int r,int c,String word){
+	boolean[] loc=new boolean[word.length()];
+	
+	for(int i=0;i<word.length();i++){
+		if( board[r+i][c] =='.'){
+			board[r+i][c] = word.charAt(i);
+			loc[i]=true;
+		}
+	}
+	return loc;
+}
+
+public static void unPlaceV(int r,int c,String word,boolean[] loc){
+	
+	for(int i=0;i<word.length();i++){
+		if( loc[i]){
+			board[r+i][c] = '.';
+		}
+	}
+}
+
+  public static int crossWord_(int idx){
+	  if(idx==words.length){
+		for(int i=0;i<10;i++){
+			for(int j=0;j<10;j++){
+				System.out.print(board[i][j]+" ");
+			}
+			System.out.println();
+		} 
+
+		  return 1;
+	  }
+
+	  String word=words[idx];
+	  int count=0;
+	  for(int i=0;i<10;i++){
+		  for(int j=0;j<10;j++){
+			  if(board[i][j]=='-' || board[i][j]== word.charAt(0)){
+				 
+				  if(canPlaceH(i,j,word)){
+					    boolean[] loc=placeH(i,j,word);
+						count+=crossWord_(idx+1);
+						unPlaceH(i,j,word,loc);
+				  }
+  
+				  if(canPlaceV(i,j,word)){
+					boolean[] loc=placeV(i,j,word);
+					count+=crossWord_(idx+1);
+					unPlaceV(i,j,word,loc);
+			     }
+			  }
+		  }
+	  }
+	  return count;
+
+  }
+
+
+
   public static void wordBreak(){
     String str="ilikesamsungandmango";
     System.out.println(wordBreak(str,0,""));

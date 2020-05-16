@@ -556,10 +556,10 @@ int nqueen_05(int n, int m, int r, int tnq, string ans) // qpsf queen place so f
     return count;
 }
 
-int row=0;
-int col=0;
-int diag=0;
-int adiag=0;
+int row = 0;
+int col = 0;
+int diag = 0;
+int adiag = 0;
 
 int nqueen_06(int n, int m, int r, int tnq, string ans) // qpsf queen place so far.
 {
@@ -572,14 +572,20 @@ int nqueen_06(int n, int m, int r, int tnq, string ans) // qpsf queen place so f
 
     int count = 0;
     for (int c = 0; c < m; c++)
-    { 
-        if ((row&(1<<r))==0 && (col&(1<<r))==0 && (diag&(1<<(r+c)))==0 && (diag&(1<<(r-c+m-1)))==0)
+    {
+        if ((row & (1 << r)) == 0 && (col & (1 << r)) == 0 && (diag & (1 << (r + c))) == 0 && (diag & (1 << (r - c + m - 1))) == 0)
         {
-            row^=(1<<r); col^=(1<<c); diag^=(1<<(r+c)) ; diag^=(1<<(r-c+m-1));
+            row ^= (1 << r);
+            col ^= (1 << c);
+            diag ^= (1 << (r + c));
+            diag ^= (1 << (r - c + m - 1));
 
             count += nqueen_06(n, m, r + 1, tnq - 1, ans + "(" + to_string(r) + ", " + to_string(c) + ") ");
 
-            row^=(1<<r); col^=(1<<c); diag^=(1<<(r+c)) ; diag^=(1<<(r-c+m-1));
+            row ^= (1 << r);
+            col ^= (1 << c);
+            diag ^= (1 << (r + c));
+            diag ^= (1 << (r - c + m - 1));
         }
     }
     return count;
@@ -615,42 +621,96 @@ bool knightTourPath(vector<vector<int>> &board, int r, int c, int move)
     return res;
 }
 
-bool isSafeToUseNumber(vector<vector<char>> &board,int r,int c,int num){
+bool isSafeToUseNumber(vector<vector<char>> &board, int r, int c, int num)
+{
 
     //  in Row
-    for(int i=0;i<9;i++){
-        if(board[r][i] == num) return false;
+    for (int i = 0; i < 9; i++)
+    {
+        if (board[r][i] - '0' == num)
+            return false;
     }
 
-    
     //  in col
-    for(int i=0;i<9;i++){
-        if(board[i][c] == num) return false;
+    for (int i = 0; i < 9; i++)
+    {
+        if (board[i][c] - '0' == num)
+            return false;
     }
 
     // in 3X3 matrix
-    
+    r = (r / 3) * 3;
+    c = (c / 3) * 3;
 
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (board[r + i][c + j] - '0' == num)
+                return false;
+        }
+    }
+
+    return true;
 }
 
-bool solveSudoku_(int idx,vector<int>& calls,vector<vector<char>> &board)
+vector<int> sudokuRow;
+vector<int> sudokuCol;
+vector<vector<int>> sudokuMat;
+
+bool solveSudoku_(int idx, vector<int> &calls, vector<vector<char>> &board)
 {
-      if(idx==calls.size()){
-          return true;
-      }
+    if (idx == calls.size())
+        return true;
 
-      int r=calls[idx] / 9;
-      int c=calls[idx] % 9;
+    int r = calls[idx] / 9;
+    int c = calls[idx] % 9;
+    bool res = false;
+    for (int num = 1; num <= 9; num++)
+    {
+        int mask = (1 << num);
+        if ((sudokuRow[r] & mask) == 0 && (sudokuCol[c] & mask) == 0 && (sudokuMat[r / 3][c / 3] & mask) == 0)
+        {
+            sudokuRow[r] ^= mask;
+            sudokuCol[c] ^= mask;
+            sudokuMat[r / 3][c / 3] ^= mask;
 
-      for(int num=1; num<=9; num++){
-          if(isSafeToUseNumber(board,int r,int c)){
-              board[r][c]=(char)(num + '0');
-              res=res||solveSudoku_(idx + 1, calls, board);
-              if(!res) board[r][c]='.';
-          }
-      }
+            board[r][c] = (char)(num + '0');
 
-      return res;
+            if(solveSudoku_(idx + 1, calls, board)) return true;
+
+            board[r][c] = '.';
+            sudokuRow[r] ^= mask;
+            sudokuCol[c] ^= mask;
+            sudokuMat[r / 3][c / 3] ^= mask;
+        }
+    }
+
+    return res;
+}
+
+bool isValidSudoku(vector<vector<char>>& board) {
+    sudokuRow.resize(9, 0);
+    sudokuCol.resize(9, 0);
+    sudokuMat.resize(3, vector<int>(3, 0));
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            if (board[i][j] != '.'){
+                int mask = (1 << (board[i][j] - '0'));
+                
+                if ((sudokuRow[i] & mask) != 0 || (sudokuCol[j] & mask) != 0 || (sudokuMat[i / 3][j / 3] & mask) != 0) 
+                return false;  
+                
+                sudokuRow[i] ^= mask;
+                sudokuCol[j] ^= mask;
+                sudokuMat[i / 3][j / 3] ^= mask;
+            }
+        }
+    }
+
+        
 }
 
 //=====================================================================
@@ -658,16 +718,26 @@ bool solveSudoku_(int idx,vector<int>& calls,vector<vector<char>> &board)
 void solveSudoku(vector<vector<char>> &board)
 {
     vector<int> calls;
+    sudokuRow.resize(9, 0);
+    sudokuCol.resize(9, 0);
+    sudokuMat.resize(3, vector<int>(3, 0));
     for (int i = 0; i < 9; i++)
     {
         for (int j = 0; j < 9; j++)
         {
             if (board[i][j] == '.')
                 calls.push_back(i * 9 + j);
+            else
+            {
+                int mask = (1 << (board[i][j] - '0'));
+                sudokuRow[i] ^= mask;
+                sudokuCol[j] ^= mask;
+                sudokuMat[i / 3][j / 3] ^= mask;
+            }
         }
     }
 
-    solveSudoku_(0,board,calls);
+    solveSudoku_(0, calls, board);
 }
 
 
