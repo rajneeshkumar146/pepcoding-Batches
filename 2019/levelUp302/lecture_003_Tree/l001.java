@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 public class l001{
 
     public static void main(String[] args){
@@ -19,7 +20,7 @@ public class l001{
 
    static int idx=0;
    public static Node constructTree(int[] arr){
-      if(idx >= arr.length || arr[idx]==-1) {
+      if(idx == arr.length || arr[idx]==-1) {
         idx++;  
         return null;
       }
@@ -82,8 +83,12 @@ public class l001{
        if(node==null) return false;
        
        if(node.data==data) return true;
-       return find(node.left,data) || find(node.right,data);
-   }
+       return find(node.left,data) || find(node.right,data);   
+        
+        // if(find(node.left,data)) return true;
+        // if(find(node.rigth,data)) return true;
+  
+    }
 
    //Traversal.============================================================
 
@@ -110,20 +115,91 @@ public class l001{
     postOrder(node.left);
     postOrder(node.right);
     System.out.print(node.data+ " ");
-}
+   
+    }
 
+    public static boolean rootToNodePath_(Node root,int data,ArrayList<Node> path){
+      if(root==null) return false;
+      if(root.data==data){
+          path.add(root);
+          return true;
+      }
 
+      boolean res = rootToNodePath_(root.left,data,path) || rootToNodePath_(root.right,data,path);
+     if(res) path.add(root);
+      return res;
+    }
 
+    public static ArraLits<Node> rootToNodePath_02(Node root,int data){
+        
+        if(root==null){
+            return new ArrayList<>();
+        }
+        
+        if(root.data==data){
+            ArrayList<Node> base=new ArrayList<>();
+            base.add(root);
+            return base;
+        }
+  
+        ArrayList<Node> left=rootToNodePath_(root.left,data,path);
+        if(left.size()!=0){
+            left.add(root);
+            return left
+        }
+   
+        ArrayList<Node> right=rootToNodePath_(root.right,data,path);
+        if(right.size()!=0){
+            right.add(root);
+            return right
+        }
+        
+        return new ArrayList<>();
+      }
 
+    public static void rootToNodePath(Node root,int data){
+        ArrayList<Node> path=new ArrayList<>();
+        rootToNodePath_(root,data,path);
+        for(Node n: path){
+            System.out.print(n.data + " -> ");
+        }
+    }
 
-   public static void solve(){
-    //    int[] arr={10,20,40,-1,-1,50,80,-1,-1,90,-1,-1,30,60,100,-1,-1,-1,70,110,-1,-1,120,-1,-1};
-       int[] arr={10,20};
-       Node root=constructTree(arr);
-       display(root);
-   }
+    public Node lowestCommonAncestor(Node root, int p, int q) {
+        ArrayList<Node> path1=new ArrayList<>();
+        ArrayList<Node> path2=new ArrayList<>();
+        
+        rootToNodePath_(root,p,path1);
+        rootToNodePath_(root,q,path2);
+
+        Node prev=null;
+        int i=path1.size()-1;
+        int j=path2.size()-1;
+        
+        while(i>=0 && j>=0){
+          if(path1.get(i).data!=path2.get(j).data) break;
+          
+          prev=path1.get(i);
+          i--;
+          j--;
+        }
+
+        return prev;
+    } 
+
 
    
 
+   public static void set1(Node node){
+      rootToNodePath(node,100);
 
+   }
+
+   public static void solve(){
+       int[] arr={10,20,40,-1,-1,50,80,-1,-1,90,-1,-1,30,60,100,-1,-1,-1,70,110,-1,-1,120,-1,-1};
+    //    int[] arr={10,20};
+       Node root=constructTree(arr);
+       display(root);
+       set1(root);
+   }
 }
