@@ -19,7 +19,7 @@ public class l001{
 
    static int idx=0;
    public static Node constructTree(int[] arr){
-      if(idx==arr.length || arr[idx]==-1) {
+      if(idx >= arr.length || arr[idx]==-1) {
         idx++;  
         return null;
       }
@@ -66,7 +66,7 @@ public class l001{
    
    public static int Minimum(Node node){
     if(node==null) return (int)1e8;  // java: Integer.MAX_VALUE, c++: INT_MAX; 
-    return Math.min(Math.min(Minimum(node.left), MaxMinimumimum(node.right)),node.data);
+    return Math.min(Math.min(Minimum(node.left), Minimum(node.right)),node.data);
    }
 
    public static int Minimum_02(Node node){
@@ -82,7 +82,7 @@ public class l001{
        if(node==null) return false;
        
        if(node.data==data) return true;
-       return find(node.left,data) || find(node.right,data)
+       return find(node.left,data) || find(node.right,data);
    }
 
    //Traversal.============================================================
@@ -117,7 +117,8 @@ public class l001{
 
 
    public static void solve(){
-       int[] arr={10,20,40,-1,-1,50,80,-1,-1,90,-1,-1,30,60,100,-1,-1,-1,70,110,-1,-1,120,-1,-1};
+    //    int[] arr={10,20,40,-1,-1,50,80,-1,-1,90,-1,-1,30,60,100,-1,-1,-1,70,110,-1,-1,120,-1,-1};
+       int[] arr={10,20};
        Node root=constructTree(arr);
        display(root);
    }
