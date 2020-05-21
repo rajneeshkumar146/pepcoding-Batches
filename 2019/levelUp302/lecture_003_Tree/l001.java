@@ -85,6 +85,7 @@ public class l001{
        if(node.data==data) return true;
        return find(node.left,data) || find(node.right,data);   
         
+
         // if(find(node.left,data)) return true;
         // if(find(node.rigth,data)) return true;
   
@@ -130,7 +131,7 @@ public class l001{
       return res;
     }
 
-    public static ArraLits<Node> rootToNodePath_02(Node root,int data){
+    public static ArrayList<Node> rootToNodePath_02(Node root,int data){
         
         if(root==null){
             return new ArrayList<>();
@@ -142,16 +143,16 @@ public class l001{
             return base;
         }
   
-        ArrayList<Node> left=rootToNodePath_(root.left,data,path);
+        ArrayList<Node> left=rootToNodePath_02(root.left,data);
         if(left.size()!=0){
             left.add(root);
-            return left
+            return left;
         }
    
-        ArrayList<Node> right=rootToNodePath_(root.right,data,path);
+        ArrayList<Node> right=rootToNodePath_02(root.right,data);
         if(right.size()!=0){
             right.add(root);
-            return right
+            return right;
         }
         
         return new ArrayList<>();
@@ -187,12 +188,67 @@ public class l001{
         return prev;
     } 
 
+    static Node LCANode=null;
+    public static boolean lowestCommonAncestor_02(Node root, int p, int q) {
+        if(root==null) return false;
+        
+        boolean selfDone=false;
+        if(root.data==p || root.data==q){
+            selfDone=true;
+        }
+
+        boolean leftDone=lowestCommonAncestor_02(root.left,p,q);
+        if(LCANode!=null) return true;
+
+        boolean rightDone=lowestCommonAncestor_02(root.right,p,q);
+        if(LCANode!=null) return true;
+        
+        if((selfDone && leftDone) || (selfDone && rightDone) || (leftDone && rightDone))
+          LCANode=root;
+
+
+        return selfDone || leftDone || rightDone; 
+    }
+
+    public static void kDown(Node root,int level,Node blockNode){
+       if(root==null || root==blockNode) return;
+
+       if(level==0){
+         System.out.print(root.data + " ");
+         return;  
+       }
+
+       kDown(root.left,level-1,blockNode);
+       kDown(root.right,level-1,blockNode);
+
+    }
+
+    public static void allNodeKAway(Node root, int target, int K) {
+        ArrayList<Node> path=new ArrayList<>();
+        rootToNodePath_(root,target,path);
+
+        Node blockNode=null;
+        for(int i=0;i<path.size();i++){
+            if(k-i<0) break;
+            kDown(path.get(i),K-i,blockNode);
+            blockNode=path.get(i);
+        }
+    }
+
+
+
+
+
+
 
    
 
    public static void set1(Node node){
-      rootToNodePath(node,100);
-
+    //   rootToNodePath(node,100);
+    
+    //   lowestCommonAncestor_02(node,200,30);
+    //   System.out.println("LCA: " + (LCANode!=null?LCANode.data:"-1"));
+    allNodeKAway(node,20,1);
    }
 
    public static void solve(){
