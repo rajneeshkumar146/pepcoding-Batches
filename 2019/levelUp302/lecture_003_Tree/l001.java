@@ -229,26 +229,139 @@ public class l001{
 
         Node blockNode=null;
         for(int i=0;i<path.size();i++){
-            if(k-i<0) break;
+            if(K-i<0) break;
             kDown(path.get(i),K-i,blockNode);
             blockNode=path.get(i);
         }
     }
+    
+    public static int allNodeKAway_02_(Node root, int target, int K) {
+         if(root==null) return -1;
 
+         if(root.data == target){
+            kDown(root,K,null);
+            return 1;
+         }
 
+         int leftdistance=allNodeKAway_02_(root.left,target,K);
+         if(leftdistance!=-1){
+            if(K-leftdistance >= 0) kDown(root,K-leftdistance,root.left);
+            return leftdistance+1;
+         }
+         
+         int rightdistance=allNodeKAway_02_(root.right,target,K);
+          if(rightdistance!=-1){
+            if(K-rightdistance >= 0) kDown(root,K-rightdistance,root.right);
+            return rightdistance+1;
+        }
 
+        return -1;
+    
+    }
 
+    public static void kDown(Node root,int level){
+        if(root==null) return;
+ 
+        if(level==0){
+          System.out.print(root.data + " ");
+          return;  
+        }
+ 
+        kDown(root.left,level-1);
+        kDown(root.right,level-1);
+ 
+     }
 
+    public static int allNodeKAway_03_(Node root, int target, int K) {
+        if(root==null) return -1;
 
+        if(root.data == target){
+           kDown(root,K,null);
+           return 1;
+        }
 
+        int leftdistance=allNodeKAway_03_(root.left,target,K);
+        if(leftdistance!=-1){
+           if(K-leftdistance == 0)  
+              System.out.print(root.data + " ");
+           else
+              kDown(root.right,K-leftdistance-1);
+           return leftdistance+1;
+        }
+        
+        int rightdistance=allNodeKAway_03_(root.right,target,K);
+        if(rightdistance!=-1){
+            if(K-rightdistance == 0)
+               System.out.print(root.data + " ");
+            else
+               kDown(root.left,K-rightdistance-1);
+            return rightdistance+1;
+         }
+
+       return -1;
    
+   }
 
+   public static int diameter_01(Node node){
+       if(node==null) return 0;
+
+       int ld=diameter_01(node.left);
+       int rd=diameter_01(node.right);
+
+       int lh=height(node.left);
+       int rh=height(node.right);
+
+       int myDia = lh + rh + 2;
+       return Math.max(Math.max(ld,rd), myDia);
+   }
+
+   public static class diaPair{
+       int dia=0;
+       int hei=0;
+
+       diaPair(int dia,int hei){
+           this.dia=dia;
+           this.hei=hei;
+       }
+   }
+
+   public static diaPair diameter_02(Node node){
+    if(node==null) return new diaPair(0,-1) ;
+
+    diaPair lr=diameter_02(node.left); // left result
+    diaPair rr=diameter_02(node.right); // right result
+
+    diaPair myRes=new diaPair(0,-1);
+    myRes.dia = Math.max(Math.max(lr.dia,rr.dia), (lr.hei+rr.hei+2));
+    myRes.hei = Math.max(lr.hei,rr.hei)+1;
+    
+    return myRes;
+}
+
+static int diameter=0;
+public static int diameter_03(Node node){
+    if(node==null) return -1 ;
+
+    int lh = diameter_03(node.left); // left height
+    int rh =diameter_03(node.right); // right height
+    
+    diameter=Math.max(diameter,lh+rh+2);
+    return Math.max(lh,rh)+1;
+}
+  
    public static void set1(Node node){
     //   rootToNodePath(node,100);
     
     //   lowestCommonAncestor_02(node,200,30);
     //   System.out.println("LCA: " + (LCANode!=null?LCANode.data:"-1"));
-    allNodeKAway(node,20,1);
+    // allNodeKAway(node,20,1);
+
+
+    System.out.println(diameter_01(node));
+    System.out.println(diameter_02(node).dia);
+    diameter_03(node);
+    System.out.println(diameter);
+
    }
 
    public static void solve(){

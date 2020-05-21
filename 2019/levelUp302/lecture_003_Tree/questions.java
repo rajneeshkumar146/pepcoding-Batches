@@ -44,7 +44,17 @@ public class question{
             blockNode=path.get(i);
         }  
         return ans;
+    }   
+
+    public List<Integer> distanceK_02(TreeNode root, TreeNode target, int K) {
+    
+    }
+    
+    public List<Integer> distanceK_02(TreeNode root, TreeNode target, int K) {
+        List<Integer> ans=new ArrayList<>();
+        return ans;
     }      
+
 
 
 
