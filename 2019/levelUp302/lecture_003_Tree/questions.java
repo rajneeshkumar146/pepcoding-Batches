@@ -121,7 +121,8 @@ public class question{
    int rightNodeToNodeSum = maxPathSum_(node.right);
    
    int max_=Math.max(leftNodeToNodeSum,rightNodeToNodeSum) + node.val;
-   max_nodeToNodeSum=Math.max(Math.max(max_nodeToNodeSum,node.val),Math.max(leftNodeToNodeSum + node.val + rightNodeToNodeSum, max_));
+   max_nodeToNodeSum=Math.max(Math.max(max_nodeToNodeSum,node.val),
+                    Math.max(leftNodeToNodeSum + node.val + rightNodeToNodeSum, max_));
 
    return Math.max(max_,node.val);
 }
