@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 public class l001{
 
     public static void main(String[] args){
@@ -348,7 +349,99 @@ public static int diameter_03(Node node){
     diameter=Math.max(diameter,lh+rh+2);
     return Math.max(lh,rh)+1;
 }
-  
+
+   //LevelOrder_series.=========================================================
+
+   public static void levelOrder_00(Node node){
+       LinkedList<Node> pQue=new LinkedList<>(); // addLast and removeFirst.
+       pQue.addLast(node);
+
+       while(pQue.size()!=0){
+           Node rnode=pQue.removeFirst();
+           System.out.print(rnode.data+ " ");
+           if(rnode.left!=null) pQue.addLast(rnode.left);
+           if(rnode.right!=null) pQue.addLast(rnode.right);
+      }
+   }
+
+   public static void levelOrder_01(Node node){
+    LinkedList<Node> pQue=new LinkedList<>(); // addLast and removeFirst.
+    LinkedList<Node> cQue=new LinkedList<>(); // addLast and removeFirst.
+
+    pQue.addLast(node);
+    int count=0;
+    System.out.print("Level: " + count + " -> ");
+    
+    while(pQue.size()!=0){
+        Node rnode=pQue.removeFirst();
+        System.out.print(rnode.data+ " ");
+        if(rnode.left!=null) cQue.addLast(rnode.left);
+        if(rnode.right!=null) cQue.addLast(rnode.right);
+
+        if(pQue.size()==0){
+          LinkedList<Node> temp=pQue;
+          pQue=cQue;
+          cQue=temp;
+          count++;      
+         System.out.print("\nLevel: " + count + " -> ");
+        }
+    }
+}
+
+public static void levelOrder_02(Node node){
+    LinkedList<Node> Que=new LinkedList<>(); // addLast and removeFirst.
+
+    Que.addLast(node);
+    Que.addLast(null);
+    int count=0;
+    System.out.print("Level: " + count + " -> ");
+    
+    while(Que.size()!=1){
+        Node rnode=Que.removeFirst();
+        System.out.print(rnode.data+ " ");
+        if(rnode.left!=null) Que.addLast(rnode.left);
+        if(rnode.right!=null) Que.addLast(rnode.right);
+
+        if(Que.getFirst()==null){
+            Que.removeFirst();
+            Que.addLast(null);
+            count++;      
+            System.out.print("\nLevel: " + count + " -> ");
+        }
+    }
+}
+
+public static void levelOrder_03(Node node){
+    LinkedList<Node> pQue=new LinkedList<>(); // addLast and removeFirst.
+    pQue.addLast(node);
+    
+    int count=0;
+    while(pQue.size()!=0){
+        System.out.print("Level: " + count + " -> ");
+        count++;
+        int size=pQue.size();
+   
+        while(size--> 0){
+            Node rnode=pQue.removeFirst();
+            System.out.print(rnode.data+ " ");
+            if(rnode.left!=null) pQue.addLast(rnode.left);
+            if(rnode.right!=null) pQue.addLast(rnode.right);    
+        }
+        System.out.println();
+    }
+}
+
+
+
+   public static void levelOrder(Node node){
+    // levelOrder_00(node);
+    // levelOrder_01(node);
+    // levelOrder_02(node);
+    levelOrder_03(node);
+
+   }
+
+
    public static void set1(Node node){
     //   rootToNodePath(node,100);
     
@@ -361,7 +454,6 @@ public static int diameter_03(Node node){
     System.out.println(diameter_02(node).dia);
     diameter_03(node);
     System.out.println(diameter);
-
    }
 
    public static void solve(){
@@ -369,6 +461,7 @@ public static int diameter_03(Node node){
     //    int[] arr={10,20};
        Node root=constructTree(arr);
        display(root);
-       set1(root);
+    //    set1(root);
+       levelOrder(root);
    }
 }
