@@ -644,7 +644,34 @@ public static void diagonalSum(Node node){
     System.out.println();
 }
 
+static Node DLLhead=null;
+static Node DLLprev=null;
 
+public static void DLL(Node node){
+     if(node==null) return;
+     
+     DLL(node.left);
+     
+     if(DLLhead==null){
+        DLLhead=node;
+     }else{
+         DLLprev.right=node;
+         node.left=DLLprev;
+     }
+      DLLprev=node;
+
+     DLL(node.right);
+     
+    }
+
+
+  public static void set2(Node node){
+    DLL(node);
+    while(DLLhead!=null){
+        System.out.print(DLLhead.data+ " ");
+        DLLhead=DLLhead.right;
+    }
+  }
 
 
    public static void view(Node node){
@@ -655,8 +682,6 @@ public static void diagonalSum(Node node){
     //    topView(node);
 
    }
-
-
 
    public static void levelOrder(Node node){
     // levelOrder_00(node);
@@ -688,6 +713,7 @@ public static void diagonalSum(Node node){
        display(root);
     //    set1(root);
     //    levelOrder(root);
-           view(root);
+        //    view(root);
+        set2(root);
    }
 }
