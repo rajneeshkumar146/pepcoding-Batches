@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+
 public class question{
      public class TreeNode {
         int val;
@@ -125,6 +129,67 @@ public class question{
                     Math.max(leftNodeToNodeSum + node.val + rightNodeToNodeSum, max_));
 
    return Math.max(max_,node.val);
+}
+
+//Leetcode 987.====================================================
+
+
+static int leftMinValue=0;
+static int rightMaxValue=0;
+
+public static void width(TreeNode node,int lev){
+    if(node==null) return;
+
+    leftMinValue=Math.min(leftMinValue,lev);
+    rightMaxValue=Math.max(rightMaxValue,lev);
+    
+    width(node.left, lev - 1);
+    width(node.right, lev + 1);
+} 
+
+public static class pairVO implements Comparable<pairVO>{
+    TreeNode node;  //actual Node
+    int vl=0;  // vertical Level
+    public pairVO(TreeNode node,int vl){
+        this.node=node;
+        this.vl=vl;
+    }
+
+    @override
+    public int compareTo(pairVO o){  // for c++: bool opeartor < ( pairvo const & o) const{
+       if(this.vl==o.vl) return this.node.val-o.node.val; // in c++: replace '-' with '>'
+       return this.vl-o.vl;  // default behaviour of que // in c++: replace '-' with '>'
+    }
+}
+
+public List<List<Integer>> verticalTraversal(TreeNode root) {
+    List<List<Integer>> ans=new ArrayList<>();
+    if(root==null) return ans;
+
+    width(root,0);
+    int n=rightMaxValue - leftMinValue + 1;
+    for(int i=0;i<n;i++)
+        ans.add(new ArrayList<>());
+
+    PriorityQueue<pairVO> pque=new PriorityQueue<>();
+    PriorityQueue<pairVO> cque=new PriorityQueue<>();
+
+    pque.add(new pairVO(root,-leftMinValue));
+
+    while(pque.size()!=0){
+        int size=pque.size();
+        while(size--> 0){
+            pairVO rpair=pque.poll();
+            ans.get(rpair.vl).add(rpair.node.val);
+
+            if(rpair.node.left!=null) cque.add(new pairVO(rpair.node.left,rpair.vl-1));
+            if(rpair.node.right!=null) cque.add(new pairVO(rpair.node.right,rpair.vl+1));
+        }
+
+        PriorityQueue<pairVO> temp=pque;
+        pque=cque;
+        cque=temp;
+    }
 }
 
 }
