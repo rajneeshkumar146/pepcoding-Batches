@@ -26,6 +26,7 @@ bool isValidBST(TreeNode *root)
 
     if (prevData >= root->val)
         return false;
+        
     prevData = root->val;
 
     if (!isValidBST(root->right))
