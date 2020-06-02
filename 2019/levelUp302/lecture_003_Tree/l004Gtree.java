@@ -148,6 +148,23 @@ public static Node linearize(Node node){
     return lastTail;
 }
 
+public static void flattern(Node node){
+    ArrayList<Node> nchilds=new ArrayList<>();
+    
+    for(Node child: node.childs){
+        flattern(child);
+
+        nchilds.add(child);
+        for(Node ch: child.childs){
+          nchilds.add(ch);
+        }
+        child.childs.clear();
+    }
+
+    node.childs.clear();
+    node.childs=nchilds;
+}
+
 
 
 
@@ -156,7 +173,8 @@ public static Node linearize(Node node){
 
 public static void set1(Node root){
     // levelOrder(root);
-    linearize(root);
+    // linearize(root);
+    flattern(root);
     display(root);
 }
 
