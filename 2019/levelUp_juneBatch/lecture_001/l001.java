@@ -95,7 +95,7 @@ public class l001{
         return myAns;
     }
 
-    public static int nokiaKeyPad(String str,String ans){
+    public static int nokiaKeyPad_02(String str,String ans){
         if(str.length()==0) {
             System.out.println(ans);
             return 1;
@@ -103,12 +103,45 @@ public class l001{
 
         char ch=str.charAt(0);
         String nstr=str.substring(1);
-
         String word=words[ch-'0'];
-        
         int count=0;
+
         for(int i=0;i<word.length();i++){
-            count+=nokiaKeyPad(nstr,ans+word.charAt(i));
+            count+=nokiaKeyPad_02(nstr,ans+word.charAt(i));
+        }
+
+        if(str.length() > 1){
+            char ch2=str.charAt(1);
+            int num = (ch-'0')*10 + (ch2-'0');
+            if(num >= 10 && num <= 11){
+                word=words[num];
+                for(int i=0;i<word.length();i++){
+                    count+=nokiaKeyPad_02(str.substring(2),ans + word.charAt(i));
+                }
+            }
+        }
+       
+        return count;
+    }
+
+    public static int encoding(String str,String ans){
+        if(str.length()==0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        char ch=str.charAt(0);
+        String nstr=str.substring(1);
+        int count=0;
+        
+        count+=encoding(nstr,ans+(char)('a'+ (ch-'0')));
+
+        if(str.length() > 1){
+            char ch2=str.charAt(1);
+            int num = (ch-'0')*10 + (ch2-'0');
+            if(num >= 10 && num <= 25){
+                count+=encoding(str.substring(2),ans+ (char)('a'+ num));
+            }
         }
        
         return count;
