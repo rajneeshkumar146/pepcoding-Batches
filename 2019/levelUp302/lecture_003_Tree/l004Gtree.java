@@ -167,10 +167,6 @@ public static void flattern(Node node){
 
 
 
-
-
-
-
 public static void set1(Node root){
     // levelOrder(root);
     // linearize(root);
