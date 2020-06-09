@@ -1468,7 +1468,7 @@ public class l001 {
 			        int myCost=leftOptimalCost +  arr[st] * arr[cut] * arr[end]   + rightOptimalCost;
 					
 					if(myCost<min_){
-						min_=myCost;
+						min_=myCost;palindrome_partitioning_rec
 						mins=  "(" + sdp[st][cut]+sdp[cut][end] + ")";
 					}
 		        }
@@ -1689,10 +1689,6 @@ public class l001 {
 
 		return dp[n];
     }
-
-
-
-
 
 	public static void PathSeries() {
 		int er = 3;
