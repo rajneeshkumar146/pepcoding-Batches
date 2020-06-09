@@ -18,6 +18,7 @@ public class l001{
 
         public int size(){
             return this.size;
+
         }
 
         public boolean isEmpty(){
@@ -79,11 +80,26 @@ public class l001{
 
 
         private void addAtNode(Node node,int pos){
-            
-         
+            if(pos==0){
+                addFirstNode(node);
+            }else if(pos==this.size) 
+                addLastNode(node);
+            else{
+                Node prevNode=getNodeAt(pos-1);
+                Node temp=prevNode.next;
+                
+                prevNode.next=node;
+                node.next=temp;
+            }
+            this.size++;
         }
 
         public void addAt(int data,int pos){
+            if(pos < 0 || pos > this.size ){
+                System.out.println("NullPointException!")
+                return ;
+            }
+
             Node node=new Node(data);
             addAtNode(node,pos);
         }
@@ -132,6 +148,25 @@ public class l001{
         }
 
         public int removeAt(int pos){
+            if(pos>=this.size || pos < 0){
+                System.out.println("NullPointException!")
+                return -1;
+            }
+
+            if(pos==0) 
+                return removeFirst();
+            else if(pos==this.size-1) 
+                return removeLast();
+            else{
+                Node prev=getNodeAt(pos-1);
+                Node next=prev.next;
+
+                prev.next=next.next;
+                next.next=null;
+                this.size--;
+
+                return next.data;
+            }
 
         }
 
@@ -160,7 +195,7 @@ public class l001{
                 return -1;
             }
 
-            return 0;  
+            return getNodeAt(pos).data;  
         }
 
     }
@@ -173,8 +208,9 @@ public class l001{
         for(int i=1;i<10;i++){
             ll.addLast(i*10);
         }
-        System.out.println(ll);
 
+        
+        System.out.println(ll);
     }
     
     
