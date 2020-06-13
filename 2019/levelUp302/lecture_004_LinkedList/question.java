@@ -262,4 +262,48 @@ public class question {
         return slow;
     }
 
+    // Leetcode 160
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if (headB == null || headA == null)
+            return null;
+        if (headA.next == null && headB.next == null)
+            if (headA != headB)
+                return null;
+            else
+                return headA;
+
+        ListNode curr = headA;
+        while (curr.next != null) {
+            curr = curr.next;
+        }
+
+        curr.next = headA;
+        ListNode rv = detectCycle(headB);
+        curr.next = null;
+
+        return rv;
+
+    }
+
+    public ListNode sortList(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode mid = getMidNode2(head);
+        ListNode nhead = mid.next;
+        mid.next = null;
+
+        return mergeTwoLists(sortList(head), sortList(nhead));
+
+    }
+
+    public ListNode mergeKLists(ListNode[] lists, int si, int ei) {
+        if (si == ei)
+            return lists[si];
+        if (si + 1 == ei)
+            return mergeTwoLists(lists[si], lists[si + 1]);
+        int mid = (si + ei) / 2;
+        return mergeTwoLists(mergeKLists(lists, si, mid), mergeKLists(lists, mid + 1, ei));
+    }
+
 }
