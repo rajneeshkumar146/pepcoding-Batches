@@ -109,6 +109,12 @@ public class l001 {
                 count += hasAllPath(e.v, dest, wsf + e.w, vis, path + src + " ");
         }
 
+        for (int i = 0; i < graph[src].size(); i++) {
+            Edge e = graph[src].get(i);
+            if (!vis[e.v])
+                count += hasAllPath(e.v, dest, wsf + e.w, vis, path + src + " ");
+        }
+
         vis[src] = false;
         return count;
     }

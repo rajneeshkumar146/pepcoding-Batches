@@ -38,6 +38,7 @@ public class Q002Leetcode092 {
                 ListNode forw = curr.next;
                 curr.next = null;
                 addFirstNode(curr);
+                
 
                 curr = forw;
                 idx++;

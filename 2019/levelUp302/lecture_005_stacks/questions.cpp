@@ -135,3 +135,145 @@ public:
         return ans;
     }
 };
+
+//Leetcode 921.==================================================================
+
+int minAddToMakeValid(string str)
+{
+
+    stack<int> st;
+    st.push(-1);
+
+    for (int i = 0; i < str.length(); i++)
+    {
+        if (st.top() != -1 && str[i] == ')' && str[st.top()] == '(')
+            st.pop();
+        else
+            st.push(i);
+    }
+
+    return st.size() - 1;
+}
+
+int minAddToMakeValid02(string str)
+{
+    int openingBracketReq = 0;
+    int closingBracketReq = 0;
+
+    for (int i = 0; i < str.length(); i++)
+    {
+        if (str[i] == '(')
+            closingBracketReq++;
+        else if (closingBracketReq > 0)
+            closingBracketReq--;
+        else
+            openingBracketReq++;
+    }
+
+    return openingBracketReq + closingBracketReq;
+}
+
+//Leetcode 1249:
+
+string minRemoveToMakeValid(string str)
+{
+    int n = str.length();
+    vector<bool> marked(n, false);
+
+    stack<int> st;
+    st.push(-1);
+
+    for (int i = 0; i < n; i++)
+    {
+        if (st.top() != -1 && str[i] == ')' && str[st.top()] == '(')
+        {
+            int val = st.top();
+            st.pop();
+            marked[i] = marked[val] = true;
+        }
+        else if (str[i] == '(')
+            st.push(i);
+        else if (str[i] != ')')
+            marked[i] = true;
+    }
+
+    string ans = "";
+    for (int i = 0; i < n; i++)
+    {
+        if (marked[i])
+            ans += str[i];
+    }
+
+    return ans;
+}
+
+string minRemoveToMakeValid_02(string str)
+{
+    int n = str.length();
+
+    stack<int> st;
+
+    for (int i = 0; i < n; i++)
+    {
+        if (str[i] == ')')
+        {
+            if (st.size() != 0)
+                st.pop();
+            else
+                str[i] = '*';
+        }
+        else if (str[i] == '(')
+            st.push(i);
+    }
+
+    while (st.size() != 0)
+    {
+        str[st.top()] = '*';
+        st.pop();
+    }
+
+    string ans = "";
+    for (int i = 0; i < n; i++)
+    {
+        if (str[i] != '*')
+            ans += str[i];
+    }
+
+    return ans;
+}
+
+//Leetcode : 735
+
+vector<int> asteroidCollision(vector<int> &arr)
+{
+    stack<int> st;
+    for (int ele : arr)
+    {
+        if (ele > 0)
+            st.push(ele);
+        else
+        {
+            while (st.size() != 0 && st.top() > 0 && st.top() < -ele)
+                st.pop();
+
+            if (st.size() != 0 && st.top() == -ele)
+                st.pop();
+            else if (st.size() == 0 || st.top() < 0)
+                st.push(ele);
+            else if (st.size() != 0 && st.top() > -ele)
+            {
+                //do nothing.
+            }
+        }
+    }
+
+    vector<int> ans(st.size(), 0);
+    int i = st.size() - 1;
+    while (st.size())
+    {
+        ans[i--] = st.top();
+        st.pop();
+    }
+
+    return ans;
+}
