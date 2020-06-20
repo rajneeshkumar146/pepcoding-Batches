@@ -277,3 +277,211 @@ vector<int> asteroidCollision(vector<int> &arr)
 
     return ans;
 }
+
+vector<int> nsor(vector<int> &arr)
+{
+    stack<int> st;
+    vector<int> ans(arr.size(), arr.size());
+
+    for (int i = 0; i < arr.size(); i++)
+    {
+        while (st.size() != 0 && arr[st.top()] > arr[i]) // for smaller replace to '<' to '>'
+        {
+            ans[st.top()] = i;
+            st.pop();
+        }
+
+        st.push(i);
+    }
+
+    return ans;
+}
+
+vector<int> nsol(vector<int> &arr)
+{
+    stack<int> st;
+    vector<int> ans(arr.size(), -1);
+
+    for (int i = arr.size() - 1; i >= 0; i--)
+    {
+        while (st.size() != 0 && arr[st.top()] > arr[i]) // for smaller replace to '<' to '>'
+        {
+            ans[st.top()] = i;
+            st.pop();
+        }
+
+        st.push(i);
+    }
+
+    return ans;
+}
+
+int largestRectangleArea(vector<int> &heights)
+{
+    vector<int> nsolA = nsol(heights);
+    vector<int> nsorA = nsor(heights);
+
+    int max_ = 0;
+    for (int i = 0; i < heights.size(); i++)
+    {
+        int width = nsorA[i] - nsolA[i] - 1;
+        int area = heights[i] * width;
+        max_ = max(max_, area);
+    }
+    return max_;
+}
+
+vector<int> largestRectangleArea_btr(vector<int> &heights)
+{
+    int n = heights.size();
+    stack<int> st;
+    st.push(-1);
+    int maxArea = 0;
+
+    int lb = 0, rb = 0, h = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        while (st.top() != -1 && heights[st.top()] >= heights[i])
+        {
+            int height = heights[st.top()];
+            st.pop();
+            int area = height * (i - st.top() - 1);
+            if (area > maxArea)
+            {
+                maxArea = area;
+                lb = st.top() + 1;
+                rb = i - 1;
+                h = height;
+            }
+        }
+        st.push(i);
+    }
+
+    while (st.top() != -1)
+    {
+        int height = heights[st.top()];
+        st.pop();
+        int area = height * (n - st.top() - 1);
+        if (area > maxArea)
+        {
+            maxArea = area;
+            lb = st.top() + 1;
+            rb = n - 1;
+            h = height;
+        }
+    }
+
+    return {maxArea, lb, rb, h};
+}
+
+int largestRectangleArea(vector<int> &heights)
+{
+    int n = heights.size();
+    stack<int> st;
+    st.push(-1);
+    int maxArea = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        while (st.top() != -1 && heights[st.top()] >= heights[i])
+        {
+            int height = heights[st.top()];
+            st.pop();
+            int area = height * (i - st.top() - 1);
+            if (area > maxArea)
+                maxArea = area;
+        }
+        st.push(i);
+    }
+
+    while (st.top() != -1)
+    {
+        int height = heights[st.top()];
+        st.pop();
+        int area = height * (n - st.top() - 1);
+        if (area > maxArea)
+            maxArea = area;
+    }
+
+    return maxArea;
+}
+
+int maximalRectangle(vector<vector<char>> &matrix)
+{
+    if (matrix.size() == 0 || matrix[0].size() == 0)
+        return 0;
+
+    int n = matrix.size();
+    int m = matrix[0].size();
+    vector<int> heights(m, 0);
+
+    int maxArea = 0;
+
+    for (int r = 0; r < n; r++)
+    {
+        for (int c = 0; c < m; c++)
+        {
+            int ch = matrix[r][c] - '0';
+            if (ch == 1)
+                heights[c] += 1;
+            else
+                heights[c] = 0;
+        }
+
+        int area = largestRectangleArea(heights);
+        maxArea = max(maxArea, area);
+    }
+
+    return maxArea;
+}
+
+int trap(vector<int> &height)
+{
+    int n = height.size();
+    vector<int> gol(n, 0); // greatest so far till ith index
+    vector<int> gor(n, 0);
+
+    int prev = -1;
+    for (int i = 0; i < n; i++)
+    {
+        gol[i] = max(prev, height[i]);
+        prev = gol[i];
+    }
+
+    prev = -1;
+    for (int i = n - 1; i >= 0; i--)
+    {
+        gor[i] = max(prev, height[i]);
+        prev = gor[i];
+    }
+
+    int twater = 0;
+    for (int i = 0; i < n; i++)
+        twater += min(gor[i], gol[i]) - height[i];
+
+    return twater;
+}
+
+int trap02(vector<int> &height)
+{
+    int n = height.size();
+    stack<int> st;
+    int water = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        while (st.size() != 0 && height[i] >= height[st.top()])
+        {
+            int h = height[st.top()];
+            st.pop();
+            if (st.size() == 0)
+                break;
+
+            int w = i - st.top() - 1;
+            water += w * (min(height[i], height[st.top()]) - h);
+        }
+        st.push(i);
+    }
+    return water;
+}
