@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stack>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -484,4 +485,158 @@ int trap02(vector<int> &height)
         st.push(i);
     }
     return water;
+}
+
+int trap03(vector<int> &height)
+{
+    int n = height.size();
+    int li = 0, ri = n - 1, lMaxBH = 0, rMaxBH = 0;
+    int water = 0;
+
+    while (li <= ri)
+    {
+        lMaxBH = max(lMaxBH, height[li]);
+        rMaxBH = max(rMaxBH, height[ri]);
+
+        if (lMaxBH <= rMaxBH)
+            water += lMaxBH - height[li++];
+        else
+            water += rMaxBH - height[ri--];
+    }
+    return water;
+}
+
+class MinStack
+{
+    stack<long> st;
+    long minSF = 0;
+
+public:
+    MinStack()
+    {
+        minSF = 0;
+    }
+
+    void push(int x)
+    {
+        if (st.size() == 0)
+        {
+            st.push(x);
+            minSF = x;
+            return;
+        }
+
+        if (x < minSF)
+        {
+            st.push(2 * x - minSF);
+            minSF = x;
+        }
+        else
+            st.push(x);
+    }
+
+    void pop()
+    {
+        if (st.top() < minSF)
+            minSF = 2 * minSF - st.top();
+        st.pop();
+    }
+
+    int top()
+    {
+        if (st.top() > minSF)
+            return (int)st.top();
+        return (int)minSF;
+    }
+
+    int getMin()
+    {
+        return (int)minSF;
+    }
+};
+
+bool validateStackSequences(vector<int> &pushed, vector<int> &popped)
+{
+    stack<int> st;
+    int i = 0;
+    for (int ele : pushed)
+    {
+        st.push(ele);
+        while (st.size() != 0 && st.top() == popped[i])
+        {
+            st.pop();
+            i++;
+        }
+    }
+
+    return st.size() == 0;
+}
+
+string removeKdigits(string num, int k)
+{
+    if (num.size() == 0)
+        return "0";
+
+    int n = num.length();
+    stack<char> st; // as a stack
+
+    for (int i = 0; i < n; i++)
+    {
+        while (st.size() != 0 && k > 0 && st.top() > num[i])
+        {
+            st.pop();
+            k--;
+        }
+        st.push(num[i]);
+    }
+
+    while (k--)
+        st.pop();
+
+    string ans = ""; // convert stack into string.
+    while (st.size() != 0)
+    {
+        ans += st.top();
+        st.pop();
+    }
+
+    while (ans.size() != 0) // remove leading zeros.
+    {
+        if (ans.back() != '0')
+            break;
+        ans.pop_back();
+    }
+    reverse(ans.begin(), ans.end()); // reverse your answer.
+    return ans.length() != 0 ? ans : "0";
+}
+
+//leetcode 316.==
+string removeDuplicateLetters(string s)
+{
+    if (s.length() == 0)
+        return s;
+    int n = s.length();
+    vector<int> freq(26, 0);
+    vector<bool> seen(26, 0);
+
+    for (char ch : s)
+        freq[ch - 'a']++;
+
+    string ans = "0"; // treat as a stack.
+    for (char ch : s)
+    {
+        freq[ch - 'a']--;
+        if (seen[ch - 'a'])
+            continue;
+        while (ans.back() > ch && freq[ans.back() - 'a'] > 0)
+        {
+            seen[ans.back() - 'a'] = false;
+            ans.pop_back();
+        }
+
+        seen[ch - 'a'] = true;
+        ans += ch;
+    }
+
+    return ans.substr(1);
 }

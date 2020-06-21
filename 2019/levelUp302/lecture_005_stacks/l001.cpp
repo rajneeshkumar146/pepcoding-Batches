@@ -14,6 +14,7 @@ public:
     Mystack()
     {
         this->arr = new int[N];
+        
     }
 
     Mystack(int size)

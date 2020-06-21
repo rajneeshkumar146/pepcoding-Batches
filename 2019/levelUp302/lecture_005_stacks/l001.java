@@ -5,7 +5,6 @@ public class l001 {
     }
 
     public static class Mystack {
-
         private int N = 10000;
         private int[] arr;
         private int sz = 0;
