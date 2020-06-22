@@ -202,4 +202,170 @@ public class question {
         return mergeKLists02(lists, 0, lists.length - 1);
     }
 
+    // Leetcode 141: linked-list-cycle.====================================
+
+    public boolean hasCycle(ListNode head) {
+        if (head == null || head.next == null)
+            return false;
+
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast)
+                break;
+        }
+
+        return fast == slow ? true : false;
+    }
+
+    // Leetcode 142.=====================================================
+    public ListNode detectCycle(ListNode head) {
+        if (head == null || head.next == null)
+            return null;
+
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast)
+                break;
+        }
+
+        if (fast != slow)
+            return null;
+
+        slow = head;
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return slow;
+    }
+
+    // Leetcode 160=========================================================
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if (headA == null || headB == null)
+            return null;
+
+        ListNode curr = headA;
+        while (curr.next != null)
+            curr = curr.next;
+
+        curr.next = headB; // cycle.
+        ListNode ans = detectCycle(headA);
+        curr.next = null; // destroy cycle.
+        return ans;
+    }
+
+    ListNode oH = null, oT = null;
+    ListNode tH = null, tT = null;
+
+    public void addFirstNode(ListNode node) {
+        if (tT == null) {
+            tH = node;
+            tT = node;
+        } else {
+            node.next = tH;
+            tH = node;
+        }
+    }
+
+    public int length(ListNode node) {
+        int len = 0;
+        while (node != null) {
+            node = node.next;
+            len++;
+        }
+        return len;
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head == null || head.next == null || k == 0 || k == 1)
+            return head;
+
+        int len = length(head);
+        if (len < k)
+            return head;
+
+        ListNode curr = head;
+        while (curr != null && len >= k) {
+            int temp = k;
+            while (temp-- > 0) {
+                ListNode rnode = curr;
+                curr = curr.next;
+                rnode.next = null;
+
+                addFirstNode(rnode);
+            }
+
+            if (oH == null) {
+                oH = tH;
+                oT = tT;
+            } else {
+                oT.next = tH;
+                oT = tT;
+            }
+
+            tH = null;
+            tT = null;
+
+            len -= k;
+        }
+
+        oT.next = curr;
+        return oH;
+    }
+
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if (head == null || head.next == null || n == m)
+            return head;
+
+        int i = 1;
+        ListNode curr = head;
+        ListNode prev = null;
+
+        while (curr != null) {
+            while (i >= m && i <= n) {
+                ListNode rnode = curr;
+                curr = curr.next;
+                rnode.next = null;
+                addFirstNode(rnode);
+                i++;
+            }
+
+            if (i > n) {
+                if (prev != null)
+                    prev.next = tH;
+                else
+                    head = tH;
+                tT.next = curr;
+                break;
+            }
+
+            prev = curr;
+            curr = curr.next;
+            i++;
+        }
+
+        return head;
+    }
+
+    ListNode reverseLL(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        while (head != null) {
+            ListNode rnode = head;
+            head = head.next;
+            rnode.next = null;
+            addFirstNode(rnode);
+        }
+
+        return th;
+
+    }
+
 }

@@ -497,11 +497,12 @@ int trap03(vector<int> &height)
     {
         lMaxBH = max(lMaxBH, height[li]);
         rMaxBH = max(rMaxBH, height[ri]);
+        water += lMaxBH <= rMaxBH ? lMaxBH - height[li++] : water += rMaxBH - height[ri--];
 
-        if (lMaxBH <= rMaxBH)
-            water += lMaxBH - height[li++];
-        else
-            water += rMaxBH - height[ri--];
+        // if (lMaxBH <= rMaxBH)
+        //     water += lMaxBH - height[li++];
+        // else
+        //     water += rMaxBH - height[ri--];
     }
     return water;
 }

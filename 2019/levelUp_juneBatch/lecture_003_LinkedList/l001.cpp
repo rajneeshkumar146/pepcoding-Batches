@@ -19,7 +19,6 @@ class Linkedlist
     Node *head = nullptr;
     Node *tail = nullptr;
 
-
     // Basic functions.===================================
 public:
     int size()
@@ -32,6 +31,13 @@ public:
         return this->sz == 0;
     }
 
+private:
+    Node *getNodeAt(int idx)
+    {
+        return nullptr;
+    }
+
+public:
     // AddFunctions.========================================
 
     // removeFunctions.=====================================
@@ -43,11 +49,11 @@ void solve()
 {
 
     Linkedlist ll;
-
 }
 
 int main()
 {
     solve();
+    
     return 0;
 }
