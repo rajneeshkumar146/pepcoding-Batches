@@ -350,6 +350,221 @@ int minCostClimbingStairs(vector<int> &cost)
     return minCostClimbingStairsDP(n, dp, cost);
 }
 
+int friends_pairing_problem(int n, vector<int> &dp)
+{
+    if (n <= 1)
+        return dp[n] = 1;
+
+    if (dp[n] != 0)
+        return dp[n];
+
+    int single = friends_pairing_problem(n - 1, dp);
+    int pairUp = friends_pairing_problem(n - 2, dp) * (n - 1);
+
+    return dp[n] = (single + pairUp);
+}
+
+int friends_pairing_problem_DP(int n, vector<int> &dp)
+{
+    int N = n;
+    for (int n = 0; n <= N; n++)
+    {
+        if (n <= 1)
+        {
+            dp[n] = 1;
+            continue;
+        }
+
+        int single = dp[n - 1];           //friends_pairing_problem(n - 1, dp);
+        int pairUp = dp[n - 2] * (n - 1); //friends_pairing_problem(n - 2, dp) * (n - 1);
+
+        dp[n] = (single + pairUp);
+    }
+    return dp[N];
+}
+
+int minPathSum(int sr, int sc, vector<vector<int>> &grid, vector<vector<int>> &dp)
+{
+    if (sr == grid.size() - 1 && sc == grid[0].size() - 1)
+    {
+        return dp[sr][sc] = grid[sr][sc];
+    }
+
+    if (dp[sr][sc] != 0)
+        return dp[sr][sc];
+
+    int minCost = 1e8;
+    if (sr + 1 < grid.size())
+        minCost = min(minCost, minPathSum(sr + 1, sc, grid, dp));
+    if (sc + 1 < grid[0].size())
+        minCost = min(minCost, minPathSum(sr, sc + 1, grid, dp));
+
+    return dp[sr][sc] = minCost + grid[sr][sc];
+}
+
+int minPathSum_DP(int sr, int sc, vector<vector<int>> &grid, vector<vector<int>> &dp)
+{
+
+    for (sr = grid.size() - 1; sr >= 0; sr--)
+    {
+        for (sc = grid[0].size() - 1; sc >= 0; sc--)
+        {
+
+            if (sr == grid.size() - 1 && sc == grid[0].size() - 1)
+            {
+                dp[sr][sc] = grid[sr][sc];
+                continue;
+            }
+
+            int minCost = 1e8;
+            if (sr + 1 < grid.size())
+                minCost = min(minCost, dp[sr + 1][sc]);
+            if (sc + 1 < grid[0].size())
+                minCost = min(minCost, dp[sr][sc + 1]);
+
+            dp[sr][sc] = minCost + grid[sr][sc];
+        }
+    }
+    return dp[0][0];
+}
+
+int minPathSum(vector<vector<int>> &grid)
+{
+    vector<vector<int>> dp(grid.size(), vector<int>(grid[0].size(), 0));
+    return minPathSum(0, 0, grid, dp);
+}
+
+int goldMin(int sr, int sc, vector<vector<int>> &grid, vector<vector<int>> &dp)
+{
+
+    if (sc == grid[0].size() - 1)
+    {
+        return dp[sr][sc] = grid[sr][sc];
+    }
+
+    if (dp[sr][sc] != 0)
+        return dp[sr][sc];
+
+    int dir[3][2] = {{-1, 1}, {0, 1}, {1, 1}};
+    int maxCoins = 0;
+    for (int d = 0; d < 3; d++)
+    {
+        int x = sr + dir[d][0];
+        int y = sc + dir[d][1];
+        if (x >= 0 && y >= 0 && x < grid.size() && y < grid[0].size())
+        {
+            maxCoins = max(maxCoins, goldMin(x, y, grid, dp));
+        }
+    }
+
+    return dp[sr][sc] = maxCoins + grid[sr][sc];
+}
+
+int goldMin_DP(vector<vector<int>> &grid, vector<vector<int>> &dp)
+{
+
+    for (int sc = grid[0].size() - 1; sc >= 0; sc--)
+    {
+        for (int sr = grid.size() - 1; sr >= 0; sr--)
+        {
+            if (sc == grid[0].size() - 1)
+            {
+                dp[sr][sc] = grid[sr][sc];
+                continue;
+            }
+
+            int dir[3][2] = {{-1, 1}, {0, 1}, {1, 1}};
+            int maxCoins = 0;
+            for (int d = 0; d < 3; d++)
+            {
+                int x = sr + dir[d][0];
+                int y = sc + dir[d][1];
+                if (x >= 0 && y >= 0 && x < grid.size() && y < grid[0].size())
+                    maxCoins = max(maxCoins, dp[x][y]);
+            }
+
+            dp[sr][sc] = maxCoins + grid[sr][sc];
+        }
+    }
+
+    int maxCoin = 0;
+    for (int i = 0; i < grid.size(); i++)
+        maxCoin = max(maxCoin, dp[i][0]);
+    return maxCoin;
+}
+
+// https://www.geeksforgeeks.org/count-number-of-ways-to-partition-a-set-into-k-subsets/
+
+int count_of_ways(int n, int k, vector<vector<int>> &dp)
+{
+    if (n < k)
+        return 0;
+    if (n == k || k == 1)
+        return dp[k][n] = 1;
+
+    if (dp[k][n] != 0)
+        return dp[k][n];
+
+    int newGroup = count_of_ways(n - 1, k - 1, dp);
+    int ExistingGroup = count_of_ways(n - 1, k, dp) * k;
+
+    return dp[k][n] = newGroup + ExistingGroup;
+}
+
+int count_of_ways_DP(int n, int k, vector<vector<int>> &dp)
+{
+
+    int K = k, N = n;
+    for (k = 1; k <= K; k++)
+    {
+        for (n = 0; n <= N; n++)
+        {
+            if (n < k)
+                continue;
+
+            if (n == k || k == 1)
+            {
+                dp[k][n] = 1;
+                continue;
+            }
+
+            int newGroup = dp[k - 1][n - 1];
+            int ExistingGroup = dp[k][n - 1] * k;
+
+            dp[k][n] = newGroup + ExistingGroup;
+        }
+    }
+
+    return dp[K][N];
+}
+
+void count_of_ways(int n, int k)
+{
+    if (n < k)
+        return;
+
+    vector<vector<int>> dp(k + 1, vector<int>(n + 1, 0));
+    // cout << count_of_ways(n, k, dp) << endl;
+    cout << count_of_ways_DP(n, k, dp) << endl;
+
+    display2D(dp);
+}
+
+// https://practice.geeksforgeeks.org/problems/mobile-numeric-keypad/0
+
+
+
+
+void set2()
+{
+    int n = 10;
+    vector<int> dp(n + 1, 0);
+    // cout << friends_pairing_problem(n, dp) << endl;
+    cout << friends_pairing_problem_DP(n, dp) << endl;
+
+    display(dp);
+}
+
 void pathSet()
 {
     // int n = 3, m = 3;
@@ -359,12 +574,29 @@ void pathSet()
     // cout << mazePathMulti(0, 0, n - 1, m - 1, dp) << endl;
     // cout << mazePathMulti(0, 0, n - 1, m - 1, dp) << endl;
 
-    int sp = 0, ep = 10;
-    vector<int> dp(ep + 1, 0);
+    // int sp = 0, ep = 10;
+    // vector<int> dp(ep + 1, 0);
     // vector<int> diceArray{1, 2, 3, 4, 5, 6};
-    cout << boardPathDP(sp, ep, dp) << endl;
+    // cout << boardPathDP(sp, ep, dp) << endl;
     // cout << boardPathWithDiceArrayDP(sp, ep, dp, diceArray) << endl;
-    cout << boardPath_best(sp, ep);
+    // cout << boardPath_best(sp, ep);
+
+    // vector<vector<int>> grid = {{1, 3, 1, 5},
+    //                             {2, 2, 4, 1},
+    //                             {5, 0, 2, 3},
+    //                             {0, 6, 1, 2}};
+    // int n = grid.size(), m = grid[0].size();
+    // vector<vector<int>> dp(n, vector<int>(m, 0));
+
+    // int maxCoin = 0;
+    // for (int i = 0; i < n; i++)
+    // {
+    //     maxCoin = max(maxCoin, goldMin(i, 0, grid, dp));
+    // }
+    // maxCoin = goldMin_DP(grid, dp);
+    // cout << maxCoin << endl;
+
+    count_of_ways(7, 3);
 
     // display(dp);
     // display2D(dp);
@@ -384,6 +616,7 @@ void solve()
 {
     // set1();
     pathSet();
+    // set2();
 }
 
 int main()
