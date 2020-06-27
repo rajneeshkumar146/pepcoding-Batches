@@ -209,6 +209,63 @@ int diameter_Btr02(Node *root)
     return max(la, ra) + 1;
 }
 
+class allSolPair
+{
+public:
+    bool isBST = false;
+    int maxEle = -1e8;
+    int minEle = 1e8;
+
+    int countOfBST = 0;
+
+    int maxSizeOfBST = 0;
+    Node *maxBSTNode = nullptr;
+
+    bool isBal = false;
+    int height = -1;
+};
+
+allSolPair allSolution(Node *node)
+{
+    if (node == nullptr)
+    {
+        allSolPair base;
+        base.isBST = true;
+        base.isBal = true;
+        return base;
+    }
+    allSolPair lp = allSolution(node->left);
+    allSolPair rp = allSolution(node->right);
+
+    allSolPair mypair;
+    if (lp.isBST && rp.isBST && lp.maxEle < node->data && node->data < rp.minEle)
+    {
+        mypair.isBST = true;
+        mypair.countOfBST += 1;
+
+        mypair.maxSizeOfBST = lp.maxSizeOfBST + rp.maxSizeOfBST + 1;
+        mypair.maxBSTNode = node;
+    }
+
+    mypair.countOfBST += (lp.countOfBST + rp.countOfBST);
+
+    mypair.maxEle = max(max(lp.maxEle, rp.maxEle), node->data);
+    mypair.minEle = min(min(lp.minEle, rp.minEle), node->data);
+
+    if (!mypair.isBST)
+    {
+        mypair.maxSizeOfBST = lp.maxSizeOfBST < rp.maxSizeOfBST ? rp.maxSizeOfBST : lp.maxSizeOfBST;
+        mypair.maxBSTNode = lp.maxSizeOfBST < rp.maxSizeOfBST ? rp.maxBSTNode : lp.maxBSTNode;
+    }
+
+    if (lp.isBal && rp.isBal && abs(lp.height - rp.height) < 2)
+        mypair.isBal = true;
+
+    mypair.height = max(lp.height, rp.height) + 1;
+
+    return mypair;
+}
+
 void display(Node *node)
 {
     if (node == nullptr)
