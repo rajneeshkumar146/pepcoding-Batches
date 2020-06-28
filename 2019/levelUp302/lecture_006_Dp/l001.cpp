@@ -552,8 +552,138 @@ void count_of_ways(int n, int k)
 
 // https://practice.geeksforgeeks.org/problems/mobile-numeric-keypad/0
 
+//Substring and Subsequence Series.=========================================================================
+
+vector<vector<bool>> isPlaindromeSubstring(string str)
+{
+    int n = str.length();
+    vector<vector<bool>> dp(n, vector<bool>(n, 0));
+    for (int gap = 0; gap < n; gap++)
+    {
+        for (int i = 0, j = gap; j < n; i++, j++)
+        {
+            if (gap == 0)
+                dp[i][j] = true;
+            else if (gap == 1 && str[i] == str[j])
+                dp[i][j] = true;
+            else
+                dp[i][j] = str[i] == str[j] && dp[i + 1][j - 1];
+        }
+    }
+
+    return dp;
+}
+
+string longestPlaindromeSubstring(string str)
+{
+    int n = str.length();
+    vector<vector<int>> dp(n, vector<int>(n, 0));
+
+    int maxLen = 0;
+    int si = 0, ei = 0;
+    for (int gap = 0; gap < n; gap++)
+    {
+        for (int i = 0, j = gap; j < n; i++, j++)
+        {
+            if (gap == 0)
+                dp[i][j] = 1;
+            else if (gap == 1 && str[i] == str[j])
+                dp[i][j] = 2;
+            else if (str[i] == str[j] && dp[i + 1][j - 1] != 0)
+                dp[i][j] = gap + 1;
+
+            if (dp[i][j] > maxLen)
+            {
+                maxLen = dp[i][j];
+                si = i;
+                ei = j;
+            }
+        }
+    }
+
+    return str.substr(si, (ei - si + 1));
+}
+
+int countAllPlaindromicSubstring(string str)
+{
+    int n = str.length();
+    vector<vector<int>> dp(n, vector<int>(n, 0));
+
+    int count = 0;
+    for (int gap = 0; gap < n; gap++)
+    {
+        for (int i = 0, j = gap; j < n; i++, j++)
+        {
+            if (gap == 0)
+                dp[i][j] = 1;
+            else if (gap == 1 && str[i] == str[j])
+                dp[i][j] = 2;
+            else if (str[i] == str[j] && dp[i + 1][j - 1] != 0)
+                dp[i][j] = gap + 1;
+
+            count += dp[i][j] != 0 ? 1 : 0;
+        }
+    }
+}
+
+int longestPlaindromeSubseq_Rec(string str, int si, int ei, vector<vector<int>> &dp, vector<vector<bool>> &isPalindrome)
+{
+    if (isPalindrome[si][ei])
+        return dp[si][ei] = ei - si + 1;
+    if (dp[si][ei] != 0)
+        return dp[si][ei];
+
+    int len = 0;
+    if (str[si] == str[ei])
+        len = longestPlaindromeSubseq_Rec(str, si + 1, ei - 1, dp, isPalindrome) + 2;
+    else
+        len = max(longestPlaindromeSubseq_Rec(str, si + 1, ei, dp, isPalindrome), longestPlaindromeSubseq_Rec(str, si, ei - 1, dp, isPalindrome));
+
+    return dp[si][ei] = len;
+}
+
+int longestPlaindromeSubseq_DP(string str, int si, int ei, vector<vector<int>> &dp, vector<vector<bool>> &isPalindrome)
+{
+
+    for (int gap = 0; gap < str.length(); gap++)
+    {
+        for (si = 0, ei = gap; ei < str.length(); si++, ei++)
+        {
+
+            if (isPalindrome[si][ei])
+            {
+                dp[si][ei] = ei - si + 1;
+                continue;
+            }
+
+            int len = 0;
+            if (str[si] == str[ei])
+                len = dp[si + 1][ei - 1] + 2;
+            else
+                len = max(dp[si + 1][ei], dp[si][ei - 1]);
+            dp[si][ei] = len;
+        }
+    }
+
+    return dp[0][str.length() - 1];
+}
 
 
+void stringSubstringSet()
+{
+    string str = "geeksforgeeks";
+    int n = str.length();
+    int si = 0, ei = n - 1;
+    vector<vector<int>> dp(n, vector<int>(n, 0));
+
+    vector<vector<bool>> isPlalindrome = isPlaindromeSubstring(str);
+    // cout << longestPlaindromeSubstring("abcaacbefgpgf") << endl;
+
+    // cout << longestPlaindromeSubseq_Rec(str, si, ei, dp, isPlalindrome) << endl;
+    cout << longestPlaindromeSubseq_DP(str, si, ei, dp, isPlalindrome) << endl;
+
+    display2D(dp);
+}
 
 void set2()
 {
@@ -596,7 +726,7 @@ void pathSet()
     // maxCoin = goldMin_DP(grid, dp);
     // cout << maxCoin << endl;
 
-    count_of_ways(7, 3);
+    // count_of_ways(7, 3);
 
     // display(dp);
     // display2D(dp);
@@ -615,8 +745,9 @@ void set1()
 void solve()
 {
     // set1();
-    pathSet();
+    // pathSet();
     // set2();
+    stringSubstringSet();
 }
 
 int main()
