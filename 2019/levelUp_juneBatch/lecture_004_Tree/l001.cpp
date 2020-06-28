@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <queue>
 
 using namespace std;
 
@@ -171,18 +173,6 @@ int diameter(Node *root)
     return max(max(ld, rd), lh + rh + 2);
 }
 
-// public int[] diameter(TreeNode root){
-//     if(root==null) return new int[]{0,-1};   //dia,height
-
-//     int[] la=diameter(root.left);
-//     int[] ra=diameter(root.right);
-
-//     int dia=Math.max(Math.max(la[0],ra[0]),la[1]+ra[1]+2);
-//     int height=Math.max(la[1],ra[1])+1;
-//     return new int[]{dia,height};
-
-// }
-
 pair<int, int> diameter_Btr(Node *root)
 {
     if (root == nullptr)
@@ -266,6 +256,352 @@ allSolPair allSolution(Node *node)
     return mypair;
 }
 
+class pairSum
+{
+public:
+    int maxSumLTL = 0; // max sum leaf to leaf.
+    int nodeToLeafMaxSum = 0;
+    string maxPathLTL = "";
+    string maxPathNTL = ""; // max sum node to leaf.
+
+    pairSum(int a, int b, string c, string d)
+    {
+        maxSumLTL = a;
+        nodeToLeafMaxSum = b;
+        maxPathLTL = c;
+        maxPathNTL = d;
+    }
+};
+
+pairSum leafToLeafPathSum02(Node *node)
+{
+    if (node == nullptr)
+    {
+        pairSum base(-1e8, -1e8, "", "");
+        return base;
+    }
+
+    pairSum lp = leafToLeafPathSum02(node->left);
+    pairSum rp = leafToLeafPathSum02(node->right);
+
+    pairSum myPair(-1e8, -1e8, "", "");
+
+    if (node->left == nullptr && node->right == nullptr)
+    {
+        pairSum base(-1e8, node->data, "", to_string(node->data));
+        return base;
+    }
+
+    if (node->left != nullptr && node->right != nullptr)
+    {
+        myPair.maxSumLTL = max(max(lp.maxSumLTL, rp.maxSumLTL), lp.nodeToLeafMaxSum + rp.nodeToLeafMaxSum + node->data);
+        if (myPair.maxSumLTL == lp.maxSumLTL)
+            myPair.maxPathLTL = lp.maxPathLTL;
+        else if (myPair.maxSumLTL == rp.maxSumLTL)
+            myPair.maxPathLTL = rp.maxPathLTL;
+        else
+        {
+            myPair.maxPathLTL = lp.maxPathNTL + " " + to_string(node->data) + " " + rp.maxPathNTL;
+        }
+    }
+    else
+    {
+        if (lp.maxSumLTL > rp.maxSumLTL)
+        {
+            myPair.maxSumLTL = lp.maxSumLTL;
+            myPair.maxPathLTL = lp.maxPathLTL;
+        }
+        else
+        {
+            myPair.maxSumLTL = rp.maxSumLTL;
+            myPair.maxPathLTL = rp.maxPathLTL;
+        }
+    }
+
+    if (lp.nodeToLeafMaxSum > rp.nodeToLeafMaxSum)
+    {
+        myPair.nodeToLeafMaxSum = lp.nodeToLeafMaxSum + node->data;
+        myPair.maxPathNTL = lp.maxPathNTL + " " + to_string(node->data);
+    }
+    else
+    {
+        myPair.nodeToLeafMaxSum = rp.nodeToLeafMaxSum + node->data;
+        myPair.maxPathNTL = rp.maxPathNTL + " " + to_string(node->data);
+    }
+
+    return myPair;
+}
+
+//LevelOrder/BFS.=======================================================================
+
+void levelOrder_01(Node *node)
+{
+    queue<Node *> que;
+    que.push(node);
+    while (que.size() != 0)
+    {
+        Node *rvtx = que.front();
+        que.pop();
+        cout << rvtx->data << " ";
+
+        if (rvtx->left != nullptr)
+            que.push(rvtx->left);
+        if (rvtx->right != nullptr)
+            que.push(rvtx->right);
+    }
+}
+
+void levelOrder_02(Node *node)
+{
+    queue<Node *> que;
+    que.push(node);
+    que.push(nullptr);
+    while (que.size() != 1)
+    {
+        Node *rvtx = que.front();
+        que.pop();
+        cout << rvtx->data << " ";
+
+        if (rvtx->left != nullptr)
+            que.push(rvtx->left);
+        if (rvtx->right != nullptr)
+            que.push(rvtx->right);
+
+        if (que.front() == nullptr)
+        {
+            cout << endl;
+            que.pop();
+            que.push(nullptr);
+        }
+    }
+}
+
+void levelOrder_03(Node *node)
+{
+    queue<Node *> que;
+    que.push(node);
+    int level = 0;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        cout << "Level: " << level << " -> ";
+        while (size-- > 0)
+        {
+            Node *rvtx = que.front();
+            que.pop();
+            cout << rvtx->data << " ";
+
+            if (rvtx->left != nullptr)
+                que.push(rvtx->left);
+            if (rvtx->right != nullptr)
+                que.push(rvtx->right);
+        }
+        level++;
+        cout << endl;
+    }
+}
+
+//Views.======================================================================
+
+void leftView(Node *node)
+{
+    queue<Node *> que;
+    que.push(node);
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        cout << que.front()->data << " ";
+        while (size-- > 0)
+        {
+            Node *rvtx = que.front();
+            que.pop();
+
+            if (rvtx->left != nullptr)
+                que.push(rvtx->left);
+            if (rvtx->right != nullptr)
+                que.push(rvtx->right);
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
+void rightView(Node *node)
+{
+    queue<Node *> que;
+    que.push(node);
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        Node *prev = nullptr;
+        while (size-- > 0)
+        {
+            Node *rvtx = que.front();
+            que.pop();
+
+            if (rvtx->left != nullptr)
+                que.push(rvtx->left);
+            if (rvtx->right != nullptr)
+                que.push(rvtx->right);
+
+            prev = rvtx;
+        }
+        cout << prev->data << " ";
+        cout << endl;
+    }
+    cout << endl;
+}
+
+void width(Node *node, int level, pair<int, int> &maxMin)
+{
+    if (node == nullptr)
+        return;
+
+    maxMin.first = min(maxMin.first, level);
+    maxMin.second = max(maxMin.second, level);
+
+    width(node->left, level - 1, maxMin);
+    width(node->right, level + 1, maxMin);
+}
+
+void verticalOrderTraversal(Node *node)
+{
+    pair<int, int> maxMin = {0, 0};
+    width(node, 0, maxMin);
+    int w = maxMin.second - maxMin.first + 1;
+    vector<vector<int>> ans(w, vector<int>());
+
+    queue<pair<Node *, int>> que;
+    que.push({node, -maxMin.first});
+
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            pair<Node *, int> rpair = que.front();
+            que.pop();
+
+            ans[rpair.second].push_back(rpair.first->data);
+
+            if (rpair.first->left != nullptr)
+                que.push({rpair.first->left, rpair.second - 1});
+
+            if (rpair.first->right != nullptr)
+                que.push({rpair.first->right, rpair.second + 1});
+        }
+    }
+
+    for (vector<int> &ar : ans)
+    {
+        for (int ele : ar)
+            cout << ele << " ";
+        cout << endl;
+    }
+    cout << endl;
+}
+
+void verticalOrderSum(Node *node)
+{
+    pair<int, int> maxMin = {0, 0};
+    width(node, 0, maxMin);
+    int w = maxMin.second - maxMin.first + 1;
+    vector<int> ans(w, -1);
+
+    queue<pair<Node *, int>> que;
+    que.push({node, -maxMin.first});
+
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            pair<Node *, int> rpair = que.front();
+            que.pop();
+
+            ans[rpair.second] += rpair.first->data;
+
+            if (rpair.first->left != nullptr)
+                que.push({rpair.first->left, rpair.second - 1});
+
+            if (rpair.first->right != nullptr)
+                que.push({rpair.first->right, rpair.second + 1});
+        }
+    }
+
+    for (int ele : ans)
+        cout << ele << " ";
+    cout << endl;
+}
+
+
+void verticalView(Node *node)
+{
+    pair<int, int> maxMin = {0, 0};
+    width(node, 0, maxMin);
+    int w = maxMin.second - maxMin.first + 1;
+    vector<int> ans(w, -1);
+
+    queue<pair<Node *, int>> que;
+    que.push({node, -maxMin.first});
+
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            pair<Node *, int> rpair = que.front();
+            que.pop();
+
+            if (ans[rpair.second] == -1)
+                ans[rpair.second] = rpair.first->data;
+
+            if (rpair.first->left != nullptr)
+                que.push({rpair.first->left, rpair.second - 1});
+
+            if (rpair.first->right != nullptr)
+                que.push({rpair.first->right, rpair.second + 1});
+        }
+    }
+
+    for (int ele : ans)
+        cout << ele << " ";
+    cout << endl;
+}
+
+void BottomView(Node *node)
+{
+    pair<int, int> maxMin = {0, 0};
+    width(node, 0, maxMin);
+    int w = maxMin.second - maxMin.first + 1;
+    vector<int> ans(w, -1);
+
+    queue<pair<Node *, int>> que;
+    que.push({node, -maxMin.first});
+
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            pair<Node *, int> rpair = que.front();
+            que.pop();
+
+            ans[rpair.second] = rpair.first->data;
+
+            if (rpair.first->left != nullptr)
+                que.push({rpair.first->left, rpair.second - 1});
+
+            if (rpair.first->right != nullptr)
+                que.push({rpair.first->right, rpair.second + 1});
+        }
+    }
+
+    for (int ele : ans)
+        cout << ele << " ";
+    cout << endl;
+}
+
 void display(Node *node)
 {
     if (node == nullptr)
@@ -280,12 +616,32 @@ void display(Node *node)
     display(node->right);
 }
 
+void set1(Node *root)
+{
+    // levelOrder_01(root);
+    // levelOrder_02(root);
+    // levelOrder_03(root);
+
+    leftView(root);
+    rightView(root);
+    verticalOrderTraversal(root);
+    verticalView(root);
+    BottomView(root);
+}
+
 void solve()
 {
     vector<int> arr = {10, 20, 30, 40, -1, -1, 50, -1, -1, 60, 70, -1, 80, -1, -1, -1, 90, 100, -1, 120, -1, -1, 110, 130, -1, -1, -1};
+    // vector<int> arr = {-15, 5, -8, 2, -1, -1, 6, -1, -1, 1, -1, -1, 6, 3, -1, -1, 9, -1, 0, 4, -1, -1, -2, 10, -1, -1, -1};
+
     Node *root = constructTree(arr);
     // inOrder(root);
     display(root);
+
+    // pairSum p = leafToLeafPathSum02(root);
+    // cout << p.maxPathLTL << " @ " << p.maxSumLTL << endl;
+
+    set1(root);
 }
 
 int main()
