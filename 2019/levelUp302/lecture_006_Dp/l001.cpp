@@ -574,6 +574,7 @@ vector<vector<bool>> isPlaindromeSubstring(string str)
     return dp;
 }
 
+//Leetcode 005.==================================================================
 string longestPlaindromeSubstring(string str)
 {
     int n = str.length();
@@ -604,6 +605,7 @@ string longestPlaindromeSubstring(string str)
     return str.substr(si, (ei - si + 1));
 }
 
+//Leetcode 647.=================================================================================
 int countAllPlaindromicSubstring(string str)
 {
     int n = str.length();
@@ -626,18 +628,21 @@ int countAllPlaindromicSubstring(string str)
     }
 }
 
-int longestPlaindromeSubseq_Rec(string str, int si, int ei, vector<vector<int>> &dp, vector<vector<bool>> &isPalindrome)
+//Leetcode 516.================================================================================================================
+int longestPlaindromeSubseq_Rec(string str, int si, int ei, vector<vector<int>> &dp)
 {
-    if (isPalindrome[si][ei])
-        return dp[si][ei] = ei - si + 1;
+    if (si > ei)
+        return 0;
+    if (si == ei)
+        return dp[si][ei] = 1;
     if (dp[si][ei] != 0)
         return dp[si][ei];
 
     int len = 0;
     if (str[si] == str[ei])
-        len = longestPlaindromeSubseq_Rec(str, si + 1, ei - 1, dp, isPalindrome) + 2;
+        len = longestPlaindromeSubseq_Rec(str, si + 1, ei - 1, dp) + 2;
     else
-        len = max(longestPlaindromeSubseq_Rec(str, si + 1, ei, dp, isPalindrome), longestPlaindromeSubseq_Rec(str, si, ei - 1, dp, isPalindrome));
+        len = max(longestPlaindromeSubseq_Rec(str, si + 1, ei, dp), longestPlaindromeSubseq_Rec(str, si, ei - 1, dp));
 
     return dp[si][ei] = len;
 }
@@ -668,21 +673,136 @@ int longestPlaindromeSubseq_DP(string str, int si, int ei, vector<vector<int>> &
     return dp[0][str.length() - 1];
 }
 
+//Leetcode 115 : distinct-subsequences.=========================================================
+int distinct_subsequences(string S, string T, int n, int m, vector<vector<int>> &dp)
+{
+    if (m == 0)
+        return dp[n][m] = 1;
+    if (m > n)
+        return dp[n][m] = 0;
+
+    if (dp[n][m] != -1)
+        return dp[n][m];
+
+    if (S[n - 1] == T[m - 1])
+        return dp[n][m] = distinct_subsequences(S, T, n - 1, m - 1, dp) + distinct_subsequences(S, T, n - 1, m, dp);
+
+    return dp[n][m] = distinct_subsequences(S, T, n - 1, m, dp);
+}
+
+int distinct_subsequences_02(string S, string T, int i, int j, vector<vector<int>> &dp)
+{
+    if (T.length() - j == 0)
+        return dp[i][j] = 1;
+    if (S.length() - i > T.length() - j)
+        return dp[i][j] = 0;
+
+    if (dp[i][j] != -1)
+        return dp[i][j];
+
+    if (S[i] == T[j])
+        return dp[i][j] = distinct_subsequences_02(S, T, i + 1, j + 1, dp) + distinct_subsequences_02(S, T, i + 1, j, dp);
+
+    return dp[i][j] = distinct_subsequences_02(S, T, i + 1, j, dp);
+}
+
+int distinct_subsequences_DP(string S, string T, int n, int m, vector<vector<int>> &dp)
+{
+    int N = n, M = m;
+    for (n = 0; n <= N; n++)
+    {
+        for (m = 0; m <= M; m++)
+        {
+            if (m == 0)
+            {
+                dp[n][m] = 1;
+                continue;
+            }
+            if (m > n)
+            {
+                dp[n][m] = 0;
+                continue;
+            }
+            if (S[n - 1] == T[m - 1])
+                dp[n][m] = dp[n - 1][m - 1] + dp[n - 1][m];
+            else
+                dp[n][m] = dp[n - 1][m];
+        }
+    }
+
+    return dp[N][M];
+}
+
+int numDistinct(string s, string t)
+{
+    int n = s.length();
+    int m = t.length();
+    vector<vector<int>> dp(n + 1, vector<int>(m + 1, -1));
+    // cout << distinct_subsequences(s, t, n, m, dp) << endl;
+    cout << distinct_subsequences_DP(s, t, n, m, dp) << endl;
+
+    display2D(dp);
+}
+
+//Geeks: https://practice.geeksforgeeks.org/problems/count-palindromic-subsequences/1
+int countPS(string &s, int i, int j, vector<vector<int>> &dp)
+{
+    if (i > j)
+        return 0;
+    if (i == j)
+        return dp[i][j] = 1;
+    if (dp[i][j] != 0)
+        return dp[i][j];
+
+    int middleString = countPS(s, i + 1, j - 1, dp);
+    int excludingLast = countPS(s, i, j - 1, dp);
+    int excludingFirst = countPS(s, i + 1, j, dp);
+
+    int ans = excludingFirst + excludingLast;
+    return dp[i][j] = (s[i] == s[j]) ? ans + 1 : ans - middleString;
+}
+
+int countPS_DP(string &s, int i, int j, vector<vector<int>> &dp)
+{
+
+    int n = s.length();
+    for (int gap = 0; gap < n; gap++)
+    {
+        for (int i = 0, j = gap; j < n; j++, i++)
+        {
+            if (i == j)
+            {
+                dp[i][j] = 1;
+                continue;
+            }
+
+            int middleString = dp[i + 1][j - 1];
+            int excludingLast = dp[i][j - 1];
+            int excludingFirst = dp[i + 1][j];
+
+            int ans = excludingFirst + excludingLast;
+            dp[i][j] = (s[i] == s[j]) ? ans + 1 : ans - middleString;
+        }
+    }
+    return dp[0][n - 1];
+}
 
 void stringSubstringSet()
 {
-    string str = "geeksforgeeks";
-    int n = str.length();
-    int si = 0, ei = n - 1;
-    vector<vector<int>> dp(n, vector<int>(n, 0));
+    // string str = "geeksforgeeks";
+    // int n = str.length();
+    // int si = 0, ei = n - 1;
+    // vector<vector<int>> dp(n, vector<int>(n, 0));
 
-    vector<vector<bool>> isPlalindrome = isPlaindromeSubstring(str);
+    // vector<vector<bool>> isPlalindrome = isPlaindromeSubstring(str);
     // cout << longestPlaindromeSubstring("abcaacbefgpgf") << endl;
 
     // cout << longestPlaindromeSubseq_Rec(str, si, ei, dp, isPlalindrome) << endl;
-    cout << longestPlaindromeSubseq_DP(str, si, ei, dp, isPlalindrome) << endl;
+    // cout << longestPlaindromeSubseq_DP(str, si, ei, dp, isPlalindrome) << endl;
 
-    display2D(dp);
+    // display2D(dp);
+
+    numDistinct("geeksforgeeks", "gks");
 }
 
 void set2()
