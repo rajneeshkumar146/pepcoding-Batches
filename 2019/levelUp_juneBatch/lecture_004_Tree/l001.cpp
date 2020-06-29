@@ -534,7 +534,6 @@ void verticalOrderSum(Node *node)
     cout << endl;
 }
 
-
 void verticalView(Node *node)
 {
     pair<int, int> maxMin = {0, 0};
@@ -602,6 +601,45 @@ void BottomView(Node *node)
     cout << endl;
 }
 
+class allSol
+{
+public:
+    int height = 0;
+    int size = 0;
+    bool find = false;
+
+    int ceil = 1e8;
+    int floor = -1e8;
+
+    Node *pred = nullptr;
+    Node *succ = nullptr;
+    Node *prev = nullptr;
+};
+
+void allSolution(Node *node, int data, int level, allSol &p)
+{
+    if (node == nullptr)
+        return;
+
+    p.height = max(p.height, level);
+    p.size++;
+    p.find = p.find || node->data == data;
+
+    if (node->data > data)
+        p.ceil = min(p.ceil, node->data);
+    if (node->data < data)
+        p.floor = max(p.floor, node->data);
+
+    if (node->data == data)
+        p.pred = p.prev;
+    if (p.prev != nullptr && p.prev->data == data)
+        p.succ = node;
+    p.prev = node;
+
+    allSolution(node->left, data, level + 1, p);
+    allSolution(node->right, data, level + 1, p);
+}
+
 void display(Node *node)
 {
     if (node == nullptr)
@@ -627,6 +665,11 @@ void set1(Node *root)
     verticalOrderTraversal(root);
     verticalView(root);
     BottomView(root);
+
+    allSol p;
+    allSolution(root, 90, 0, p);
+
+    cout << p.height << endl;
 }
 
 void solve()
