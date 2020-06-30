@@ -787,6 +787,211 @@ int countPS_DP(string &s, int i, int j, vector<vector<int>> &dp)
     return dp[0][n - 1];
 }
 
+// Leetcode 1143.====================================================================
+int longestCommonSubsequence(string &text1, string &text2, int i, int j, vector<vector<int>> &dp)
+{
+    if (i == text1.length() || j == text2.length())
+        return dp[i][j] = 0;
+    if (dp[i][j] != 0)
+        return dp[i][j];
+
+    int ans = 0;
+    if (text1[i] == text2[j])
+        ans = longestCommonSubsequence(text1, text2, i + 1, j + 1, dp) + 1;
+    else
+        ans = max(longestCommonSubsequence(text1, text2, i + 1, j, dp), longestCommonSubsequence(text1, text2, i, j + 1, dp));
+
+    return dp[i][j] = ans;
+}
+
+int longestCommonSubsequence_DP(string &text1, string &text2, int i, int j, vector<vector<int>> &dp)
+{
+    for (i = text1.length(); i >= 0; i--)
+    {
+        for (j = text2.length(); j >= 0; j--)
+        {
+            if (i == text1.length() || j == text2.length())
+                continue;
+
+            int ans = 0;
+            if (text1[i] == text2[j])
+                ans = dp[i + 1][j + 1] + 1;
+            else
+                ans = max(dp[i + 1][j], dp[i][j + 1]);
+
+            dp[i][j] = ans;
+        }
+    }
+    return dp[0][0];
+}
+
+int max_ = 0;
+int longestCommonSubstring(string &text1, string &text2, int i, int j, vector<vector<int>> &dp)
+{
+    if (i == text1.length() || j == text2.length())
+        return dp[i][j] = 0;
+    if (dp[i][j] != 0)
+        return dp[i][j];
+
+    int a = longestCommonSubstring(text1, text2, i + 1, j, dp);
+    int b = longestCommonSubstring(text1, text2, i, j + 1, dp);
+
+    if (text1[i] == text2[j])
+    {
+        int a = longestCommonSubstring(text1, text2, i + 1, j + 1, dp) + 1;
+        max_ = max(max_, a);
+        return dp[i][j] = a;
+    }
+
+    return 0;
+}
+
+int longestCommonSubstring_DP(string &text1, string &text2, int i, int j, vector<vector<int>> &dp)
+{
+    int max_ = 0;
+    for (i = text1.length(); i >= 0; i--)
+    {
+        for (j = text2.length(); j >= 0; j--)
+        {
+            if (i == text1.length() || j == text2.length())
+                continue;
+
+            int ans = 0;
+            if (text1[i] == text2[j])
+            {
+                ans = dp[i + 1][j + 1] + 1;
+                max_ = max(max_, ans);
+            }
+            int a = dp[i + 1][j];
+            int b = dp[i][j + 1];
+
+            dp[i][j] = ans;
+        }
+    }
+    return dp[0][0];
+}
+
+int longestCommonSubsequence(string text1, string text2)
+{
+    vector<vector<int>> dp(text1.length() + 1, vector<int>(text2.length() + 1, 0));
+    int ans = 0;
+    // ans = longestCommonSubsequence(text1, text2, 0, 0, dp);
+    ans = longestCommonSubsequence_DP(text1, text2, 0, 0, dp);
+    display2D(dp);
+    return ans;
+}
+
+//Leetcode 1035.
+int maxUncrossedLines(vector<int> &A, vector<int> &B)
+{
+    int n = A.size(), m = B.size();
+    vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+    for (int i = n; i >= 0; i--)
+    {
+        for (int j = m; j >= 0; j--)
+        {
+            if (i == n || m == j)
+            {
+                dp[i][j] = 0;
+                continue;
+            }
+            if (A[i] == B[j])
+                dp[i][j] = dp[i + 1][j + 1] + 1;
+            else
+                dp[i][j] = max(dp[i + 1][j], dp[i][j + 1]);
+        }
+    }
+
+    return dp[0][0];
+}
+
+//leetcode 1458.
+int maxDotProduct(vector<int> &nums1, vector<int> &nums2)
+{
+    int n = nums1.size(), m = nums2.size();
+    vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+    for (int i = n; i >= 0; i--)
+    {
+        for (int j = m; j >= 0; j--)
+        {
+            if (i == n || m == j)
+            {
+                dp[i][j] = -1e8;
+                continue;
+            }
+
+            int val = nums1[i] * nums2[j];
+            int a = dp[i + 1][j + 1] + val;
+            int b = dp[i + 1][j];
+            int c = dp[i][j + 1];
+
+            dp[i][j] = max(max(a, b), max(c, val));
+        }
+    }
+
+    return dp[0][0];
+}
+
+//Coin_Change/Target_Type.===================================================================================
+
+int coinChangePermutation(vector<int> &arr, int tar, vector<int> &dp)
+{
+    if (tar == 0)
+        return dp[tar] = 1;
+    if (dp[tar] != 0)
+        return dp[tar];
+
+    int count = 0;
+    for (int ele : arr)
+        if (tar - ele >= 0)
+            count += coinChangePermutation(arr, tar - ele, dp);
+
+    return dp[tar] = count;
+}
+
+int coinChangePermutation_DP(vector<int> &arr, int tar, vector<int> &dp)
+{
+    dp[0] = 1;
+    for (int tar = 0; tar <= Tar; tar++)
+    {
+        int count = 0;
+        for (int ele : arr)
+            if (tar - ele >= 0)
+                count += dp[tar - ele];
+
+        dp[tar] = count;
+    }
+}
+
+int coinChangeCombination_DP(vector<int> &arr, int tar, vector<int> &dp)
+{
+    dp[0] = 1;
+    for (int ele : arr)
+        for (int tar = ele; tar <= Tar; tar++)
+            dp[tar] += dp[tar - ele];
+}
+
+//https://www.geeksforgeeks.org/find-number-of-solutions-of-a-linear-equation-of-n-variables/
+
+int LinearEquation_DP(vector<int> &coeff, int rhs)
+{
+    vector<int> dp(rhs + 1, 0);
+    dp[0] = 1;
+    for (int ele : coeff)
+        for (int tar = ele; tar <= rhs; tar++)
+            dp[tar] += dp[tar - ele];
+}
+
+void coinChange()
+{
+    vector<int> arr{2, 3, 5, 7};
+    int tar = 10;
+    vector<int> dp(tar + 1, 0);
+    cout << coinChangePermutation(arr, tar, dp) << endl;
+
+    display(dp);
+}
+
 void stringSubstringSet()
 {
     // string str = "geeksforgeeks";
@@ -802,7 +1007,9 @@ void stringSubstringSet()
 
     // display2D(dp);
 
-    numDistinct("geeksforgeeks", "gks");
+    // numDistinct("geeksforgeeks", "gks");
+
+    cout << longestCommonSubsequence("abc", "aa") << endl;
 }
 
 void set2()
@@ -867,7 +1074,8 @@ void solve()
     // set1();
     // pathSet();
     // set2();
-    stringSubstringSet();
+    // stringSubstringSet();
+    coinChange();
 }
 
 int main()
