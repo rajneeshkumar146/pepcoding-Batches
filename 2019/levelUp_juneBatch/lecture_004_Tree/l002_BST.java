@@ -221,6 +221,34 @@ public class l002_BST {
 
     }
 
+    public static Node addData(Node root, int data) {
+        if (root == null)
+            return new Node(data);
+        if (data < root.data)
+            root.left = addData(root.left, data);
+        else
+            root.right = addData(root.right, data);
+        return root;
+    }
+
+    public static Node removeData(Node root, int data) {
+        if (root == null)
+            return null;
+            
+        if (data < root.data)
+            root.left = removeData(root.left, data);
+        else if (data > root.data)
+            root.right = removeData(root.right, data);
+        else if (root.data == data) {
+            if (root.left == null || root.right == null)
+                return root.left != null ? root.left : root.right;
+            int maxEle = maximum(root.left);
+            root.data = maxEle;
+            root.left = removeData(root.left, maxEle);
+        }
+        return root;
+    }
+
     public static void set1(ArrayList<Integer> ans) {
         int[] ar = new int[ans.size()];
         for (int i = 0; i < ans.size(); i++)
@@ -239,15 +267,26 @@ public class l002_BST {
         for (int i = 0; i < arr.length; i++)
             arr[i] = (i + 1) * 10;
 
-        Node root = constructTree(arr, 0, arr.length - 1);
-        display(root);
-        System.out.println(height(root));
+        // Node root = constructTree(arr, 0, arr.length - 1);
+        // display(root);
+        // System.out.println(height(root));
 
-        ArrayList<Integer> ans = new ArrayList<>();
+        // ArrayList<Integer> ans = new ArrayList<>();
         // preOrder(root, ans);
-        postOrder(root, ans);
-        set1(ans);
+        // postOrder(root, ans);
+        // set1(ans);
 
+        Node root = null;
+        for (int ele : arr)
+            root = addData(root, ele);
+
+        display(root);
+        int i = 0;
+        for (int ele : arr) {
+            System.out.println(root.data + " ");
+            root = removeData(root, ele);
+        }
+        display(root);
     }
 
     public static void main(String[] args) {

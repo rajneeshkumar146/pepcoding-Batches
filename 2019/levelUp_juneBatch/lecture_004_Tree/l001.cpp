@@ -623,19 +623,7 @@ void allSolution(Node *node, int data, int level, allSol &p)
 
     p.height = max(p.height, level);
     p.size++;
-    p.find = p.find || node->data == data;
-
-    if (node->data > data)
-        p.ceil = min(p.ceil, node->data);
-    if (node->data < data)
-        p.floor = max(p.floor, node->data);
-
-    if (node->data == data)
-        p.pred = p.prev;
-    if (p.prev != nullptr && p.prev->data == data)
-        p.succ = node;
-    p.prev = node;
-
+    p.find = p.find;
     allSolution(node->left, data, level + 1, p);
     allSolution(node->right, data, level + 1, p);
 }
