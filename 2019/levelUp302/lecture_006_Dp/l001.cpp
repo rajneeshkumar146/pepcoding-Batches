@@ -932,6 +932,31 @@ int maxDotProduct(vector<int> &nums1, vector<int> &nums2)
     return dp[0][0];
 }
 
+//Leetcode 72, edit distance.
+
+int minDistance(string &word1, string &word2, int n, int m, vector<vector<int>> &dp)
+{
+    if (n == 0 || m == 0)
+    {
+        return dp[n][m] = (n == 0 ? m : n);
+    }
+
+    if (dp[n][m] != 0)
+        return dp[n][m];
+    if (word1[n - 1] == word2[m - 1])
+        return dp[n][m] = minDistance(word1, word2, n - 1, m - 1, dp);
+
+    int insert_ = minDistance(word1, word2, n, m - 1, dp);
+    int replace_ = minDistance(word1, word2, n - 1, m - 1, dp);
+    int delete_ = minDistance(word1, word2, n - 1, m, dp);
+
+    return dp[n][m] = min(min(insert_, replace_), delete_);
+}
+
+int minDistance(string word1, string word2)
+{
+}
+
 //Coin_Change/Target_Type.===================================================================================
 
 int coinChangePermutation(vector<int> &arr, int tar, vector<int> &dp)
@@ -952,6 +977,7 @@ int coinChangePermutation(vector<int> &arr, int tar, vector<int> &dp)
 int coinChangePermutation_DP(vector<int> &arr, int tar, vector<int> &dp)
 {
     dp[0] = 1;
+    int Tar = tar;
     for (int tar = 0; tar <= Tar; tar++)
     {
         int count = 0;
@@ -966,6 +992,7 @@ int coinChangePermutation_DP(vector<int> &arr, int tar, vector<int> &dp)
 int coinChangeCombination_DP(vector<int> &arr, int tar, vector<int> &dp)
 {
     dp[0] = 1;
+    int Tar = tar;
     for (int ele : arr)
         for (int tar = ele; tar <= Tar; tar++)
             dp[tar] += dp[tar - ele];
@@ -982,6 +1009,33 @@ int LinearEquation_DP(vector<int> &coeff, int rhs)
             dp[tar] += dp[tar - ele];
 }
 
+//leetcode 322
+int coinChange_(vector<int> &coins, int tar, vector<int> &dp)
+{
+    if (tar == 0)
+        return 0;
+
+    if (dp[tar] != 0)
+        return dp[tar];
+    int minHeight = 1e8;
+    for (int ele : coins)
+    {
+        if (tar - ele >= 0)
+        {
+            int rMinHeight = coinChange_(coins, tar, dp);
+            if (rMinHeight != 1e8 && rMinHeight + 1 < minHeight)
+                minHeight = rMinHeight + 1;
+        }
+    }
+    return dp[tar] = minHeight;
+}
+
+int coinChange(vector<int> &coins, int tar)
+{
+    vector<int> dp(tar + 1, 0);
+    return coinChange_(coins, tar, dp);
+}
+
 void coinChange()
 {
     vector<int> arr{2, 3, 5, 7};
@@ -990,6 +1044,195 @@ void coinChange()
     cout << coinChangePermutation(arr, tar, dp) << endl;
 
     display(dp);
+}
+
+int targetSum(vector<int> &coins, int idx, int tar, vector<vector<int>> &dp)
+{
+    if (tar == 0 || idx == coins.size())
+    {
+        if (tar == 0)
+            return dp[idx][tar] = 1;
+        return dp[idx][tar] = 0;
+    }
+
+    if (dp[idx][tar] != 0)
+        return dp[idx][tar];
+
+    int count = 0;
+    if (tar - coins[idx] >= 0)
+        count += targetSum(coins, idx + 1, tar - coins[idx], dp);
+
+    count += targetSum(coins, idx + 1, tar, dp);
+    return dp[idx][tar] = count;
+}
+
+int targetSum_02(vector<int> &coins, int idx, int tar, vector<vector<int>> &dp)
+{
+    if (tar == 0 || idx == 0)
+    {
+        if (tar == 0)
+            return dp[idx][tar] = 1;
+        return dp[idx][tar] = 0;
+    }
+
+    if (dp[idx][tar] != 0)
+        return dp[idx][tar];
+
+    int count = 0;
+    if (tar - coins[idx - 1] >= 0)
+        count += targetSum_02(coins, idx - 1, tar - coins[idx - 1], dp);
+
+    count += targetSum_02(coins, idx - 1, tar, dp);
+    return dp[idx][tar] = count;
+}
+
+int printPathOfTargetSum(vector<int> &coins, int idx, int tar, string ans, vector<vector<bool>> &dp)
+{
+    if (tar == 0 || idx == 0)
+    {
+        if (tar == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    if (tar - coins[idx - 1] >= 0 && dp[idx - 1][tar - coins[idx - 1]])
+        count += printPathOfTargetSum(coins, idx - 1, tar - coins[idx - 1], ans + to_string(coins[idx - 1]) + " ", dp);
+
+    if (dp[idx - 1][tar])
+        count += printPathOfTargetSum(coins, idx - 1, tar, ans, dp);
+
+    return count;
+}
+
+void targetSum_02DP(vector<int> &coins, int tar)
+{
+    vector<vector<bool>> dp(coins.size() + 1, vector<bool>(tar + 1, false));
+    int Tar = tar;
+    for (int idx = 0; idx <= coins.size(); idx++)
+    {
+        for (tar = 0; tar <= Tar; tar++)
+        {
+
+            if (tar == 0 || idx == 0)
+            {
+                if (tar == 0)
+                    dp[idx][tar] = true;
+                continue;
+            }
+
+            if (tar - coins[idx - 1] >= 0)
+                dp[idx][tar] = dp[idx - 1][tar - coins[idx - 1]];
+
+            dp[idx][tar] = dp[idx][tar] || dp[idx - 1][tar];
+        }
+    }
+
+    for (vector<bool> &ar : dp)
+    {
+        for (bool ele : ar)
+        {
+            cout << ele << " ";
+        }
+        cout << endl;
+    }
+
+    cout << printPathOfTargetSum(coins, coins.size(), Tar, "", dp) << endl;
+}
+
+int knapsack01(vector<int> &w, vector<int> &p, int weight, int n, vector<vector<int>> &dp)
+{
+    if (weight == 0 || n == 0)
+    {
+        return 0;
+    }
+
+    if (dp[n][weight] != 0)
+        return dp[n][weight];
+
+    int maxProfit = -1e8;
+    if (weight - w[n - 1] >= 0)
+        maxProfit = max(maxProfit, knapsack01(w, p, weight - w[n - 1], n - 1, dp) + p[n - 1]); // dp[n-1][weight - w[n - 1]]+p[n-1]
+    maxProfit = max(maxProfit, knapsack01(w, p, weight, n - 1, dp));                           // dp[n-1][weight]
+
+    return dp[n][weight] = maxProfit;
+}
+
+int unbpounded(vector<int> &w, vector<int> &p, int weight)
+{
+    vector<int> dp(w.size() + 1, -1e8);
+    dp[0] = 0;
+    for (int i = 0; i < w.size(); i++)
+        for (int tar = w[i]; tar <= weight; tar++)
+            dp[tar] = max(dp[tar], dp[tar - w[i]] + p[i]);
+
+    return dp[w.size()];
+}
+
+void knapsack()
+{
+    vector<int> p = {100, 280, 120};
+    vector<int> w = {10, 40, 20};
+    int weight = 60;
+    int n = w.size();
+    vector<vector<int>> dp(n + 1, vector<int>(weight + 1, 0));
+
+    cout << knapsack01(w, p, weight, n, dp) << endl;
+}
+
+//Leetcode 416
+bool canPartition_(vector<int> &nums, int n, int sum, vector<vector<int>> &dp)
+{
+    if (sum == 0 || n == 0)
+    {
+        if (sum == 0)
+            return dp[n][sum] = 1;
+        return dp[n][sum] = 0;
+    }
+
+    if (dp[n][sum] != -1)
+        return dp[n][sum];
+
+    bool res = false;
+    if (sum - nums[n - 1] >= 0)
+        res = res || canPartition_(nums, n - 1, sum - nums[n - 1], dp) == 1;
+    res = res || canPartition_(nums, n - 1, sum, dp) == 1;
+
+    return dp[n][sum] = res ? 1 : 0;
+}
+
+bool canPartition(vector<int> &nums)
+{
+    int sum = 0;
+    for (int ele : nums)
+        sum += ele;
+    if (sum % 2 != 0)
+        return false;
+
+    sum /= 2;
+    vector<vector<int>> dp(nums.size() + 1, vector<int>(sum + 1, -1));
+
+    return canPartition_(nums, nums.size(), sum, dp);
+}
+
+//Leetcode 494
+
+void targetType()
+{
+    // coinChange();
+
+    vector<int> arr{2, 3, 5, 7};
+    int tar = 10;
+    // vector<vector<int>> dp(arr.size() + 1, vector<int>(tar + 1, 0));
+    // cout << targetSum(arr, 0, tar, dp) << endl;
+    // cout << targetSum_02(arr, arr.size(), tar, dpTF) << endl;
+    targetSum_02DP(arr, tar);
+
+    // knapsack();
+    // display2D(dp);
 }
 
 void stringSubstringSet()
@@ -1075,7 +1318,7 @@ void solve()
     // pathSet();
     // set2();
     // stringSubstringSet();
-    coinChange();
+    targetType();
 }
 
 int main()
