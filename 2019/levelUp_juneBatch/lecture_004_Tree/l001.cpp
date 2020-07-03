@@ -628,6 +628,80 @@ void allSolution(Node *node, int data, int level, allSol &p)
     allSolution(node->right, data, level + 1, p);
 }
 
+//Traversal. ===============================================================
+
+Node *rightMost(Node *next, Node *curr)
+{
+    while (next->right != nullptr && next->right != curr)
+        next = next->right;
+
+    return next;
+}
+
+void morrisInOrderTraversal(Node *node)
+{
+    Node *curr = node;
+    while (curr != nullptr)
+    {
+        Node *next = curr->left;
+        if (next == nullptr)
+        {
+            cout << curr->data << " ";
+            curr = curr->right;
+        }
+        else
+        {
+            Node *rMost = rightMost(next, curr);
+            if (rMost->right == nullptr) // thread creation
+            {
+                rMost->right = curr;
+                curr = curr->left;
+            }
+            else
+            {
+                cout << curr->data << " ";
+                rMost->right = nullptr; // thread break
+                curr = curr->right;
+            }
+        }
+    }
+}
+
+void morrisPreOrderTraversal(Node *node)
+{
+    Node *curr = node;
+    while (curr != nullptr)
+    {
+        Node *next = curr->left;
+        if (next == nullptr)
+        {
+            cout << curr->data << " ";
+            curr = curr->right;
+        }
+        else
+        {
+            Node *rMost = rightMost(next, curr);
+            if (rMost->right == nullptr) // thread creation
+            {
+                cout << curr->data << " ";
+                rMost->right = curr;
+                curr = curr->left;
+            }
+            else
+            {
+                rMost->right = nullptr;
+                curr = curr->right;
+            }
+        }
+    }
+}
+
+void traversal(Node *root)
+{
+    // morrisInOrderTraversal(root);
+    morrisPreOrderTraversal(root);
+}
+
 void display(Node *node)
 {
     if (node == nullptr)
@@ -672,7 +746,8 @@ void solve()
     // pairSum p = leafToLeafPathSum02(root);
     // cout << p.maxPathLTL << " @ " << p.maxSumLTL << endl;
 
-    set1(root);
+    // set1(root);
+    traversal(root);
 }
 
 int main()

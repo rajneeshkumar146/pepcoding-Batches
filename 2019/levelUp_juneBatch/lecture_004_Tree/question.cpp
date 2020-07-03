@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <stack>
 using namespace std;
 
 class TreeNode
@@ -254,4 +255,114 @@ TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
 {
     lowestCommonAncestor_(root, p, q);
     return lca;
+}
+
+//Letcode 173.
+class BSTIterator
+{
+public:
+    stack<TreeNode *> st;
+
+    BSTIterator(TreeNode *root)
+    {
+        insertLeftMost(root);
+    }
+
+    void insertLeftMost(TreeNode *root)
+    {
+        TreeNode *curr = root;
+        while (curr != nullptr)
+        {
+            st.push(curr);
+            curr = curr->left;
+        }
+    }
+
+    int next()
+    {
+        TreeNode *rnode = st.top();
+        st.pop();
+        insertLeftMost(rnode->right);
+
+        return rnode->val;
+    }
+
+    bool hasNext()
+    {
+        return st.size() != 0;
+    }
+
+    // while(obj.hasNext()) cout<<obj.next()<<endl;
+};
+
+// https://practice.geeksforgeeks.org/problems/binary-tree-to-dll/1
+
+TreeNode *prevDLL = nullptr, *head = nullptr;
+void DLL(TreeNode *node)
+{
+    if (node == nullptr)
+        return;
+
+    DLL(node->left);
+    if (head == nullptr)
+        head = node;
+    else
+    {
+        prevDLL->right = node;
+        node->left = prevDLL;
+    }
+
+    prevDLL = node;
+    DLL(node->right);
+}
+
+TreeNode *bToDLL(TreeNode *root)
+{
+    prevDLL = nullptr;
+    head = nullptr;
+    DLL(root);
+    return head;
+}
+
+//Leetcode : 426
+
+TreeNode *treeToDoublyList(TreeNode *root)
+{
+    if (root == nullptr)
+        return root;
+
+    prevDLL = nullptr;
+    head = nullptr;
+    DLL(root);
+
+    prevDLL->right = head;
+    head->left = prevDLL;
+
+    return head;
+}
+
+//Leetcode : 105
+TreeNode *buildTree(vector<int> &preorder, int psi, int pei, vector<int> &inorder, int isi, int iei) // si=starting index, ei = end index.
+{
+    if (psi > pei)
+        return nullptr;
+
+    TreeNode *node = new TreeNode(preorder[psi]);
+
+    int idx = isi;
+    while (inorder[idx] != preorder[psi])
+        idx++;
+
+    int tel = idx - isi;
+
+    node->left = buildTree(preorder, psi + 1, psi + tel, inorder, isi, idx - 1);
+    node->right = buildTree(preorder, psi + tel + 1, pei, inorder, idx + 1, iei);
+
+    return node;
+}
+
+TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder)
+{
+    int n = preorder.size();
+    return buildTree(preorder, 0, n - 1, inorder, 0, n - 1);
 }
