@@ -366,3 +366,95 @@ TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder)
     int n = preorder.size();
     return buildTree(preorder, 0, n - 1, inorder, 0, n - 1);
 }
+
+//Leetcode : 106
+TreeNode *buildTree(vector<int> &postorder, int psi, int pei, vector<int> &inorder, int isi, int iei) // si=starting index, ei = end index.
+{
+    if (psi > pei)
+        return nullptr;
+
+    TreeNode *node = new TreeNode(postorder[pei]);
+
+    int idx = isi;
+    while (inorder[idx] != postorder[pei])
+        idx++;
+
+    int tel = idx - isi;
+
+    node->left = buildTree(postorder, psi, psi + tel - 1, inorder, isi, idx - 1);
+    node->right = buildTree(postorder, psi + tel, pei - 1, inorder, idx + 1, iei);
+
+    return node;
+}
+
+TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder)
+{
+    int n = inorder.size();
+    return buildTree(postorder, 0, n - 1, inorder, 0, n - 1);
+}
+
+//Leetcode 889.
+
+TreeNode *buildTree(vector<int> &preorder, int psi, int pei, vector<int> &postorder, int ppsi, int ppei) // si=starting index, ei = end index.
+{
+    if (psi > pei)
+        return nullptr;
+
+    if (psi == pei)
+        return new TreeNode(preorder[psi]);
+
+    TreeNode *node = new TreeNode(preorder[psi]);
+    int idx = ppsi;
+    while (postorder[idx] != preorder[psi + 1])
+        idx++;
+
+    int tel = idx - ppsi + 1;
+
+    node->left = buildTree(preorder, psi + 1, psi + tel, postorder, ppsi, idx);
+    node->right = buildTree(preorder, psi + tel + 1, pei, postorder, idx + 1, ppei - 1);
+
+    return node;
+}
+
+TreeNode *constructFromPrePost(vector<int> &pre, vector<int> &post)
+{
+    int n = pre.size();
+    return buildTree(pre, 0, n - 1, post, 0, n - 1);
+}
+
+// -1 : need a camera.
+//  0 : is a camera
+//  1 : dosen't need a camera.
+
+int camera = 0;
+int minCameraCover_(TreeNode *root)
+{
+    if (root == nullptr)
+        return 1;
+    if (root->left == nullptr && root->right == nullptr)
+        return -1;
+
+    int lans = minCameraCover_(root->left);
+    int rans = minCameraCover_(root->right);
+
+    if (lans == -1 || rans == -1)
+    {
+        camera++;
+        return 0;
+    }
+    else if (lans == 0 || rans == 0)
+        return 1;
+
+    return -1;
+}
+
+int minCameraCover(TreeNode *root)
+{
+    if (root = nullptr)
+        return 0;
+
+    if (minCameraCover_(root) == -1)
+        camera++;
+
+    return camera;
+}
