@@ -1220,6 +1220,115 @@ bool canPartition(vector<int> &nums)
 
 //Leetcode 494
 
+//LIS_Type=========================================================================================================
+
+//LIS
+int LIS_leftToRight(vector<int> &arr, vector<int> &dp)
+{
+    int N = arr.size();
+    int oMax = 0;
+    for (int i = 0; i < N; i++)
+    {
+        dp[i] = 1;
+        for (int j = i - 1; j >= 0; j--)
+            if (arr[j] < arr[i])
+                dp[i] = max(dp[i], dp[j] + 1);
+        oMax = max(oMax, dp[i]);
+    }
+    return oMax;
+}
+
+//LDS
+int LIS_rightToLeft(vector<int> &arr, vector<int> &dp)
+{
+    int N = arr.size();
+    int oMax = 0;
+    for (int i = N - 1; i >= 0; i--)
+    {
+        dp[i] = 1;
+        for (int j = i + 1; j < N; j++)
+            if (arr[j] < arr[i])
+                dp[i] = max(dp[i], dp[j] + 1);
+        oMax = max(oMax, dp[i]);
+    }
+    return oMax;
+}
+
+//https://www.geeksforgeeks.org/longest-bitonic-subsequence-dp-15/
+//Longest bitonic subsequence
+int LBS(vector<int> &arr)
+{
+    int n = arr.size();
+    vector<int> LIS(n, 0);
+    vector<int> LDS(n, 0);
+
+    LIS_leftToRight(arr, LIS);
+    LIS_rightToLeft(arr, LDS);
+
+    int maxLen = 0;
+    for (int i = 0; i < n; i++)
+    {
+        int len = LIS[i] + LDS[i] - 1;
+        maxLen = max(maxLen, len);
+    }
+    return maxLen;
+}
+
+// https://practice.geeksforgeeks.org/problems/maximum-sum-increasing-subsequence/0
+int maximumIncreasingSumSubsequence(vector<int> &arr)
+{
+    int n = arr.size();
+    vector<int> dp(n, 0);
+
+    int oMax = 0;
+    for (int i = 0; i < n; i++)
+    {
+        dp[i] = arr[i];
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (arr[j] < arr[i])
+                dp[i] = max(dp[i], dp[j] + arr[i]);
+        }
+
+        oMax = max(oMax, dp[i]);
+    }
+    return oMax;
+}
+
+// question for you : //https://practice.geeksforgeeks.org/problems/maximum-sum-bitonic-subsequence/0
+
+// minimum no of deletion to make array in sorted order in increasing order.
+int minDeletion(vector<int> &arr)
+{
+    int n = arr.size();
+    vector<int> dp(n, 0);
+
+    int oMax = 0;
+    for (int i = 0; i < n; i++)
+    {
+        dp[i] = 1;
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (arr[j] <= arr[i])
+                dp[i] = max(dp[i], dp[j] + 1);
+        }
+
+        oMax = max(oMax, dp[i]);
+    }
+
+    return n - oMax;
+}
+
+//==============================================================================================================
+
+void LIS_Type()
+{
+    vector<int> arr = {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15};
+    vector<int> dp(arr.size(), 0);
+
+    cout << LIS_leftToRight(arr, dp) << endl;
+}
+
 void targetType()
 {
     // coinChange();
@@ -1318,7 +1427,8 @@ void solve()
     // pathSet();
     // set2();
     // stringSubstringSet();
-    targetType();
+    // targetType();
+    LIS_Type();
 }
 
 int main()
