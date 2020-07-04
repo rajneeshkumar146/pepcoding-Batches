@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <algorithm>
 
 using namespace std;
 
@@ -1295,7 +1296,7 @@ int maximumIncreasingSumSubsequence(vector<int> &arr)
     return oMax;
 }
 
-// question for you : //https://practice.geeksforgeeks.org/problems/maximum-sum-bitonic-subsequence/0
+//--------------------------------------------------> // question for you : //https://practice.geeksforgeeks.org/problems/maximum-sum-bitonic-subsequence/0
 
 // minimum no of deletion to make array in sorted order in increasing order.
 int minDeletion(vector<int> &arr)
@@ -1317,6 +1318,84 @@ int minDeletion(vector<int> &arr)
     }
 
     return n - oMax;
+}
+//Leetcode 354
+int maxEnvelopes(vector<vector<int>> &arr)
+{
+    // for Java:
+    // Arrays.sort(arr,(int[] a, int[] b)-> {
+    //     if (a[0] == b[0])
+    //         return b[1] - a[1]; // other - this
+    //     return a[0] - b[0];     // this - other. default
+    // });
+
+    sort(arr.begin(), arr.end(), [](vector<int> &a, vector<int> &b) {
+        if (a[0] == b[0])
+            return b[1] < a[1]; // other - this
+        return a[0] < b[0];     // this - other., for cpp replace '-' with '<' default
+    });
+
+    int n = arr.size();
+    vector<int> dp(n, 0);
+
+    int oMax = 0;
+    for (int i = 0; i < n; i++)
+    {
+        dp[i] = 1;
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (arr[j][1] < arr[i][1])
+                dp[i] = max(dp[i], dp[j] + 1);
+        }
+
+        oMax = max(oMax, dp[i]);
+    }
+
+    return oMax;
+}
+
+//--------------------------------------------------> // for you : 1027, 1235
+
+int findNumberOfLIS(vector<int> &arr)
+{
+    int n = arr.size();
+    if (n <= 1)
+        return n;
+
+    vector<int> dp(n, 0);
+    vector<int> count(n, 0);
+
+    int maxLen = 0;
+    int maxCount = 0;
+    for (int i = 0; i < n; i++)
+    {
+        dp[i] = 1;
+        count[i] = 1;
+
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (arr[i] > arr[j])
+            {
+                if (dp[j] + 1 > dp[i])
+                {
+                    dp[i] = dp[j] + 1;
+                    count[i] = count[j];
+                }
+                else if (dp[j] + 1 == dp[i])
+                    count[i] += count[j];
+            }
+        }
+
+        if (dp[i] > maxLen)
+        {
+            maxLen = dp[i];
+            maxCount = count[i];
+        }
+        else if (dp[i] == maxLen)
+            maxCount += count[i];
+    }
+
+    return maxCount;
 }
 
 //==============================================================================================================
