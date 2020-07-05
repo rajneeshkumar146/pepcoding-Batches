@@ -135,6 +135,63 @@ Node *lowestCommonAncestor(Node *root, Node *p, Node *q)
     return LCA;
 }
 
+void kDown(Node *node, int k, Node *block)
+{
+    if (node == nullptr || node == block)
+        return;
+
+    if (k == 0)
+    {
+        cout << node->data << " ";
+        return;
+    }
+
+    kDown(node->left, k - 1, block);
+    kDown(node->right, k - 1, block);
+}
+
+void kAway(Node *node, int k, int data)
+{
+    vector<Node *> arr;
+    rootToNodePath(node, data, arr);
+
+    Node *block = nullptr;
+    for (int i = 0; i < arr.size(); i++)
+    {
+        kDown(arr[i], k - i, block);
+        block = arr[i];
+    }
+}
+
+int kAway02(Node *node, int k, int data)
+{
+    if (node == nullptr)
+        return -1;
+
+    if (node->data == data)
+    {
+        kDown(node, k, nullptr);
+        return 1;
+    }
+
+    int ld = kAway02(node->left, k, data);
+    if (ld > 0)
+    {
+        kDown(node, k - ld, node->left);
+        return ld + 1;
+    }
+
+    int rd = kAway02(node->right, k, data);
+    if (rd > 0)
+    {
+
+        kDown(node, k - rd, node->right);
+        return rd + 1;
+    }
+
+    return -1;
+}
+
 int distanceBWNodes(Node *root, int p, int q)
 {
 
@@ -614,8 +671,6 @@ public:
     Node *pred = nullptr;
     Node *succ = nullptr;
     Node *prev = nullptr;
-    
-    
 };
 
 void allSolution(Node *node, int data, int level, allSol &p)
@@ -626,12 +681,6 @@ void allSolution(Node *node, int data, int level, allSol &p)
     p.height = max(p.height, level);
     p.size++;
     p.find = p.find;
-    
-    
-    
-
-
-
 
     allSolution(node->left, data, level + 1, p);
     allSolution(node->right, data, level + 1, p);
