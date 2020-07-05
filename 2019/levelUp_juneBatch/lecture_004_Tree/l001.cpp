@@ -614,6 +614,8 @@ public:
     Node *pred = nullptr;
     Node *succ = nullptr;
     Node *prev = nullptr;
+    
+    
 };
 
 void allSolution(Node *node, int data, int level, allSol &p)
@@ -624,6 +626,13 @@ void allSolution(Node *node, int data, int level, allSol &p)
     p.height = max(p.height, level);
     p.size++;
     p.find = p.find;
+    
+    
+    
+
+
+
+
     allSolution(node->left, data, level + 1, p);
     allSolution(node->right, data, level + 1, p);
 }

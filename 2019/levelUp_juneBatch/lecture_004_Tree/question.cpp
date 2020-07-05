@@ -458,3 +458,33 @@ int minCameraCover(TreeNode *root)
 
     return camera;
 }
+
+//Leetcode 230
+
+void leftMost(TreeNode *node, stack<TreeNode *> &st)
+{
+    while (node != nullptr)
+    {
+        st.push(node);
+        node = node->left;
+    }
+}
+
+int kthSmallest(TreeNode *root, int k)
+{
+    stack<TreeNode *> st;
+    leftMost(root, st);
+
+    int ans = -1;
+    while (k-- > 0)
+    {
+        TreeNode *rnode = st.top();
+        st.pop();
+        leftMost(rnode->right, st);
+        
+        ans = rnode->val;
+    }
+    return ans;
+}
+
+//Leetcode 662
