@@ -87,16 +87,9 @@ public class l001 {
 		// ans=fib_01(n,dp);
 		// ans=fibDP_01(n,dp);
 
-		int[][] a = {
-			{
-				1,
-				1
-			},
-			{
-				1,
-				0
-			}
-		};
+		int[][] a = {{1, 1},
+			         {1, 0}
+		            };
 		int[][] mat = fiboLogn(a, n);
 		ans = mat[0][1];
 
@@ -1736,7 +1729,7 @@ public class l001 {
 	}
 
 	public static void stringSet() {
-		// String str="geeksse";
+		 // String str="geeksse";
 		// int[][] dp=new int[str.length()][str.length()];
 		// System.out.println(longestPalindromicSubsubsequence_Rec(str,0,str.length()-1,dp));
 		// System.out.println(longestPalindromicSubsubsequence(str));
