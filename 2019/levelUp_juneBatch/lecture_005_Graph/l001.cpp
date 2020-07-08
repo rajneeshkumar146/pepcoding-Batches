@@ -210,6 +210,7 @@ void KthSmallest(int src, int dest, int k)
 
 int KthSmallest02_(int src, int dest, int floor, vector<bool> &vis)
 {
+    return -1;
 }
 
 void KthSmallest02(int src, int dest, int k)
@@ -223,6 +224,55 @@ void KthSmallest02(int src, int dest, int k)
         floor = ans;
     }
     cout << ans << endl;
+}
+
+int hamintoninPath(int src, int osrc, int noEdge, vector<bool> &vis, string path)
+{
+    if (noEdge == N - 1)
+    {
+        int idx = searchVrtx(src, osrc);
+        path += to_string(src);
+        if (idx != -1)
+            cout << "Cycle : " << path << endl;
+        else
+            cout << "Non Cycle : " << path << endl;
+        return 1;
+    }
+
+    vis[src] = true;
+    int count = 0;
+    for (Edge e : graph[src])
+    {
+        if (!vis[e.v])
+            count += hamintoninPath(e.v, osrc, noEdge + 1, vis, path + to_string(src) + " ");
+    }
+    vis[src] = false;
+
+    return count;
+}
+
+void GCC_(int src, vector<bool> &vis)
+{
+    vis[src] = true;
+    for (Edge e : graph[src])
+    {
+        if (!vis[e.v])
+            GCC_(e.v, vis);
+    }
+}
+
+void GCC()
+{
+    vector<bool> vis(N, false);
+    int count = 0;
+    for (int i = 0; i < N; i++)
+    {
+        if (!vis[i])
+        {
+            GCC_(i, vis);
+            count++;
+        }
+    }
 }
 
 void constructGraph()
@@ -244,6 +294,8 @@ void constructGraph()
     addEdge(4, 6, 8);
     addEdge(5, 6, 3);
 
+    addEdge(0, 6, 10);
+
     display();
 }
 
@@ -257,10 +309,12 @@ void solve()
 
     // preorder(0, "", vis);
     // cout << allPath(0, 6, "", vis) << endl;
-    cout << allPath(0, 6, 0, "", vis) << endl;
+    // cout << allPath(0, 6, 0, "", vis) << endl;
 
     // pathPair p = smallestPath(0, 6, vis);
     // cout << p.path << " @ " << p.len << endl;
+
+    cout << hamintoninPath(0, 0, 0, vis, "") << endl;
 }
 
 int main()
