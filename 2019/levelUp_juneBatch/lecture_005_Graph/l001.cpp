@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -275,6 +276,104 @@ void GCC()
     }
 }
 
+//BFS.============================================================
+
+void BFS_01(int src, vector<bool> &vis)
+{
+    queue<int> que;
+    que.push(src);
+    int desti = 6;
+
+    while (que.size() != 0)
+    {
+        int rvtx = que.front();
+        que.pop();
+
+        vis[rvtx] = true;
+        for (Edge e : graph[rvtx])
+        {
+            if (!vis[e.v])
+                que.push(e.v);
+        }
+    }
+}
+
+void BFS_02(int src, vector<bool> &vis)
+{
+    queue<int> que;
+    que.push(src);
+    int desti = 6;
+
+    int level = 0;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int rvtx = que.front();
+            que.pop();
+
+            vis[rvtx] = true;
+            for (Edge e : graph[rvtx])
+            {
+                if (!vis[e.v])
+                    que.push(e.v);
+            }
+        }
+        level++;
+    }
+}
+
+void BFS_03(int src, vector<bool> &vis)
+{
+    queue<int> que;
+    que.push(src);
+    int desti = 6;
+
+    int level = 0;
+    vis[src] = true;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int rvtx = que.front();
+            que.pop();
+
+            for (Edge e : graph[rvtx])
+            {
+                if (!vis[e.v])
+                {
+                    vis[e.v] = true;
+                    que.push(e.v);
+                }
+            }
+        }
+        level++;
+    }
+}
+
+void GCC_UsingBFS()
+{
+    vector<bool> vis(N, false);
+    int count = 0;
+    for (int i = 0; i < N; i++)
+    {
+        if (!vis[i])
+        {
+            BFS_03(i, vis);
+            count++;
+        }
+    }
+}
+
+void BFS()
+{
+
+    vector<bool> vis(N, false);
+    BFS_01(0, vis);
+}
+
 void constructGraph()
 {
     N = 7;
@@ -294,7 +393,7 @@ void constructGraph()
     addEdge(4, 6, 8);
     addEdge(5, 6, 3);
 
-    addEdge(0, 6, 10);
+    // addEdge(0, 6, 10);
 
     display();
 }
@@ -305,7 +404,7 @@ void solve()
     // removeVtx(3);
     // display();
 
-    vector<bool> vis(N, false);
+    // vector<bool> vis(N, false);
 
     // preorder(0, "", vis);
     // cout << allPath(0, 6, "", vis) << endl;
@@ -314,7 +413,8 @@ void solve()
     // pathPair p = smallestPath(0, 6, vis);
     // cout << p.path << " @ " << p.len << endl;
 
-    cout << hamintoninPath(0, 0, 0, vis, "") << endl;
+    // cout << hamintoninPath(0, 0, 0, vis, "") << endl;
+    BFS();
 }
 
 int main()
