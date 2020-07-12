@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 
@@ -284,4 +285,119 @@ int shortestPathBinaryMatrix(vector<vector<int>> &grid)
     }
 
     return -1;
+}
+
+//Leetcode 207.
+
+bool canFinish(int numCourses, vector<vector<int>> &prerequisites)
+{
+    int N = numCourses;
+    vector<vector<int>> graph(N, vector<int>());
+
+    vector<int> indegree(N, 0);
+    for (vector<int> &ar : prerequisites)
+    {
+        graph[ar[0]].push_back(ar[1]);
+        indegree[ar[1]]++;
+    }
+
+    queue<int> que;
+    int count = 0;
+    for (int i = 0; i < N; i++)
+        if (indegree[i] == 0)
+            que.push(i);
+
+    while (que.size() != 0)
+    {
+        int rvtx = que.front();
+        que.pop();
+
+        count++;
+        for (int e : graph[rvtx])
+        {
+            if (--indegree[e] == 0)
+                que.push(e);
+        }
+    }
+
+    return count == N;
+}
+
+vector<int> findOrder(int numCourses, vector<vector<int>> &prerequisites)
+{
+
+    int N = numCourses;
+    vector<vector<int>> graph(N, vector<int>());
+
+    vector<int> indegree(N, 0);
+    for (vector<int> &ar : prerequisites)
+    {
+        graph[ar[0]].push_back(ar[1]);
+        indegree[ar[1]]++;
+    }
+
+    queue<int> que;
+    vector<int> ans;
+    for (int i = 0; i < N; i++)
+        if (indegree[i] == 0)
+            que.push(i);
+
+    while (que.size() != 0)
+    {
+        int rvtx = que.front();
+        que.pop();
+
+        ans.push_back(rvtx);
+        for (int e : graph[rvtx])
+        {
+            if (--indegree[e] == 0)
+                que.push(e);
+        }
+    }
+    if (ans.size() != N)
+        ans.clear();
+    reverse(ans.begin(), ans.end());
+    return ans;
+}
+//===============================================================================
+
+bool topoCycle(int src, vector<vector<int>> &graph, vector<bool> &vis, vector<bool> &myPath, vector<int> &ans)
+{
+    vis[src] = myPath[src] = true;
+    bool isCycle = false;
+    for (int e : graph[src])
+    {
+        if (!vis[e])
+            isCycle = isCycle || topoCycle(e, graph, vis, myPath, ans);
+        else if (myPath[e])
+            return true;
+    }
+
+    myPath[src] = false;
+    ans.push_back(src);
+    return isCycle;
+}
+
+vector<int> findOrder(int numCourses, vector<vector<int>> &prerequisites)
+{
+
+    int N = numCourses;
+    vector<vector<int>> graph(N, vector<int>());
+
+    for (vector<int> &ar : prerequisites)
+        graph[ar[0]].push_back(ar[1]);
+
+    vector<bool> vis(N, false);
+    vector<bool> myPath(N, false);
+    vector<int> ans;
+
+    bool isCycle = false;
+    for (int i = 0; i < N; i++)
+        if (!vis[i])
+            isCycle = isCycle || topoCycle(i, graph, vis, myPath, ans);
+
+    if (isCycle)
+        ans.clear();
+
+    return ans;
 }
