@@ -37,7 +37,12 @@ void display()
 void addEdge(int u, int v, int w)
 {
     graph[u].push_back(Edge(v, w));
-    // graph[v].push_back(Edge(u, w));
+    graph[v].push_back(Edge(u, w));
+}
+
+void addEdge2(int u, int v, int w)
+{
+    graph[u].push_back(Edge(v, w));
 }
 
 int searchVrtx(int u, int v)
@@ -435,11 +440,85 @@ void kahnsAlgo()
     }
 }
 
+//KosaRaju's Algo for strongly Connected Components.
+
+void dfs(int src, vector<bool> &vis, vector<vector<Edge>> &graph, vector<int> &res)
+{
+    vis[src] = true;
+    for (Edge e : graph[src])
+    {
+        if (!vis[e.v])
+            dfs(e.v, vis, graph, res);
+    }
+
+    res.push_back(src);
+}
+
+void KosaRajuAlgoFor_SCC()
+{
+    vector<bool> vis(N, false);
+    vector<int> res;
+
+    for (int i = 0; i < N; i++)
+        if (!vis[i])
+            dfs(i, vis, graph, res);
+
+    vector<vector<Edge>> gp(N, vector<Edge>());
+    for (int i = 0; i < N; i++)
+        for (Edge e : graph[i])
+            gp[e.v].push_back(Edge(i, e.w));
+
+    for (int i = 0; i < N; i++)
+        vis[i] = false;
+    int count = 1;
+    vector<int> vtx;
+
+    for (int i = res.size() - 1; i >= 0; i--)
+        if (!vis[res[i]])
+        {
+            dfs(res[i], vis, gp, vtx);
+            cout << count++ << " -> ";
+            while (vtx.size() != 0)
+            {
+                cout << vtx.back() << ", ";
+                vtx.pop_back();
+            }
+            cout << endl;
+        }
+}
+
 void BFS()
 {
 
     vector<bool> vis(N, false);
     BFS_01(0, vis);
+}
+
+void constructDirectedGraph()
+{
+    N = 11;
+    graph.resize(N, vector<Edge>());
+
+    addEdge2(0, 5, 10);
+    addEdge2(6, 0, 10);
+    addEdge2(5, 6, 40);
+
+    addEdge2(6, 8, 10);
+
+    addEdge2(8, 9, 10);
+    addEdge2(9, 10, 2);
+    addEdge2(10, 8, 2);
+
+    addEdge2(10, 7, 10);
+
+    addEdge2(7, 3, 8);
+    addEdge2(3, 1, 3);
+    addEdge2(1, 2, 8);
+    addEdge2(2, 7, 3);
+
+    addEdge2(2, 4, 8);
+
+    KosaRajuAlgoFor_SCC();
 }
 
 void constructGraph()
@@ -468,7 +547,7 @@ void constructGraph()
 
 void solve()
 {
-    constructGraph();
+    // constructGraph();
     // removeVtx(3);
     // display();
 
@@ -482,7 +561,9 @@ void solve()
     // cout << p.path << " @ " << p.len << endl;
 
     // cout << hamintoninPath(0, 0, 0, vis, "") << endl;
-    BFS();
+    // BFS();
+
+    constructDirectedGraph();
 }
 
 int main()
