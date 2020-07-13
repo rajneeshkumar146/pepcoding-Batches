@@ -45,7 +45,26 @@ void addEdge(int u, int v, int w)
 vector<int> par;
 vector<int> size;
 
+int findPar(int u)
+{
+    if (par[u] == u)
+        return u;
+    return par[u] = findPar(par[u]);
+}
 
+void merge(int p1, int p2)
+{
+    if (size[p1] < size[p2])
+    {
+        par[p1] = p2;
+        size[p2] += size[p1];
+    }
+    else
+    {
+        par[p2] = p1;
+        size[p1] += size[p2];
+    }
+}
 
 void UnionFind(int n, vector<vector<int>> &edges)
 {
@@ -68,9 +87,10 @@ void UnionFind(int n, vector<vector<int>> &edges)
         if (p1 != p2)
         {
             merge(p1, p2);
-            addEdge(u, v, w);
+            addEdge(u, v, w); // if we want to create a graph.
         }
     }
 
     display();
 }
+

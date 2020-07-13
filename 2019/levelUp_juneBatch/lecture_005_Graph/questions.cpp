@@ -455,3 +455,81 @@ int longestIncreasingPath(vector<vector<int>> &matrix)
 
     return len == 0 ? -1 : len;
 }
+
+vector<int> par;
+vector<int> size;
+
+void merge(int p1, int p2)
+{
+    if (size[p1] < size[p2])
+    {
+        par[p1] = p2;
+        size[p2] += size[p1];
+    }
+    else
+    {
+        par[p2] = p1;
+        size[p1] += size[p2];
+    }
+}
+
+int findPar(int u)
+{
+    if (par[u] == u)
+        return u;
+    return par[u] = findPar(par[u]);
+}
+
+//Leetcode 684:
+vector<int> findRedundantConnection(vector<vector<int>> &edges)
+{
+    if (edges.size() == 0 || edges[0].size() == 0)
+        return {};
+    for (int i = 0; i <= edges.size() + 1; i++)
+    {
+        par.push_back(i);
+        // size.push_back(1);
+    }
+
+    for (vector<int> &e : edges)
+    {
+        int p1 = findPar(e[0]);
+        int p2 = findPar(e[1]);
+
+        if (p1 != p2)
+            par[p1] = p2;
+        else
+            return e;
+    }
+
+    return {};
+}
+
+//Leetcode 547
+int findCircleNum(vector<vector<int>> &M)
+{
+    for (int i = 0; i < M.size(); i++)
+        par.push_back(i);
+
+    for (int i = 0; i < M.size(); i++)
+    {
+        for (int j = 0; j < M[0].size(); j++)
+        {
+            if (M[i][j] == 1 && i != j)
+            {
+                int p1 = findPar(i);
+                int p2 = findPar(j);
+
+                if (p1 != p2)
+                    par[p1] = p2;
+            }
+        }
+    }
+    
+    int count=0;
+    for(int i=0;i<M.size();i++){
+        if(par[i]==i) count++;
+    }
+
+    return count;
+}
