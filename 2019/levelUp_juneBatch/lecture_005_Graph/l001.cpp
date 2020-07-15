@@ -319,6 +319,9 @@ void BFS_02(int src, vector<bool> &vis)
             int rvtx = que.front();
             que.pop();
 
+            if (vis[rvtx])
+                continue;
+            
             vis[rvtx] = true;
             for (Edge e : graph[rvtx])
             {

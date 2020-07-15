@@ -457,8 +457,14 @@ int longestIncreasingPath(vector<vector<int>> &matrix)
 }
 
 vector<int> par;
-vector<int> size;
+int findPar(int u)
+{
+    if (par[u] == u)
+        return u;
+    return par[u] = findPar(par[u]);
+}
 
+vector<int> size;
 void merge(int p1, int p2)
 {
     if (size[p1] < size[p2])
@@ -473,12 +479,6 @@ void merge(int p1, int p2)
     }
 }
 
-int findPar(int u)
-{
-    if (par[u] == u)
-        return u;
-    return par[u] = findPar(par[u]);
-}
 
 //Leetcode 684:
 vector<int> findRedundantConnection(vector<vector<int>> &edges)
@@ -525,10 +525,129 @@ int findCircleNum(vector<vector<int>> &M)
             }
         }
     }
+
+    int count = 0;
+    for (int i = 0; i < M.size(); i++)
+    {
+        if (par[i] == i)
+            count++;
+    }
+
+    return count;
+}
+
+// Leetcode 200.
+int numIslands02_(vector<vector<char>> &grid, int sr, int sc)
+{
+    int n = grid.size();
+    int m = grid[0].size();
+
+    int count = 0;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++)
+        {
+            par.push_back(i * m + j);
+            size.push_back(1);
+            if (grid[i][j] == '1')
+                count++;
+        }
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (grid[i][j] == '1')
+            {
+                int p1 = findPar(i * m + j);
+                if (j + 1 < m && grid[i][j + 1] == '1')
+                {
+                    int p2 = findPar(i * m + j + 1);
+                    if (p1 != p2)
+                    {
+                        par[p1] = p2;
+                        size[p2] += size[p1];
+                        count--;
+                    }
+                }
+
+                if (i + 1 < n && grid[i + 1][j] == '1')
+                {
+                    int p2 = findPar((i + 1) * m + j);
+                    if (p1 != p2)
+                    {
+                        par[p1] = p2;
+                        size[p2] += size[p1];
+                        count--;
+                    }
+                }
+            }
+        }
+    }
+
+    return count;
+}
+
+//Leetcode 1061.
+
+string smallestEquivalentString(string A, string B, string S)
+{
+    for (int i = 0; i < 26; i++)
+        par.push_back(i);
+
+    for (int i = 0; i < A.size(); i++)
+    {
+        char ch1 = A[i];
+        char ch2 = B[i];
+
+        int p1 = findPar(ch1 - 'a');
+        int p2 = findPar(ch2 - 'a');
+
+        par[p1] = min(p1, p2);
+        par[p2] = min(p1, p2);
+    }
+
+    string ans = "";
+    for (int i = 0; i < S.length(); i++)
+        ans += (char)(findPar(S[i] - 'a') + 'a');
+
+    return ans;
+}
+
+//Leetcode 839.==================================================
+
+bool isSimilar(string &str1, string &str2)
+{
+
+    int count = 0;
+    for (int i = 0; i < str1.size(); i++)
+        if (str1[i] != str2[i] && ++count > 2)
+           return false;
     
-    int count=0;
-    for(int i=0;i<M.size();i++){
-        if(par[i]==i) count++;
+    return true;
+}
+
+int numSimilarGroups(vector<string> &A)
+{
+    int n = A.size();
+    for (int i = 0; i < n; i++)
+        par.push_back(i);
+
+    int count = n;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            if (isSimilar(A[i], A[j]))
+            {
+                int p1 = findPar(i);
+                int p2 = findPar(j);
+                if (p1 != p2)
+                {
+                    par[p1] = p2;
+                    count--;
+                }
+            }
+        }
     }
 
     return count;
