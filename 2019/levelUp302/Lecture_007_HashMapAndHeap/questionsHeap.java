@@ -1,4 +1,7 @@
 import java.util.PriorityQueue;
+import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 public class questionsHeap {
 
@@ -71,6 +74,92 @@ public class questionsHeap {
 
         int[] rvtx = pq.remove();
         return new int[] { rvtx[0], rvtx[1] };
+    }
+
+    public int[] intersection(int[] nums1, int[] nums2) {
+        if (nums1.length == 0 || nums2.length == 0)
+            return new int[0];
+
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int ele : nums1)
+            map.put(ele, map.getOrDefault(ele, 0) + 1);
+
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int ele : nums2) {
+            if (map.containsKey(ele)) {
+                list.add(ele);
+                map.remove(ele);
+            }
+        }
+
+        int[] ans = new int[list.size()];
+        int i = 0;
+        for (int ele : list)
+            ans[i++] = ele;
+
+        return ans;
+
+    }
+
+    public class pair implements Comparable<pair> {
+        int val;
+        int freq;
+
+        pair(int val, int freq) {
+            this.val = val;
+            this.freq = freq;
+        }
+
+        @Override
+        public int compareTo(pair o) {
+            return this.freq - o.freq;
+        }
+    }
+
+    public int[] topKFrequent(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int ele : nums)
+            map.put(ele, map.getOrDefault(ele, 0) + 1);
+
+        PriorityQueue<pair> pq = new PriorityQueue<>();
+        for (Integer i : map.keySet()) {
+            pq.add(new pair(i, map.get(i)));
+            if (pq.size() > k)
+                pq.remove();
+        }
+
+        int[] ans = new int[pq.size()];
+        int i = 0;
+        while (pq.size() != 0)
+            ans[i++] = pq.remove().val;
+
+        return ans;
+    }
+
+    public List<List<String>> groupAnagrams(String[] str) {
+        HashMap<String, ArrayList<String>> map = new HashMap<>();
+        for (int i = 0; i < str.length; i++) {
+            String s = str[i];
+            int[] freq = new int[26];
+            for (int j = 0; j < s.length(); j++)
+                freq[s.charAt(j) - 'a']++;
+
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < 26; j++)
+                if (freq[j] != 0)
+                    sb.append((char) (j + 'a') + (freq[j] + ""));
+
+            String RLES = sb.toString();
+            map.putIfAbsent(RLES, new ArrayList<>());
+            map.get(RLES).add(s);
+        }
+
+        List<List<String>> ans = new ArrayList<>();
+        for (String code : map.keySet()) {
+            ans.add(map.get(code));
+        }
+
+        return ans;
     }
 
 }

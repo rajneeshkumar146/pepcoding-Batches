@@ -48,7 +48,7 @@ public class l001HM {
 
     public static void main(String[] args) {
         String str = "aasbvaabababababccc";
-        FreqMap2(str);
+        FreqMap3(str);
     }
 
 }
