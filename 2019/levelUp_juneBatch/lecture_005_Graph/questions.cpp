@@ -479,7 +479,6 @@ void merge(int p1, int p2)
     }
 }
 
-
 //Leetcode 684:
 vector<int> findRedundantConnection(vector<vector<int>> &edges)
 {
@@ -621,8 +620,8 @@ bool isSimilar(string &str1, string &str2)
     int count = 0;
     for (int i = 0; i < str1.size(); i++)
         if (str1[i] != str2[i] && ++count > 2)
-           return false;
-    
+            return false;
+
     return true;
 }
 
@@ -651,4 +650,32 @@ int numSimilarGroups(vector<string> &A)
     }
 
     return count;
+}
+
+//Leetcode 1168.
+int minCostToSupplyWater(int n, vector<int> &wells, vector<vector<int>> &pipes)
+{
+    for (int i = 0; i < wells.size(); i++)
+        pipes.push_back({0, i + 1, wells[i]});
+
+    sort(pipes.begin(), pipes.end(), [](vector<int> &a, vector<int> &b) {
+        return a[2] < b[2];
+    });
+
+    for (int i = 0; i <= n; i++)
+        par.push_back(i);
+
+    int cost = 0;
+    for (vector<int> &e : pipes)
+    {
+        int p1 = findPar(e[0]);
+        int p2 = findPar(e[1]);
+        if (p1 != p2)
+        {
+            par[p1] = p2;
+            cost += e[2];
+        }
+    }
+
+    return cost;
 }
