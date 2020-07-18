@@ -206,6 +206,7 @@ vector<vector<string>> groupAnagrams(vector<string> &strs)
     return ans;
 }
 
+//Leetcode 380.
 class RandomizedSet
 {
 public:
@@ -246,6 +247,212 @@ public:
     {
         int loc = rand() % list.size();
         return list[loc];
+    }
+};
+
+//Leetcode 295
+class MedianFinder
+{
+public:
+    priority_queue<int> leftRegion;                             //MAXPQ
+    priority_queue<int, vector<int>, greater<int>> rightRegion; //MINPQ
+
+    MedianFinder()
+    {
+    }
+
+    void addNum(int num)
+    {
+
+        // find suitable region.
+        if (leftRegion.empty() || num < leftRegion.top())
+            leftRegion.push(num);
+        else
+            rightRegion.push(num);
+
+        // adjust boundary of left and right region.
+        if (leftRegion.size() > rightRegion.size() + 1)
+        {
+            rightRegion.push(leftRegion.top());
+            leftRegion.pop();
+        }
+        else if (rightRegion.size() > leftRegion.size())
+        {
+            leftRegion.push(rightRegion.top());
+            rightRegion.pop();
+        }
+    }
+
+    double findMedian()
+    {
+        if (leftRegion.size() == rightRegion.size())
+            return leftRegion.size() == 0 ? 0 : 1.0 * (leftRegion.top() + rightRegion.top()) / 2;
+        else
+            return leftRegion.top();
+    }
+};
+
+//Leetcode 407.
+
+int trapRainWater(vector<vector<int>> &heightMap)
+{
+    if (heightMap.empty() || heightMap[0].empty())
+        return 0;
+
+    int n = heightMap.size();
+    int m = heightMap[0].size();
+
+    typedef pair<int, int> cell;                          // ( height,i*m+j )
+    priority_queue<cell, vector<cell>, greater<cell>> pq; //MIN_PQ
+
+    vector<vector<bool>> vis(n, vector<bool>(m, false));
+
+    for (int i = 0; i < n; i++)
+    {
+        pq.push({heightMap[i][0], i * m});
+        pq.push({heightMap[i][m - 1], i * m + m - 1});
+
+        vis[i][0] = true;
+        vis[i][m - 1] = true;
+    }
+
+    for (int j = 0; j < m; j++)
+    {
+
+        pq.push({heightMap[0][j], j});
+        pq.push({heightMap[n - 1][j], (n - 1) * m + j});
+
+        vis[0][j] = true;
+        vis[n - 1][j] = true;
+    }
+
+    vector<vector<int>> dir = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    int totalWater = 0, MaxTillNow = 0;
+
+    while (pq.size() != 0)
+    {
+        cell rvtx = pq.top();
+        pq.pop();
+
+        int r = rvtx.second / m;
+        int c = rvtx.second % m;
+        MaxTillNow = max(MaxTillNow, rvtx.first);
+
+        for (int d = 0; d < 4; d++)
+        {
+            int x = r + dir[d][0];
+            int y = c + dir[d][1];
+
+            if (x >= 0 && y >= 0 && x < n && y < m && !vis[x][y])
+            {
+                totalWater += max(0, MaxTillNow - heightMap[x][y]);
+                vis[x][y] = true;
+                pq.push(heightMap[x][y], x * m + y);
+            }
+        }
+    }
+
+    return totalWater;
+}
+
+//Leetcode 138.
+class Solution
+{
+public:
+    class Node
+    {
+    public:
+        int val = 0;
+        Node *next;
+        Node *random;
+
+        Node(int _val)
+        {
+            val = _val;
+            next = NULL;
+            random = NULL;
+        }
+    };
+
+    unordered_map<Node *, Node *> map;
+    Node *copyRandomList2(Node *head)
+    {
+        Node *curr = head;
+        while (curr != nullptr)
+        {
+            Node *node = new Node(curr->val);
+            map[curr] = node;
+            curr = curr->next;
+        }
+
+        for (auto p : map)
+        {
+            if (map.find(p.first->next) != map.end())
+                p.second->next = map[p.first->next];
+            if (map.find(p.first->random) != map.end())
+                p.second->random = map[p.first->random];
+        }
+
+        return map[head];
+    }
+
+    //Solution_02
+    Node *copyRandomList(Node *head)
+    {
+
+        copyList(head);
+        setRandomPointers(head);
+        return ExtractNode(head);
+    }
+
+    //Step 01 : CopyList
+    void copyList(Node *node)
+    {
+        Node *curr = node;
+        while (curr != nullptr)
+        {
+            Node *forw = curr->next;
+            Node *node = new Node(curr->val);
+
+            curr->next = node;
+            node->next = forw;
+
+            curr = forw;
+        }
+    }
+
+    //Step 02:set Random pointers
+    void setRandomPointers(Node *node)
+    {
+        Node *curr = node;
+        while (curr != nullptr)
+        {
+            if (curr->random != nullptr)
+                curr->next->random = curr->random->next;
+            curr = curr->next->next;
+        }
+    }
+
+    //Step 03: Extract Your copyied list
+    Node *ExtractNode(Node *node)
+    {
+        Node *curr = node;
+        Node *NewList = new Node(-1);
+        Node *curr2 = NewList;
+
+        while (curr != nullptr)
+        {
+            Node *forw = curr->next->next;
+
+            Node *copyNode = curr->next;
+            curr->next = forw;
+            curr2->next = copyNode;
+
+            curr = forw;
+            curr2 = copyNode;
+        }
+
+        return NewList->next;
     }
 };
 
