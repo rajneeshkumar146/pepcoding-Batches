@@ -535,18 +535,20 @@ int findCircleNum(vector<vector<int>> &M)
     return count;
 }
 
-// Leetcode 200.
-int numIslands02_(vector<vector<char>> &grid, int sr, int sc)
+int numIslands(vector<vector<char>> &grid)
 {
-    int n = grid.size();
-    int m = grid[0].size();
 
+    int n = grid.size();
+    if(n==0) return 0;
+    
+    int m = grid[0].size();
+    if(m==0) return 0;
+    
     int count = 0;
     for (int i = 0; i < n; i++)
         for (int j = 0; j < m; j++)
         {
             par.push_back(i * m + j);
-            size.push_back(1);
             if (grid[i][j] == '1')
                 count++;
         }
@@ -557,25 +559,28 @@ int numIslands02_(vector<vector<char>> &grid, int sr, int sc)
         {
             if (grid[i][j] == '1')
             {
-                int p1 = findPar(i * m + j);
+                // grid[i][j]='0';
+               
                 if (j + 1 < m && grid[i][j + 1] == '1')
                 {
+                    int p1 = findPar(i * m + j);
                     int p2 = findPar(i * m + j + 1);
                     if (p1 != p2)
                     {
                         par[p1] = p2;
-                        size[p2] += size[p1];
+                        
                         count--;
                     }
                 }
 
                 if (i + 1 < n && grid[i + 1][j] == '1')
                 {
+                    int p1 = findPar(i * m + j);
                     int p2 = findPar((i + 1) * m + j);
                     if (p1 != p2)
                     {
                         par[p1] = p2;
-                        size[p2] += size[p1];
+                       
                         count--;
                     }
                 }
@@ -585,7 +590,6 @@ int numIslands02_(vector<vector<char>> &grid, int sr, int sc)
 
     return count;
 }
-
 //Leetcode 1061.
 
 string smallestEquivalentString(string A, string B, string S)
@@ -678,4 +682,92 @@ int minCostToSupplyWater(int n, vector<int> &wells, vector<vector<int>> &pipes)
     }
 
     return cost;
+}
+
+//Leetcode : 787.
+
+int findCheapestPrice(int n, vector<vector<int>> &flights, int src, int dst, int K)
+{
+    typedef pair<int, int> pii; //{v,w}
+    vector<vector<pii>> graph(n, vector<pii>());
+    for (vector<int> &flight : flights)
+        graph[flight[0]].push_back({flight[1], flight[2]});
+
+    typedef vector<int> pqPair; //  {wsf, src, stops}
+    priority_queue<pqPair, vector<pqPair>, greater<pqPair>> pq;
+
+    pq.push({0, src, K + 1});
+
+    while (pq.size() != 0)
+    {
+        pqPair rvtx = pq.top();
+        pq.pop();
+
+        int u = rvtx[1];
+        int wsf = rvtx[0];
+        int stop = rvtx[2];
+
+        if (u == dst)
+            return wsf;
+        if (stop == 0)
+            continue;
+
+        for (pii e : graph[u])
+        {
+            int v = e.first;
+            int weightOfEdge = e.second;
+            pq.push({wsf + weightOfEdge, v, stop - 1});
+        }
+    }
+
+    return -1;
+}
+
+//Leetcode 778
+
+int swimInWater(vector<vector<int>> &grid)
+{
+    if (grid.empty() || grid[0].empty())
+        return 0;
+
+    typedef pair<int, int> pii; //{ele, i*m+j}
+    priority_queue<pii, vector<pii>, greater<pii>> pq;
+
+    int n = grid.size();
+    int m = grid[0].size();
+
+    vector<vector<bool>> vis(n, vector<bool>(m, false));
+
+    pq.push({grid[0][0], 0});
+    vis[0][0] = true;
+
+    int ans = 0;
+    vector<vector<int>> dir = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+
+    while (pq.size() != 0)
+    {
+        pii rvtx = pq.top();
+        pq.pop();
+
+        int height = rvtx.first;
+        int x = rvtx.second / m;
+        int y = rvtx.second % m;
+        
+        ans = max(ans, height);
+        if (x == n - 1 && y == m - 1) // destination
+            return ans;
+
+        for (int d = 0; d < 4; d++)
+        {
+            int r = x + dir[d][0];
+            int c = y + dir[d][1];
+            if (r >= 0 && c >= 0 && r < n && c < m && !vis[r][c])
+            {
+                vis[r][c] = true;
+                pq.push({grid[r][c], r * m + c});
+            }
+        }
+    }
+
+    return ans;
 }

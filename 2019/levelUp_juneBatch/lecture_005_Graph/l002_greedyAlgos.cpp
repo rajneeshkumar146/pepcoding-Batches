@@ -95,40 +95,6 @@ void PrimsAlgo_01(int src, vector<bool> &vis)
     display(primsGraph);
 }
 
-void PrimsAlgo_01(int src, vector<bool> &vis)
-{
-    vector<vector<Edge>> primsGraph(N, vector<Edge>());
-    priority_queue<PrimsPair, vector<PrimsPair>, compareTo> que;
-    que.push(PrimsPair(src, -1, 0));
-
-    int noOfEdges = 0;
-    int noOfVertex = N;
-    while (noOfEdges < noOfVertex - 1)
-    // while(que.size()!=0)
-    {
-        PrimsPair p = que.top();
-        que.pop();
-
-        if (vis[p.u])
-            continue;
-
-        if (p.par != -1)
-        {
-            addEdge(primsGraph, p.u, p.par, p.w);
-            noOfEdges++;
-        }
-
-        vis[p.u] = true;
-        for (Edge e : graph[p.u])
-        {
-            if (!vis[e.v])
-                que.push(PrimsPair(e.v, p.u, e.w));
-        }
-    }
-
-    display(primsGraph);
-}
-
 //Djikstra Algo.============================================================
 
 class DijiPair
@@ -187,6 +153,7 @@ int dikistra(int source, int desti, vector<bool> &vis)
         }
     }
 
+    display(dijiGraph);
     return mDistanceSF[desti];
 }
 
@@ -201,13 +168,15 @@ void constructGraph()
         addEdge(graph, e[0], e[1], e[2]);
 
     vector<bool> vis(N, false);
-    for (int i = 0; i < N; i++)
-    {
-        if (!vis[i])
-            PrimsAlgo_01(0, vis);
-    }
+    // for (int i = 0; i < N; i++)
+    // {
+    //     if (!vis[i])
+    //         PrimsAlgo_01(0, vis);
+    // }
 
-    display(graph);
+    cout << dikistra(0, 8, vis) << endl;
+
+    // display(graph);
 }
 
 int main()
