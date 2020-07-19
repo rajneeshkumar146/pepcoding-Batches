@@ -95,7 +95,102 @@ void PrimsAlgo_01(int src, vector<bool> &vis)
     display(primsGraph);
 }
 
-void constructDirectedGraph()
+void PrimsAlgo_01(int src, vector<bool> &vis)
+{
+    vector<vector<Edge>> primsGraph(N, vector<Edge>());
+    priority_queue<PrimsPair, vector<PrimsPair>, compareTo> que;
+    que.push(PrimsPair(src, -1, 0));
+
+    int noOfEdges = 0;
+    int noOfVertex = N;
+    while (noOfEdges < noOfVertex - 1)
+    // while(que.size()!=0)
+    {
+        PrimsPair p = que.top();
+        que.pop();
+
+        if (vis[p.u])
+            continue;
+
+        if (p.par != -1)
+        {
+            addEdge(primsGraph, p.u, p.par, p.w);
+            noOfEdges++;
+        }
+
+        vis[p.u] = true;
+        for (Edge e : graph[p.u])
+        {
+            if (!vis[e.v])
+                que.push(PrimsPair(e.v, p.u, e.w));
+        }
+    }
+
+    display(primsGraph);
+}
+
+//Djikstra Algo.============================================================
+
+class DijiPair
+{
+public:
+    int src, par, w, wsf;
+
+    DijiPair(int src, int par, int w, int wsf)
+    {
+        this->src = src;
+
+        this->par = par;
+        this->w = w;
+
+        this->wsf = wsf;
+    }
+};
+
+class compareDijiTo
+{
+public:
+    bool operator()(const DijiPair &self, const DijiPair &other) const
+    {
+        return self.wsf > other.wsf;
+    }
+};
+
+int dikistra(int source, int desti, vector<bool> &vis)
+{
+    vector<vector<Edge>> dijiGraph(N, vector<Edge>());
+    priority_queue<DijiPair, vector<DijiPair>, compareDijiTo> pq;
+
+    vector<int> mDistanceSF(N, 1e8); // minimum distance so far
+
+    pq.push(DijiPair(source, -1, 0, 0));
+    while (pq.size() != 0)
+    {
+        DijiPair rvtx = pq.top();
+        pq.pop();
+
+        if (vis[rvtx.src]) // for Cycle.
+            continue;
+
+        if (rvtx.par != -1) // for construct graph
+            addEdge(dijiGraph, rvtx.src, rvtx.par, rvtx.w);
+
+        vis[rvtx.src] = true;
+
+        for (Edge e : graph[rvtx.src])
+        {
+            if (!vis[e.v] && mDistanceSF[e.v] > rvtx.wsf + e.w)
+            {
+                mDistanceSF[e.v] = rvtx.wsf + e.w;
+                pq.push(DijiPair(e.v, rvtx.src, e.w, rvtx.wsf + e.w));
+            }
+        }
+    }
+
+    return mDistanceSF[desti];
+}
+
+void constructGraph()
 {
     N = 9;
     graph.resize(N, vector<Edge>());
@@ -117,6 +212,6 @@ void constructDirectedGraph()
 
 int main()
 {
-    constructDirectedGraph();
+    constructGraph();
     return 0;
 }
