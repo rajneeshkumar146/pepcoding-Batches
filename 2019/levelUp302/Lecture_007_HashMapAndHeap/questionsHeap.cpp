@@ -1,6 +1,7 @@
 #include <iostream>
 #include <queue>
 #include <unordered_map>
+#include <list>
 
 using namespace std;
 
@@ -453,6 +454,100 @@ public:
         }
 
         return NewList->next;
+    }
+};
+
+int swimInWater(vector<vector<int>> &grid)
+{
+    if (grid.empty() || grid[0].empty())
+        return 0;
+
+    typedef pair<int, int> cell; //{height,i*m+j}
+    priority_queue<cell, vector<cell>, greater<cell>> pq;
+
+    int n = grid.size();
+    int m = grid[0].size();
+    vector<vector<int>> dir = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+    vector<vector<bool>> vis(n, vector<bool>(m, false));
+
+    pq.push({grid[0][0], 0});
+    vis[0][0] = true;
+
+    int maxWait = 0;
+    while (pq.size() != 0)
+    {
+        cell rvtx = pq.top();
+        pq.pop();
+
+        int height = rvtx.first;
+        int x = rvtx.second / m;
+        int y = rvtx.second % m;
+
+        maxWait = max(maxWait, height);
+        // if (x == n - 1 && y == m - 1)
+        //     break;
+
+        for (int d = 0; d < 4; d++)
+        {
+            int r = x + dir[d][0];
+            int c = y + dir[d][1];
+
+            if (r >= 0 && c >= 0 && r < n && c < m && !vis[r][c])
+            {
+                vis[r][c] = true;
+                pq.push({grid[r][c], r * m + c});
+                if (r == n - 1 && c == m - 1)
+                    return max(maxWait, grid[r][c]);
+            }
+        }
+    }
+    return maxWait;
+}
+
+class LRUCache
+{
+    unordered_map<int, int> map; //{key,value}
+    list<int> ll;                //{key}
+    int size = 0;
+
+public:
+    LRUCache(int capacity)
+    {
+        this->size = capacity;
+    }
+
+    int get(int key)
+    {
+        if (map.find(key) == map.end())
+            return -1;
+        else
+        {
+            ll.remove(key);    // O(n)
+            ll.push_back(key); //O(1)
+            return map[key];   //O(1)
+        }
+    }
+
+    void put(int key, int value)
+    {
+        if (map.find(key) != map.end())
+        {
+            ll.remove(key);    // O(n)
+            ll.push_back(key); //O(1)
+            map[key] = value;  //O(1)
+        }
+        else //O(1)
+        {
+            map[key] = value;
+            
+            if (ll.size() == size)
+            {
+                map.erase(ll.front());
+                ll.pop_front();
+            }
+            
+            ll.push_back(key);
+        }
     }
 };
 
