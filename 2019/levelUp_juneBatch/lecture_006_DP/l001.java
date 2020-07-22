@@ -1,8 +1,10 @@
 import java.util.LinkedList;
+import java.util.Arrays;
 
 public class l001 {
 
     // Future Planning.=============================================
+    static int mod = (int) 1e9 + 7;
 
     public static void display(int[] dp) {
         for (int ele : dp)
@@ -215,7 +217,246 @@ public class l001 {
         return dp[0];
     }
 
+    // https://practice.geeksforgeeks.org/problems/gold-mine-problem/0
+
+    public static int goldmineProblem(int[][] grid, int sr, int sc, int[][] dp) {
+        if (sc == grid[0].length - 1)
+            return grid[sr][sc];
+        if (dp[sr][sc] != 0)
+            return dp[sr][sc];
+
+        int[][] dirA = { { 0, 1 }, { -1, 1 }, { 1, 1 } };
+        int maxCoin = 0; // max coin collected by nbrs.
+        for (int d = 0; d < 3; d++) {
+            int r = sr + dirA[d][0];
+            int c = sc + dirA[d][1];
+            if (r >= 0 && c >= 0 && r < grid.length && c < grid[0].length) {
+                maxCoin = Math.max(maxCoin, goldmineProblem(grid, r, c, dp));
+            }
+        }
+
+        return dp[sr][sc] = maxCoin + grid[sr][sc];
+    }
+
+    public static int goldmineProblem_DP(int[][] grid, int sr, int sc, int[][] dp) {
+
+        int[][] dirA = { { 0, 1 }, { -1, 1 }, { 1, 1 } };
+        for (sc = grid[0].length - 1; sc >= 0; sc--) {
+            for (sr = grid.length - 1; sr >= 0; sr--) {
+                if (sc == grid[0].length - 1) {
+                    dp[sr][sc] = grid[sr][sc];
+                    continue;
+                }
+
+                int maxCoin = 0; // max coin collected by nbrs.
+                for (int d = 0; d < 3; d++) {
+                    int r = sr + dirA[d][0];
+                    int c = sc + dirA[d][1];
+                    if (r >= 0 && c >= 0 && r < grid.length && c < grid[0].length) {
+                        maxCoin = Math.max(maxCoin, dp[r][c]);
+                    }
+                }
+
+                dp[sr][sc] = maxCoin + grid[sr][sc];
+            }
+        }
+        int MaxCoins = 0;
+        for (int i = 0; i < grid.length; i++) {
+            MaxCoins = Math.max(MaxCoins, dp[i][0]);
+        }
+        return MaxCoins;
+    }
+
+    public static int goldmineProblem(int[][] grid) {
+        int[][] dp = new int[grid.length][grid[0].length];
+
+        int MaxCoins = 0;
+        for (int i = 0; i < grid.length; i++) {
+            MaxCoins = Math.max(MaxCoins, goldmineProblem(grid, i, 0, dp));
+        }
+
+        return MaxCoins;
+    }
+
+    // Leetcode 64
+
+    public static int minPathSum(int[][] grid) {
+        int[][] dp = new int[grid.length][grid[0].length];
+
+        for (int sr = grid.length - 1; sr >= 0; sr--) {
+            for (int sc = grid[0].length - 1; sc >= 0; sc--) {
+                if (sr == grid.length - 1 && sc == grid[0].length - 1) {
+                    dp[sr][sc] = grid[sr][sc];
+                    continue;
+                }
+
+                int minCoins = (int) 1e8;
+                if (sc + 1 < grid[0].length)
+                    minCoins = Math.min(minCoins, dp[sr][sc + 1]);
+                if (sr + 1 < grid.length)
+                    minCoins = Math.min(minCoins, dp[sr + 1][sc]);
+
+                dp[sr][sc] = minCoins + grid[sr][sc];
+            }
+        }
+
+        return dp[0][0];
+    }
+
+    // Leetcode 70.
+
+    public static int climbStairs(int n, int[] dp) {
+        if (n <= 1)
+            return dp[n] = 1;
+        if (dp[n] != 0)
+            return dp[n];
+
+        return dp[n] = climbStairs(n - 1, dp) + climbStairs(n - 2, dp);
+    }
+
+    public static int climbStairs(int n) {
+
+        int[] dp = new int[n + 1];
+        return climbStairs(n, dp);
+    }
+
+    public static int minCostClimbingStairs(int[] cost, int n, int[] dp) {
+        if (n <= 1)
+            return dp[n] = cost[n];
+        if (dp[n] != 0)
+            return dp[n];
+
+        int minCost = Math.min(minCostClimbingStairs(cost, n - 1, dp), minCostClimbingStairs(cost, n - 2, dp));
+
+        return dp[n] = minCost + (n == cost.length ? 0 : cost[n]);
+    }
+
+    public static int minCostClimbingStairs_Opti(int[] cost) {
+        int a = cost[0];
+        int b = cost[1];
+
+        for (int i = 2; i < cost.length; i++) {
+            int ans = Math.min(a, b) + cost[i];
+            a = b;
+            b = ans;
+        }
+        return Math.min(a, b);
+    }
+
+    public static int minCostClimbingStairs(int[] cost) {
+        int[] dp = new int[cost.length + 1];
+
+        return minCostClimbingStairs(cost, cost.length, dp);
+    }
+
+    // https://practice.geeksforgeeks.org/problems/friends-pairing-problem/0
+
+    public static long friendsPairingProblem(int n, long[] dp) {
+        if (n <= 1)
+            return dp[n] = 1;
+        if (dp[n] != 0)
+            return dp[n];
+
+        long single = friendsPairingProblem(n - 1, dp) % mod;
+        long pairUp = friendsPairingProblem(n - 2, dp) % mod * (n - 1) % mod;
+
+        return dp[n] = (single + pairUp) % mod;
+    }
+
+    public static long friendsPairingProblem_DP(int n, long[] dp) {
+        int N = n;
+        for (n = 0; n <= N; n++) {
+            if (n <= 1) {
+                dp[n] = 1;
+                continue;
+            }
+
+            long single = dp[n - 1] % mod;// friendsPairingProblem(n - 1, dp);
+            long pairUp = dp[n - 2] % mod * (n - 1) % mod;// friendsPairingProblem(n - 2, dp) * (n - 1);
+
+            dp[n] = single + pairUp;
+        }
+
+        return dp[N] % mod;
+    }
+
+    public static int friendsPairingProblem_Opti(int n) {
+        int single = 1;
+        int pairUp = 1;
+
+        int ans = 0;
+        for (int i = 2; i <= n; i++) {
+            ans = single + pairUp * (i - 1);
+
+            single = pairUp;
+            pairUp = ans;
+        }
+
+        return ans;
+    }
+
+    public static void friendsPairingProblem() {
+        // int n = scn.nextInt();
+        int n = 5;
+        long[] dp = new long[n + 1];
+        long ans = friendsPairingProblem(n, dp);
+
+        System.out.println(ans);
+    }
+
+    // https://www.geeksforgeeks.org/count-number-of-ways-to-partition-a-set-into-k-subsets/
+
+    public static int count_of_ways(int n, int k, int[][] dp) {
+        if (k == n || k == 1)
+            return dp[k][n] = 1;
+
+        if (dp[k][n] != -1)
+            return dp[k][n];
+
+        int ownGroup = count_of_ways(n - 1, k - 1, dp);
+        int partOfOtherGroup = count_of_ways(n - 1, k, dp) * k;
+
+        return dp[k][n] = ownGroup + partOfOtherGroup;
+    }
+
+    public static int count_of_ways_DP(int n, int k, int[][] dp) {
+        int K = k;
+        int N = n;
+        for (k = 1; k <= K; k++) {
+            for (n = k; n <= N; n++) {
+                if (k == n || k == 1) {
+                    dp[k][n] = 1;
+                    continue;
+                }
+
+                int ownGroup = dp[k - 1][n - 1]; // count_of_ways(n - 1, k - 1, dp);
+                int partOfOtherGroup = dp[k][n - 1] * k;// count_of_ways(n - 1, k, dp) * k;
+
+                dp[k][n] = ownGroup + partOfOtherGroup;
+            }
+        }
+
+        return dp[K][N];
+    }
+
+    public static void count_of_ways(int n, int k) {
+        int[][] dp = new int[k + 1][n + 1];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        // System.out.println(count_of_ways(n, k, dp));
+        System.out.println(count_of_ways_DP(n, k, dp));
+
+        display2D(dp);
+    }
+    // set2=============================================================================================
+
     // ===================================================================================================
+
+    public static void set2() {
+
+    }
+
     public static void pathSet() {
         // int n = 4, m = 4;
         // int[][] dp = new int[n][m];
@@ -226,16 +467,18 @@ public class l001 {
         // System.out.println(mazePath_Rec_02(0, 0, n - 1, m - 1, dp));
         // System.out.println(mazePath_DP_02(0, 0, n - 1, m - 1, dp));
 
-        int n = 10;
-        int[] dp = new int[n + 1];
-        int[] moves = { 2, 4, 1, 5 };
+        // int n = 10;
+        // int[] dp = new int[n + 1];
+        // int[] moves = { 2, 4, 1, 5 };
         // System.out.println(boardPath_Rec_01(0, n, dp));
         // System.out.println(boardPath_DP_01(0, n, dp));
-        System.out.println(boardPath_opti(n));
+        // System.out.println(boardPath_opti(n));
 
         // System.out.println(boardPath_DP_02(0, n, moves, dp));
 
-        display(dp);
+        count_of_ways(5, 3);
+
+        // display(dp);
         // display2D(dp);
     }
 
