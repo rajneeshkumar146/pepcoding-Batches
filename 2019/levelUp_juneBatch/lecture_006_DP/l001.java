@@ -511,7 +511,7 @@ public class l001 {
             this.len = len;
         }
     }
-   
+
     public static pair longestPlaindromeSubsequence_02(String str, int i, int j, pair[][] dp) {
         if (i > j)
             return dp[i][j] = new pair("", 0);
@@ -574,6 +574,65 @@ public class l001 {
 
         System.out.println(sdp[0][n - 1] + " @ " + dp[0][n - 1]);
         return dp[0][n - 1];
+    }
+
+    // Leetcode 115
+    // https://practice.geeksforgeeks.org/problems/find-number-of-times-a-string-occurs-as-a-subsequence/0
+
+    public static int numDistinct_(String s, String t, int n, int m, int[][] dp) {
+        if (n < m)
+            return dp[n][m] = 0;
+        if (m == 0)
+            return dp[n][m] = 1;
+
+        if (dp[n][m] != -1)
+            return dp[n][m];
+
+        if (s.charAt(n - 1) == t.charAt(m - 1)) {
+            return dp[n][m] = numDistinct_(s, t, n - 1, m - 1, dp) + numDistinct_(s, t, n - 1, m, dp);
+        } else
+            return dp[n][m] = numDistinct_(s, t, n - 1, m, dp);
+
+    }
+
+    public static int numDistinct_DP_(String s, String t, int n, int m, int[][] dp) {
+        int N = n, M = m;
+        for (n = 0; n <= N; n++) {
+            for (m = 0; m <= M; m++) {
+                if (n < m) {
+                    dp[n][m] = 0;
+                    continue;
+                }
+                if (m == 0) {
+                    dp[n][m] = 1;
+                    continue;
+                }
+
+                if (s.charAt(n - 1) == t.charAt(m - 1)) {
+                    dp[n][m] = dp[n - 1][m - 1] + dp[n - 1][m];
+                } else
+                    dp[n][m] = dp[n - 1][m];
+            }
+        }
+        return dp[N][M];
+    }
+
+    public static int numDistinct(String s, String t) {
+        int n = s.length();
+        int m = t.length();
+        int[][] dp = new int[n + 1][m + 1];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+        // int ans = numDistinct_(s, t, n, m, dp);
+        int ans = numDistinct_DP_(s, t, n, m, dp);
+
+        for (int[] d : dp) {
+            for (int ele : d) {
+                System.out.print(ele + " ");
+            }
+            System.out.println();
+        }
+        return ans;
     }
 
     // ===================================================================================================
