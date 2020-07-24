@@ -451,6 +451,7 @@ public class l001 {
     }
     // String_set=========================================================================================
 
+    // Leetcode 005,647.
     public static int[][] longestPalindromeSubstring(String str) {
         int n = str.length();
         int[][] dp = new int[n][n];
@@ -483,16 +484,7 @@ public class l001 {
         return dp;
     }
 
-    public static class pair {
-        String str = "";
-        int len = 0;
-
-        pair(String str, int len) {
-            this.str = str;
-            this.len = len;
-        }
-    }
-
+    // Leetcode 516
     public static int longestPlaindromeSubsequence(String str, int i, int j, int[][] dp) {
         if (i > j)
             return dp[i][j] = 0;
@@ -510,6 +502,16 @@ public class l001 {
         return dp[i][j] = maxLen;
     }
 
+    public static class pair {
+        String str = "";
+        int len = 0;
+
+        pair(String str, int len) {
+            this.str = str;
+            this.len = len;
+        }
+    }
+   
     public static pair longestPlaindromeSubsequence_02(String str, int i, int j, pair[][] dp) {
         if (i > j)
             return dp[i][j] = new pair("", 0);
