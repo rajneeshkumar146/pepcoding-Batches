@@ -388,8 +388,8 @@ public class l001 {
         for (int i = 2; i <= n; i++) {
             ans = single + pairUp * (i - 1);
 
-            single = pairUp;
-            pairUp = ans;
+            pairUp = single;
+            single = ans;
         }
 
         return ans;
@@ -449,12 +449,147 @@ public class l001 {
 
         display2D(dp);
     }
-    // set2=============================================================================================
+    // String_set=========================================================================================
+
+    public static int[][] longestPalindromeSubstring(String str) {
+        int n = str.length();
+        int[][] dp = new int[n][n];
+
+        int maxLen = 0;
+        int count = 0;
+        int si = 0, ei = 0;
+        for (int gap = 0; gap < n; gap++) {
+            for (int i = 0, j = gap; j < n; j++, i++) {
+                if (gap == 0)
+                    dp[i][j] = 1;
+                else if (gap == 1 && str.charAt(i) == str.charAt(j))
+                    dp[i][j] = 2;
+                else if (str.charAt(i) == str.charAt(j) && dp[i + 1][j - 1] > 0) // if dp[i][j] > 0 means it is a
+                                                                                 // palindrome.
+                    dp[i][j] = dp[i + 1][j - 1] + 2;
+
+                if (dp[i][j] > maxLen) {
+                    maxLen = dp[i][j];
+                    si = i;
+                    ei = j;
+                }
+                count += (dp[i][j] > 0) ? 1 : 0;
+            }
+        }
+
+        System.out.println("maxLen: " + maxLen + " and Count of total Palindromes: " + count);
+        System.out.println(str.substring(si, ei + 1));
+
+        return dp;
+    }
+
+    public static class pair {
+        String str = "";
+        int len = 0;
+
+        pair(String str, int len) {
+            this.str = str;
+            this.len = len;
+        }
+    }
+
+    public static int longestPlaindromeSubsequence(String str, int i, int j, int[][] dp) {
+        if (i > j)
+            return dp[i][j] = 0;
+        if (i == j)
+            return dp[i][j] = 1;
+        if (dp[i][j] != 0)
+            return dp[i][j];
+        int maxLen = 0;
+        if (str.charAt(i) == str.charAt(j))
+            maxLen = longestPlaindromeSubsequence(str, i + 1, j - 1, dp) + 2;
+        else
+            maxLen = Math.max(longestPlaindromeSubsequence(str, i + 1, j, dp),
+                    longestPlaindromeSubsequence(str, i, j - 1, dp));
+
+        return dp[i][j] = maxLen;
+    }
+
+    public static pair longestPlaindromeSubsequence_02(String str, int i, int j, pair[][] dp) {
+        if (i > j)
+            return dp[i][j] = new pair("", 0);
+        if (i == j)
+            return dp[i][j] = new pair(str.charAt(i) + "", 1);
+
+        if (dp[i][j] != null)
+            return dp[i][j];
+
+        pair maxPair = new pair("", 0);
+        if (str.charAt(i) == str.charAt(j)) {
+            pair recAns = longestPlaindromeSubsequence_02(str, i + 1, j - 1, dp);
+            maxPair.str = str.charAt(i) + recAns.str + str.charAt(j);
+            maxPair.len = recAns.len + 2;
+        } else {
+            pair recAns1 = longestPlaindromeSubsequence_02(str, i + 1, j, dp);
+            pair recAns2 = longestPlaindromeSubsequence_02(str, i, j - 1, dp);
+
+            if (recAns1.len > recAns2.len) {
+                maxPair.len = recAns1.len;
+                maxPair.str = recAns1.str;
+            } else {
+                maxPair.len = recAns2.len;
+                maxPair.str = recAns2.str;
+            }
+        }
+
+        return dp[i][j] = maxPair;
+
+    }
+
+    public static int longestPlaindromeSubsequence_DP(String str, int i, int j, int[][] dp) {
+        int n = str.length();
+
+        String[][] sdp = new String[n][n];
+        for (String[] d : sdp)
+            Arrays.fill(d, "");
+
+        for (int gap = 0; gap < n; gap++) {
+            for (i = 0, j = gap; j < n; j++, i++) {
+                if (i == j) {
+                    dp[i][j] = 1;
+                    continue;
+                }
+
+                if (str.charAt(i) == str.charAt(j)) {
+                    dp[i][j] = dp[i + 1][j - 1] + 2;
+                    sdp[i][j] = str.charAt(i) + sdp[i + 1][j - 1] + str.charAt(j);
+
+                } else if (dp[i + 1][j] > dp[i][j - 1]) {
+                    dp[i][j] = dp[i + 1][j];
+                    sdp[i][j] = sdp[i + 1][j];
+                } else {
+                    dp[i][j] = dp[i][j - 1];
+                    sdp[i][j] = sdp[i][j - 1];
+                }
+
+            }
+        }
+
+        System.out.println(sdp[0][n - 1] + " @ " + dp[0][n - 1]);
+        return dp[0][n - 1];
+    }
 
     // ===================================================================================================
 
-    public static void set2() {
+    public static void String_set() {
+        String str = "effbccbade";
+        int n = str.length();
+        int[][] dp = new int[n][n];
 
+        // longestPalindromeSubstring("effbccbad");
+        // System.out.println(longestPlaindromeSubsequence(str, 0, n - 1, dp));
+        System.out.println(longestPlaindromeSubsequence_DP(str, 0, n - 1, dp));
+
+        // pair[][] dp = new pair[n][n];
+        // pair ans = longestPlaindromeSubsequence_02(str, 0, n - 1, dp);
+        // System.out.println(ans.str + "@" + ans.len);
+
+        // display2D(dp);
     }
 
     public static void pathSet() {
@@ -495,7 +630,8 @@ public class l001 {
 
     public static void solve() {
         // set1();
-        pathSet();
+        // pathSet();
+        String_set();
     }
 
     public static void main(String... args) {
