@@ -130,6 +130,47 @@ public class l001 {
         return myAns;
     }
 
+    public static int hamintonianPathAndCycle(int src, int osrc, int edgeCount, boolean[] vis, String path) {
+        if (edgeCount == N - 1) {
+            int idx = findEdge(src, osrc);
+            if (idx != -1) {
+                System.out.println("Cycle: " + path + src);
+            } else {
+                System.out.println("Path: " + path + src);
+            }
+            return 1;
+        }
+
+        vis[src] = true;
+        int count = 0;
+        for (Edge e : graph[src]) {
+            if (!vis[e.v])
+                count += hamintonianPathAndCycle(e.v, osrc, edgeCount + 1, vis, path + src + " ");
+        }
+
+        vis[src] = false;
+        return count;
+    }
+
+    public static void GCC_DFS(int src, boolean[] vis) {
+        vis[src] = true;
+        for (Edge e : graph[src])
+            if (!vis[e.v])
+                GCC_DFS(e.v, vis);
+    }
+
+    public static int GCC() {
+        boolean[] vis = new boolean[N];
+        int count = 0;
+        for (int i = 0; i < N; i++) {
+            if (!vis[i]) {
+                GCC_DFS(i, vis);
+                count++;
+            }
+        }
+        return count;
+    }
+
     // ============================================================================
 
     public static void constructGraph() {
@@ -146,6 +187,8 @@ public class l001 {
         addEdge(4, 6, 8);
         addEdge(5, 6, 3);
 
+        addEdge(2, 5, 10);
+
         display();
 
     }
@@ -156,9 +199,10 @@ public class l001 {
         // allPath(0, 6, 0, "", vis);
         // preOrder(0, 0, "", vis);
 
-        pair ans = heavyWeightPath(0, 6, vis);
-        System.out.println(ans.path + " @ " + ans.cost);
+        // pair ans = heavyWeightPath(0, 6, vis);
+        // System.out.println(ans.path + " @ " + ans.cost);
 
+        System.out.println(hamintonianPathAndCycle(0, 0, 0, vis, ""));
         // display();
 
     }
