@@ -791,7 +791,8 @@ public class l001 {
 
         return dp[0][str.length() - 1];
     }
-    //leetcode 940
+
+    // leetcode 940
     public static int distinctSubseqII(String str) {
         int mod = (int) 1e9 + 7;
         str = '$' + str;
@@ -800,10 +801,11 @@ public class l001 {
 
         int[] loc = new int[26];
 
+        dp[0] = 1;
         for (int i = 1; i < n; i++) {
             dp[i] = (2 * dp[i - 1]) % mod;
             int idx = str.charAt(i) - 'a';
-            
+
             if (loc[idx] != -1) {
                 dp[i] = dp[i] % mod - dp[loc[idx] - 1] % mod + mod;
             }
