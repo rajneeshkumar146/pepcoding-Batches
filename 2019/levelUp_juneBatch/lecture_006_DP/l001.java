@@ -803,17 +803,17 @@ public class l001 {
 
         dp[0] = 1;
         for (int i = 1; i < n; i++) {
-            dp[i] = (2 * dp[i - 1]) % mod;
+            dp[i] = (2 * dp[i - 1]% mod)% mod ;
             int idx = str.charAt(i) - 'a';
 
             if (loc[idx] != -1) {
-                dp[i] = dp[i] % mod - dp[loc[idx] - 1] % mod + mod;
+                dp[i] = (dp[i] % mod - dp[loc[idx] - 1] % mod + mod)% mod;
             }
 
             loc[idx] = i;
         }
 
-        return (int) dp[n - 1];
+        return (int) dp[n - 1]%mod;
 
     }
 
