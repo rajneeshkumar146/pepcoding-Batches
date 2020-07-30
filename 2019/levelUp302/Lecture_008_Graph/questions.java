@@ -121,8 +121,53 @@ public class questions {
         }
     }
 
-    
+    //Leetcode 785
 
+    public static boolean isBipartite_(int[][] graph,int src,int[] vis){
+        // vis[x]={-1(non visited),0(visited with red),1(visited with green)}
+        
+        LinkedList<int[]> que=new LinkedList<>();
+        que.addLast(new int[]{src,0});  // vtx, color (0 - red, 1 - green)
+
+        while(que.size()!=0){
+           int size=que.size();
+           while(size-->0){
+              int[] pair=que.removeFirst();    
+              
+              int rvtx=pair[0];
+              int color=pair[1]; 
+
+              if(vis[rvtx] != -1){
+                if(color != vis[rvtx]) return false;
+                continue;
+              }
+
+             vis[rvtx]=color;    
+             for(int e: graph[rvtx]){
+                 if(vis[e] == -1)
+                   que.addLast(new int[]{e,(color+1)%2});
+              }
+           }
+        }
+
+        return true;
+    }
+
+    public boolean isBipartite(int[][] graph) {
+        int N=graph.length;
+        int[] vis=new int[N];
+        Arrays.fill(vis,-1);
+
+        for(int i=0;i<N;i++){
+            if(vis[i] == -1){
+                if(!isBipartite_(graph,i,vis)){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    } 
 
 
 }

@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Arrays;
 
 public class l001 {
 
@@ -170,6 +172,133 @@ public class l001 {
         }
         return count;
     }
+
+    public static void BFS_01(int src,boolean[] vis){
+        LinkedList<Integer> que=new LinkedList<>();
+        que.addLast(src);
+        
+        while(que.size()!=0){
+           int rvtx=que.removeFirst();
+           
+           if(vis[rvtx]){
+               System.out.println("Cycle");
+               continue;
+           }
+
+           vis[rvtx]=true;    
+           for(Edge e: graph[rvtx]){
+               if(!vis[e.v])
+                  que.addLast(e.v);
+           }
+        }
+    }
+
+    public static void BFS_02(int src,boolean[] vis){
+        LinkedList<Integer> que=new LinkedList<>();
+        que.addLast(src);
+        
+        int level=0;
+        int desti=6;
+
+        while(que.size()!=0){
+           int size=que.size();
+           while(size-->0){
+              int rvtx=que.removeFirst();
+              
+              if(rvtx==desti){
+                System.out.println("Level: " + level) ; 
+              }
+
+              if(vis[rvtx]){
+                System.out.println("Cycle");
+                continue;
+              }
+
+           vis[rvtx]=true;    
+           for(Edge e: graph[rvtx]){
+               if(!vis[e.v])
+                  que.addLast(e.v);
+           }
+         }
+         level++;
+        }
+    }
+
+    
+    public static void BFS_03(int src,boolean[] vis){
+        LinkedList<Integer> que=new LinkedList<>();
+        que.addLast(src);
+        vis[src]=true;
+
+        int level=0;
+        int desti=6;
+        while(que.size()!=0){
+           int size=que.size();
+           while(size-->0){
+              int rvtx=que.removeFirst();
+              
+              if(rvtx==desti){
+                System.out.println("Level: " + level) ; 
+              }
+ 
+           for(Edge e: graph[rvtx]){
+               if(!vis[e.v]){
+                  que.addLast(e.v);
+                  vis[e.v]=true;   
+               }
+           
+            }
+         }
+         level++;
+        }
+    }
+
+
+    public static boolean isBipartite_(int src,int[] vis){
+        // vis[x]={-1(non visited),0(visited with red),1(visited with green)}
+        
+        LinkedList<int[]> que=new LinkedList<>();
+        que.addLast(new int[]{src,0});  // vtx, color (0 - red, 1 - green)
+
+        while(que.size()!=0){
+           int size=que.size();
+           while(size-->0){
+              int[] pair=que.removeFirst();    
+              
+              int rvtx=pair[0];
+              int color=pair[1]; 
+
+              if(vis[rvtx]! = -1){   // conflict? (either same color/Set or different colors/Set)
+                if(color != vis[rvtx]) return false;
+                continue;
+              }
+
+             vis[rvtx]=color;    
+             for(Edge e: graph[rvtx]){
+                 if(!vis[e.v])
+                   que.addLast(new int[]{e.v,(color+1)%2});
+              }
+           }
+        }
+
+        return true;
+    }
+
+    public boolean isBipartite() {
+        int[] vis=new int[N];
+        Arrays.fill(vis,-1);
+
+        for(int i=0;i<N;i++){
+            if(vis[i] == -1){
+                if(!isBipartite_(i,vis)){
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 
     // ============================================================================
 
