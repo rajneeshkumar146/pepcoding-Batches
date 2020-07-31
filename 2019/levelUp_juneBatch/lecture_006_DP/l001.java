@@ -857,7 +857,7 @@ public class l001 {
     }
 
     // Left to Right
-    public static void LIS_LR(int[] arr,int[] dp){
+    public static int LIS_LR(int[] arr,int[] dp){
         int max_=0;
         for(int i=0;i<arr.length;i++){
             dp[i] = 1;
@@ -870,6 +870,96 @@ public class l001 {
         }
         return max_;
     }
+
+    // Right to Left
+    public static int LIS_RL(int[] arr,int[] dp){
+            int max_=0;
+            for(int i = arr.length-1; i>=0 ; i--){
+                dp[i] = 1;
+                for(int j = i+1;j < arr.length;j++){
+                    if(arr[j] < arr[i]){
+                        dp[i]=Math.max(dp[i],dp[j]+1);
+                    }
+                }
+                max_=Math.max(max_,dp[i]);
+            }
+            return max_;
+    }
+
+    // https://www.geeksforgeeks.org/longest-bitonic-subsequence-dp-15/
+    public static int LBS(int[] arr){
+        int n=arr.length;
+        int[] LIS=new int[n];
+        int[] LDS=new int[n];
+
+        LIS_LR(arr,LIS);
+        LIS_RL(arr,LDS);
+
+        int maxLen=0;
+        for(int i=0;i<n;i++){
+            int len=LIS[i]+LDS[i]-1;
+            maxLen=Math.max(maxLen,len);
+        }
+
+        return maxLen;
+    }
+
+    //Minimum deletion to make a array in sorted order.
+    public static int minDeletion(int[] arr){
+        int n = arr.length;
+        int[] dp = new int[n];
+        
+        int max_=0;
+        for(int i=0;i<arr.length;i++){
+            dp[i] = 1;
+            for(int j = i-1;j>=0;j--){
+                if(arr[j] <= arr[i]){
+                    dp[i]=Math.max(dp[i],dp[j]+1);
+                }
+            }
+            max_=Math.max(max_,dp[i]);
+        }
+
+        return n - max_;
+    }
+
+    //----------------> // question for you : //https://practice.geeksforgeeks.org/problems/maximum-sum-bitonic-subsequence/0
+
+
+    //Leetcode 354.
+    public static int maxEnvelopes(int[][] arr) {
+        if(arr.length==0) return 0;
+        
+        // sort(arr.begin(),arr.end(),[](vector<int>& a,vector<int>& b){
+        //     return a[0] < b[0];
+        // });
+
+        Arrays.sort(arr,(a,b)->{
+            if(a[0]==b[0]) return b[1]-a[1];   // other - this
+            return a[0]-b[0]; // this - other, increasing order.
+        });
+        
+        int n=arr.length;
+        int[] dp=new int[n];
+        int max_=0;
+
+        for(int i=0;i<n;i++){
+            dp[i]=1;
+            for(int j=i-1;j>=0;j--){
+                if(arr[j][1] < arr[i][1]){
+                    dp[i]=Math.max(dp[i],dp[j]+1);
+                }
+            }
+            max_=Math.max(max_,dp[i]);
+        }
+
+        return max_;
+    }
+
+    //for you-----------> Leetcode 1027, 1235
+    // https://www.geeksforgeeks.org/dynamic-programming-building-bridges/
+    
+    
 
     // ===================================================================================================
 
