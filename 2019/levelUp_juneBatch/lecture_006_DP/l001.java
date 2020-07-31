@@ -825,6 +825,51 @@ public class l001 {
 
         display2D(dp);
     }
+    
+    //LIS_series.=======================================================================================
+     
+    public static int LIS_Rec(int[] arr,int ei,int[] dp){        
+        if(dp[ei]!=0) return dp[ei];
+        
+        int maxLen=1;
+        for(int i=ei;i >=0 ;i--){
+            
+            if(arr[i] < arr[ei]){
+               int len = LIS_Rec(arr,i,dp);
+               maxLen = Math.max(maxLen,len+1);
+            }
+        }
+
+        return dp[ei] = maxLen;
+    }
+
+    public static int LIS_Rec(int[] arr){
+        if(arr.lengt == 0) return 0;
+
+        int n=arr.length;
+        int[] dp=new int[n];
+        int max_=0;
+        for(int i=n-1;i>=0;i--){
+           max_=Math.max(LIS_Rec(arr,i,dp),max_);
+        }
+
+        return max_;
+    }
+
+    // Left to Right
+    public static void LIS_LR(int[] arr,int[] dp){
+        int max_=0;
+        for(int i=0;i<arr.length;i++){
+            dp[i] = 1;
+            for(int j = i-1;j>=0;j--){
+                if(arr[j] < arr[i]){
+                    dp[i]=Math.max(dp[i],dp[j]+1);
+                }
+            }
+            max_=Math.max(max_,dp[i]);
+        }
+        return max_;
+    }
 
     // ===================================================================================================
 
