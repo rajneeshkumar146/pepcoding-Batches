@@ -1,3 +1,9 @@
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+
 public class questions {
 
     // Leetcode 200
@@ -167,7 +173,207 @@ public class questions {
         }
 
         return true;
-    } 
+    }
+
+
+    //Leetcode 994
+    public int orangesRotting(int[][] grid) {
+        if(grid.length==0 || grid[0].length==0) return 0;
+        
+        int n = grid.length;
+        int m = grid[0].length;
+        int[][] dir = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+        
+        LinkedList<int[]> que=new LinkedList<>();
+        int freshOranges = 0;
+        
+        for(int i = 0;i < n;i++){
+            for(int j = 0;j < m;j++){
+                if(grid[i][j] == 1) freshOranges++; 
+                else if (grid[i][j] == 2) que.addLast(new int[]{i,j});
+            }
+        }
+
+        if(freshOranges == 0) return 0;
+
+        int time = 0;
+        while(que.size() != 0){
+            int size = que.size();
+            while(size-->0){
+
+                int[] rvtx = que.removeFirst();
+                int x = rvtx[0];
+                int y = rvtx[1];
+                
+                for(int d = 0; d < 4; d++){
+                    int r = x + dir[d][0];
+                    int c = y + dir[d][1];
+
+                    if(r >= 0 && c >= 0 && r < n && c < m && grid[r][c]==1){
+                        que.addLast(new int[]{r,c});
+                        grid[r][c] = 2;
+                        freshOranges--;
+                    }
+                }
+            }
+
+            time++;
+            if(freshOranges==0) return time;
+        }
+
+        return -1;
+    }
+
+    // leetcode 1091
+    public int shortestPathBinaryMatrix(int[][] grid) {
+        if(grid.length==0 || grid[0].length==0) return 0;
+        
+        int n = grid.length;
+        int m = grid[0].length;
+
+        if(grid[0][0] == 1 || grid[n-1][m-1] == 1) return -1;
+        
+        int[][] dir =  {{-1, -1}, {-1, 0}, {0, -1}, {-1, 1}, {1, -1}, {0, 1}, {1, 0}, {1, 1}};
+        
+        LinkedList<int[]> que=new LinkedList<>();
+        que.addLast(new int[]{0,0});
+        grid[0][0] = 1;
+       
+        int level=0;
+
+        while(que.size() != 0){
+            int size = que.size();
+            while(size-->0){
+
+                int[] rvtx = que.removeFirst();
+                int x = rvtx[0];
+                int y = rvtx[1];
+                
+                if(x == n-1 && y == m-1) return level + 1;
+
+                for(int d = 0; d < 8; d++){
+                    int r = x + dir[d][0];
+                    int c = y + dir[d][1];
+
+                    if(r >= 0 && c >= 0 && r < n && c < m && grid[r][c] == 0){
+                        que.addLast(new int[]{r,c});
+                        grid[r][c] = 1;
+                    }
+                }
+            }
+
+            level++;
+        }
+
+        return -1;
+    }
+
+
+    //leetcode 542
+    public int[][] updateMatrix(int[][] grid) {
+        if(grid.length==0 || grid[0].length==0) return grid;
+        
+        int n = grid.length;
+        int m = grid[0].length;
+        int[][] dir = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+        
+        
+        int[][] vis=new int[n][m];
+        for(int[] a: vis)
+          Arrays.fill(a, -1);
+
+        LinkedList<int[]> que=new LinkedList<>();
+        
+        int countOnes = n*m;
+        for(int i = 0;i < n;i++){
+            for(int j = 0;j < m;j++){
+                if (grid[i][j] == 0) {
+                    que.addLast(new int[]{i,j});
+                    vis[i][j] = 0;
+                    countOnes--;
+                }
+            }
+        }
+
+       
+        while(que.size()!=0){
+            int size = que.size();
+
+            while(size-->0){
+                int[] rvtx = que.removeFirst();
+                int x = rvtx[0];
+                int y = rvtx[1];
+
+
+                for(int d=0; d<4; d++){
+                    int r = x + dir[d][0];
+                    int c = y + dir[d][1];
+
+                    if(r >= 0 && c >= 0 && r < n && c < m && grid[r][c] == 1 && vis[r][c] == -1){
+                         que.addLast(new int[]{r,c});
+                         vis[r][c] = vis[x][y] + 1;
+                         countOnes--;
+                    }
+                }
+            }
+
+            if(countOnes==0) break;
+        }
+    
+        return vis;
+    }
+
+    public int numBusesToDestination(int[][] routes, int src, int desti) {
+        int n=routes.length;
+
+        HashMap<Integer,ArrayList<Integer>> BusStandToBus=new HashMap<>();
+        
+        for(int i=0;i<n;i++){
+            for(int busStand : routes[i]){
+                BusStandToBus.putIfAbsent(busStand,new ArrayList<>());
+                BusStandToBus.get(busStand).add(i);
+            }
+        }
+
+        LinkedList<Integer> que=new LinkedList<>();
+        
+        HashSet<Integer> vis_BusStand=new HashSet<>();
+        boolean[] vis_BUS=new boolean[n];
+
+        que.addLast(src);
+        vis_BusStand.add(src);
+        int level = 0;
+
+        while(que.size()!=0){
+            int size=que.size();
+            while(size-->0){
+
+                int busStand = que.removeFirst();
+                
+                if(busStand==desti) return level;
+
+                for(int bus : BusStandToBus.get(busStand)){
+                    
+                    if(vis_BUS[bus]) continue;
+
+                    for(int busS : routes[bus]){
+                        if(!vis_BusStand.contains(busS)){
+                            que.addLast(busS);
+                            vis_BusStand.add(busS);
+                        }
+                    }
+
+                    vis_BUS[bus]=true;
+                }
+
+            }
+            level++;
+        }
+
+        return -1;
+    }
+
+
 
 
 }
