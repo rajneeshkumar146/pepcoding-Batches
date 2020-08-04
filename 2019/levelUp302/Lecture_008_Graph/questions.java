@@ -373,7 +373,166 @@ public class questions {
         return -1;
     }
 
+    //Leetcode 207.==================================================================
 
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int N=numCourses;
+        ArrayList<Integer>[] graph=new ArrayList[N]; //vector<vector<int>> graph(N,vector<int>());
+        for(int i=0;i<N;i++) graph[i]=new ArrayList<>();
+        
+        LinkedList<Integer> que=new LinkedList<>();
+        int[] indegree=new int[N];
 
+        for(int[] arr: prerequisites){
+            int u=arr[0];
+            int v=arr[1];
+            graph[u].add(v);
 
+            indegree[v]++;
+        }
+
+        for(int i=0;i<N;i++)
+            if(indegree[i]==0)que.addLast(i);
+        
+        ArrayList<Integer> ans=new ArrayList<>();
+        while(que.size()!=0){
+            int rvtx=que.removeFirst();
+            ans.add(rvtx);
+
+            for(int e: graph[rvtx]){
+                if(--indegree[e]==0) que.addLast(e);
+            }
+        }
+
+        if(ans.size()!=N) ans.clear();
+         
+        return ans.size()!=0;
+        
+    }
+    
+    //Leetcode 210
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int N=numCourses;
+       ArrayList<Integer>[] graph=new ArrayList[N];
+       for(int i=0;i<N;i++) graph[i]=new ArrayList<>();
+       
+       LinkedList<Integer> que=new LinkedList<>();
+       int[] indegree=new int[N];
+
+       for(int[] arr: prerequisites){
+           int v=arr[0];
+           int u=arr[1];
+           graph[u].add(v);
+
+           indegree[v]++;
+       }
+
+       for(int i=0;i<N;i++)
+           if(indegree[i]==0)que.addLast(i);
+       
+       ArrayList<Integer> ans=new ArrayList<>();
+       while(que.size()!=0){
+           int rvtx=que.removeFirst();
+           ans.add(rvtx);
+
+           for(int e: graph[rvtx]){
+               if(--indegree[e]==0) que.addLast(e);
+           }
+       }
+
+       if(ans.size()!=N) ans.clear();
+       int[] ANS=new int[ans.size()];
+       int i=0;
+       for(int ele: ans) ANS[i++]=ele;
+       return ANS;
+   }
+ 
+   //Leetcode 207
+   public static boolean isCycleInTopo(int src,boolean[] vis,boolean[] myPath,ArrayList<Integer>[] graph){
+      vis[src]=myPath[src]=true;
+
+      boolean res = false;
+      for(int e: graph[src]){
+          if(!vis[e]) res = res ||  isCycleInTopo(e,vis,myPath,graph);
+          else if(myPath[e]) return true;
+      }
+
+      myPath[src]=false;
+      return res;
+   }
+   
+   
+   public boolean canFinish(int numCourses, int[][] prerequisites) {
+    int N=numCourses;
+    ArrayList<Integer>[] graph=new ArrayList[N]; //vector<vector<int>> graph(N,vector<int>());
+    for(int i=0;i<N;i++) graph[i]=new ArrayList<>();
+       
+    for(int[] arr: prerequisites){
+        int u=arr[0];
+        int v=arr[1];
+        
+        graph[u].add(v);
+    }
+
+    boolean[] vis=new boolean[N];
+    boolean[] myPath=new boolean[N];
+    
+    for(int i=0;i<N;i++){
+        if(!vis[i] && isCycleInTopo(i,vis,myPath,graph)) return false;  
+    }
+
+    return true;
+   }
+
+   //Leetcode 329 
+   public int longestIncreasingPath(int[][] matrix) {
+      int n = matrix.length;
+      int m = matrix[0].length;
+
+      int[][] indegree=new int[n][m];
+      int[][] dir = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+      
+      for(int i=0;i<n;i++){
+          for(int j=0;j<m;j++){
+              
+             for(int d=0; d<4; d++){
+               int r = i + dir[d][0];
+               int c = j + dir[d][1];
+
+               if(r >= 0 && c >= 0 && r < n && c < m && matrix[r][c] > matrix[i][j]){
+                   indegree[r][c]++;
+               }
+            }
+        }
+    }
+
+    LinkedList<int[]> que=new LinkedList<>();
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+          if(indegree[i][j]==0) que.addLast(new int[]{i,j});
+        }
+    }
+
+    int level=0;
+    while(que.size()!=0){
+        int size=que.size();
+        while(size-->0){
+            int[] rvtx=que.removeFirst();
+            int u=rvtx[0];
+            int v=rvtx[1];
+        
+            for(int d=0; d<4; d++){
+               int r = u + dir[d][0];
+               int c = v + dir[d][1];
+
+               if(r >= 0 && c >= 0 && r < n && c < m && matrix[r][c] > matrix[u][v] && --indegree[r][c]==0){
+                   que.addLast(new int[]{r,c});
+                }
+            }
+        }
+        level++;
+    }
+
+    return level;    
+   }
 }
