@@ -111,4 +111,72 @@ public class questions{
 
         return maxLen;
     }
+
+    // Leetcode 416
+    public boolean canPartition(int[] nums) {
+        
+        int sum=0;
+        for(int ele: nums){
+            sum+=ele;
+        }
+        
+        if(sum%2!=0) return false;
+        
+        boolean[][] dp=new boolean[nums.length+1][sum/2+1];
+        return targetSum_01_DP(nums,sum/2,nums.length,dp);
+    }
+    
+     public static boolean targetSum_01_DP(int[] coins,int tar,int n,boolean[][] dp){
+        int N=n;
+        int Tar=tar;
+ 
+        for(n=0;n<=N;n++){
+            for(tar=0;tar<=Tar;tar++){
+                if(tar == 0 || n == 0){
+                    dp[n][tar] = (tar==0)?true:false;
+                    continue;
+                }
+                
+                dp[n][tar]=false;
+                if(tar-coins[n-1]>=0)
+                   dp[n][tar]=dp[n][tar] || dp[n-1][tar-coins[n-1]];
+                dp[n][tar]=dp[n][tar] || dp[n-1][tar];
+            }
+        }
+
+        return dp[N][Tar];
+    }
+
+public static int findTargetSumWays_memo(int[] nums, int n, int sum, int tar,int[][] dp){
+    if (n == 0)
+        return dp[n][sum] = ((tar == (0 + sum)) ? 1 : 0);
+
+    if (dp[n][sum] != -1)
+        return dp[n][sum];
+
+    int include = findTargetSumWays_memo(nums, n - 1, sum - nums[n - 1], tar,dp);  // positive call
+    int exclude = findTargetSumWays_memo(nums, n - 1, sum + nums[n - 1], tar,dp); // nrgative call
+
+    return dp[n][sum] = include + exclude;
+}
+
+
+public static int findTargetSumWays(vector<int> &nums, int s)
+{
+    if (nums.length == 0)
+        return 0;
+
+    int n = nums.length;
+    int sum = 0;
+
+    for (int i : nums)
+        sum += i;
+    if (s > sum || s < -sum)
+        return 0;
+
+    int[][] dp=new int[n+1][2*sum+1];
+    for(int[] a: dp) Arrays.fill(a,-1);
+
+    return findTargetSumWays_memo(nums, n, sum, s+sum,dp);
+  }
 }

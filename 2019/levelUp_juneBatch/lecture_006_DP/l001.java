@@ -1157,9 +1157,6 @@ public class l001 {
            targetSum_01_BE(coins,tar,n-1,dp,str);
     }
 
-
-
-
     public static void targetSum(){
         //  int[] coins={1,2,3,4,5,6,7,8};
          int[] coins={2,1,3,5,6};
@@ -1173,6 +1170,69 @@ public class l001 {
          System.out.println(targetSum_01_DP(coins,tar,coins.length,dp));
          targetSum_01_BE(coins,6,coins.length,dp,"");
          display2D(dp);
+    }
+
+    public static int knapSack_01_Rec(int[] weight,int[] value,int cap,int n,int[][] dp){
+        if(cap==0 || n == 0){
+            return dp[n][cap] = 0;
+        }
+
+        if(dp[n][cap]!=-1) return dp[n][cap];
+
+        int maxProfit = 0;
+        if(cap-weight[n-1]>=0)
+           maxProfit = Math.max(maxProfit,knapSack_01_Rec(weight,value,cap-weight[n-1],n-1,dp) + value[n-1]);
+        
+        maxProfit = Math.max(maxProfit,knapSack_01_Rec(weight,value,cap,n-1,dp));
+
+        return dp[n][cap]=maxProfit;
+    }
+
+    public static int knapSack_01_DP(int[] weight,int[] value,int cap,int n,int[][] dp){
+        
+        int N=n;
+        int CAP=cap;
+        for(n=0;n<=N;n++){
+            for(cap=0;cap<=CAP;cap++){
+                if(cap==0 || n == 0){
+                    dp[n][cap] = 0;
+                    continue;
+                }
+        
+                int maxProfit = 0;
+                if(cap-weight[n-1]>=0)
+                   maxProfit = Math.max(maxProfit,dp[n-1][cap - weight[n-1]] + value[n-1]);
+                
+                maxProfit = Math.max(maxProfit,dp[n-1][cap]);
+        
+                dp[n][cap]=maxProfit;
+            }
+
+        }
+    }
+
+    public static int knapSack_01_DP(int[] weight,int[] value,int cap){
+        int n=weight.length;
+        int[] dp=new int[cap+1];
+
+        for(int i=0;i<n;i++){
+            for(int c = weight[i];c<=cap;c++){
+                dp[c]=Math.max(dp[c],dp[c-weight[i]]+value[i]);
+            }
+        }
+
+        return dp[cap];
+    }
+
+
+
+    public static void knapSack_01(){
+        int weight[]={1,2,3};
+        int value[]={6,10,12};
+        int we=5;
+        
+        int[][] dp=new int[weight.length+1][we+1];
+
     }
 
 
