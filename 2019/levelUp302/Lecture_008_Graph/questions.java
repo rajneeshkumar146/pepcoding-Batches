@@ -535,4 +535,186 @@ public class questions {
 
     return level;    
    }
+
+
+    int[] par;
+   public int findPar(int u){
+       if(par[u]==u) return u;
+       return par[u]=findPar(par[u]);
+   }
+   
+   public int[] findRedundantConnection(int[][] edges) {
+       int N=edges.length;
+       par=new int[N+1];
+       for(int i=0;i<=N;i++)
+        par[i]=i;
+        
+        for(int[] e: edges){
+            int p1=findPar(e[0]);
+            int p2=findPar(e[1]);
+            if(p1!=p2) par[p1]=p2;
+            else return e;
+        }
+
+        return new int[0];
+   }
+
+   //Leetcode 200
+   public int numIslands(char[][] grid) {
+       
+    if(grid.length==0 || grid[0].length==0) return 0;
+    int n=grid.length;
+    int m=grid[0].length;
+
+       par=new int[n*m];
+       int count=0;
+       for(int i=0;i<n;i++)
+           for(int j=0;j<m;j++){
+              if(grid[i][j]=='1')
+                {   count++;
+                    par[i * m + j]=i * m + j;
+                }
+            }
+
+       for(int i=0;i<n;i++){
+           for(int j=0;j<m;j++){
+              if(grid[i][j]=='1'){
+               
+                int p1=findPar(i*m+j);
+               
+                if(j + 1 < m && grid[i][j+1] == '1'){
+                      int p2=findPar(i * m + j + 1);
+                      if(p1!=p2){
+                         par[p2]=p1;
+                         count--;
+                      }
+                  }
+
+                  if(i + 1 < n && grid[i+1][j] == '1'){
+                    int p2=findPar((i + 1) * m + j);
+                    if(p1!=p2){
+                        par[p2]=p1;
+                        count--;
+                    }
+                }
+              }
+           }
+       }
+
+       return count; 
+   }
+
+   //Leetcode 695
+   public int maxAreaOfIsland(int[][] grid) {
+       if(grid.length==0 || grid[0].length==0) return 0;
+       int n=grid.length;
+       int m=grid[0].length;
+
+       par=new int[n*m];
+       size=new int[n*m];
+       
+       int count=0;
+       for(int i=0;i<n;i++)
+           for(int j=0;j<m;j++){
+              if(grid[i][j] == 1)
+                {   count++;
+                    par[i * m + j] = i * m + j;
+                    size[i*m + j] = 1;
+                }
+            }
+
+       for(int i=0;i<n;i++){
+           for(int j=0;j<m;j++){
+              if(grid[i][j]== 1){
+               
+                int p1=findPar(i*m+j);
+               
+                if(j + 1 < m && grid[i][j+1] == 1){
+                      int p2=findPar(i * m + j + 1);
+                      if(p1!=p2){
+                         par[p2]=p1;
+                         size[p1]+=size[p2];
+                         count--;
+                      }
+                  }
+
+                  if(i + 1 < n && grid[i+1][j] == 1){
+                    int p2=findPar((i + 1) * m + j);
+                    if(p1!=p2){
+                        par[p2]=p1;
+                        size[p1]+=size[p2];
+                        count--;
+                    }
+                }
+              }
+           }
+       }
+
+       int max=0;
+       for(int i=0;i<n*m;i++){
+           if(i==par[i]){
+            max=Math.max(max,size[i]);
+           }
+       }
+
+       return max;
+   }
+
+   //Leetcode 1061
+   public String smallestEquivalentString(String A, String B, String S) {
+       par=new int[26];
+       for(int i=0;i<26;i++) par[i] = i;
+
+       for(int i=0;i<A.length();i++){
+           int p1=findPar(A.charAt(i)-'a');
+           int p2=findPar(B.charAt(i)-'a');
+
+           par[p1]=Math.min(p1,p2);
+           par[p2]=Math.min(p1,p2);
+       }
+
+       String ans="";
+       for(int i=0;i<A.length();i++){
+          ans += (char)(findPar(S.charAt(i)-'a') + 'a');
+       }
+
+       return ans;
+   }
+
+   //Leetcode 305
+   public List<Integer> numIslands2(int n, int m, int[][] positions) {
+    par=new int[n*m];
+    for(int i=0;i<n*m;i++) par[i] = i;
+    int[][] dir = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+    
+    int[][] mat=new int[n][m];
+
+    int count=0;
+    List<Integer> ans=new ArrayList<>();
+    for(int[] ele:positions){
+        int r = ele[0];
+        int c = ele[1];
+        if(mat[r][c]!=1){ 
+        mat[r][c] = 1;
+        count++;
+
+        int p1=findPar(r*m+c);
+
+        for(int d=0;d<4;d++){
+            int x = r + dir[d][0];
+            int y = c + dir[d][1];
+            if(x>=0 && y>=0 && x<n && y<m && mat[x][y]==1){
+                int p2=findPar(x*m+y);
+                if(p1 != p2) {
+                    count--;
+                    par[p2]=p1;
+                }
+            }
+         }
+        }
+        ans.add(count);
+    }
+
+    return ans;
+}
 }
