@@ -1,11 +1,13 @@
-2
-6 
-1 5 
-2 1 3 
-1 0 0 0 0 0 0 0 0 0 0 
-1 0 1 0 0 0 0 0 0 0 0 
-1 1 1 1 0 0 0 0 0 0 0 
-1 1 1 2 1 1 1 0 0 0 0 
-1 1 1 2 1 2 2 1 2 1 1 
-1 1 1 2 1 2 3 2 3 3 2 
+30000
+(((AB)C)D)
+0 0 6000 18000 30000 
+0 0 0 24000 48000 
+0 0 0 0 36000 
+0 0 0 0 0 
+0 0 0 0 0 
 
+null A (AB) ((AB)C) (((AB)C)D) 
+null null B (BC) ((BC)D) 
+null null null C (CD) 
+null null null null D 
+null null null null null 
