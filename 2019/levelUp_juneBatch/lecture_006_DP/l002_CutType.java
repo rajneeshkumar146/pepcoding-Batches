@@ -43,7 +43,7 @@ public class l002_CutType{
                     int leftRes = dp[si][cut];//MCM_Rec(arr,si,cut,dp);
                     int rightRes = dp[cut][ei];//MCM_Rec(arr,cut,ei,dp);
             
-                    int recRes = leftRes +  arr[si]*arr[cut]*arr[ei]  + rightRes;
+                    int recRes = leftRes +  arr[si] * arr[cut] * arr[ei]  + rightRes;
                     if(recRes<myAns) myAns = recRes; 
                 }
 
@@ -95,9 +95,40 @@ public class l002_CutType{
         }
     }
 
+    //OBST.======================================================
+
+    public static int summation(int si,int ei,int[] freq){
+        int sum=0;
+        while(si<=ei) sum+=freq[si++];
+        return sum;
+    }
+
+    public static int OBST_Rec(int[] freq,int si,int ei,int[][] dp,int[] prefixSum){
+        if(dp[si][ei] != 0) return dp[si][ei]; 
+
+        int myAns=(int)1e8;
+        for(int cut=si;cut<=ei;cut++){
+            int leftRes = cut == si ? 0 : OBST_Rec(freq,si,cut,dp,prefixSum);
+            int rightRes = cut == ei ? 0 : OBST_Rec(freq,cut,ei,dp,prefixSum);
+            
+            int recRes = leftRes +  (prefixSum[ei]-(si==0?0:prefixSum[si])) + rightRes;
+            if(recRes<myAns) myAns = recRes; 
+        }
+
+        return dp[si][ei] = myAns;
+    }
+
+    public static void OBST(){
+        int[] keys={10,12,20};
+        int[] freq={34, 8, 50};
+
+        
+
+
+    }
+
     public static void main(String[] args){
         MCM();
-
     }
 
 
