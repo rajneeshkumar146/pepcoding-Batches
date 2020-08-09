@@ -717,4 +717,38 @@ public class questions {
 
     return ans;
 }
+
+//Leetcode 1168
+public int minCostToSupplyWater(int n, int[] wells, int[][] pipes) {
+        ArrayList<int[]> pipeConnection=new ArrayList<>();
+        for(int i=0;i<wells.length;i++){
+            pipeConnection.add(new int[]{0,i+1,wells[i]});
+        }
+
+        for(int[] p: pipes){
+            pipeConnection.add(p);
+        }
+
+        Collections.sort(pipeConnection,(a,b)->{
+            return a[2]-b[2]; // this-other 
+        });
+
+        par=new int[n+1];
+        for(int i=0;i<=n;i++) par[i]=i;
+        int cost=0;
+
+        for(int[] p : pipeConnection){
+            int p1=findPar(p[0]);
+            int p2=findPar(p[1]);
+
+            if(p1!=p2){
+                par[p1]=p2;
+                cost+=p[2];
+            }
+        }
+
+        return cost;
+}
+
+
 }
