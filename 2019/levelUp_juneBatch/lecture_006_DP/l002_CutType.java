@@ -237,6 +237,20 @@ public class l002_CutType{
         return dp[si][ei]=minCut;
     }
 
+    public static int minPlaindromicCut_bestMethod(String str,int si,int ei,int[] dp,boolean[][] palindromicSubstring){
+        if(palindromicSubstring[si][ei]) return 0;
+        if(dp[si] != -1) return dp[si];
+        
+        int minCut=(int)1e8;
+        for(int cut = si; cut < ei; cut++){
+            if(palindromicSubstring[si][cut]){
+              minCut = Math.min(minCut,minPlaindromicCut_bestMethod(str,cut+1,ei,dp,palindromicSubstring)+1);
+            }            
+        }
+
+        return dp[si]=minCut;
+    }
+
     public static int minCut(String str) {
 		int n = str.length();
 		int[][] dp=new int[n][n];
@@ -254,6 +268,7 @@ public class l002_CutType{
 
 		return minPlaindromicCut(str,0,n-1,dp,isPalindrome);
     }
+    
 
     public static void minMaxEval(){
         String str="1+2*3+4*5";
