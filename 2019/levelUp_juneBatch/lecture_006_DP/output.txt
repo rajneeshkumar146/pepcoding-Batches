@@ -1,13 +1,2 @@
-30000
-(((AB)C)D)
-0 0 6000 18000 30000 
-0 0 0 24000 48000 
-0 0 0 0 36000 
-0 0 0 0 0 
-0 0 0 0 0 
-
-null A (AB) ((AB)C) (((AB)C)D) 
-null null B (BC) ((BC)D) 
-null null null C (CD) 
-null null null null D 
-null null null null null 
+(1+((2*3)+(4*5))) -> 27
+((1+2)*((3+4)*5)) -> 105

@@ -118,17 +118,177 @@ public class l002_CutType{
         return dp[si][ei] = myAns;
     }
 
-    public static void OBST(){
-        int[] keys={10,12,20};
-        int[] freq={34, 8, 50};
+    public static int maxCoins(int[] nums,int si,int ei,int[][] dp) {
+        if(dp[si][ei]!=0) return dp[si][ei];
 
+        int lval = si == 0 ? 1 : nums[si-1];
+        int rval = ei == nums.length -1 ? 1 : nums[ei+1];
+
+        int maxAns = 0;
+        for(int cut = si;cut<=ei;cut++){
+            int leftRes = cut == si ? 0 : maxCoins(nums,si,cut - 1,dp);
+            int rightRes = cut == ei ? 0 : maxCoins(nums,cut + 1, ei, dp); 
+
+            int myAns = leftRes + lval * nums[cut] * rval + rightRes;
+            maxAns = Math.max(maxAns, myAns);
+        }
+
+        return dp[si][ei] = maxAns;
+    }
+
+    public static int maxCoinsDP(int[] nums,int si,int ei,int[][] dp) {
         
+        for(int gap = 1; gap < nums.length;gap++){
+            for(si=0,ei=gap;ei<nums.length;si++,ei++){
+                int lval = si == 0 ? 1 : nums[si-1];
+                int rval = ei == nums.length - 1 ? 1 : nums[ei+1];
 
+                int maxAns = 0;
+                for(int cut = si;cut<=ei;cut++){
+                    int leftRes = cut == si ? 0 : dp[si][cut-1];//maxCoins(nums,si,cut - 1,dp);
+                    int rightRes = cut == ei ? 0 : dp[cut+1][ei];//maxCoins(nums,cut + 1, ei, dp); 
+
+                    int myAns = leftRes + lval * nums[cut] * rval + rightRes;
+                    maxAns = Math.max(maxAns, myAns);
+                }
+
+            dp[si][ei] = maxAns;
+            }
+        }
+
+        return dp[0][nums.length-1];
+        
+    }
+
+    public static int evaluateExpression(int a,int b,char oper){
+        if(oper=='+') return a+b;
+        else return a*b;
 
     }
 
+    public static class pair{
+        int min=(int)1e8;
+        int max= (int) -1e8;
+       
+        String minStr="";
+        String maxStr="";
+        pair(int min,int max,String minStr,String maxStr){
+            this.min = min;
+            this.max = max;
+
+            this.minStr = minStr;
+            this.maxStr = maxStr;
+        }
+
+        pair(){
+        }
+
+        @Override
+        public String toString(){
+           return "(" + min + ", " + max  + ")";
+        }
+    }
+
+    public static pair minMaxEval(String str,int si,int ei,pair[][] dp){
+        if(si==ei){
+            char ch = str.charAt(si);
+            int val = ch-'0';
+            return new pair(val,val, val+"",val+"");
+        }
+
+        if(dp[si][ei] != null) return dp[si][ei];
+        
+        pair maxAns = new pair();
+        for(int cut = si + 1;cut < ei; cut+=2){
+            pair leftRes = minMaxEval(str, si, cut-1, dp);
+            pair rightRes = minMaxEval(str, cut + 1, ei, dp); 
+
+            int minVal = evaluateExpression(leftRes.min,rightRes.min,str.charAt(cut));
+            int maxVal = evaluateExpression(leftRes.max,rightRes.max,str.charAt(cut));
+            
+            if(minVal < maxAns.min){
+                maxAns.min=minVal;
+                maxAns.minStr = "("+leftRes.minStr + str.charAt(cut) + rightRes.minStr + ")";
+            }
+
+            if(maxVal > maxAns.max){
+                maxAns.max=maxVal;
+                maxAns.maxStr = "("+leftRes.maxStr + str.charAt(cut) + rightRes.maxStr + ")";
+            }
+        }
+
+        return dp[si][ei] = maxAns;
+
+    }
+
+    public static int minPlaindromicCut(String str,int si,int ei,int[][] dp,boolean[][] palindromicSubstring){
+        if(palindromicSubstring[si][ei]) return 0;
+        if(dp[si][ei] != -1) return dp[si][ei];
+        int minCut=(int)1e8;
+        
+        for(int cut = si; cut < ei; cut++){
+            int leftRes = minPlaindromicCut(str,si,cut,dp,palindromicSubstring);
+            int rightRes = minPlaindromicCut(str,cut+1,ei,dp,palindromicSubstring);
+            
+            int myAns= leftRes + 1 + rightRes;
+            minCut = Math.min(minCut, myAns);
+        }
+
+        return dp[si][ei]=minCut;
+    }
+
+    public static int minCut(String str) {
+		int n = str.length();
+		int[][] dp=new int[n][n];
+		boolean[][] isPalindrome=new boolean[n][n];
+
+		for(int[] d: dp) Arrays.fill(d,-1);
+
+		for (int gap = 0; gap < n; gap++) {
+			for (int si = 0, ei = gap; ei < n; si++, ei++) {
+				if (gap == 0) isPalindrome[si][ei] = true;
+				else if (str.charAt(si) == str.charAt(ei) && gap == 1) isPalindrome[si][ei] = true;
+				else isPalindrome[si][ei] = str.charAt(si) == str.charAt(ei) && isPalindrome[si + 1][ei - 1];
+			}
+		}
+
+		return minPlaindromicCut(str,0,n-1,dp,isPalindrome);
+    }
+
+    public static void minMaxEval(){
+        String str="1+2*3+4*5";
+        int n=str.length();
+        pair[][] dp=new pair[n][n];
+
+        pair ans=minMaxEval(str,0,n-1,dp);
+        System.out.println(ans.minStr + " -> "+ans.min);
+        System.out.println(ans.maxStr + " -> "+ans.max);
+        
+
+        // for(pair[] d : dp){
+        //     for(pair e : d){
+        //         System.out.print(e + " ");
+        //     }
+        //     System.out.println();
+        // }
+    }
+
+    public static int maxCoins(int[] nums) {
+        int n=nums.length; if(n==0) return 0;
+        int[][] dp =new int[n][n];
+        
+        return maxCoins(nums,0,n-1,dp);   
+    }
+
+    public static void OBST(){
+        int[] keys={10,12,20};
+        int[] freq={34, 8, 50};
+    }
+
     public static void main(String[] args){
-        MCM();
+        // MCM();
+        minMaxEval();
+       
     }
 
 
