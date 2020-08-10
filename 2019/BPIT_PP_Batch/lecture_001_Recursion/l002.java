@@ -1,3 +1,4 @@
+import java.util.HashSet;
 public class l002{
 
     public static void main(String[] args){
@@ -23,11 +24,16 @@ public class l002{
         // System.out.println(oneDQueenCombination(box,0,tnq,0,""));
         // System.out.println(oneDQueenPermutation(box,0,tnq,0,""));
 
-        boolean[][] box=new boolean[4][4];
-        int tnq = 4;
+        // boolean[][] box=new boolean[4][4];
+        // int tnq = 4;
         // System.out.println(twoDQueenCombination(box,0,tnq,""));
         // System.out.println(twoDQueenPermutation(box,0,tnq,""));
-        System.out.println(twoDNqueenFloorWise(box,0,tnq,""));
+        // System.out.println(twoDNqueenFloorWise(box,0,tnq,""));
+
+
+        // Nqueen();
+        // wordBreak();
+        isCryptoValid();
     }
 
     public static int coinChangeInfnitePermuatation(int[] arr,int idx,int tar,String ans){
@@ -258,4 +264,185 @@ public class l002{
         
          return count;
     }
+
+    //Nqueen.=============================================================================
+
+    public static boolean isSafeToPlaceQueen(boolean[][] box,int r,int c){
+        // int[][] dirP = {{1,0},{-1,0},{0,1},{0,-1},{1,1},{-1,-1},{-1,1},{1,-1}};
+        int[][] dirC = {{-1,0},{0,-1},{-1,1},{-1,-1}};
+
+        for(int[] d: dirC){
+            for(int rad=1;rad<=Math.max(box.length,box[0].length);rad++){
+                int x = r + rad * d[0];
+                int y = c + rad * d[1];
+
+                if(x >= 0 && x < box.length && y >=0 && y < box[0].length){
+                   if(box[x][y])
+                    return false;
+                }else break;
+            }
+        }
+
+        return true;
+    }
+
+
+
+    public static int NQueenCombination(boolean[][] box,int idx,int tnq,String ans){
+        if(tnq==0){
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count=0;
+        int n=box.length;
+        int m=box[0].length;
+
+        for(int i=idx;i<n*m;i++){
+            int r = i / m;
+            int c = i % m; 
+            if(isSafeToPlaceQueen(box,r,c)){
+                box[r][c] = true;
+                count+=NQueenCombination(box,i+1,tnq-1,ans + "(" + r + ", " + c + ") ");
+                box[r][c] = false;
+            }
+        }
+
+        return count;
+    }
+
+    public static int NQueenCombination_best(boolean[][] box,int row,int tnq,String ans){
+        if(tnq==0 || row==box.length){
+            if(tnq==0){
+                System.out.println(ans);
+                return 1;
+            }
+            return 0;
+        }
+
+        int m = box[0].length;
+        int count = 0; 
+        for(int i = 0; i < m; i++){
+            if(isSafeToPlaceQueen(box,row,i)){
+                box[row][i] = true;
+                count+=NQueenCombination_best(box,row + 1, tnq - 1, ans + "(" + row + ", " + i + ") " );
+                box[row][i] = false;
+            }
+        }
+        
+         return count;
+    }
+
+    public static void Nqueen(){
+        int n=4,m=4,tnq=4;
+        boolean[][] box=new boolean[n][m];
+        // System.out.println(NQueenCombination(box,0,tnq,""));
+        System.out.println(NQueenCombination_best(box,0,tnq,""));      
+    }
+
+    //WordBreak.=====================================================================
+
+    public static int wordBreak(String ques,int idx,String ans,int maxLenWord,HashSet<String> words){
+        if(idx == ques.length()){
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count=0;
+        for(int i = idx + 1 ; i <=  (idx + maxLenWord + 1) && i <= ques.length();i++){
+            String str = ques.substring(idx,i);
+            if(words.contains(str))
+               count+=wordBreak(ques,i,ans + str + " ",maxLenWord,words);
+        }
+
+        return count;   
+    }
+
+    public static void wordBreak(){
+        String ques="ilikesamsungandmango";
+        String[] word={"mobile","samsung","sam","sung", 
+        "man","mango","icecream","and", 
+         "go","i","like","ice","cream","ilike"};
+        
+        HashSet<String> words=new HashSet();
+        int maxLenWord=0;
+        for(String s: word){
+            maxLenWord = Math.max(maxLenWord, s.length());
+            words.add(s);
+        }
+
+        System.out.println(wordBreak(ques,0,"",maxLenWord,words));
+    }
+
+    //Crypto.=========================================================================
+    static String a="send";
+    static String b="more";
+    static String c="money";
+    static int[] charToNumber=new int[26];
+    static boolean[] numberUsed=new boolean[10];
+
+    public static int stringToNumber(String str){
+        int num=0;
+        for(int i=0;i<str.length();i++){
+            char ch=str.charAt(i);
+            int val = charToNumber[ch-'a'];
+
+            num = num * 10 + val;
+        }
+
+        return num;
+    }
+
+    public static int cryptoSolver(String str,int idx){
+        if(idx == str.length()){
+            int x = stringToNumber(a);
+            int y = stringToNumber(b);
+            int z = stringToNumber(c);
+
+            if(x + y == z && charToNumber[a.charAt(0)-'a']!=0 && charToNumber[b.charAt(0)-'a']!=0 && charToNumber[c.charAt(0)-'a']!=0){
+               System.out.println(x + "\n+" + y + "\n" + "----\n" + z + '\n');
+                return 1;
+            }
+
+            return 0;
+        }
+
+
+        char ch=str.charAt(idx);
+        int count = 0;
+        for(int num = 0; num <= 9;num++){
+            if(!numberUsed[num]){
+                
+                numberUsed[num] = true;
+                charToNumber[ch-'a'] = num;
+            
+                count+=cryptoSolver(str,idx+1);
+            
+                charToNumber[ch-'a'] = 0;
+                numberUsed[num] = false;
+            }
+        }
+
+        return  count;
+    }
+
+
+
+    public static void isCryptoValid(){
+        String str=a+b+c;
+
+        int[] freq=new int[26];
+        for(int i=0;i<str.length();i++) freq[str.charAt(i)-'a']++;
+
+        str="";
+        for(int i=0;i<26;i++) if(freq[i] > 0) str+=(char)(i + 'a');
+        // System.out.println(str);
+
+        System.out.println(cryptoSolver(str,0));
+    }
+
+
+
+
+
 }
