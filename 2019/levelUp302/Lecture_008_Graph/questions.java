@@ -2,6 +2,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 
 
 public class questions {
@@ -748,6 +749,138 @@ public int minCostToSupplyWater(int n, int[] wells, int[][] pipes) {
         }
 
         return cost;
+}
+
+
+public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {   
+    ArrayList<int[]>[] graph=new ArrayList[n];
+    for(int i=0;i<n;i++) graph[i]=new ArrayList<>();
+
+    for(int[] f: flights){
+        int u = f[0];
+        int v = f[1];
+        int w = f[2];
+
+        graph[u].add(new int[]{v,w});
+    }
+
+    // u , cost , k
+    PriorityQueue<int[]> pq=new PriorityQueue<>((a,b)->{
+        return a[1]-b[1];   // this- other
+    });
+
+    pq.add(new int[]{src,0,K + 1});
+
+    while(pq.size()!=0){
+        int[] rvtx = pq.remove();
+        int u = rvtx[0];
+        int cost = rvtx[1];
+        int stops = rvtx[2];
+
+        if(u == dst){
+          return cost;
+        }
+
+        if(stops==0) continue;
+
+        for(int[] e : graph[u]){
+            int nbr = e[0];
+            int csf = cost + e[1];
+            int stopsSoFar= stops - 1;
+            pq.add(new int[]{nbr,csf,stopsSoFar});
+        }
+    }
+    return -1;
+}
+
+//Leetcode 743
+
+public int networkDelayTime(int[][] times, int N, int src) {
+    ArrayList<int[]>[] graph=new ArrayList[N+1];
+    for(int i=0;i<=N;i++) graph[i]=new ArrayList<>();
+
+    for(int[] f: times){
+        int u = f[0];
+        int v = f[1];
+        int w = f[2];
+
+        graph[u].add(new int[]{v,w});
+    }
+
+     // u , totalTime
+     PriorityQueue<int[]> pq=new PriorityQueue<>((a,b)->{
+        return a[1]-b[1];   // this- other
+    });
+
+    pq.add(new int[]{src,0});
+    int[] bestTime=new int[N+1]; 
+    Arrays.fill(bestTime,-1);
+
+    while(pq.size()!=0){
+        int[] rvtx = pq.remove();
+        int u = rvtx[0];
+        int time = rvtx[1];
+
+        if(bestTime[u]!=-1) continue;
+        
+        bestTime[u] = time;
+        for(int[] e : graph[u]){
+            int nbr = e[0];
+            int t = time + e[1];
+            if(bestTime[nbr] == -1)
+                pq.add(new int[]{nbr, t});
+        }
+    }
+
+    int ans=0;
+    for(int i=1 ;i<=N;i++){
+        if(bestTime[i] == -1) return -1;
+        else ans = Math.max(ans,bestTime[i]);
+    }
+    return ans;
+}
+
+//Leetcode 685
+
+int[] unionPar;
+public int findUnionPar(int u){
+    if(unionPar[u] == -1) return u;
+    return unionPar[u] = findUnionPar(unionPar[u]); 
+}
+
+public int[] findRedundantDirectedConnection(int[][] edges) {
+        int n = edges.length;
+        int a = -1,b = -1,cycle = -1;
+        
+        unionPar = new int[n+1];
+        Arrays.fill(unionPar,-1);
+
+        int[] actualPar=new int[n+1];
+        Arrays.fill(actualPar,-1);
+
+        for(int i=0; i < edges.length; i++){
+            int p = edges[i][0];
+            int c = edges[i][1];
+
+            if(actualPar[c] != -1){
+                a = actualPar[c];
+                b = i;
+                continue;
+            }
+
+            actualPar[c] = i; 
+            int rootInUnionTree = findUnionPar(p);
+            if(rootInUnionTree == c){
+                cycle = i;
+            }else{
+                unionPar[c] = rootInUnionTree;
+            }
+        }
+
+        if(cycle == -1) return edges[b];
+        else if( b == -1) return edges[cycle];
+
+        return edges[a];
 }
 
 
