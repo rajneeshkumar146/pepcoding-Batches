@@ -503,7 +503,7 @@ int count_of_ways(int n, int k, vector<vector<int>> &dp)
     if (n == k || k == 1)
         return dp[k][n] = 1;
 
-    if (dp[k][n] != 0)
+    if (dp[k][n] != -1)
         return dp[k][n];
 
     int newGroup = count_of_ways(n - 1, k - 1, dp);
@@ -521,7 +521,10 @@ int count_of_ways_DP(int n, int k, vector<vector<int>> &dp)
         for (n = 0; n <= N; n++)
         {
             if (n < k)
+            {
+                dp[k][n] = 0;
                 continue;
+            }
 
             if (n == k || k == 1)
             {
@@ -544,7 +547,7 @@ void count_of_ways(int n, int k)
     if (n < k)
         return;
 
-    vector<vector<int>> dp(k + 1, vector<int>(n + 1, 0));
+    vector<vector<int>> dp(k + 1, vector<int>(n + 1, -1));
     // cout << count_of_ways(n, k, dp) << endl;
     cout << count_of_ways_DP(n, k, dp) << endl;
 
@@ -633,7 +636,7 @@ int countAllPlaindromicSubstring(string str)
 int longestPlaindromeSubseq_Rec(string str, int si, int ei, vector<vector<int>> &dp)
 {
     if (si > ei)
-        return 0;
+        return dp[si][ei] = 0;
     if (si == ei)
         return dp[si][ei] = 1;
     if (dp[si][ei] != 0)
@@ -1454,19 +1457,19 @@ int numDecodings02(string &s)
     }
 }
 
-int numDecodings(string s)
-{
-    vector<int> dp(s.length() + 1, -1);
-    int ans = numDecodings_(s, 0, dp);
+// int numDecodings(string s)
+// {
+//     vector<int> dp(s.length() + 1, -1);
+//     int ans = numDecodings_(s, 0, dp);
 
-    display(dp);
-    return ans;
-}
+//     display(dp);
+//     return ans;
+// }
 
-void questionSet()
-{
-    numDecodings("1423101112");
-}
+// void questionSet()
+// {
+//     numDecodings("1423101112");
+// }
 
 int AiBjCk(string str)
 {
@@ -1480,10 +1483,10 @@ int AiBjCk(string str)
         else if (str[i] == 'b')
             bcount = bcount + (acount + bcount);
         else
-            ccount = ccount + (bcount + ccount);
+            count = count + (bcount + count);
     }
 
-    return ccount;
+    return count;
 }
 
 // https://www.hackerearth.com/practice/math/number-theory/basic-number-theory-1/tutorial/
@@ -1743,7 +1746,7 @@ void pathSet()
     // maxCoin = goldMin_DP(grid, dp);
     // cout << maxCoin << endl;
 
-    // count_of_ways(7, 3);
+    count_of_ways(7, 3);
 
     // display(dp);
     // display2D(dp);
@@ -1762,12 +1765,12 @@ void set1()
 void solve()
 {
     // set1();
-    // pathSet();
+    pathSet();
     // set2();
     // stringSubstringSet();
     // targetType();
     // LIS_Type();
-    questionSet();
+    // questionSet();
 }
 
 int main()

@@ -268,6 +268,29 @@ public class l002_CutType{
 
 		return minPlaindromicCut(str,0,n-1,dp,isPalindrome);
     }
+
+    public static int minTriangulation(int[] arr,int si,int ei,int[][] dp){
+        if(ei - si < 2) return 0;
+        if(dp[si][ei]!=0) return dp[si][ei];
+
+        int minAns = (int)1e8;
+        for(int cut = si + 1; cut < ei; cut++){
+            int leftAns = minTriangulation(arr,si,cut,dp);
+            int rightAns = minTriangulation(arr,cut,ei,dp);
+
+            int myAns = leftAns + arr[si]*arr[cut]*arr[ei]  + rightAns;
+            minAns=Math.min(minAns,myAns); 
+        }
+
+        return dp[si][ei] = minAns;
+    }
+
+    
+    public int minScoreTriangulation(int[] A) {
+        int n = A.length;
+        int[][] dp = new int[n][n];
+        return minTriangulation(A,0,n-1,dp); 
+    }
     
 
     public static void minMaxEval(){

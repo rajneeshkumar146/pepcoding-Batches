@@ -323,4 +323,61 @@ public class questions {
 
     return count;
   }
+
+  //Leetcode 37
+  public void solveSudoku(char[][] board) {
+    ArrayList<Integer> locOfZeros=new ArrayList<>();
+for(int i=0;i<9;i++){
+for(int j=0;j<9;j++){
+    if(board[i][j] == '.'){
+        locOfZeros.add( i*9 + j );
+    }
+}
+}
+
+sudokuSolver_02(board,0,locOfZeros);
+}
+
+public boolean isValidToPlaceNumber(char[][] board,int r,int c,int num){
+
+//row
+for(int i=0;i<9;i++) if(board[r][i] -'0' == num) return false;
+
+//col
+for(int i=0;i<9;i++) if(board[i][c] - '0' == num) return false;
+
+//matri 3X3
+r = (r/3)*3;
+c = (c/3)*3;
+
+for(int i=0;i < 3; i++)
+for(int j=0; j < 3; j++)
+   if(board[r + i][c + j]-'0'==num) return false;
+
+return true;
+}
+
+
+public boolean sudokuSolver_02(char[][] board,int vidx,ArrayList<Integer> locOfZeros){
+if(vidx == locOfZeros.size()){
+// display2D(board);
+return true;
+}
+
+int twoDloc = locOfZeros.get(vidx);
+int r = twoDloc / 9;
+int c = twoDloc % 9;
+
+
+for(int num = 1 ; num <= 9; num++){
+if(isValidToPlaceNumber(board,r,c,num)){
+    board[r][c] = (char)(num+'0');
+    
+    if(sudokuSolver_02(board,vidx + 1,locOfZeros)) return true;
+    
+    board[r][c] = '.';
+}
+}
+return false;
+}
 }
