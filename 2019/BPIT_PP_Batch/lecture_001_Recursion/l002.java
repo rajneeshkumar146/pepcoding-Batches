@@ -367,18 +367,18 @@ public class l002{
         for(int i=idx;i<n*m;i++){
             int r = i / m;
             int c = i % m; 
-            if(!rowsQ[r] && !colsQ[c] && !diagQ[r+c] && !AdiagQ[r-c+m]){
-                rowsBQ ^=();
-                colsBQ ^=();
-                diagBQ ^=();
-                AdiagBQ ^=();
+            if((rowsBQ & (1 << r))==0 && (colsBQ & (1 << c))==0 && (diagBQ & (1 << (r+c)))==0 && (AdiagBQ & (1 << (r - c + m)))==0){
+                rowsBQ ^=(1 << r);
+                colsBQ ^=(1 << c);
+                diagBQ ^=(1 << (r + c));
+                AdiagBQ ^=(1 << (r - c + m));
                 
                 count+=NQueenCombination_usingBits(box,i+1,tnq-1,ans + "(" + r + ", " + c + ") ");
                 
-                rowsQ[r] = false;
-                colsQ[c] = false;
-                diagQ[r+c] = false;
-                AdiagQ[r-c+m] = false;
+                rowsBQ ^=(1 << r);
+                colsBQ ^=(1 << c);
+                diagBQ ^=(1 << (r + c));
+                AdiagBQ ^=(1 << (r - c + m));
             }
         }
 
@@ -407,9 +407,46 @@ public class l002{
          return count;
     }
 
+    public static int NQueenCombination_bestUsingBits(boolean[][] box,int row,int tnq,String ans){
+        if(tnq==0 || row==box.length){
+            if(tnq==0){
+                System.out.println(ans);
+                return 1;
+            }
+            return 0;
+        }
+
+        int m = box[0].length;
+        int count = 0; 
+        for(int i = 0; i < m; i++){
+            int r = row;
+            int c = i; 
+            if((colsBQ & (1 << c))==0 && (diagBQ & (1 << (r+c)))==0 && (AdiagBQ & (1 << (r - c + m)))==0){
+                colsBQ ^=(1 << c);
+                diagBQ ^=(1 << (r + c));
+                AdiagBQ ^=(1 << (r - c + m));
+                
+                count+=NQueenCombination_bestUsingBits(box,i+1,tnq-1,ans + "(" + r + ", " + c + ") ");
+                
+                colsBQ ^=(1 << c);
+                diagBQ ^=(1 << (r + c));
+                AdiagBQ ^=(1 << (r - c + m));
+            }
+        }
+        }
+        
+         return count;
+    }
+
     public static void Nqueen(){
         int n=4,m=4,tnq=4;
         boolean[][] box=new boolean[n][m];
+       
+        rowsQ  = new int[n];
+        colsQ  = new int[m];
+        diagQ  = new int[n + m - 1];
+        AdiagQ = new int[n + m - 1];
+                
         // System.out.println(NQueenCombination(box,0,tnq,""));
         System.out.println(NQueenCombination_best(box,0,tnq,""));      
     }
