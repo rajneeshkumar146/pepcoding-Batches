@@ -313,6 +313,78 @@ public class l002{
         return count;
     }
 
+    static boolean[] rowsQ;
+    static boolean[] colsQ;
+    static boolean[] diagQ;
+    static boolean[] AdiagQ;
+
+    public static int NQueenCombination_usingBooleanArray(int idx,int tnq,String ans){
+        if(tnq==0){
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count=0;
+        int n=box.length;
+        int m=box[0].length;
+
+        for(int i=idx;i<n*m;i++){
+            int r = i / m;
+            int c = i % m; 
+            if(!rowsQ[r] && !colsQ[c] && !diagQ[r+c] && !AdiagQ[r-c+m]){
+                rowsQ[r] = true;
+                colsQ[c] = true;
+                diagQ[r+c] = true;
+                AdiagQ[r-c+m] = true;
+                
+                count+=NQueenCombination_usingBooleanArray(box,i+1,tnq-1,ans + "(" + r + ", " + c + ") ");
+                
+                rowsQ[r] = false;
+                colsQ[c] = false;
+                diagQ[r+c] = false;
+                AdiagQ[r-c+m] = false;
+            }
+        }
+
+        return count;
+    }
+
+    static int rowsBQ=0;
+    static int colsBQ=0;
+    static int diagBQ=0;
+    static int AdiagBQ=0;
+
+    public static int NQueenCombination_usingBits(int idx,int tnq,String ans){
+        if(tnq==0){
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count=0;
+        int n=box.length;
+        int m=box[0].length;
+
+        for(int i=idx;i<n*m;i++){
+            int r = i / m;
+            int c = i % m; 
+            if(!rowsQ[r] && !colsQ[c] && !diagQ[r+c] && !AdiagQ[r-c+m]){
+                rowsBQ ^=();
+                colsBQ ^=();
+                diagBQ ^=();
+                AdiagBQ ^=();
+                
+                count+=NQueenCombination_usingBits(box,i+1,tnq-1,ans + "(" + r + ", " + c + ") ");
+                
+                rowsQ[r] = false;
+                colsQ[c] = false;
+                diagQ[r+c] = false;
+                AdiagQ[r-c+m] = false;
+            }
+        }
+
+        return count;
+    }
+
     public static int NQueenCombination_best(boolean[][] box,int row,int tnq,String ans){
         if(tnq==0 || row==box.length){
             if(tnq==0){
@@ -443,9 +515,7 @@ public class l002{
         System.out.println(cryptoSolver(str,0));
     }
 
-    //Leetcode 36 : Sudoku.============================================================================
-
-    
+    //Leetcode 37 : Sudoku.============================================================================
     public static void display(int[] board){
         for(int ele: board) System.out.print(ele);
         System.out.println();
@@ -519,32 +589,73 @@ public class l002{
         return count;
     }
 
-    public static void sudoku(){
+    static int[] rows;
+    static int[] cols;
+    static int[][] mat;
 
+    public static int sudokuSolver_BitMasking(int[][] board,int vidx,ArrayList<Integer> locOfZeros){
+        if(vidx == locOfZeros.size()){
+            display2D(board);
+            return 1;
+        }
+
+        int twoDloc = locOfZeros.get(vidx);
+        int r = twoDloc / 9;
+        int c = twoDloc % 9;
+        
+        int count=0;
+        
+        for(int num = 1 ; num <= 9; num++){    
+            int mask= (1 << num);
+            if((rows[r] & mask) == 0 && (cols[c] & mask) == 0 && (mat[r/3][c/3] & mask) == 0){
+                
+                rows[r] ^=mask;
+                cols[c] ^=mask;
+                mat[r/3][c/3] ^=mask;
+                board[r][c] = num;
+
+                count += sudokuSolver_02(board,vidx + 1,locOfZeros);
+
+                rows[r] ^=mask;
+                cols[c] ^=mask;
+                mat[r/3][c/3] ^=mask;
+                board[r][c] = 0;
+            }
+        }
+        return count;
+    }
+
+
+    public static void sudoku(){
         int[][] board = {{3, 0, 0, 6, 0, 0, 0, 9, 2},  
-                      {5, 2, 0, 0, 0, 0, 4, 0, 8},  
-                      {0, 8, 7, 0, 0, 0, 0, 3, 1},  
-                      {0, 0, 3, 0, 1, 0, 0, 8, 0},  
-                      {9, 0, 0, 8, 6, 3, 0, 0, 5},  
-                      {0, 5, 0, 0, 9, 0, 6, 0, 0},  
-                      {1, 3, 0, 0, 0, 0, 2, 5, 0},  
-                      {0, 0, 0, 0, 0, 0, 0, 7, 4},  
-                      {0, 0, 5, 2, 0, 6, 3, 0, 0}};  
+                         {5, 2, 0, 0, 0, 0, 4, 0, 8},  
+                         {0, 8, 7, 0, 0, 0, 0, 3, 1},  
+                         {0, 0, 3, 0, 1, 0, 0, 8, 0},  
+                         {9, 0, 0, 8, 6, 3, 0, 0, 5},  
+                         {0, 5, 0, 0, 9, 0, 6, 0, 0},  
+                         {1, 3, 0, 0, 0, 0, 2, 5, 0},  
+                         {0, 0, 0, 0, 0, 0, 0, 7, 4},  
+                         {0, 0, 5, 2, 0, 6, 3, 0, 0}};  
+        
+        rows = new int[9];
+        cols = new int[9];
+        mat = new int[3][3];
 
         ArrayList<Integer> locOfZeros=new ArrayList<>();
         for(int i=0;i<9;i++){
             for(int j=0;j<9;j++){
                 if(board[i][j] == 0){
                     locOfZeros.add( i*9 + j );
+                }else{
+                    int val = board[i][j];
+                    int mask= (1 << val);
+                    rows[i] ^=mask;
+                    cols[j] ^=mask;
+                    mat[i/3][j/3] ^=mask;
                 }
             }
         }
 
         System.out.println(sudokuSolver_02(board,0,locOfZeros));
     }
-
-
-
-
-
 }

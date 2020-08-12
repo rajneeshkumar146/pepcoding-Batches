@@ -380,4 +380,93 @@ if(isValidToPlaceNumber(board,r,c,num)){
 }
 return false;
 }
+
+ 
+    
+// leetcode 37
+    
+    static int[] rows;
+    static int[] cols;
+    static int[][] mat;
+    
+    public void solveSudoku(char[][] board) {
+                
+        rows = new int[9];
+        cols = new int[9];
+        mat = new int[3][3];
+
+        ArrayList<Integer> locOfZeros=new ArrayList<>();
+        for(int i=0;i<9;i++){
+            for(int j=0;j<9;j++){
+                if(board[i][j] == '.'){
+                    locOfZeros.add( i*9 + j );
+                }else{
+                    int val = board[i][j]-'0';
+                    int mask= (1 << val);
+                    rows[i] ^=mask;
+                    cols[j] ^=mask;
+                    mat[i/3][j/3] ^=mask;
+                }
+            }
+        }
+        
+        sudokuSolver_BitMasking(board,0,locOfZeros);
+        
+    }
+
+    public static boolean sudokuSolver_BitMasking(char[][] board,int vidx,ArrayList<Integer> locOfZeros){
+        if(vidx == locOfZeros.size()){
+            // display2D(board);
+            return true;
+        }
+
+        int twoDloc = locOfZeros.get(vidx);
+        int r = twoDloc / 9;
+        int c = twoDloc % 9;
+        
+        for(int num = 1 ; num <= 9; num++){    
+            int mask= (1 << num);
+            if((rows[r] & mask) == 0 && (cols[c] & mask) == 0 && (mat[r/3][c/3] & mask) == 0){
+                
+                rows[r] ^=mask;
+                cols[c] ^=mask;
+                mat[r/3][c/3] ^=mask;
+                board[r][c] = (char)(num + '0');
+
+                if(sudokuSolver_BitMasking(board,vidx + 1,locOfZeros)) return true;
+
+                rows[r] ^=mask;
+                cols[c] ^=mask;
+                mat[r/3][c/3] ^=mask;
+                board[r][c] = '.';
+            }
+        }
+        return false;
+    }
+
+    public boolean isValidSudoku(char[][] board) {
+      int[] rows = new int[9];
+      int[] cols = new int[9];
+      int[][] mat = new int[3][3];
+
+      for(int i=0;i<9;i++){
+          for(int j=0;j<9;j++){
+              if(board[i][j] != '.'){
+                  int val = board[i][j]-'0';
+                  int mask= (1 << val);
+                  if((rows[i] & mask) == 0 && (cols[j] & mask) == 0 && (mat[i/3][j/3] & mask) == 0){
+                      rows[i] ^=mask;
+                      cols[j] ^=mask;
+                      mat[i/3][j/3] ^=mask;
+                  }else return false;
+                }
+          }
+      }
+
+      return true;
+
+    }
+
+
+
 }
