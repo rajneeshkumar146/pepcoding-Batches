@@ -32,10 +32,10 @@ public class l002{
         // System.out.println(twoDNqueenFloorWise(box,0,tnq,""));
 
 
-        // Nqueen();
+        Nqueen();
         // wordBreak();
         // isCryptoValid();
-        sudoku();
+        // sudoku();
     }
 
     public static int coinChangeInfnitePermuatation(int[] arr,int idx,int tar,String ans){
@@ -318,15 +318,14 @@ public class l002{
     static boolean[] diagQ;
     static boolean[] AdiagQ;
 
-    public static int NQueenCombination_usingBooleanArray(int idx,int tnq,String ans){
+    public static int NQueenCombination_usingBooleanArray(int n,int idx,int tnq,String ans){
         if(tnq==0){
             System.out.println(ans);
             return 1;
         }
 
         int count=0;
-        int n=box.length;
-        int m=box[0].length;
+        int m=n;
 
         for(int i=idx;i<n*m;i++){
             int r = i / m;
@@ -337,7 +336,7 @@ public class l002{
                 diagQ[r+c] = true;
                 AdiagQ[r-c+m] = true;
                 
-                count+=NQueenCombination_usingBooleanArray(box,i+1,tnq-1,ans + "(" + r + ", " + c + ") ");
+                count+=NQueenCombination_usingBooleanArray(n,i+1,tnq-1,ans + "(" + r + ", " + c + ") ");
                 
                 rowsQ[r] = false;
                 colsQ[c] = false;
@@ -349,20 +348,19 @@ public class l002{
         return count;
     }
 
-    static int rowsBQ=0;
-    static int colsBQ=0;
-    static int diagBQ=0;
-    static int AdiagBQ=0;
+    static int rowsBQ = 0;
+    static int colsBQ = 0;
+    static int diagBQ = 0;
+    static int AdiagBQ = 0;
 
-    public static int NQueenCombination_usingBits(int idx,int tnq,String ans){
+    public static int NQueenCombination_usingBits(int n,int idx,int tnq,String ans){
         if(tnq==0){
             System.out.println(ans);
             return 1;
         }
 
         int count=0;
-        int n=box.length;
-        int m=box[0].length;
+        int m=n;
 
         for(int i=idx;i<n*m;i++){
             int r = i / m;
@@ -373,7 +371,7 @@ public class l002{
                 diagBQ ^=(1 << (r + c));
                 AdiagBQ ^=(1 << (r - c + m));
                 
-                count+=NQueenCombination_usingBits(box,i+1,tnq-1,ans + "(" + r + ", " + c + ") ");
+                count+=NQueenCombination_usingBits(n,i+1,tnq-1,ans + "(" + r + ", " + c + ") ");
                 
                 rowsBQ ^=(1 << r);
                 colsBQ ^=(1 << c);
@@ -426,15 +424,13 @@ public class l002{
                 diagBQ ^=(1 << (r + c));
                 AdiagBQ ^=(1 << (r - c + m));
                 
-                count+=NQueenCombination_bestUsingBits(box,i+1,tnq-1,ans + "(" + r + ", " + c + ") ");
+                count+=NQueenCombination_bestUsingBits(box,row + 1,tnq-1,ans + "(" + r + ", " + c + ") ");
                 
                 colsBQ ^=(1 << c);
                 diagBQ ^=(1 << (r + c));
                 AdiagBQ ^=(1 << (r - c + m));
             }
         }
-        }
-        
          return count;
     }
 
@@ -442,13 +438,19 @@ public class l002{
         int n=4,m=4,tnq=4;
         boolean[][] box=new boolean[n][m];
        
-        rowsQ  = new int[n];
-        colsQ  = new int[m];
-        diagQ  = new int[n + m - 1];
-        AdiagQ = new int[n + m - 1];
+        rowsQ  = new boolean[n];
+        colsQ  = new boolean[m];
+        diagQ  = new boolean[n + m - 1];
+        AdiagQ = new boolean[n + m - 1];
                 
         // System.out.println(NQueenCombination(box,0,tnq,""));
-        System.out.println(NQueenCombination_best(box,0,tnq,""));      
+        System.out.println(NQueenCombination_best(box,0,tnq,""));   
+        
+        
+        // System.out.println(NQueenCombination_bestUsingBits(box,0,tnq,""));   
+        System.out.println(NQueenCombination_usingBits(n,0,tnq,""));   
+        
+           
     }
 
     //WordBreak.=====================================================================
@@ -695,4 +697,6 @@ public class l002{
 
         System.out.println(sudokuSolver_02(board,0,locOfZeros));
     }
+
+
 }
