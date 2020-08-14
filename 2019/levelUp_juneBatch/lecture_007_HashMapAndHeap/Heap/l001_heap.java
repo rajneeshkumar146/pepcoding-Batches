@@ -108,9 +108,13 @@ public class l001_heap{
 
     public static void solve(){
         int[] arr = { 10, 20, 30, -2, -3, -4, 5, 6, 7, 8, 9, 22, 11, 13 };
-        Heap pq=new Heap(arr,false);
+        Heap pq=new Heap(arr,true);
 
         while(pq.size()!=0){
+            
+            for(int ele: pq.arr) System.out.print(ele + " ");
+            System.out.println();
+
             System.out.print(pq.pop() + " ");
         }
     }
