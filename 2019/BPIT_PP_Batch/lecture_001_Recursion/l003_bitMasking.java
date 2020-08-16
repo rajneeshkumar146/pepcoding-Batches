@@ -163,8 +163,9 @@ public class l003_bitmasking{
                 }
             }
             res.add(ans);
-
         }
+
+        return res;
     
    }
 }
