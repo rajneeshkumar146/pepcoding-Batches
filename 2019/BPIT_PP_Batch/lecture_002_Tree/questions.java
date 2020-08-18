@@ -61,5 +61,75 @@ public class questions{
         return NTNRes;
     }
 
+    // Leetcode 863
+    public void kDown(TreeNode node,TreeNode block,int level,List<Integer> ans){
+        if(node==null || node == block || level < 0) return;
+
+        if(level == 0 ) {
+            ans.add(node.val);
+            return;
+        }
+
+        kDown(node.left,block,level-1,ans);
+        kDown(node.right,block,level-1,ans);
+    }
+
+
+    public int kFar(TreeNode node, TreeNode target, int K,List<Integer> ans) {
+        if(node == null) return -1;
+
+        if(node.val == target.val){
+            kDown(node,null,K,ans);
+            return 1;
+        }
+
+
+        int ld = kFar(node.left, target, K, ans);
+        if(ld != -1){
+            kDown(node,node.left,K - ld, ans);
+            return ld + 1;
+        }
+
+        
+        int rd = kFar(node.right, target, K, ans);
+        if(rd != -1){
+            kDown(node,node.right,K - rd, ans);
+            return rd + 1;
+        }
+
+        return -1;
+    }
+
+    public List<Integer> distanceK(TreeNode node, TreeNode target, int K) {
+        List<Integer> ans=new ArrayList<>();
+        kFar(node,target,K,ans);
+        return ans;
+    }
+
+    //Leetcode 236
+    TreeNode LCANode = null;
+    
+    public boolean lowestCommonAncestor_(TreeNode root, TreeNode p, TreeNode q) {
+        if(root==null) return false;
+
+        boolean selfDone = false;
+        if(root == p || root == q) selfDone = true;
+
+        boolean leftDone = lowestCommonAncestor_(root.left, p, q);
+        if(LCANode!=null) return true;
+        
+        boolean rightDone = lowestCommonAncestor_(root.right, p, q);
+        if(LCANode!=null) return true;
+
+        if((leftDone && rightDone) ||(leftDone && selfDone) || (rightDone && selfDone)) LCANode = root;
+        
+        return selfDone || leftDone || rightDone;
+    }
+    
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        lowestCommonAncestor_(root,p,q);
+        return LCANode;
+    }
+
     
 }

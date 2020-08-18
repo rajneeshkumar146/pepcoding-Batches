@@ -144,14 +144,153 @@ public class l001{
         return LeafToLeafAns;
     } 
 
+    public static int width(Node node,int level,int[] minMax){
+        if(node==null) return;
+
+        minMax[0] = Math.min(minMax[0],level);
+        minMax[1] = Math.max(minMax[1],level);
+
+        width(node.left, level - 1, minMax);
+        width(node.right, level + 1, minMax);
+    }
+
+    public static void kdown(Node node,Node block,int k){
+        if(node == null || node == block || k < 0) return;
+
+        if(k == 0){
+            System.out.print(node.data+" ")
+            return;
+        }
+
+        kdown(node.left,block, k - 1);
+        kdown(node.right,block, k - 1);
+    }
+
+    public static boolean rootToNodePath(Node node,int data,ArrayList<Node> path){
+
+        if(node==null) return false;
+
+        if(node.data == data){
+            path.add(node);
+            return true;
+        }
+
+        boolean res = false;
+        res = res || rootToNodePath(node.left,data,path);
+        res = res || rootToNodePath(node.right,data,path);
+
+        if(res) {
+            path.add(node);
+            return true;
+        }
+
+        return false;
+    }
+
+    public static void kFar(Node node,int tar,int k){
+        ArrayList<Node> path = new ArrayList<>();
+        rootToNodePath(node,tar,path);
+
+        Node prev = null;
+        for(int i=0;i<path.size();i++){
+            kdown(path.get(i),prev,k-i);
+            prev= path.get(i);
+        }
+    }
+
+    public static int kFar_better(Node node,int data,int k){
+        if(node==null) return -1;
+
+        if(node.data == data){
+            kdown(node,null,k);
+            return 1;
+        }
+
+        int ld = kFar_better(node.left, data, k);
+        if(ld != -1){
+            kdown(node,node.left, k - ld);
+            return ld + 1;
+        }
+
+        int rd = kFar_better(node.right, data, k);
+        if(rd != -1){
+            kdown(node,node.right, k - rd);
+            return rd + 1;
+        }
+
+        return -1;
+    }
+
+    // https://www.geeksforgeeks.org/burn-the-binary-tree-starting-from-the-target-node/
+
+    public static void BurningNodes(Node node,int time,ArrayList<ArrayList<Integer>> ans){
+        if(node == null) return;
+
+        if(time == ans.size()) ans.add(new ArrayList<>());
+        ans.get(time).add(node.data);
+
+        BurningNodes(node.left, time + 1, ans);
+        BurningNodes(node.right, time + 1, ans);
+    }
+
+    public static int burningOfTree_(Node node,int data,ArrayList<ArrayList<Integer>> ans)
+    {
+        if(node==null) return -1;
+
+        if(node.data == data){
+            BurningNodes(node,0,ans);
+            return 1;
+        }
+
+        int ld = burningOfTree_(node.left, data, ans);
+        if(ld != -1){
+        
+            if(ld == ans.size()) ans.add(new ArrayList<>());    
+            ans.get(ld).add(node.val);
+            BurningNodes(node.right,ld + 1,ans);
+            return ld + 1;
+        
+        }
+
+        int rd = burningOfTree_(node.right, data, ans);
+        if(rd != -1){
+
+            if(rd == ans.size()) ans.add(new ArrayList<>());    
+            ans.get(rd).add(node.val);
+            BurningNodes(node.left,rd + 1,ans);
+            return rd + 1;
+        
+        }
+
+        return -1;
+    }
+
+    public static Node lowestCommonAncestor(Node root,int p, int q) {
+
+        ArrayList<Integer> path1 = new ArrayList<>();
+        ArrayList<Integer> path2 = new ArrayList<>();
+        
+        rootToNodePath(root,p,path1);
+        rootToNodePath(root,q,path2);
+
+        int i = path1.size()-1;
+        int j = path2.size()-1;
+
+        Node LCA = null;
+
+        while(i >= 0 && j >= 0){
+            if(path1.get(i)!=path2.get(j)) break;
+            
+            LCA = path1.get(i);
+            i--;
+            j--;
+        }
+
+        return LCA;
+    }
 
     
-
-
-
-    
-
-
+   
 
 
     public static void solve(){
