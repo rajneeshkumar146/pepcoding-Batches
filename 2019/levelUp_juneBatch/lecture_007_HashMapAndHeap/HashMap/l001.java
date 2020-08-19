@@ -1,6 +1,7 @@
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class l001{
 
@@ -153,6 +154,97 @@ public class l001{
         }
 
         return ans;
+    }
+
+    //Leetcode 128
+    public int longestConsecutive(int[] nums) {
+        HashSet<Integer> map=new HashSet<>();
+        for(int ele: nums) map.add(ele);
+
+        int len = 0;
+        for(int ele: nums){
+            if(!map.contains(ele)) continue;
+        
+            map.remove(ele);
+            int prev = ele - 1;
+            int next = ele + 1;
+    
+            while(map.contains(prev)) {
+                map.remove(prev);
+                prev--;
+            }
+    
+            while(map.contains(next)) {
+                map.remove(next);
+                next++;
+            }
+    
+            len = Math.max(len, next - prev - 1);
+        }
+        return len;
+    }
+
+    //Leetcode 49
+    public List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<String,ArrayList<String>> map = new HashMap<>();
+        
+        int[] freq = new int[26];
+        for(String s: strs){
+            
+            Arrays.fill(freq,0);
+            for(int i=0;i<s.length();i++) freq[s.charAt(i)-'a']++;
+
+            StringBuilder sb=new StringBuilder();
+            for(int i=0;i<26;i++){
+                if(freq[i] > 0){
+                    sb.append((char)(i+'a'));
+                    sb.append(freq[i]);
+                }
+            }
+
+            String RLES = sb.toString();
+            map.putIfAbsent(RLES,new ArrayList<>());
+            map.get(RLES).add(s);
+        }
+
+        List<List<String>> ans=new ArrayList<>();
+        for(String key : map.keySet()){
+            ans.add(map.get(key));
+        }
+
+        return ans;
+    }
+
+    //Leetcode 295.=============================================
+
+    class MedianFinder {
+         
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a,b)->{
+            return b - a;
+        });
+        
+        public MedianFinder() {
+             
+        }
+        
+        public void addNum(int num) {
+            if( maxHeap.size() == 0 || num <= maxHeap.peek())  maxHeap.add(num);
+            else minHeap.add(num);
+
+            if(maxHeap.size() > minHeap.size() + 1){
+                minHeap.add(maxHeap.peek());
+                maxHeap.remove();
+            }else if(maxHeap.size() < minHeap.size()){
+                maxHeap.add(minHeap.peek());
+                minHeap.remove();
+            }  
+        }
+        
+        public double findMedian() {
+            if(maxHeap.size() == minHeap.size() && maxHeap.size() != 0) return (maxHeap.peek() + minHeap.peek()) / 2;
+            else if(maxHeap() != minHeap.size()) return maxHeap.peek();
+        }
     }
     
 
