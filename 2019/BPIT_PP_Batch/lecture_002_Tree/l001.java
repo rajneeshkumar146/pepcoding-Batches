@@ -606,6 +606,32 @@ public class l001{
         }
     }
 
+    static Node head = null, prev = null;
+    public static void bTreeToClist_(Node root){
+        if(root==null) return;
+
+
+        bTreeToClist_(root.left);
+        
+        if(head == null) head = root;
+        else{
+            root.left = prev;
+            prev.right = root;
+        }
+
+        prev = root;
+        bTreeToClist_(root.right);
+    }
+
+    public static Node bTreeToClist(Node root){
+
+        bTreeToClist_(root);
+        prev.right = head;
+        head.left = prev;
+        return head;
+    }
+    
+
 
 
 

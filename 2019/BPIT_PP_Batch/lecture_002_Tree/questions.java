@@ -1,3 +1,4 @@
+import java.util.Stack;
 public class questions{
 
     public class TreeNode {
@@ -129,6 +130,78 @@ public class questions{
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         lowestCommonAncestor_(root,p,q);
         return LCANode;
+    }
+
+    //Leetcode 235.
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        
+        TreeNode curr = root;
+        while(curr != null){
+
+            if(p.val < curr.val && q.val < curr.val) curr = curr.left;
+            else if (p.val > curr.val && q.val > curr.val) curr = curr.right;
+            else return curr;
+        }
+
+        return null;
+    }
+
+    // Leetcode 173
+    class BSTIterator {
+
+        Stack<TreeNode> st=new Stack<>();
+
+        public BSTIterator(TreeNode root) {
+            pushAllNextElements(root);
+        }
+
+        public void pushAllNextElements(TreeNode node){
+            while(node!=null){
+                st.push(node);
+                node = node.left;
+            }
+        }
+        
+        public int next() {
+            TreeNode rv = st.pop();
+            pushAllNextElements(rv.right);
+
+            return rv.val;
+        }
+        
+        public boolean hasNext() {
+            return st.size() != 0;
+        }
+    }
+
+    TreeNode A = null, B =null;
+    TreeNode prev = null;
+    public boolean recoverTree_(TreeNode root) {
+        if(root == null) return false;
+
+        if(recoverTree_(root.left)) return true;
+        if(prev != null && prev.val > root.val){
+            B = root;
+            if(A == null) A = prev;
+            else return true;
+        }
+        
+        prev = root;
+        if(recoverTree_(root.right)) return true;
+        
+        return false;
+    }
+
+    
+    public void recoverTree(TreeNode root) {
+
+        recoverTree_(root);
+        if(A!=null){
+            int temp = A.val;
+            A.val = B.val;
+            B.val = temp;
+        }
+    
     }
 
     
