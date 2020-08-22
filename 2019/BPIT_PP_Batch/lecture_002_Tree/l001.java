@@ -631,11 +631,6 @@ public class l001{
         return head;
     }
     
-
-
-
-
-
     public static void BFS(Node node){
         // BFS_01(node);
         // BFS_02(node);
@@ -645,7 +640,36 @@ public class l001{
 
         BottomView_RightPrefer(node);
         BottomView_LeftPrefer(node);
+    }
 
+    public static class allSolutionPair{
+        int height = 0;
+        int size = 0;
+        boolean find = false;
+
+        int ceil  = (int)1e8;
+        int floor = -(int)1e8;
+
+        Node pred=null, Succ = null, Prev = null;
+    }
+
+    public static void allSolutions(Node node,int level,int data,allSolutionPair pair){
+        if(node == null) return;
+
+        pair.height = Math.max(pair.height,level);
+        pair.size++; 
+        pair.find = pair.find || node.data == data;
+
+        if(node.data > data) pair.ceil = Math.min(pair.ceil, node.data);
+
+        if(node.data < data) pair.floor = Math.max(pair.floor, node.data);
+        
+        if(node.data == data) pair.pred = prev;
+        if(pair.prev!=null && pair.prev.data == data) pair.succ = node;
+        pair.prev = node;
+
+        allSolutions(node.left,level+1,data,pair);
+        allSolutions(node.right,level+1,data,pair);
     }
 
     public static void solve(){

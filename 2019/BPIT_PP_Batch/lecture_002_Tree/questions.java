@@ -203,6 +203,79 @@ public class questions{
         }
     
     }
+    
+    //Leetcode 510.
+    /*
+    // Definition for a Node.
+    class Node {
+       public int val;
+       public Node left;
+       public Node right;
+       public Node parent;
+    };
+    */
+
+    public Node inorderSuccessor(Node node) {
+        Node curr = node;
+        Node succ = null;
+        if(curr.right!=null){
+            succ = curr.right;
+            while(succ.left != null) succ=succ.left;
+            
+            return succ;
+        }
+        
+        Node prev = null;
+        while(curr.parent!=null){
+            prev = curr;
+            curr = curr.parent;
+            if(curr.left == prev) return curr;
+        }
+        
+        return succ;
+    }
+
+    
+    //Leetcode 230
+    int KthSmallestAns = -1;
+    int Kth=0;
+    public boolean kthSmallest_(TreeNode root) {
+        if(root == null) return false;
+
+        if(kthSmallest_(root.left)) return true;
+
+        if(--kth == 0){
+            KthSmallestAns = root.val;
+            return true;
+        }
+
+        if(kthSmallest_(root.right)) return true;
+        return false;
+    }
+    
+    public int kthSmallest(TreeNode root, int k) {
+        Kth = k;
+        kthSmallest_(root);
+        return KthSmallestAns;
+    }
+
+    public void pushAllNext(Stack<TreeNode> st,TreeNode node){
+        while(node!=null){
+            st.push(node);
+            node = node.left;
+        }
+    }
+
+    public int kthSmallest(TreeNode root, int k) {
+        Stack<TreeNode> st = new Stack<>();
+        pushAllNext(st,root);
+
+        while(--k != 0){
+            TreeNode rNode = st.pop();
+            pushAllNext(st,rNode.right);
+        }
+        return st.peek().val;
+    }
 
     
 }

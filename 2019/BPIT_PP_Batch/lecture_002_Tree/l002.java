@@ -101,11 +101,72 @@ public class l002{
         return Math.max(lh,rh)+1;
     }
 
+    //for you: popstOrder, LevelOrder.
+
+    public static void PredSucc(Node node,int data){
+
+        Node curr = node;
+        Node pred = null, Succ = null;
+
+        while(curr!=null){
+
+            if(curr.data == data){
+
+                if(curr.left != null){
+                    pred = curr.left;
+                    while(pred.right != null) pred = pred.right;
+                }
+
+                if(curr.right != null){
+                    succ = curr.right;
+                    while(succ.left != null) succ = succ.left;
+                }
+
+
+                break;
+            }else if(curr.data < data){
+                pred = curr;
+                curr= curr.right;
+            }else{
+                succ = curr;
+                curr= curr.left;
+            }
+        }
+    }
+
+    // In BST, ceil and floor are the pred and Succ respectively..
+
     public static void BSTUsingPreOrder(){
         int[] arr = {7,3,1,0,2,6,4,5,12,9,8,11,10,13,15,14};
         // display(BSTUsingPreOrder(arr,-(int)1e8,(int)1e8));
         System.out.println(BSTPreOrderHeight(arr,-(int)1e8,(int)1e8));
     }
+
+    public static Node addNode(Node node,int data){
+        if(node == null) return new Node(data);
+        if(data < node.data) node.left = addNode(node.left,data);
+        else node.right = addNode(node.right,data);
+
+        return node;
+    }
+
+    public static Node removeData(Node node,int data){
+        if(node == null) return null;
+
+        if(data < node.data) node.left = removeData(node.left,data);
+        else if(data < node.data) node.right = removeData(node.right,data);
+        else{
+            if(node.left == null || node.right == null) return  node.left != null? node.left: node.right;
+
+            int minEle = minimum(node.right);
+            node.data = minEle;
+
+            node.right = removeData(node.right,minEle);
+        }
+
+        return node;
+    }
+
 
 
 
