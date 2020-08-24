@@ -71,7 +71,7 @@ public class l003_AVL{
 
 
 
-    public static Node getRotation(Node node){
+    public static Node getRotation(Node node){  // O(1)
         updateHeightBalance(node);
         if(node.bal == 2){  // ll,lr
             if(node.left.bal == 1){  // ll

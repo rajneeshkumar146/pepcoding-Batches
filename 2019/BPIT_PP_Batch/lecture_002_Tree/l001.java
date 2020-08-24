@@ -672,6 +672,105 @@ public class l001{
         allSolutions(node.right,level+1,data,pair);
     }
 
+    //Traversal.=============================================================
+
+    public static class tPair{
+        Node node = null;
+        boolean selfDone = false;
+        boolean leftDone = false;
+        boolean rightDone = false;
+        
+        tpair(Node node,boolean selfDone,boolean leftDone, boolean rightDone){
+            this.node = node;
+            this.selfDone = selfDone;
+            this.leftDone = leftDone;
+            this.rightDone = rightDone;
+        }
+
+
+        // char state = '';
+        // // state: a = selfDone, b = leftDone, c = rightDone.
+        // tpair(Node node,char state){
+        //     this.node = node;
+        //     this.state = state;
+        // }
+    }
+
+    public static void traversal(Node node){
+        Stack<tPair> st = new Stack<>();
+        st.push(tPair(node,false,false,false));
+        while(st.size()!=0){
+            tapir rvtx = st.peek();
+
+            if(!rvtx.leftDone){
+                rvtx.leftDone = true;
+                if(rvtx.node.left != null) st.push(new tPair(rvtx.node.left,false,false,false));
+            }else if(!rvtx.rightDone){
+                rvtx.rightDone = true;
+                if(rvtx.node.right != null) st.push(new tPair(rvtx.node.right,false,false,false));
+            }else if(!rvtx.selfDone){
+                rvtx.selfDone = true;
+                System.out.println(rvtx.node.data + " ");
+            }else{
+                st.pop();
+            }
+        }
+    }
+
+    public static void rightMost(Node node,Node curr){
+        while(node.right!=null && node.right != curr) node=node.right;
+        return node;
+    }
+
+    public static void morrisINTraversal(Node node){
+
+        Node curr = node;
+        while(curr!=null){
+            Node next = curr.left;
+            if(next == null){
+                System.out.print(curr.data+" ");
+                curr = curr.right;
+            }else{
+                Node rightMost = rightMost(next,curr);
+                if(rightMost.right == null){
+                    rightMost.right = curr;
+                    curr = curr.left;
+                }else{
+                    System.out.print(curr.data+" ");
+                    rightMost.right = null;
+                    curr = curr.right;
+                }
+            }
+        }
+    }
+
+    public static void morrisPreTraversal(Node node){
+
+        Node curr = node;
+        while(curr!=null){
+            Node next = curr.left;
+            if(next == null){
+                System.out.print(curr.data+" ");
+                curr = curr.right;
+            }else{
+
+                Node rightMost = rightMost(next,curr);
+                if(rightMost.right == null){
+                    System.out.print(curr.data+" ");
+                    rightMost.right = curr;
+                    curr = curr.left;
+                }else{
+                    rightMost.right = null;
+                    curr = curr.right;
+                }
+            }
+        }
+    }
+
+
+
+
+
     public static void solve(){
         int[] arr={10,20,40,-1,-1,50,80,-1,-1,90,-1,-1,30,60,100,-1,-1,-1,70,110,-1,-1,120,-1,-1};
         Node root = constructTree(arr);

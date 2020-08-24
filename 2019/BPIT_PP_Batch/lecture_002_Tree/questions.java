@@ -318,5 +318,49 @@ public class questions{
     
             return buildTree(postorder,0,n-1,inorder,0,n-1);
     }
+
+    //Leetcode 979
+    
+    int totalCoins = 0;
+    public int distributeCoins_(TreeNode root) {
+        if(root = null) return 0;
+        int leftDefeGain = distributeCoins_(root.left);
+        int rightDefeGain = distributeCoins_(root.right);
+
+        totalCoins += Math.abs(leftDefeGain) + Math.abs(rightDefeGain);
+
+        return root.val - 1 + leftDefeGain + rightDefeGain;
+    }
+    
+    public int distributeCoins(TreeNode root) {
+        if(distributeCoins_(root) != 0) return -1;
+        return totalCoins;
+    }
+
+    //Leetcode 968
+    // -1 : camera Required, 0 : camera , 1 : child already covered
+    int cameras = 0;
+    public int minCameraCover_(TreeNode root) {
+        if(root == null) return 1;
+        int lans = minCameraCover_(root.left);
+        int rans = minCameraCover_(root.right);
+
+        if(lans == -1 || rans == -1){
+            cameras++;
+            return 0;
+        }
+
+        if(land == 0 || rans == 0) return 1;
+
+        return -1;
+    }
+
+    public int minCameraCover(TreeNode root) {
+        if(root == null) return 0;
+
+        if(minCameraCover_(root) == -1) cameras++;
+        return cameras;
+    }
+
     
 }
