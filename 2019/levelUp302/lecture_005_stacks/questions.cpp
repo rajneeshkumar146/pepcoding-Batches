@@ -13,7 +13,7 @@ vector<int> ngor(vector<int> &arr)
 
     for (int i = 0; i < arr.size(); i++)
     {
-        while (st.size() != 0 && arr[st.top()] < arr[i]) // for smaller replace to '<' to '>'
+        while (st.size() != 0 && arr[st.top()] < arr[i]) // for smaller replace '<' to '>'
         {
             ans[st.top()] = i;
             st.pop();

@@ -32,10 +32,11 @@ public class l002{
         // System.out.println(twoDNqueenFloorWise(box,0,tnq,""));
 
 
-        Nqueen();
+        // Nqueen();
         // wordBreak();
         // isCryptoValid();
         // sudoku();
+        crossWord();
     }
 
     public static int coinChangeInfnitePermuatation(int[] arr,int idx,int tar,String ans){
@@ -709,12 +710,19 @@ public class l002{
     }
 
     public static boolean canPlaceH(char[][] board,int r,int c,String word){
+        
+        
+        
+        for(int i=0;i<word.length();i++){
+            if(c + i >= board[0].length || (board[r][c+i]!='-' && board[r][c+i] != word.charAt(i))) return false;
+        }
 
+        return true;
     }
 
     public static boolean[] PlaceH(char[][] board,int r,int c,String word){
-        boolean[] loc=new boolean[word.length];
-        for(int i=0;i<word.length;i++){
+        boolean[] loc=new boolean[word.length()];
+        for(int i=0;i<word.length();i++){
             if(board[r][c+i]=='-'){
                 loc[i]=true;
                 board[r][c+i]=word.charAt(i);
@@ -733,12 +741,16 @@ public class l002{
     }
 
     public static boolean canPlaceV(char[][] board,int r,int c,String word){
+        for(int i=0;i<word.length();i++){
+            if(r + i >= board.length || (board[r+i][c]!='-' && board[r+i][c] != word.charAt(i))) return false;
+        }
 
+        return true;
     }
 
     public static boolean[] PlaceV(char[][] board,int r,int c,String word){
-        boolean[] loc=new boolean[word.length];
-        for(int i=0;i<word.length;i++){
+        boolean[] loc=new boolean[word.length()];
+        for(int i=0;i<word.length();i++){
             if(board[r+i][c]=='-'){
                 loc[i]=true;
                 board[r+i][c]=word.charAt(i);
