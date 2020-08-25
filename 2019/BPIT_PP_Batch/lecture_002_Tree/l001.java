@@ -767,6 +767,25 @@ public class l001{
         }
     }
 
+    static Node LeafHead = null, LeafPrev = null;
+    public static void connectLeafs(Node node){
+        if(node == null) return;
+
+        connectLeafs(node.left);
+
+        if(node.left == null && node.right == null){
+            if(LeafHead == null) LeafHead = node;
+            else{
+                LeafPrev.right = node;
+                node.left = LeafPrev;
+            }
+
+            LeafPrev = node;
+        }
+
+        connectLeafs(node.right);
+    }
+
 
 
 
