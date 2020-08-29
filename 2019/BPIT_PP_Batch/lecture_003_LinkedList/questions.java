@@ -279,5 +279,113 @@ public class questions{
 
         return mergeKLists_(lists,0,lists.length-1);
     }
+
+
+    //Leetcode 141
+    public boolean hasCycle(ListNode head) {
+        if(head == null) return false;
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while(fast!=null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast) return  true;
+        }
+
+        return false;
+    }
+
+    public ListNode detectCycle(ListNode head) {
+        if (head == null || head == null)
+            return null;
+
+        
+        ListNode slow = head;
+        ListNode fast = head;
+    
+        while(fast!=null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast) break;
+        }
+
+        if(slow!=fast) return null;
+
+        slow = head;
+        while(slow!=fast){
+            slow = slow.next;
+            fast = fast.next;;
+        }
+
+        return slow;
+    }
+
+    //Leetcode 160
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if (head == null || head == null)
+            return null;
+        
+        ListNode tail = headA;
+        while(tail.next != null){
+            tail = tail.next;
+        }
+
+        tail.next = headB;
+        ListNode ans= detectCycle(headA);
+        tail.next = null;
+
+        return ans;
+    }
+}
+
+//Leetcode 92
+
+ListNode th=null,tt = null;
+
+public void addFirst(ListNode node){
+    if(th==null){
+        th = node;
+        tt = node;
+    }else{
+        node.next = th;
+        th = node;
+    }
+}
+
+public ListNode reverseBetween(ListNode head, int n, int m) {
+    if (head == null || head.next == null || n == m)
+        return head;
+    
+    int i = 1;
+    ListNode curr = head, prev = null;
+    while(curr!=null){
+        while(i>=n && i<=m){
+            ListNode next = curr.next;
+            curr.next = null;
+            addFirst(curr);
+            curr = next;
+            i++;
+        }
+
+        if(i>m){
+            if(prev!=null){
+                prev.next = th;
+                tt.next = curr;
+            }else{
+                head = th;
+                tt.next = curr;
+            }
+            
+            break;
+        }
+
+        prev = curr;
+        curr = curr.next;
+        i++;
+    }
+
+    return head;
 }
 
