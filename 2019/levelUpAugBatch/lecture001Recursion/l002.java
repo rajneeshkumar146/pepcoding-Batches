@@ -226,7 +226,7 @@ public class l002{
       return count;
     }
 
-    public static int coinChangePermutationSingleSubSeq_01(int[] coins,int idx,int tar,String ans){
+    public static int coinChangePermutationSingleSubSeq_01(int[] coins,int idx,int tar,boolean[] vis,String ans){
       if(tar==0 || idx >= coins.length){
         if(tar==0){
           System.out.println(ans);
@@ -236,9 +236,11 @@ public class l002{
       }
        
       int count = 0;
-      if(tar - coins[idx]>=0)
+      if(!vis[idx] && tar - coins[idx]>=0){
+        vis[idx] = true;
         count += coinChangePermutationSingleSubSeq_01(coins,idx+1,tar-coins[idx],ans  + coins[idx]);
-      
+        vis[idx] = false;
+      }
       count += coinChangePermutationSingleSubSeq_01(coins,idx+1,tar,ans);
   
       return count;
@@ -253,14 +255,15 @@ public class l002{
       int tar = 10;
       boolean[] vis = new boolean[4];
       // System.out.println(coinChangePermutation_01(coins,tar,""));
-      // System.out.println(coinChangeCombination_01(coins,0,tar,""));
-      System.out.println(coinChangeCombinationSingle_01(coins,0,tar,""));
+      System.out.println(coinChangeCombination_01(coins,0,tar,""));
+      // System.out.println(coinChangeCombinationSingle_01(coins,0,tar,""));
       // System.out.println(coinChangePermutationSingle_01(coins,tar,vis,""));
      
 
       System.out.println("=========================");
 
-      System.out.println(coinChangeCombinationSingleSubseq_01(coins,0,tar,""));
+      // System.out.println(coinChangeCombinationSingleSubseq_01(coins,0,tar,""));
+      System.out.println(coinChangeCombinationSubseq_01(coins,0,tar,""));
     }
     
     public static void pathSet(){
