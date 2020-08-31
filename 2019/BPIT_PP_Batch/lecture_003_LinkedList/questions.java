@@ -486,7 +486,11 @@ class LRUCache {
             map.put(key,node);
             addLast(node);
 
-            if(this.size > this.maxSize) removeNode(this.head);
+            if(this.size > this.maxSize) {
+                Node rnode = this.head; 
+                removeNode(rnode);
+                map.remove(rnode.key);
+            }
         }
     }
 }
