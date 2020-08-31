@@ -389,3 +389,107 @@ public ListNode reverseBetween(ListNode head, int n, int m) {
     return head;
 }
 
+//Leetcode 138
+public void copyNodes(Node head){
+    Node curr = head;
+    while(curr != null){
+        Node next = curr.next;
+        Node node = new Node(curr.val);
+        
+        curr.next = node;
+        node.next = next;
+        
+        curr = next; 
+    }
+}
+
+public void setRandoms(Node head){
+    Node curr = head;
+    while(curr != null){
+        if(curr.random != null)
+        curr.next.random = curr.random.next;
+       curr = curr.next.next;
+    }
+}
+
+public Node extractList(Node head){
+    Node curr = head;
+    Node dummy = new Node(-1);
+    Node prev = dummy;
+
+    while(curr != null){
+        Node next = curr.next.next;
+        prev.next = curr.next;
+
+        curr.next = next;
+        
+        prev = prev.next;
+        curr = curr.next;
+    }
+
+    return dummy.next;
+}
+
+public Node copyRandomList(Node head) {
+    if(head == null) return null;
+
+    copyNodes(head);
+    setRandoms(head);
+    return extractList(head);
+}
+
+
+
+//Leetcode 146
+class LRUCache {
+    private class Node{
+        int key = 0;
+        int value = 0;
+
+        Node prev = null;
+        Node next = null;
+
+        Node(int key,int value){
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    private Node head = null;
+    private Node tail = null;
+    private int maxSize = 0;
+    private int size = 0;
+
+    
+    private HashMap<Integer,Node> map = new HashMap<>();
+
+    public LRUCache(int capacity) {
+        this.maxSize = capacity;
+    }
+    
+    public int get(int key) {
+        if(!map.containsKey(key)) return -1;
+
+        Node node = map.get(key);
+        removeNode(node);
+        addLast(node); 
+        return node.value;
+    }
+    
+    public void put(int key, int value) {
+        if(map.containsKey(key)){
+            int val = get(key);
+            if(val != value)
+               this.tail.value = value;
+        }else{
+            Node node = new Node(key,value);
+            map.put(key,node);
+            addLast(node);
+
+            if(this.size > this.maxSize) removeNode(this.head);
+        }
+    }
+}
+
+
+
