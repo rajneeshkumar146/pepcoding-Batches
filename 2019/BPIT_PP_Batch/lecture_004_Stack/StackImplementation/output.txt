@@ -1,2 +1,2 @@
-[75,23,34,17,62,27,99,83,10,22]
-[23,34,17,62,27,99,83,10,22]
+[Jpep,Jpep,Epep,Epep,Ipep,Cpep,Gpep,Ipep,Dpep,Fpep]
+[Jpep,Epep,Epep,Ipep,Cpep,Gpep,Ipep,Dpep,Fpep]

@@ -1,6 +1,6 @@
-public class Stack{
+public class Stack<T>{
     
-    private int[] st;
+    private Object[] st;
     private int size;
     private int tos;
     private int maxSize;
@@ -26,7 +26,7 @@ public class Stack{
     }
 
     protected void setValues(int n) {
-        this.st = new int[n];
+        this.st = new Object[n];
         this.size = 0;
         this.tos = -1;
         this.maxSize = n;
@@ -44,12 +44,12 @@ public class Stack{
         return this.maxSize;
     }
 
-    private void push_(int val){
-        this.st[++this.tos] = val;
+    protected void push_(T val){
+        this.st[++this.tos] = (T)val;
         this.size++;
     }
 
-    public void push(int val) throws Exception{
+    public void push(T val) throws Exception{
         if(this.size == this.maxSize){
             throw new Exception("StackIsFull!");
         }
@@ -57,11 +57,11 @@ public class Stack{
         push_(val);
     }
 
-    private int top_(){
-        return this.st[this.tos];
+    protected T top_(){
+        return (T)this.st[this.tos];
     }
 
-    public int top() throws Exception{
+    public T top() throws Exception{
         if(this.size == 0){
             throw new Exception("StackIsEmpty!");
         }
@@ -69,14 +69,14 @@ public class Stack{
         return top_();
     }
 
-    private int pop_(){
-        int rv = top_();
+    protected T pop_(){
+        T rv = (T)top_();
         this.st[this.tos--] = 0;
         this.size--;
         return rv;
     }
 
-    public int pop() throws Exception{
+    public T pop() throws Exception{
         if(this.size == 0){
             throw new Exception("StackIsEmpty!");
         }
