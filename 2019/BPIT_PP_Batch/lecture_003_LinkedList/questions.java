@@ -463,6 +463,49 @@ class LRUCache {
     
     private HashMap<Integer,Node> map = new HashMap<>();
 
+    public void addLast(Node node){
+        if(this.head == null) {
+            this.head = node;
+            this.tail = node;
+        }else{
+            this.tail.next = node;
+            node.prev = this.tail;
+            this.tail = node;
+        }
+
+        this.size++;
+
+
+        
+    }
+
+    public void removeNode(Node node){
+        if(this.size == 1){
+            this.head = null;
+            this.tail = null;
+        }else if(this.head == node){
+            this.head = this.head.next;
+
+            this.head.prev = null;
+            node.next = null;
+        }else if(this.tail == node){
+            this.tail = this.tail.prev;
+
+            this.tail.next = null;
+            node.prev = null;
+        }else{
+            Node prev = node.prev;
+            Node next = node.next;
+
+            prev.next = next;
+            next.prev = prev;
+
+            node.prev = null;
+            node.next = null;
+        }
+        this.size--;
+    }
+
     public LRUCache(int capacity) {
         this.maxSize = capacity;
     }
@@ -478,8 +521,11 @@ class LRUCache {
     
     public void put(int key, int value) {
         if(map.containsKey(key)){
-            int val = get(key);
-            if(val != value)
+            Node node = map.get(key);
+            removeNode(node);
+            addLast(node);
+            
+            if(node.value != value)
                this.tail.value = value;
         }else{
             Node node = new Node(key,value);
