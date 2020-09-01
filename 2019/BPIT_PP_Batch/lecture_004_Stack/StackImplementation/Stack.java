@@ -4,7 +4,7 @@ public class Stack<T>{
     private int size;
     private int tos;
     private int maxSize;
-
+   
     public Stack(){
         setValues(10);
     }
@@ -47,6 +47,7 @@ public class Stack<T>{
     protected void push_(T val){
         this.st[++this.tos] = (T)val;
         this.size++;
+        ++iteratorIdx;
     }
 
     public void push(T val) throws Exception{
@@ -83,5 +84,6 @@ public class Stack<T>{
 
         return pop_();
     }
+   
 
 }
