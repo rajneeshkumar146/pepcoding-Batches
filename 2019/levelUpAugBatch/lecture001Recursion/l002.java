@@ -246,17 +246,213 @@ public class l002{
       return count;
     }
 
+    //QueenCombinationAndPermutation.====================================================
+    
+    public static int queenCombination(boolean[] box,int idx,int qpsf,int tnq,String ans){
+      if(qpsf == tnq){
+        System.out.println(ans);
+        return 1;
+      }
+      int count=0;
+      for(int i = idx ; i < box.length;i++){
+        count+=queenCombination(box,i + 1,qpsf+1,tnq,ans +"b"+ i + "Q"+qpsf + " ");
+      }
+      return count;
+    }
+
+    public static int queenPermutation(boolean[] box,int qpsf,int tnq,String ans){
+      if(qpsf == tnq){
+        System.out.println(ans);
+        return 1;
+      }
+
+      int count=0;
+      for(int i = 0 ; i < box.length;i++){
+        if(!box[i]){
+             box[i] = true;
+             count+=queenPermutation(box,qpsf+1,tnq,ans +"b"+ i + "Q"+qpsf + " ");
+             box[i] = false;
+        }
+     }
+      return count;
+    }
+
+    
+    public static int queenCombination2D(boolean[][] box,int idx,int qpsf,int tnq,String ans){
+      if(qpsf == tnq){
+        System.out.println(ans);
+        return 1;
+      }
+      int count=0;
+      int n = box.length;
+      for(int i = idx ; i < n*n; i++){
+        int r = i / n;
+        int c = i % n;
+        count+=queenCombination2D(box,i + 1,qpsf+1,tnq,ans +"("+ r + ","+c + ") ");
+      }
+      return count;
+    }
+
+    public static int queenPermutation2D(boolean[][] box,int qpsf,int tnq,String ans){
+      if(qpsf == tnq){
+        System.out.println(ans);
+        return 1;
+      }
+
+      int count=0;
+      int n = box.length;
+      for(int i = 0 ; i < n*n; i++){
+        int r = i / n;
+        int c = i % n;
+        if(!box[r][c]){
+             box[r][c] = true;
+             count+=queenPermutation2D(box,qpsf+1,tnq,ans +"("+ r + ","+c + ") ");
+             box[r][c] = false;
+        }
+     }
+      return count;
+    }
+
+    //Nqueen.=========================================================
+    
+    public static boolean isSafeToPlaceQueen(boolean[][] box,int r,int c){
+
+      int[][] dirA = {{0,-1},{-1,0},{-1,-1},{-1,1}};
+      // int[][] dirA = {{0,-1},{-1,0},{-1,-1},{-1,1},{0,1},{1,0},{1,1},{1,-1}};
+    
+      for(int d = 0; d < dirA.length;d++){
+        for(int rad = 1 ; rad<=box.length;rad++){
+          int x = r + rad*dirA[d][0];
+          int y = c + rad*dirA[d][1];
+
+          if(x >= 0 && y >= 0 && x < box.length && y < box[0].length){
+            if(box[x][y]) return false;
+          }else break;
+        }
+      }
+
+      return true;
+    }
+ 
+    //Combination
+    public static int Nqueen_01(boolean[][] box,int idx,int qpsf,int tnq,String ans){
+      if(qpsf == tnq){
+        System.out.println(ans);
+        return 1;
+      }
+      int count=0;
+      int n = box.length;
+      for(int i = idx ; i < n*n; i++){
+        int r = i / n;
+        int c = i % n;
+        
+        if(isSafeToPlaceQueen(box, r, c)){
+          box[r][c] = true;
+          count+=Nqueen_01(box,i + 1,qpsf+1,tnq,ans +"("+ r + ","+c + ") ");
+          box[r][c] = false;  
+        }
+      }
+      return count;
+    }
+ 
+    // permutation
+    public static int Nqueen_02(boolean[][] box,int qpsf,int tnq,String ans){
+      if(qpsf == tnq){
+        System.out.println(ans);
+        return 1;
+      }
+      int count=0;
+      int n = box.length;
+      for(int i = 0 ; i < n*n; i++){
+        int r = i / n;
+        int c = i % n;
+        
+        if(!box[r][c] && isSafeToPlaceQueen(box, r, c)){
+          box[r][c] = true;
+          count+=Nqueen_02(box,qpsf+1,tnq,ans +"("+ r + ","+c + ") ");
+          box[r][c] = false;  
+        }
+      }
+      return count;
+    }
+
+    static boolean[] rowA,colA,diagA,adiagA;
+    public static int Nqueen_03(int n,int idx,int qpsf,int tnq,String ans){
+      if(qpsf == tnq){
+        System.out.println(ans);
+        return 1;
+      }
+      int count=0;
+      for(int i = idx ; i < n*n; i++){
+        int r = i / n;
+        int c = i % n;
+        
+        if(!rowA[r] && !colA[c] && !diagA[r+c] && !adiagA[r-c+n-1]){
+
+          rowA[r] = !rowA[r];
+          colA[c] = !colA[c];
+          diagA[r+c] = !diagA[r+c];
+          adiagA[r-c+n-1] = !adiagA[r-c+n-1];
+
+          count+=Nqueen_03(n,i + 1,qpsf+1,tnq,ans +"("+ r + ","+c + ") ");
+
+          rowA[r] = !rowA[r];
+          colA[c] = !colA[c];
+          diagA[r+c] = !diagA[r+c];
+          adiagA[r-c+n-1] = !adiagA[r-c+n-1];
+
+        }
+      }
+      return count;
+    }
+
+
+    public static void nQueen(){
+      boolean[][] box = new boolean[4][4];
+      int tnq = 4;
+      int n = box.length;
+      int m = box[0].length;
+      
+
+      // System.out.println(Nqueen_01(box,0,0,tnq,""));
+      // System.out.println(Nqueen_02(box,0,tnq,""));
+    
+      rowA = new boolean[n];
+      colA = new boolean[m];
+      diagA = new boolean[n+m-1];
+      adiagA = new boolean[n+m-1];
+      System.out.println(Nqueen_03(n,0,0,tnq,""));
+      
+    }
 
 
 
+
+
+
+    // queen combination and permutation
+    public static void QueenCAP(){
+      // boolean[] box = new boolean[6];
+      // int tnq = 3;
+      // System.out.println(queenCombination(box,0,0,tnq,""));
+      // System.out.println(queenPermutation(box,0,tnq,""));
+    
+      boolean[][] box = new boolean[4][4];
+      int tnq = 4;
+      System.out.println(queenCombination2D(box,0,0,tnq,""));
+      // System.out.println(queenPermutation2D(box,0,tnq,""));
+    
+    
+    }
 
     public static void coinChange(){
       int[] coins = {2,3,5,7};
       int tar = 10;
+      
       boolean[] vis = new boolean[4];
       // System.out.println(coinChangePermutation_01(coins,tar,""));
-      System.out.println(coinChangeCombination_01(coins,0,tar,""));
-      // System.out.println(coinChangeCombinationSingle_01(coins,0,tar,""));
+      // System.out.println(coinChangeCombination_01(coins,0,tar,""));
+      System.out.println(coinChangeCombinationSingle_01(coins,0,tar,""));
       // System.out.println(coinChangePermutationSingle_01(coins,tar,vis,""));
      
 
@@ -279,7 +475,9 @@ public class l002{
     public static void solve(){
         // pathSet();
         // KnightTour();
-        coinChange();
+        // coinChange();
+        // QueenCAP();
+        nQueen();
     }
 
     public static void main(String[] args){
