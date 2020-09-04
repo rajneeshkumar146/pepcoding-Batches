@@ -167,13 +167,110 @@ public class questionStack{
         return len;
     }
 
+    //Leetcode 1249
+    public String minRemoveToMakeValid(String str) {
+        Stack<Integer> st = new Stack<>();
+        int n = str.length();
+        StringBuilder sb = new StringBuilder(str);
+        for(int i=0;i<n;i++){
+            char ch = str.charAt(i);
+            if(ch == ')'){
+                if(st.size()!=0) st.pop();
+                else sb.setCharAt(i,'#');
+            }else if(ch == '(')
+               st.push(i);
+        }
 
+        while(st.size()!=0){
+            int i = st.pop();
+            sb.setCharAt(i,'#');
+        }
 
+        StringBuilder ans = new StringBuilder();
+        for(int i=0;i<n;i++){
+            char ch = sb.charAt(i);
+            if(ch!='#') ans.append(ch);
+        }
 
+        return ans.toString();
+    }
+    public static int[] asteroidCollision(int[] arr) {
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < arr.length; i++) {
+            if(arr[i] > 0) st.push(arr[i]);
+            else{
 
+                while(st.size()!=0 && st.peek() > 0 && st.peek() < -arr[i]) st.pop();
 
-    
+                if(st.size()!=0 && st.peek() == -arr[i]) st.pop();
+                else if(st.size() == 0 || st.peek() < 0 ) st.push(arr[i]);
+                else{
+                    // astroid will distroy
+                }
+            }
+        }
 
+        int[] ans = new int[st.size()];
+        int i = st.size()-1;
+        while(st.size()!=0) ans[i--] = st.pop();
+
+        return ans;
+    }
+
+    //Leetcode 84
+    public int largestRectangleArea(int[] heights) {
+        int[] nsol = nsol(heights);
+        int[] nsor = nsor(heights);
+
+        int area = 0;
+        for(int i=0;i<heights.length;i++){
+            int w = nsor[i] - nsol[i] -1;
+            int h heights[i];
+            area = Math.max(area,w*h);
+        }
+
+        return area;
+    }
+
+    public int largestRectangleArea(int[] heights) {
+        Stack<Integer> st = new Stack<>();
+        st.push(-1);
+        int area = 0;
+        for(int i=0;i<heights.length;i++){
+            while(st.peek() != -1 && heights[st.peek()] > heights[i]){
+                int idx = st.pop();
+                int w = i - st.peek() - 1;
+                area = Math.max(area, w * heights[idx]);
+            }
+            st.push(i);
+        }
+
+        while(st.peek() !=-1){
+            int idx = st.pop();
+            int w = heights.length - st.peek() - 1;
+            area = Math.max(area, w * heights[idx]);
+        }
+
+        return area;
+    }
+
+    public int maximalRectangle(char[][] matrix) {
+     if( matrix.length == 0 ||  matrix[0].length == 0)  return 0;
+     int n = matrix.length;
+     int m = matrix[0].length;   
+
+     int[] heights = new int[m];
+     int area = 0;
+     for(int i=0;i<n;i++){
+         for(int j=0;j<m;j++){
+            heights[j] = matrix[i][j] == '1' ? heights[j] + 1 : 0;
+         }
+
+         area = Math.max(area, largestRectangleArea(heights));
+     }
+     
+     return area;
+    }
 
 
 
