@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 public class l002{
 
@@ -376,6 +377,7 @@ public class l002{
       return count;
     }
 
+    static int calls = 0;
     static boolean[] rowA,colA,diagA,adiagA;
     public static int Nqueen_03(int n,int idx,int qpsf,int tnq,String ans){
       if(qpsf == tnq){
@@ -383,6 +385,7 @@ public class l002{
         return 1;
       }
       int count=0;
+      calls++;
       for(int i = idx ; i < n*n; i++){
         int r = i / n;
         int c = i % n;
@@ -406,10 +409,120 @@ public class l002{
       return count;
     }
 
+    public static int Nqueen_04(int n,int r,int tnq,String ans){
+      if(tnq == 0){
+        System.out.println(ans);
+        return 1;
+      }
+
+      int count=0;
+      calls++;
+      for(int c = 0; c < n; c++){
+        if(!colA[c] && !diagA[r+c] && !adiagA[r-c+n-1]){
+
+          colA[c] = !colA[c];
+          diagA[r+c] = !diagA[r+c];
+          adiagA[r-c+n-1] = !adiagA[r-c+n-1];
+
+          count+=Nqueen_04(n,r + 1,tnq-1,ans +"("+ r + ","+c + ") ");
+
+          colA[c] = !colA[c];
+          diagA[r+c] = !diagA[r+c];
+          adiagA[r-c+n-1] = !adiagA[r-c+n-1];
+        }
+      }
+
+      return count;
+
+    }
+
+    public static int Nqueen_04_subseq(int n,int r,int tnq,String ans){
+      if(tnq == 0 || r >= n){
+        if(tnq == 0){
+          System.out.println(ans);
+          return 1;
+        }
+        return 0;
+      }
+
+      int count=0;
+      for(int c = 0; c < n;c++){
+       if(!colA[c] && !diagA[r+c] && !adiagA[r-c+n-1]){
+          colA[c] = !colA[c];
+          diagA[r+c] = !diagA[r+c];
+          adiagA[r-c+n-1] = !adiagA[r-c+n-1];
+
+          count+=Nqueen_04_subseq(n,r + 1,tnq-1,ans +"("+ r + ","+c + ") ");
+
+          colA[c] = !colA[c];
+          diagA[r+c] = !diagA[r+c];
+          adiagA[r-c+n-1] = !adiagA[r-c+n-1];
+      }
+    }
+
+    count+=Nqueen_04_subseq(n,r + 1,tnq,ans);
+
+      return count;
+
+    }
+
+    //WordBreak.====================================================================
+
+    public static int wordBreak(String ques,int idx,String ans,HashSet<String> words,int len){
+      if(idx == ques.length()){
+        System.out.println(ans);
+        return 1;
+      }
+
+
+      int count=0;
+      for(int i= idx; i - idx <= len &&  i <= ques.length();i++){
+        String s = ques.substring(idx,i);
+        if(words.contains(s)){
+          count += wordBreak(ques,i,ans + s + " ", words,len); 
+        }  
+      }
+      return count;
+    }
+
+    
+    public static int wordBreak_02(String ques,String ans,HashSet<String> words,int len){
+      if(ques.length()==0){
+        System.out.println(ans);
+        return 1;
+      }
+
+
+      int count=0;
+      for(int i= 0; i <= len &&  i <= ques.length();i++){
+        String s = ques.substring(0,i);
+        if(words.contains(s)){
+          count += wordBreak_02(ques.substring(i),ans + s + " ", words,len); 
+        }  
+      }
+      return count;
+    }
+   
+    public static void wordBreak(){
+      String dictionary[] = {"mobile","samsung","sam","sung",  
+                            "man","mango","icecream","and",  
+                            "go","i","like","ice","cream","ilikesamsung"}; 
+      HashSet<String> words=new HashSet<>();
+      int len = 0;
+      for(String str: dictionary){
+        words.add(str);
+        len = Math.max(len,str.length());
+      }
+
+      String ques = "ilikesamsungandmango";
+      System.out.println(wordBreak(ques,0,"",words,len));
+    }
+
 
     public static void nQueen(){
-      boolean[][] box = new boolean[4][4];
-      int tnq = 4;
+      int k = 10;
+      boolean[][] box = new boolean[k][k];
+      int tnq = k;
       int n = box.length;
       int m = box[0].length;
       
@@ -421,8 +534,13 @@ public class l002{
       colA = new boolean[m];
       diagA = new boolean[n+m-1];
       adiagA = new boolean[n+m-1];
-      System.out.println(Nqueen_03(n,0,0,tnq,""));
-      
+      // System.out.println(Nqueen_03(n,0,0,tnq,""));
+      // System.out.println(Nqueen_04(n,0,tnq,""));
+      // System.out.println(calls);
+       
+      System.out.println(Nqueen_04_subseq(n,0,tnq,""));
+    
+    
     }
 
 
@@ -477,7 +595,8 @@ public class l002{
         // KnightTour();
         // coinChange();
         // QueenCAP();
-        nQueen();
+        // nQueen();
+        wordBreak();
     }
 
     public static void main(String[] args){
