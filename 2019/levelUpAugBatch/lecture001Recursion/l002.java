@@ -433,8 +433,36 @@ public class l002{
       }
 
       return count;
-
     }
+
+    static int colN = 0, diagN = 0, adiagN = 0 ;
+    public static int Nqueen_04_Bits(int n,int r,int tnq,String ans){
+      if(tnq == 0){
+        System.out.println(ans);
+        return 1;
+      }
+
+      int count=0;
+      for(int c = 0; c < n; c++){
+        if( (colN & (1<<c)) == 0 && (diagN & (1<<(r+c))) == 0 && (adiagN & (1 << (r-c+n-1) )) == 0  ){
+
+          colN ^= (1 << c);
+          diagN ^= (1 << (r+c));
+          adiagN ^= (1 << (r-c+n-1));
+
+          count+=Nqueen_04_Bits(n,r + 1,tnq-1,ans +"("+ r + ","+c + ") ");
+
+          colN ^= (1 << c);
+          diagN ^= (1 << (r+c));
+          adiagN ^= (1 << (r-c+n-1));
+
+        }
+      }
+
+      return count;
+    }
+
+
 
     public static int Nqueen_04_subseq(int n,int r,int tnq,String ans){
       if(tnq == 0 || r >= n){
@@ -536,9 +564,11 @@ public class l002{
       adiagA = new boolean[n+m-1];
       // System.out.println(Nqueen_03(n,0,0,tnq,""));
       // System.out.println(Nqueen_04(n,0,tnq,""));
+      System.out.println(Nqueen_04_Bits(n,0,tnq,""));
+
       // System.out.println(calls);
        
-      System.out.println(Nqueen_04_subseq(n,0,tnq,""));
+      // System.out.println(Nqueen_04_subseq(n,0,tnq,""));
     
     
     }
@@ -595,8 +625,8 @@ public class l002{
         // KnightTour();
         // coinChange();
         // QueenCAP();
-        // nQueen();
-        wordBreak();
+        nQueen();
+        // wordBreak();
     }
 
     public static void main(String[] args){
