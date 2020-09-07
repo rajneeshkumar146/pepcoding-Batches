@@ -550,7 +550,7 @@ public class l002{
     public static void nQueen(){
       int k = 10;
       boolean[][] box = new boolean[k][k];
-      int tnq = k;
+      int tnq = 4;
       int n = box.length;
       int m = box[0].length;
       
@@ -564,13 +564,11 @@ public class l002{
       adiagA = new boolean[n+m-1];
       // System.out.println(Nqueen_03(n,0,0,tnq,""));
       // System.out.println(Nqueen_04(n,0,tnq,""));
-      System.out.println(Nqueen_04_Bits(n,0,tnq,""));
+      // System.out.println(Nqueen_04_Bits(n,0,tnq,""));
 
       // System.out.println(calls);
        
-      // System.out.println(Nqueen_04_subseq(n,0,tnq,""));
-    
-    
+      System.out.println(Nqueen_04_subseq(n,0,tnq,""));
     }
 
 
