@@ -1,5 +1,6 @@
 import java.util.LinkedList;
 import java.util.ArrayList;
+import java.util.Arrays;
 public class l001{
     public static void print(int[] arr){
         for(int ele: arr)
@@ -155,7 +156,7 @@ public class l001{
             if(ll.size()<=6) ll.addFirst(ll.getFirst()*2);
             else{
                 int lval = ll.removeLast();
-                ll.addFirst(ll.getFirst()*2 - lval)
+                ll.addFirst(ll.getFirst()*2 - lval);
             }
         }
         
@@ -192,12 +193,12 @@ public class l001{
     public  int minCostClimbingStairs(int[] cost) {
         int[] dp = new int[cost.length + 1];
         int ans = minCostClimbingStairs(cost,dp.length,dp);
-        int ans = minCostClimbingStairs_DP(cost,dp.length,dp);
+        // ans = minCostClimbingStairs_DP(cost,dp.length,dp);
         return ans;
     }
 
 
-    public static int boardPath_Moves(int si,int ei,int[] moves){
+    public static int boardPath_Moves(int si,int ei,int[] moves,int[] dp){
         Arrays.sort(moves);
         for(si=ei;si>=0;si--){
             if(si==ei){
@@ -214,9 +215,191 @@ public class l001{
         }
         
         return dp[0];
+    }
+
+    //Leetcode 64    
+    public static int minPathSum(int[][] grid,int sr,int sc,int[][] dp) {
+        if(sr==grid.length-1 && sc==grid[0].length-1){
+            return dp[sr][sc] = grid[sr][sc];
+        }
+
+        if(dp[sr][sc]!=0) return dp[sr][sc];
+
+        int minCost = (int)1e8;
+        if(sr + 1 < grid.length) minCost = Math.min(minCost,minPathSum(grid,sr+1,sc,dp));
+        if(sc + 1 < grid[0].length) minCost = Math.min(minCost,minPathSum(grid,sr,sc+1,dp));
         
+        return dp[sr][sc] = minCost + grid[sr][sc];
+    }
+
+    
+    public static int minPathSum_DP(int[][] grid,int sr,int sc,int[][] dp) {
+        
+        for(sr=grid.length-1;sr>=0 ;sr--){
+            for(sc=grid[0].length-1; sc>=0 ; sc--){
+               if(sr==grid.length-1 && sc==grid[0].length-1){
+                    dp[sr][sc] = grid[sr][sc];
+                    continue;
+                }
+                int minCost = (int)1e8;
+                if(sr + 1 < grid.length) minCost = Math.min(minCost,dp[sr+1][sc]);
+                if(sc + 1 < grid[0].length) minCost = Math.min(minCost,dp[sr][sc+1]);
+        
+                dp[sr][sc] = minCost + grid[sr][sc];         
+            }
+        }
+
+        return dp[0][0];
+    }
+
+    
+    public static int minPathSum(int[][] grid) {
+        int[][] dp = new int[grid.length][grid[0].length];
+        // int ans= minPathSum(grid,0,0,dp);
+        int ans= minPathSum_DP(grid,0,0,dp);
+
+        return ans;
+    }
+
+    public static int goldMineProblem(int[][] coins,int sr,int sc,int[][] dp,int[][] dir){
+        if(sc==coins[0].length-1){
+            return dp[sr][sc] = coins[sr][sc];
+        }
+
+        if(dp[sr][sc]!=0) return dp[sr][sc];
+
+        for(int d=0;d<3;d++){
+            int r = sr + dir[d][0];
+            int c = sc + dir[d][1];
+
+            if(r>=0 && c>=0 && r < coins.length && c < coins[0].length){
+                dp[sr][sc] = Math.max(dp[sr][sc], goldMineProblem(coins,r,c,dp,dir) + coins[sr][sc]);
+            }
+        }
+
+        return dp[sr][sc];
+    }
+
+    
+    public static int goldMineProblem_DP(int[][] coins,int sr,int sc,int[][] dp,int[][] dir){
+        for(sc = coins[0].length - 1;sc>=0;sc--){
+            for(sr = coins.length - 1; sr>=0;sr--){
+                if(sc==coins[0].length-1){
+                    dp[sr][sc] = coins[sr][sc];
+                    continue; 
+                }
+                
+                for(int d=0;d<3;d++){
+                     int r = sr + dir[d][0];
+                     int c = sc + dir[d][1];
+         
+                     if(r>=0 && c>=0 && r < coins.length && c < coins[0].length){
+                        dp[sr][sc] = Math.max(dp[sr][sc], dp[r][c]  + coins[sr][sc]);
+                     }
+                 }
+            }
+        }
+
+        int max = 0;
+        for(int i=0;i<coins.length;i++){
+            max = Math.max(max, dp[i][0]);
+        }
+
+        return max;
+    }
+
+    public static int goldMineProblem(){
+        int[][] coins={{10, 33, 13, 15},
+                        {22, 21, 04, 1},
+                        {5, 0, 2, 3},
+                        {0, 6, 14, 2}};
+        int[][] dp = new int[coins.length][coins[0].length];
+        int[][] dir = {{-1,1},{0,1},{1,1}};
+
+        int max = 0;
+        // for(int i=0;i<coins.length;i++){
+        //     max = Math.max(max, goldMineProblem(coins,i,0,dp,dir));
+        // }
+
+        max=goldMineProblem_DP(coins,0,0,dp,dir);
+
+        print2D(dp);
+        return max;
+    }
+
+    //geeksforgeeks.org/friends-pairing-problem/
+    public static int frindsPairing(int n,int[] dp){
+        if(n<=1){
+            return dp[n] = 1;
+        }
+
+        if(dp[n]!=0) return dp[n];
+
+        int single = frindsPairing(n-1,dp);
+        int pairUp = frindsPairing(n - 2,dp) * (n-1);
+
+        return dp[n] = single + pairUp;
+    }
+
+    public static int frindsPairing_DP(int N,int[] dp){
+        
+        for(int n=0;n <= N;n++){
+            if(n<=1){
+                dp[n] = 1;
+                continue;
+            }
+
+            int single = dp[n-1];//frindsPairing(n-1,dp);
+            int pairUp = dp[n-2]*(n-1);//frindsPairing(n - 2,dp) * (n-1);
+            dp[n] = single + pairUp;
+
+            // dp[n] = dp[n-1] + dp[n-2] * (n-1);
+        }
+
+        return dp[N];
+    }
+
+    public static int frindsPairing_Opti(int N,int[] dp){
+        int a = 1;
+        int b = 1;
+        for(int i=2; i <= N;i++){
+            int sum = a * (i-1) + b;
+            a = b;
+            b = sum;
+        }
+
+        return b;
+    }
+
+    public static void frindsPairing(){
+        int n=84;
+        int[] dp =new int[n+1];
+        int ans = frindsPairing(n,dp);
+
+        print(dp);
+        System.out.println(ans);
+    }
+ 
+    public static int count_of_ways(int n,int k,int[][] dp){
+        if(k == 1 || k == n){
+            return dp[n][k] = 1;
+        }
+
+        if(dp[n][k]!=0) return dp[n][k];
+
+        int ownSet = count_of_ways(n-1,k-1,dp);
+        int partOfSet = count_of_ways(n-1,k,dp) * k;
+
+        return dp[n][k] = ownSet + partOfSet;
+    }
+
+    public static void count_of_ways(){
 
     }
+
+
+
+
 
     public static void Basic(){
         // int n = 10;
@@ -232,12 +415,15 @@ public class l001{
 
         // System.out.println(mazePath_HVDJump_DP(0,0,n-1,n-1,dp));
            
-        int n = 10;
-        int[] dp = new int[n+1];
+        // int n = 10;
+        // int[] dp = new int[n+1];
         // System.out.println(boardPath(0,n,dp));
-        System.out.println(boardPath_DP(0,n,dp));
+        // System.out.println(boardPath_DP(0,n,dp));
         
-        print(dp);
+        // System.out.println(goldMineProblem());
+        frindsPairing();
+
+        // print(dp);
         // print2D(dp);
     }
 
