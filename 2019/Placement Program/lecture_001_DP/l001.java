@@ -451,8 +451,13 @@ public class l001{
 
     
     public static int countWays_DP(int N,int K,int[][] dp){ 
-        for(int k=1;k<=K;k++){
-            for(int n = k;n<=N;n++){
+        for(int n = 1;n<=N;n++){
+            for(int k=1;k<=K;k++){
+                if(n<k){
+                    dp[n][k] =0;
+                    break;
+                }
+
                 if(n==k || k==1){
                     dp[n][k] = 1;
                     continue;
@@ -498,6 +503,182 @@ public class l001{
         // print(dp);
         print2D(dp);
     }
+
+    //StringSet.=====================================================================
+
+    //Longest Plaindromic Subsequence
+    public static int LPSS(String str,int i,int j,int[][] dp){
+        if(i >= j){
+            return dp[i][j] = (i==j?1:0);
+        }
+
+        if(dp[i][j]!=0) return dp[i][j];
+
+        if(str.charAt(i) == str.charAt(j)) return dp[i][j] = LPSS(str,i+1,j-1,dp) + 2;
+        else return dp[i][j] = Math.max(LPSS(str,i+1,j,dp),LPSS(str,i,j-1,dp));
+    }
+
+    public static int LPSS_DP(String str,int i,int j,int[][] dp){
+        for(int gap =0; gap<str.length();gap++){
+            for(i=0,j=gap;j<str.length();i++,j++){
+                if(i >= j){
+                    dp[i][j] = (i==j?1:0);
+                    continue;
+                }
+        
+                if(str.charAt(i) == str.charAt(j)) return dp[i][j] = dp[i+1][j-1] + 2;
+                else return dp[i][j] = Math.max(dp[i+1][j],dp[i][j-1]);
+            }
+        }
+
+        return dp[0][str.length()-1];  
+    }
+
+    
+    public static String LPSS_SDP(String str,int i,int j,int[][] dp){
+        String[][] sdp = new String[str.length()][str.length()];
+        for(String[] s: sdp) Arrays.fill(s,"");
+
+        for(int gap =0; gap<str.length();gap++){
+            for(i=0,j=gap;j<str.length();i++,j++){
+                if(i >= j){
+                    dp[i][j] = (i==j?1:0);
+                    if(dp[i][j]==1) sdp[i][j] = str.charAt(i);
+                    continue;
+                }
+        
+                if(str.charAt(i) == str.charAt(j)){
+                    dp[i][j] = dp[i+1][j-1] + 2;
+                    sdp[i][j] = str.charAt(i) + sdp[i+1][j-1] + str.charAt(j);
+                }
+                else{
+                    dp[i][j] = Math.max(dp[i+1][j],dp[i][j-1]);
+                    if(dp[i][j] == dp[i+1][j]) sdp[i][j] = sdp[i+1][j];
+                    else sdp[i][j] = sdp[i][j-1];
+                }
+            }
+        }
+
+        return sdp[0][str.length()-1];  
+    }
+    
+    //Leetcode 516
+    public static int longestPalindromeSubseq(String s) {
+        int[][] dp = new int[s.length()][s.length()];
+        int ans = LPSS(s,0,s.length()-1,dp);
+        
+        
+        return ans;
+    }
+
+    
+    //Longest Plaindromic Substring
+    // Leetcode 5, 647
+    public static int[] LPSS_DP(String str){
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        
+        int count = 0;
+        int si = 0;
+        int ei =0;
+        int length = 0;
+
+        for(int gap =0; gap<str.length();gap++){
+            for(i=0,j=gap;j<str.length();i++,j++){
+
+                if(gap==0){
+                    dp[i][j] = true;
+                }else if(gap == 1 && str.charAt(i) == str.charAt(j)) dp[i][j] = true;
+                else  dp[i][j] = str.charAt(i) == str.charAt(j) && dp[i+1][j-1];
+            
+                if(dp[i][j]){
+                    count++;
+                    if(gap + 1 > len){
+                        len = gap + 1;
+                        si = i;
+                        ei = j;
+                    }
+                }
+            }
+        }
+
+        return dp;  
+    }
+
+    // https://practice.geeksforgeeks.org/problems/count-palindromic-subsequences/1
+    public static int countPS(String str,int i,int j,int[][] dp){
+        if(i >= j){
+            return dp[i][j] = (i==j?1:0);
+        }
+
+        int a = countPS(str,i+1,j-1,dp);
+        int b = countPS(str,i+1,j,dp);
+        int c = countPS(str,i,j-1,dp);
+
+        if(str.charAt(i)==str.charAt(j)){
+            return dp[i][j] = b + c + 1
+        }else
+           return dp[i][j] = b + c - a;
+    }
+
+    public static int countPS(String str,int i,int j,int[][] dp){
+        
+        for(int gap =0; gap<str.length();gap++){
+            for(i=0,j=gap;j<str.length();i++,j++){
+                
+                if(i >= j){
+                    dp[i][j] = (i==j?1:0);
+                    continue;
+                }
+        
+                int a = dp[i+1][j-1];//countPS(str,i+1,j-1,dp);
+                int b = dp[i+1][j];//countPS(str,i+1,j,dp);
+                int c = dp[i][j-1];//countPS(str,i,j-1,dp);
+        
+                if(str.charAt(i)==str.charAt(j)){
+                    dp[i][j] = b + c + 1
+                }else
+                   dp[i][j] = b + c - a;     
+            }
+        }
+
+        return dp[0][str.length()-1];
+    }
+    
+    public static int numDistinct(String s, int n,String t,int m,int[][] dp){
+        if(n < m) return dp[n][m] = 0;
+        if(m == 0) return dp[n][m] = 1;
+
+        if(dp[n][m] != -1) return dp[n][m];
+
+        int count=0;
+        
+        if(s.charAt(n-1) == t.charAt(m-1)) count+= numDistinct(s,n-1,t,m-1,dp);
+        count+=numDistinct(s,n-1,t,m,dp);
+
+        return dp[n][m] = count;
+    }
+
+
+
+    public static int numDistinct(String s, String t) {
+        int n = s.length();
+        int m = t.length();
+        int[][] dp = new int[n + 1][m + 1];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+        int ans = numDistinct(s, n,t, m, dp);
+        
+        // for (int[] d : dp) {
+        //     for (int ele : d) {
+        //         System.out.print(ele + " ");
+        //     }
+        //     System.out.println();
+        // }
+        return ans;
+    }
+
+
+
 
 
     
