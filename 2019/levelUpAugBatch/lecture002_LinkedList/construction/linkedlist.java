@@ -82,7 +82,7 @@ public class linkedlist{
                 Node curr = prev.next;
 
                 prev.next = node;
-                curr.next = node;
+                node.next = curr;
 
                 this.elementCount++;
             }

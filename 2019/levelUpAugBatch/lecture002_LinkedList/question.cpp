@@ -433,3 +433,208 @@ ListNode *reverseBetween(ListNode *head, int m, int n)
 
     return head;
 }
+
+//Leetcode 141
+bool hasCycle(ListNode *head)
+{
+    if (head == nullptr || head->next == nullptr)
+        return false;
+    ListNode *slow = head;
+    ListNode *fast = head;
+
+    while (fast != nullptr && fast->next != nullptr)
+    {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast)
+            break;
+    }
+
+    return slow == fast;
+}
+
+//Leetcode 142
+ListNode *detectCycle(ListNode *head)
+{
+
+    if (head == nullptr || head->next == nullptr)
+        return nullptr;
+    ListNode *slow = head;
+    ListNode *fast = head;
+
+    while (fast != nullptr && fast->next != nullptr)
+    {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast)
+            break;
+    }
+
+    if (slow != fast)
+        return nullptr;
+
+    slow = head;
+    while (slow != fast)
+    {
+
+        slow = slow->next;
+        fast = fast->next;
+    }
+
+    return slow;
+}
+
+// Insight
+ListNode *detectCycle(ListNode *head)
+{
+
+    if (head == nullptr || head->next == nullptr)
+        return nullptr;
+    ListNode *slow = head;
+    ListNode *fast = head;
+
+    int m = 0, x = 0, y = 0, z = 0;
+    int disOfSlow = 0;
+    while (fast != nullptr && fast->next != nullptr)
+    {
+        slow = slow->next;
+        fast = fast->next->next;
+        disOfSlow++;
+        if (slow == fast)
+            break;
+    }
+
+    if (slow != fast)
+        return nullptr;
+
+    slow = head;
+    ListNode *node = fast;
+    while (slow != fast)
+    {
+        if (fast == node)
+            m++;
+        x++;
+        slow = slow->next;
+        fast = fast->next;
+    }
+
+    y = disOfSlow - x;
+
+    return slow;
+}
+
+//Leetcode 160
+ListNode *getIntersectionNode(ListNode *headA, ListNode *headB)
+{
+    if (headA == nullptr || headB == nullptr)
+        return nullptr;
+
+    ListNode *prev = headA;
+    ListNode *curr = headA;
+
+    while (curr != nullptr)
+    {
+        prev = curr;
+        curr = curr->next;
+    }
+
+    prev->next = headB;
+    ListNode *ans = detectCycle(headA);
+    prev->next = nullptr;
+
+    return ans;
+}
+
+ListNode *removeNthFromEnd(ListNode *head, int n)
+{
+    if (n == 0 || head == nullptr)
+        return head;
+
+    ListNode *c1 = head;
+    ListNode *c2 = head;
+
+    while (n-- > 0)
+        c2 = c2->next;
+
+    if (c2 == nullptr)
+        return head->next;
+
+    while (c2->next != nullptr)
+    {
+        c1 = c1->next;
+        c2 = c2->next;
+    }
+
+    c1->next = c1->next->next;
+    return head;
+}
+
+//Leetcode 61
+ListNode *rotateRight(ListNode *head, int k)
+{
+    if (head == nullptr || head->next == nullptr || k == 0)
+        return head;
+
+    int len = 0;
+    ListNode *curr = head;
+    while (curr != nullptr)
+    {
+        curr = curr->next;
+        len++;
+    }
+
+    k %= len;
+    if (k == 0)
+        return head;
+
+    ListNode *c1 = head;
+    ListNode *c2 = head;
+
+    while (k-- > 0)
+        c2 = c2->next;
+
+    while (c2->next != nullptr)
+    {
+        c1 = c1->next;
+        c2 = c2->next;
+    }
+
+    c2->next = head;
+    head = c1->next;
+    c1->next = nullptr;
+
+    return head;
+}
+
+// https://practice.geeksforgeeks.org/problems/segregate-even-and-odd-nodes-in-a-linked-list/0
+ListNode *segregateOddEven(ListNode *head)
+{
+    if (head == nullptr || head->next == nullptr)
+        return head;
+
+    ListNode *even = new ListNode(-1);
+    ListNode *ep = even;
+
+    ListNode *odd = new ListNode(-1);
+    ListNode *op = odd;
+
+    ListNode *curr = head;
+    while (curr != nullptr)
+    {
+        if (curr->val % 2 == 0)
+        {
+            ep->next = curr;
+            ep = ep->next;
+        }
+        else
+        {
+            op->next = curr;
+            op = op->next;
+        }
+
+        curr = curr->next;
+    }
+
+    ep->next = odd->next;
+    return even->next;
+}
