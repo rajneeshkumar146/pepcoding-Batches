@@ -638,3 +638,95 @@ ListNode *segregateOddEven(ListNode *head)
     ep->next = odd->next;
     return even->next;
 }
+
+ListNode *insert(ListNode *head, int insertVal)
+{
+    ListNode *node = new ListNode(insertVal);
+    if (head == nullptr)
+    {
+        node->next = node;
+        return node;
+    }
+
+    ListNode *prev = head;
+    ListNode *curr = head->next;
+
+    bool connect = false;
+    while (curr != head)
+    {
+
+        if (insertVal >= prev->val && insertVal <= curr->val)
+            connect = true;
+        else if (prev->val > curr->val)
+            if (insertVal > prev->val || insertVal < curr->val)
+                connect = true;
+
+        if (connect)
+            break;
+
+        prev = curr;
+        curr = curr->next;
+    }
+
+    prev->next = node;
+    node->next = curr;
+
+    return head;
+}
+
+//Letcode 138
+void copyNode(Node *head)
+{
+    Node *curr = head;
+    while (curr != nullptr)
+    {
+        Node *next = curr->next;
+        Node *node = new Node(curr->val);
+
+        curr->next = node;
+        node->next = next;
+
+        curr = next;
+    }
+}
+
+void copyRandomsPointers(Node *head)
+{
+    Node *curr = head;
+    while (curr != nullptr)
+    {
+        if (curr->random != nullptr)
+            curr->next->random = curr->random->next;
+
+        curr = curr->next->next;
+    }
+}
+
+Node *extractMyLL(Node *head)
+{
+
+    Node *dummy = new Node(-1);
+    Node *prev = dummy;
+
+    Node *curr = head;
+    while (curr != nullptr)
+    {
+
+        prev->next = curr->next; // links
+        curr->next = curr->next->next;
+
+        prev = prev->next; // move
+        curr = curr->next;
+    }
+
+    return dummy->next;
+}
+
+Node *copyRandomList(Node *head)
+{
+    if (head == nullptr)
+        return head;
+    copyNode(head);            // O(n)
+    copyRandomsPointers(head); // O(n)
+    return extractMyLL(head);  // O(n)
+}
