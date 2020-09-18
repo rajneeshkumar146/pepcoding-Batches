@@ -126,6 +126,30 @@ public class l001{
         return myAns;
     }
 
+    public static int hamintonianPath(int src,int osrc,int vtxCount, boolean[] vis,String ans){
+        if(vtxCount == N - 1){
+            int idx = findEdge(src,osrc);
+            if(idx!=-1)
+                System.out.println("Cycle: " + ans);
+            else
+                System.out.println("Path: " + ans);
+            
+            return 1;
+        }
+
+        vis[src] = true;
+        int count = 0;
+
+        for(Edge e: graph[src]){
+            if(!graph[e.v]){
+                count += hamintonianPath(e.v,osrc,vtxCount+1,vis,ans + src + " ");
+            }
+        }
+
+        vis[src] = false;
+        return count;
+    }
+
 
     public static void constructGraph(){
         for(int i=0;i<N;i++)
@@ -150,9 +174,11 @@ public class l001{
         boolean[] vis = new boolean[N];
         // System.out.println(allPath(0,6,vis,0,""));
 
-        pair p = heavyWeightPath(0,6,vis);
-        System.out.println(p.path + " @ "  + p.weight);
+        // pair p = heavyWeightPath(0,6,vis);
+        // System.out.println(p.path + " @ "  + p.weight);
         
+
+        System.out.println(hamintonianPath(0,0,0,vis,""));
         // display();
     }
 
