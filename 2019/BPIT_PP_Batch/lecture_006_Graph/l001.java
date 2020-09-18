@@ -130,9 +130,9 @@ public class l001{
         if(vtxCount == N - 1){
             int idx = findEdge(src,osrc);
             if(idx!=-1)
-                System.out.println("Cycle: " + ans);
+                System.out.println("Cycle: " + ans + src);
             else
-                System.out.println("Path: " + ans);
+                System.out.println("Path: " + ans + src);
             
             return 1;
         }
@@ -141,12 +141,39 @@ public class l001{
         int count = 0;
 
         for(Edge e: graph[src]){
-            if(!graph[e.v]){
+            if(!vis[e.v]){
                 count += hamintonianPath(e.v,osrc,vtxCount+1,vis,ans + src + " ");
             }
         }
 
         vis[src] = false;
+        return count;
+    }
+
+    public static int dfs(int src,boolean[] vis){
+        vis[src] = true;
+        int count = 0;
+        for(Edge e: graph[src]){
+            if(!vis[e.v])
+             count += dfs(e.v,vis);
+        }
+
+        return count;
+    }
+
+    //get connected Components.
+    public static int GCC(){
+        int count = 0;
+        boolean[] vis = new boolean[N];
+        
+        int area = 0;
+        for(int i=0;i<n;i++){
+            if(!vis[i]){
+                count++;
+                area += dfs(i,vis);
+            }
+        }
+
         return count;
     }
 
@@ -163,6 +190,9 @@ public class l001{
         addEdge(4,5,2);
         addEdge(5,6,3);
         addEdge(4,6,8);
+
+        addEdge(0,6,1);
+        addEdge(2,5,1);
 
         display();
     }
