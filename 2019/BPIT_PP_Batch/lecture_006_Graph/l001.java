@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 public class l001{
     
     public static class Edge{
@@ -167,7 +168,7 @@ public class l001{
         boolean[] vis = new boolean[N];
         
         int area = 0;
-        for(int i=0;i<n;i++){
+        for(int i=0;i<N;i++){
             if(!vis[i]){
                 count++;
                 area += dfs(i,vis);
@@ -175,6 +176,83 @@ public class l001{
         }
 
         return count;
+    }
+
+    //BFS.===================================================================
+
+    public static void BFS_01(int src,boolean[] vis){
+        LinkedList<Integer> que = new LinkedList<>();
+        que.addLast(src);
+
+        while(que.size()!=0){
+            int vtx = que.removeFirst();
+            
+            if(vis[vtx]){
+                System.out.print("Cycle: " + vtx);
+                continue;
+            }
+
+            vis[vtx] = true; // mark
+            for(Edge e: graph[vtx]){
+                if(!vis[e.v])
+                  que.addLast(e.v);
+            }
+        }
+    }
+
+    public static void BFS_01(int src,boolean[] vis){
+        LinkedList<Integer> que = new LinkedList<>();
+        que.addLast(src);
+        
+        int level=0;
+        while(que.size()!=0){
+            int size = que.size();
+            while(size-->0){
+                int vtx = que.removeFirst();
+            
+                if(vis[vtx])
+                    continue;
+                if(vtx == 6){
+                    System.out.println(level);
+                    break;
+                }
+    
+                vis[vtx] = true; // mark
+                for(Edge e: graph[vtx]){
+                    if(!vis[e.v])
+                      que.addLast(e.v);
+                }
+            }
+            level++;
+        }
+    }
+
+    public static void BFS_02(int src,boolean[] vis){
+        LinkedList<Integer> que = new LinkedList<>();
+        que.addLast(src);
+        vis[src] = true;
+        
+        int level=0;
+        while(que.size()!=0){
+            int size = que.size();
+            while(size-->0){
+                int vtx = que.removeFirst();
+            
+                if(vtx == 6){
+                    System.out.println(level);
+                    break;
+                }
+    
+                for(Edge e: graph[vtx]){
+                    if(!vis[e.v]){
+                      que.addLast(e.v);
+                      vis[e.v] = true; // mark
+                    }
+                }
+            }
+            
+            level++;
+        }
     }
 
 
@@ -208,7 +286,10 @@ public class l001{
         // System.out.println(p.path + " @ "  + p.weight);
         
 
-        System.out.println(hamintonianPath(0,0,0,vis,""));
+        // System.out.println(hamintonianPath(0,0,0,vis,""));
+        
+        
+        BFS_01(0,vis);
         // display();
     }
 
