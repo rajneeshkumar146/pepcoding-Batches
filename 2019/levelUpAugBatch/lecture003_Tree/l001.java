@@ -183,6 +183,45 @@ public class l001{
         
     }
 
+    public static int diameter_01(Node node){
+        if(node == null) return 0;
+
+        int ld = diameter_01(node.left);
+        int rd = diameter_01(node.right);
+
+        int lh = height(node.left);
+        int rh = height(node.right);
+
+        return Math.max(Math.max(ld,rd),lh + rh + 2);
+    }
+
+    public static int[] diameter_02(Node node){
+        if(node == null) return new int[]{0,-1};   // {dia, height}
+
+        int[] lres = diameter_02(node.left);
+        int[] rres = diameter_02(node.left);
+        
+        int dia = Math.max(Math.max(lres[0],rres[0]),lres[1] + rres[1] + 2);
+        int hei = Math.max(lres[1],rres[1]) + 1;
+        
+        return new int[]{dia,hei};
+    }
+
+    // static int diaAns = 0;
+    public static int diameter_03(Node node,int[] diaAns){
+        if(node == null) return -1;
+
+        int lh = diameter_03(node.left,diaAns);
+        int rh = diameter_03(node.right,diaAns);
+        
+        diaAns[0] = Math.max(diaAns[0],lh + rh + 2);
+        return Math.max(lh,rh) + 1;
+    }
+
+    
+
+    
+
 
 
 
