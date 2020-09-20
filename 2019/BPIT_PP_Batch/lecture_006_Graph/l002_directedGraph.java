@@ -51,7 +51,7 @@ public class l002_directedGraph{
         ArrayDeque<Integer> que = new ArrayDeque<>();
         ArrayList<Integer> ans = new ArrayList<>();
 
-        for(int i=0;i<N;i++) if(indegree[i]==0) que.add(i);
+        for(int i=0;i<N;i++) if(indegree[i]==0) que.addLast(i);
 
         while(que.size()!=0){
             int vtx = que.removeFirst();

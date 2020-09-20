@@ -414,7 +414,149 @@ public class questions{
         return one;
     }
 
+    //Leetcode 207 
+    public boolean canFinish(int N, int[][] prerequisites) {
+        ArrayList<Integer>[] graph = new ArrayList[N];
+        for(int i=0;i<N;i++) graph[i] = new ArrayList<>();
+        int[] indegree= new int[N];
+        
+        for(int[] a : prerequisites){
+            int u = a[0];
+            int v = a[1];
+
+            indegree[v]++;
+            graph[u].add(v);
+        }
+
+        ArrayDeque<Integer> que = new ArrayDeque<>();
+        for(int i=0;i<N;i++) if(indegree[i]==0) que.addLast(i);
+
+        int count = 0;
+        while(que.size()!=0){
+            int vtx = que.removeFirst();
+            count++;
+            for(int e : graph[vtx]){
+                if(--indegree[e]==0)
+                   que.add(e); 
+            }
+        }
+
+        return count == N;
+    }
+
+    public int[] findOrder(int N, int[][] prerequisites) {
+        ArrayList<Integer>[] graph = new ArrayList[N];
+        for(int i=0;i<N;i++) graph[i] = new ArrayList<>();
+        int[] indegree= new int[N];
+        
+        for(int[] a : prerequisites){
+            int u = a[0];
+            int v = a[1];
+
+            indegree[v]++;
+            graph[u].add(v);
+        }
+
+        ArrayDeque<Integer> que = new ArrayDeque<>();
+        for(int i=0;i<N;i++) if(indegree[i]==0) que.addLast(i);
+
+        int[] ans = new int[N];
+        int idx = N-1;
+        while(que.size()!=0){
+            int vtx = que.removeFirst();
+            ans[idx--] = vtx;
+            for(int e : graph[vtx]){
+                if(--indegree[e]==0)
+                   que.addLast(e); 
+            }
+        }
+
+        if(idx != -1) return  new int[0];
+        return ans;
+    }
+
+    public static boolean isCyclePresent(ArrayList<Integer>[] graph,int src,int[] vis,ArrayList<Integer> ans){
+        vis[src] = 0;
+        
+        for(int e : graph[src]){
+            if(vis[e]==-1){
+               if(isCyclePresent(graph,e,vis,ans)) return true;
+            }else if(vis[e]==0) return true;
+        }
+
+        vis[src] = 1;
+        ans.add(src);
+    }
 
 
+    public int[] findOrder(int N, int[][] prerequisites) {
+        ArrayList<Integer>[] graph = new ArrayList[N];
+        for(int i=0;i<N;i++) graph[i] = new ArrayList<>();
+        
+        for(int[] a : prerequisites)
+            graph[a[0]].add(a[1]);
 
+        int[] vis = new int[N];
+        Arrays.fill(vis,-1);
+        ArrayList<Integer> ans = new ArrayList<>();
+
+        for(int i=0;i<N;i++){
+            if(vis[i]==-1) if(isCyclePresent(graph,i,vis,ans)) return new int[0];
+        }
+
+        int[] res = new int[ans.size()];
+        int idx =0;
+        for(int ele: ans) res[idx++] = ele;
+        return ans;
+    }
+
+    //Leetcode 329 
+   public int longestIncreasingPath(int[][] matrix) {
+       int n = matrix.length; if(n==0) return 0;
+       int m = matrix[0].length;if(m==0) return 0;
+
+       int[][] indegree=new int[n][m];
+       int[][] dir = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+
+       for(int i=0;i<n;i++){
+           for(int j=0;j<m;j++){
+               for(int d=0;d<4;d++){
+                   int r = i + dir[d][0];
+                   int c = j + dir[d][1];
+
+                   if(r >= 0 && c >= 0 && r < n && c < m && matrix[r][c] > matrix[i][j])
+                      indegree[r][c]++;
+               }
+           }
+       }
+
+       ArrayDeque<Integer> que = new ArrayDeque<>();
+       for(int i=0;i<n;i++){
+         for(int j=0;j<m;j++){
+          if(indegree[i][j]==0) que.addLast(i*m+j);
+         }
+      } 
+
+      int level = 0;
+      while(que.size()!=0){
+          int size = que.size();
+          while(size-- > 0){
+          
+            int vtx = que.removeFirst();
+            int i = vtx / m;
+            int j = vtx % m;
+
+            for(int d=0;d<4;d++){
+                int r = i + dir[d][0];
+                int c = j + dir[d][1];
+
+                if(r >= 0 && c >= 0 && r < n && c < m && matrix[r][c] > matrix[i][j] && --indegree[r][c]==0)
+                   que.addLast(r*m+c);
+            }
+          }
+          level++;
+      }
+
+      return level;
+   }
 }
