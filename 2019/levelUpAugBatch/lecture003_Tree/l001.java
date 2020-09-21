@@ -218,13 +218,71 @@ public class l001{
         return Math.max(lh,rh) + 1;
     }
 
-    
+     //BFS/LevelOrder.===================================================
 
-    
+     public static void BFS_01(Node node){
+        LinkedList<Node> que = new LinkedList<>();
+        que.addLast(node);
+
+        while(que.size()!=0){
+            Node vtx = que.removeFirst();
+            System.out.print(vtx.data + " ");
+            if(vtx.left != null) que.addLast(vtx.left);
+            if(vtx.right != null) que.addLast(vtx.right);
+        }
+    }
+
+    public static void BFS_02(Node node){
+        LinkedList<Node> que = new LinkedList<>();
+        que.addLast(node);
+        que.addLast(null);
+
+        while(que.size()!=1){
+            Node vtx = que.removeFirst();
+            
+            System.out.print(vtx.data + " ");
+        
+            if(vtx.left != null) que.addLast(vtx.left);
+            if(vtx.right != null) que.addLast(vtx.right);
+            
+            if(que.getFirst()==null){
+                System.out.println();
+                que.removeFirst();
+                que.addLast(null);
+            }
+        }
+    }
+
+    public static void BFS_03(Node node){
+        LinkedList<Node> que = new LinkedList<>();
+        que.addLast(node);
+
+        int level = 0;
+        while(que.size()!=0){
+            int size = que.size();
+            System.out.print("Level : " + level + " -> ")
+            while(size-- > 0){
+                Node vtx = que.removeFirst();
+                System.out.print(vtx.data + " ");
+                if(vtx.left != null) que.addLast(vtx.left);
+                if(vtx.right != null) que.addLast(vtx.right);
+            }
+
+            System.out.println();
+            level++;
+        }
+    }
+
+    public static List<Integer> leftView(Node node){
+
+    }
 
 
 
 
+    public static void ViewSet(Node node){
+                 
+    }
 
     public static void solve(){
         int[] arr={10,20,40,-1,-1,50,80,-1,-1,90,-1,-1,30,60,100,-1,-1,-1,70,110,-1,-1,120,-1,-1};
