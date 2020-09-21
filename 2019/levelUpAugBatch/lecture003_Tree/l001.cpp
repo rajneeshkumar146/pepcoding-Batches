@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -60,3 +61,46 @@ TreeNode *lowestCommonAncestor(TreeNode *node, TreeNode *p, TreeNode *q)
 
     return LCA;
 }
+
+vector<int> rightSideView(TreeNode* node) {
+    if(node==nullptr) return {};
+
+    queue<TreeNode*> que;
+    que.push(node);
+
+    vector<int> ans;
+
+    while(que.size()!=0){
+        int size = que.size();
+        ans.push_back(que.front()->val);
+        
+        while(size-->0){
+           TreeNode* vtx = que.front(); que.pop();
+
+           if(vtx->right != nullptr) que.push(vtx->right); 
+           if(vtx->left != nullptr) que.push(vtx->left);
+        }
+    }
+
+    return ans;
+}
+
+
+void rightSideView_(TreeNode* node,int level,vector<int>& ans){
+    if(node == nullptr) return;
+
+    if(level == ans.size()) ans.push_back(node->val);
+
+    rightSideView_(node->right,level+1,ans);
+    rightSideView_(node->left,level+1,ans);
+}
+
+vector<int> rightSideView(TreeNode* node) {
+    vector<int> ans;
+    rightSideView_(node,0,ans);
+    return ans;
+}
+
+
+
+
