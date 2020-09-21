@@ -559,4 +559,201 @@ public class questions{
 
       return level;
    }
+
+
+   //================================================
+
+   int[] par;
+    public int findPar(int u){
+        if(par[u] == u) return u;
+        return par[u] = findPar(par[u]);
+    }
+   
+    //Leetcode 200
+    public int numIslands(char[][] grid) {
+        if(grid.length==0 || grid[0].length==0) return 0;
+        int n = grid.length;
+        int m = grid[0].length;
+        
+        par = new int[n*m];
+        int count=0;
+        for(int i=0;i<n*m;i++){
+            par[i] = i;
+            if(grid[i/m][i%m]=='1') count++;
+        }
+
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(grid[i][j] == '1'){
+                    int p1 = findPar(i*m+j);
+                    if(j+1 < m && grid[i][j+1] == '1'){
+                        int p2 = findPar(i*m+j+1);
+                        if(p1 != p2){
+                            par[p2] = p1;
+                            count--;
+                        }
+                    }
+
+                    if(i+1 < n && grid[i+1][j] == '1'){
+                        int p2 = findPar((i+1)*m+j);
+                        if(p1 != p2){
+                            par[p2] = p1;
+                            count--;
+                        }
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    public String smallestEquivalentString(String A, String B, String S) {
+        par = new int[26];
+        for(int i=0;i<26;i++) par[i] = i;
+        
+        for(int i=0;i<A.length();i++){
+            int p1 = findPar(A.charAt(i)-'a');
+            int p2 = findPar(B.charAt(i)-'a');
+            
+            par[p1] = Math.min(p1,p2);
+            par[p2] = Math.min(p1,p2);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<S.length();i++){
+            int ch = findPar(S.charAt(i)-'a');
+            sb.append((char)(ch+'a'));
+        }
+
+
+        return sb.toString();
+    }
+
+    //Leetcode 684
+    public int[] findRedundantConnection(int[][] edges) {
+        int N=edges.length;
+        par=new int[N+1];
+        for(int i=0;i<=N;i++)
+           par[i]=i;
+        
+        int[] ans = null;
+        for(int[] e: edges){
+            int p1 = findPar(e[0]);
+            int p2 = findPar(e[1]);
+
+            if(p1!=p2)
+                par[p1] = p2;
+            else
+               {
+                   ans = e;
+                   break;
+               }
+        }
+
+        return ans;
+    }
+
+    //Leetcode 839
+    public boolean isSimilar(String a,String b){
+        int count = 0;
+        for(int i=0;i<a.length();i++){
+            if(a.charAt(i) != b.charAt(i) && ++count > 2) return false;
+        }
+
+        return true;
+    }
+    
+    public int numSimilarGroups(String[] A) {
+        int n = A.length();
+        
+        par = new int[n];
+        for(int i=0;i<n;i++) par[i] = i;
+        
+        int count = n;
+        for(int i=0;i<n;i++){
+            for(int j=i+1;j<n;j++){
+                if(isSimilar(A[i],A[j])){
+                    int p1 = findPar(i);
+                    int p2 = findPar(j);
+
+                    if(p1 != p2){
+                        par[p1] = p2;
+                        count--;
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+
+    public List<Integer> numIslands2(int n, int m, int[][] positions) {
+       par = new int[n*m];
+       for(int i=0;i<n*m;i++) par[i] = i;
+
+       int islandCount = 0;
+       int[][] dir = {{0,1},{0,-1},{1,0},{-1,0}};
+       
+       int[][] mat = new int[n][m];
+       List<Integer> ans = new ArrayList<>();
+
+       for(int[] a: positions){
+           int i = a[0];
+           int j = a[1];
+
+           if(mat[i][j]==0){
+            int p1 = findPar(i*m+j);
+            mat[i][j] = 1;
+            islandCount++;
+ 
+            for(int d = 0;d<4;d++){
+                int r = i + dir[d][0];
+                int c = j + dir[d][1];
+ 
+                if(r >= 0 && c >= 0 && r < n && c < m && mat[r][c]==1){
+                   int p2 = findPar(r*m+c);
+                   
+                   if(p1 != p2){
+                       islandCount--;
+                       par[p2] = p1;
+                   }
+                }
+            }
+           
+           }
+           ans.add(islandCount);
+       }
+
+       return ans;
+
+    }
+
+    public int minCostToSupplyWater(int n, int[] wells, int[][] pipes) {
+        ArrayList<int[]> gp = new ArrayList<>();
+        for(int[] e: pipes) gp.add(e);
+        for(int i=0;i<wells.length;i++){
+            gp.add(new int[]{0,i+1,wells[i]});
+        }
+
+        Collections.sort(gp,(a,b)->{
+            return a[2] - b[2];
+        });
+
+        par = new int[n+1];
+        for(int i=0;i<=n;i++) par[i] = i;
+
+        int weight = 0;
+        for(int[] a: gp){
+            int p1 = findPar(a[0]);
+            int p2 = findPar(a[1]);
+
+            if(p1!=p2){
+                par[p1] = p2;
+                weight += a[2];
+            }
+        }
+
+        return weight;
+    }
+
 }
