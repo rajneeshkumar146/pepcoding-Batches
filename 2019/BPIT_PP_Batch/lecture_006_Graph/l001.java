@@ -255,6 +255,33 @@ public class l001{
         }
     }
 
+    //Prims.===========================================================
+
+    public static class primsPair implements Comparable<primsPair>{
+        int vtx = 0;
+        int par = 0;
+        int weight = 0;
+
+        primsPair(int vtx, int par,int weight){
+            this.vtx = vtx;
+            this.par = par;
+            this.weight = weight;
+        }
+
+        @Override
+        public int compareTo(primsPair o){
+            return this.weight - o.weight;
+        }
+    }
+
+    public static void prims(int src){
+
+    }
+
+
+
+
+
 
     public static void constructGraph(){
         for(int i=0;i<N;i++)
