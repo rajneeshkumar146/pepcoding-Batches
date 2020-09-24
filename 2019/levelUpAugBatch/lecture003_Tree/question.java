@@ -132,6 +132,58 @@ public class question{
         return res;
     }
 
+    //Leetcode 98
+    TreeNode prev = null;
+    public boolean isValidBST(TreeNode root) {
+        if(root == null) return true;
+
+        if(!isValidBST(root.left)) return false;
+        
+        if(prev!= null && prev.val > root.val) return false;
+        prev = root;
+
+        if(!isValidBST(root.right)) return false;
+
+        return true;
+    }
+
+    public class BSTpair{
+        boolean isBST = true;
+        long min =  (long)1e18;
+        long max = -(long)1e18;
+    }
+
+    public BSTpair isValidBST_(TreeNode root) {
+        if(root == null) return new BSTpair();
+
+        BSTpair left = isValidBST_(root.left);
+        BSTpair right = isValidBST_(root.right);
+
+        BSTpair myAns = new BSTpair();
+        if(!left.isBST || !right.isBST ||  left.max >= root.val || right.min <= root.val){
+            myAns.isBST = false;
+            return myAns;
+        
+        }
+
+        myAns.min = Math.min(left.min,root.val);
+        myAns.max = Math.max(right.max,root.val); 
+
+        return myAns;
+    }
+    
+    public boolean isValidBST(TreeNode node){
+        return isValidBST_(node).isBST;
+    }
+
+    
+
+    
+
+
+
+
+
 
 
    
