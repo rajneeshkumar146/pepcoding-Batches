@@ -67,6 +67,65 @@ public class l002_directedGraph{
         else System.out.println(ans);
     }
 
+    public static int dfs_SCC(ArrayList<Integer>[] ngraph,int src,ArrayList<Integer> ans,boolean[] vis){
+        vis[src] = true;
+        
+        int count = 0;
+        ans.add(src);
+
+        for(int e: ngraph[src]){
+            if(!vis[e]){
+                count+= dfs_SCC(ngraph,e,ans,vis);
+            }
+        }
+
+        return count;
+    }
+
+    public static void SCC(){
+        boolean[] vis = new boolean[N];
+        ArrayList<Integer> ans = new ArrayList<>();
+
+        for(int i=0;i<N;i++){
+            if(!vis[i]) topoDFS(i,vis,ans);
+        }
+
+        ArrayList<Integer>[] ngraph = new ArrayList[N];
+        for(int i=0;i<N;i++){
+            ngraph[i] = new ArrayList<>();
+        }
+
+        for(int i=0;i<N;i++){
+            vis[i] = false;
+            for(int ele:graph[i]){
+                ngraph[ele].add(i);
+            }
+        }
+
+
+        int tcomponents = 0;
+        ArrayList<Integer> res = new ArrayList<>();
+
+        for(int i=ans.size()-1;i>=0;i--){
+            int ele = ans.get(i);
+            if(!vis[ele]){
+                tcomponents++;
+                dfs_SCC(ngraph,ele,res,vis);
+
+                System.out.println(res);
+                res.clear();
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
     
 
 
