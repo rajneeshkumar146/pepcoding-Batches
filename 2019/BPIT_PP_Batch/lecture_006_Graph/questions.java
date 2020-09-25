@@ -912,8 +912,146 @@ public class questions{
     }
     
     return -1;
-    
 }
+
+//815
+public int numBusesToDestination(int[][] routes, int src, int desti) {
+    if(src == desti) return 0;
+  int n=routes.length;
+  HashMap<Integer,ArrayList<Integer>> BusStandToBus=new HashMap<>();
+  for(int i=0;i<n;i++){
+      for(int ele: routes[i]){
+          BusStandToBus.putIfAbsent(ele,new ArrayList<>());
+          BusStandToBus.get(ele).add(i);
+      }
+  }
+
+  boolean[] BusVis = new boolean[n];
+  HashSet<Integer> busStandVis = new HashSet<>();
+
+  ArrayDeque<Integer> que = new ArrayDeque<>();
+  
+  que.addLast(src);
+  busStandVis.add(src);
+  int count = 0;
+
+  while(que.size()!=0){
+      int size = que.size();
+      while(size-->0){
+
+          int busStand = que.removeFirst();
+          
+          for(int buses : BusStandToBus.get(busStand)){
+              
+              if(BusVis[buses]) continue;
+
+              for(int bs : routes[buses]){
+                  if(!busStandVis.contains(bs)){
+                      busStandVis.add(bs);
+                      que.add(bs);
+                      if(bs == desti) return count + 1;
+                  }
+              }
+
+              BusVis[buses] = true;
+          }
+      }
+      count++;
+  }
+
+  return -1;
+ 
+}
+
+
+// https://www.hackerrank.com/challenges/journey-to-the-moon/problem
+public class Solution {
+    static int[] par;
+    static int[] size;
+    public static int findPar(int u){
+        if(u == par[u]) return u;
+        return par[u] = findPar(par[u]);
+    }
+
+    public static void main(String[] args){
+        Scanner scn = new Scanner(System.in);
+
+        int n = scn.nextInt();
+        int p = scn.nextInt();
+        
+        par = new int[n];
+        size = new int[n];
+
+        for(int i=0;i<n;i++) par[i] = i;
+
+        Arrays.fill(size,1);
+
+        for(int i=0;i<p;i++){
+            int p1 = findPar(scn.nextInt());
+            int p2 = findPar(scn.nextInt());
+
+            if(p1!=p2){
+                par[p1] = p2;
+                size[p2]+=size[p1];
+            }
+        }
+
+        long sum = 0;
+        long res = 0;
+        for(int i=0;i<n;i++){
+            if(i==par[i]){
+                res += size[i] * sum;
+                sum += size[i];
+            }
+        }
+
+        System.out.println(res);
+    }
+}
+
+    // 685
+    int[] par;
+    public int findPar(int u){
+       if(u == par[u]) return u;
+        return par[u] = findPar(par[u]);
+    }
+    
+    public int[] findRedundantDirectedConnection(int[][] edges) {
+        int n = edges.length; 
+        int a = -1, b=-1, cycle = -1;   
+        
+        int[] actualParent = new int[n+1];
+        Arrays.fill(actualParent,-1);
+        
+        par=new int[n+1];
+        for(int i=0;i<=n;i++) par[i] = i;
+        
+        for(int i=0;i<n;i++){
+            int p = edges[i][0];
+            int c = edges[i][1];
+            
+            if(actualParent[c]!=-1){
+                a = actualParent[c];
+                b = i;
+                continue;
+            }
+            
+            actualParent[c] = i;
+            int globalParent = findPar(p); 
+            if(globalParent == c) cycle = i;
+            else par[c] = globalParent;
+        }
+        
+        
+        if(cycle == -1) return edges[b];
+        else if(b == -1) return edges[cycle];
+        else return edges[a];
+    }
+
+
+
+
+
 
 
 }
