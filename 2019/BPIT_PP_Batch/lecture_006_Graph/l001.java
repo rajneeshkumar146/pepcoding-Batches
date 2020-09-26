@@ -279,6 +279,63 @@ public class l001{
     }
 
 
+    //AP Bridges.===================================================
+
+    static int[] low;
+    static int[] dis;
+    static boolean[] AP;
+    
+    static boolean[] vis;
+    static int timeCount = 0;
+    static int rootCount = 0;
+    
+
+    public static void DFS_APB(int src,int par){
+        low[src] = dis[src] = timeCount++;
+        vis[src] = true;
+
+        for(Edge e: graph[src]){
+            if(!vis[e.v]){
+                
+                if(par == -1) rootCount++;
+                
+                dfs(e.v,src);
+
+                if(dis[src] <= low[e.v]){
+                    AP[src] = true;
+                }
+                
+                if(dis[src] < low[e.v]){
+                    System.out.println("ABridge: " + src + "->" + e.v);
+                }
+
+                low[src] = Math.min(low[src],low[e.v]);
+            }else if(e.v != par){
+                low[src] = Math.min(low[src],dis[e.v]);
+            }
+        }
+    }
+
+    public static APoint_Bridges(){
+        low = new int[N];
+        dis = new int[N];
+        AP = new boolean[N];
+        vis = new boolean[N];
+
+
+        for(int i=0;i<N;i++){
+            if(!vis[i]) {
+
+                DFS_APB(i,-1);
+
+                if(rootCount == 1) AP[i] = false;
+                rootCount == 1;
+            }
+        }
+    }
+
+
+
 
 
 
