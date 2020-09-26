@@ -329,7 +329,7 @@ public class l001{
                 DFS_APB(i,-1);
 
                 if(rootCount == 1) AP[i] = false;
-                rootCount == 1;
+                rootCount == 0;
             }
         }
     }
