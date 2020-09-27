@@ -45,3 +45,106 @@ void recoverTree(TreeNode *root)
         b->val = temp;
     }
 }
+
+//510
+Node *inorderSuccessor(Node *node)
+{
+
+    Node *curr = node;
+    Node *succ = nullptr;
+    if (node->right != nullptr)
+    {
+        succ = curr->right;
+        while (succ->left != nullptr)
+        {
+            succ = succ->left;
+        }
+
+        return succ;
+    }
+
+    while (curr->parent != nullptr && curr->parent->val < node->val)
+    {
+        curr = curr->parent;
+    }
+
+    return curr->parent != nullptr ? curr->parent : nullptr;
+}
+
+Node *inorderSuccessor(Node *node)
+{
+
+    Node *curr = node;
+    Node *succ = nullptr;
+    if (node->right != nullptr)
+    {
+        succ = curr->right;
+        while (succ->left != nullptr)
+        {
+            succ = succ->left;
+        }
+
+        return succ;
+    }
+
+    while (curr->parent != nullptr)
+    {
+        if (curr->parent->left == curr)
+            return curr->parent;
+        curr = curr->parent;
+    }
+
+    return nullptr;
+}
+
+//235
+TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
+{
+
+    TreeNode *curr = root;
+    while (curr != nullptr)
+    {
+        if (curr->val < p->val && curr->val < q->val)
+            curr = curr->right;
+        else if (curr->val > p->val && curr->val > q->val)
+            curr = curr->left;
+        else
+            break;
+    }
+
+    return curr;
+}
+
+
+//Leetcode 173
+class BSTIterator
+{
+public:
+    stack<TreeNode *> st;
+    BSTIterator(TreeNode *root)
+    {
+        allLeft(root);
+    }
+
+    void allLeft(TreeNode *node)
+    {
+        while (node != nullptr)
+        {
+            st.push(node);
+            node = node->left;
+        }
+    }
+
+    int next()
+    {
+        TreeNode *node = st.top();
+        st.pop();
+        allLeft(node->right);
+
+        return node->val;
+    }
+
+    bool hasNext()
+    {
+        return st.size() != 0;
+    }
