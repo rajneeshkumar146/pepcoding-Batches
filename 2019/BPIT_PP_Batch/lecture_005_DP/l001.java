@@ -397,10 +397,6 @@ public class l001{
 
     }
 
-
-
-
-
     public static void Basic(){
         // int n = 10;
         // int[] dp = new int[n+1];
