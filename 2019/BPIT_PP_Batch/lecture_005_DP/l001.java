@@ -397,6 +397,194 @@ public class l001{
 
     }
 
+    //StringSet.================================================================
+
+    //longest Plaindromic Subsequence
+    // 516
+    public static int longestPSS(String str,int i ,int j,int[][] dp){
+        if(i >= j){
+            return dp[i][j] = (i == j ? 1 : 0);
+        }
+
+        if(dp[i][j] != 0) return dp[i][j];
+
+        if(str.charAt(i) == str.charAt(j)) return dp[i][j] = longestPSS(str,i+1,j-1,dp) + 2;
+        else return dp[i][j] = Math.max(longestPSS(str,i+1,j,dp),longestPSS(str,i,j-1,dp));
+    }
+
+    public static int longestPSS_DP(String str,int i ,int j,int[][] dp){
+        int n = str.length();
+        for(int gap = 0;gap < n;gap++){
+            for(i=0,j=gap;j<n;i++,j++){
+                if(i == j) dp[i][j] = 1;
+                else if(str.charAt(i) == str.charAt(j)) dp[i][j] = dp[i+1][j-1] + 2;
+                else dp[i][j] = Math.max(dp[i+1][j],dp[i][j-1]);
+            }
+        }
+    
+          return dp[0][n-1];
+    }
+    
+
+    public static void longestPSS_String(String str,int i ,int j,int[][] dp,char[] ans,int si,int ei){
+        if(i >= j){
+            if(i == j) {   
+                ans[si] = str.charAt(i);
+                for(char ch : ans) System.out.print(ch);
+                System.out.println();
+            }
+
+            return;
+        }
+       
+        if(str.charAt(i) == str.charAt(j)){
+            ans[si] = ans[ei] = str.charAt(i);
+            longestPSS_String(str,i+1,j-1,dp,ans,si+1,ei-1);
+        }else if(dp[i+1][j] > dp[i][j-1]){
+            longestPSS_String(str,i+1,j,dp,ans,si,ei);
+        }else{
+            longestPSS_String(str,i,j-1,dp,ans,si,ei);
+        }
+    }
+
+    public static int lCSS(String s1,String s2,int i,int j,int[][] dp){
+        if(i == s1.length() || j == s2.length()){
+            return dp[i][j] = 0;
+        }
+
+        if(dp[i][j] != 0) return dp[i][j];
+
+        if(s1.charAt(i) == s2.charAt(j)) return dp[i][j] = lCSS(s1,s2,i+1,j+1,dp) + 1;
+        else return dp[i][j] = Math.max(lCSS(s1,s2,i+1,j,dp),lCSS(s1,s2,i,j+1,dp));        
+    }
+
+    public static int lCSS_02(String s1,String s2,int n,int m,int[][] dp){
+        if(n == 0 || m == 0){
+            return dp[i][j] = 0;
+        }
+
+        if(dp[i][j] != 0) return dp[i][j];
+
+        if(s1.charAt(n-1) == s2.charAt(m-1)) return dp[i][j] = lCSS(s1,s2,m-1,,m-1,dp) + 1;
+        else return dp[i][j] = Math.max(lCSS(s1,s2,n-1,j,dp),lCSS(s1,s2,i,m-1,dp));        
+    }
+
+    public static int lCSS_DP(String s1,String s2,int i,int j,int[][] dp){
+        for(int i = s1.length() - 1; i >= 0; i--){
+            for(int i = s2.length() - 1; j >= 0; j--){
+
+                if(i == s1.length() || j == s2.length()){
+                    dp[i][j] = 0;
+                    continue;
+                }
+                
+                if(s1.charAt(i) == s2.charAt(j)) dp[i][j] = dp[i+1][j+1] + 1;
+                else dp[i][j] = Math.max(dp[i+1][j],dp[i][j+1]);        
+            }
+        }
+
+        return dp[0][0];
+    }
+
+
+    //https://priactice.geeksforgeeks.org/problems/count-palindromic-subsequences/1
+
+    public static int countPS(String str,int i,int j,int[][] dp)
+    {
+        if(i>=j){
+            return dp[i][j] = ( i == j ) ? 1 : 0;
+        }
+
+        int x = countPS(str,i+1,j-1,dp);
+        int y = countPS(str,i,j-1,dp);
+        int z = countPS(str,i+1,j,dp);
+        
+        if(str.charAt(i) == str.charAt(j)) dp[i][j] = (x + 1) + (y + z - x);
+        else dp[i][j] = (y + z - x);
+
+        return dp[i][j];
+    }
+
+    public static int countPS(String str)
+    {
+        int n = str.length();
+        int[][] dp = new int[n][n];
+
+        System.out.println(countPS(str, 0, 0 , dp));
+    }
+
+    // Leetcode 115 - Distinct Subsequences
+    public static int numDistinct(String s, String t,int n,int m , int[][] dp) {
+        if(n < m){
+            return dp[n][m] = 0;
+        }
+
+        if(m==0){
+            return dp[n][m] = 1;
+        }
+
+        if(dp[n][m] != -1) return dp[n][m];
+
+        int a = numDistinct(s,t,n-1,m-1,dp);
+        int b = numDistinct(s,t,n-1,m,dp);
+
+        if(s.charAt(n-1) == t.charAt(m-1)) dp[n][m] = a + b;
+        else dp[n][m] = b;
+
+        return dp[n][m];
+    }
+
+
+    public static int numDistinct(String s, String t) {
+        int n = s.length();
+        int m = t.length();
+        int[][] dp = new int[n + 1][m + 1];
+        
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+        
+        int ans = numDistinct(s, n,t, m, dp);
+        
+        // for (int[] d : dp) {
+        //     for (int ele : d) {
+        //         System.out.print(ele + " ");
+        //     }
+        //     System.out.println();
+        // }
+        return ans;
+    }
+
+
+
+
+
+    public static void stringSet(){
+        // String str = "geeksforgeeks";
+        // int n = str.length();
+        // int[][] dp = new int[n][n];
+        
+        // for(int[] d:dp) Arrays.fill(d,-1);
+
+        // System.out.println(longestPSS(str,0,str.length()-1,dp));
+        // System.out.println(longestPSS_DP(str,0,str.length()-1,dp));
+
+        // int len = dp[0][n-1];
+        // char[] ans = new char[len];
+        // longestPSS_String(str,0,n-1,dp,ans,0,len-1);
+        
+        //---------------------------------------------------------------------------
+
+        String s1 = "AGGTAB";
+        String s2 = "GXTXAYB";
+        
+        int n = s1.length();
+        int m = s2.length();
+        int[][] dp = new int[n+1][m+1];
+        System.out.println(lCSS_DP(s1,s2,0,0,dp));
+
+        print2D(dp);
+    }
+
     public static void Basic(){
         // int n = 10;
         // int[] dp = new int[n+1];
@@ -417,7 +605,7 @@ public class l001{
         // System.out.println(boardPath_DP(0,n,dp));
         
         // System.out.println(goldMineProblem());
-        frindsPairing();
+        // frindsPairing();
 
         // print(dp);
         // print2D(dp);
@@ -425,7 +613,8 @@ public class l001{
 
 
     public static void solve(){
-        Basic();
+        // Basic();
+        stringSet();
     }
 
     public static void main(String[] args){
