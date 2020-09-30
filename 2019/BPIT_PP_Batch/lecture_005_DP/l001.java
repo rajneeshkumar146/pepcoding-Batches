@@ -554,6 +554,152 @@ public class l001{
         return ans;
     }
 
+    //Leetcode 940
+    public int distinctSubseqII(String S) {
+        int n = S.length();
+       if(n==0) return 0;
+       
+       int mod = (int)1e9 + 7;
+       
+       S = "$"+S;
+       int[] dp = new int[n+1];
+       int[] locc = new int[26];
+       Arrays.fill(locc,-1);
+       
+       dp[0] = 1;
+       for(int i = 1;i <= n; i++){
+           char ch = S.charAt(i);
+           
+           dp[i] = (dp[i-1] * 2) % mod;
+           if(locc[ch-'a']!=-1){
+               dp[i] =(dp[i] % mod  - dp[locc[ch-'a'] - 1] % mod + mod) % mod;
+           }
+           
+           locc[ch-'a'] = i;
+       }
+       
+       return dp[n] - 1;   
+   }
+
+   // https://www.geeksforgeeks.org/number-subsequences-form-ai-bj-ck/
+   public static void aibjck(String str){
+
+      int aCount = 0;
+      int bCount = 0;
+      int cCount = 0;
+      for(int i=0;i<str.length();i++){
+        char ch = str.charAt(i);
+        if(ch == 'a') aCount =  aCount + (1 + aCount);   // notInclude  + Include (prev + self)
+        else if(ch == 'b') bCount = bCount  + (aCount + bCount) ; // notInclude  + Include (prev + self)
+        else if(ch == 'c') cCount = cCount  + (bCount + cCount) ; // notInclude  + Include (prev + self)
+      }
+
+      return cCount;
+   }
+   
+   //72
+   int editDistance(String word1, String word2,int n,int m,int[][] dp) {
+    if(n==0 || m==0){
+        return n!=0?n:m;
+    }
+    
+    if(dp[n][m]!=-1) return dp[n][m];
+    
+    if(word1.charAt(n-1)==word2.charAt(m-1)) return dp[n][m]=editDistance(word1,word2,n-1,m-1,dp);
+    else{
+        int insert_  = editDistance(word1,word2,n,m-1,dp);
+        int delete_  = editDistance(word1,word2,n-1,m,dp);
+        int replace_ =editDistance(word1,word2,n-1,m-1,dp);
+        
+        return dp[n][m]=Math.min(Math.min(insert_,replace_),delete_)+1;
+    }
+}
+
+int editDistance_DP(String word1, String word2,int n,int m,int[][] dp) {
+    int N = n, M = m;
+    for(n = 0;n <= N;n++){
+        for(m=0;m <= M;m++){
+            if(n==0 || m==0){
+                dp[n][m] = n!=0?n:m;
+                continue;
+            }
+            
+            if(word1.charAt(n-1)==word2.charAt(m-1)) dp[n][m]=dp[n-1][m-1];
+            else{
+                int insert_  = dp[n][m-1];
+                int delete_  = dp[n-1][m];
+                int replace_ = dp[n-1][m-1];
+                
+                dp[n][m]=Math.min(Math.min(insert_,replace_),delete_)+1;
+            }
+        }
+    }
+}
+
+public int wildCardMatching(String str1,String str2,int n,int m,int[][] dp){
+    if(n == 0 && m == 0) return dp[n][m] = 1;
+    else if(n==0 || m == 0){
+        if(m == 1 && str2.charAt(m-1)=='*') return dp[n][m] = 1;
+        return dp[n][m] = 0;
+     }
+ 
+     if(dp[n][m]!=-1) return dp[n][m];
+ 
+     char ch1 = str1.charAt(n-1);
+     char ch2 = str2.charAt(m-1);
+     int val = -1;
+     if(ch1 == ch2 || ch2 == '?') val = wildCardMatching(str1,str2,n-1,m-1,dp);
+     else if(ch2=='*'){
+         boolean res = false;
+         res  = res || wildCardMatching(str1,str2,n-1,m,dp) == 1;
+         res = res || wildCardMatching(str1,str2,n,m-1,dp) == 1;
+ 
+         val = res ? 1 : 0;
+     }
+     else val = 0;
+ 
+ 
+     return dp[n][m] = val;
+ 
+ }
+ 
+ public String removeStar(String s){
+     if(s.length()==0) return "";
+     StringBuilder sb = new StringBuilder();
+ 
+     sb.append(s.charAt(0));
+     int i = 1;
+     while(i<s.length()){
+         while( i<s.length() && s.charAt(i) == '*' &&  s.charAt(i-1) == s.charAt(i)) i++;
+         
+         if(i<s.length())sb.append(s.charAt(i));
+         i++;
+     }
+ 
+     return sb.toString();
+ }
+ 
+ public boolean isMatch(String s, String p) {	
+     p = removeStar(p);
+     // System.out.println(p);
+     int n = s.length();
+     int m = p.length();
+     int[][] dp = new int[n+1][m+1];
+     for(int[] a: dp) Arrays.fill(a,-1);
+ 
+     return wildCardMatching(s,p,n,m,dp) == 1;
+ }
+ 
+int minDistance(String word1, String word2) {
+    int[][] dp = new int[word1.length() + 1][word2.length() + 1];
+    for (int[] d : dp)
+        Arrays.fill(d, -1);
+     return editDistance(word1,word2,word1.length(),word2.length(),dp);
+
+}
+
+
+
 
 
 
