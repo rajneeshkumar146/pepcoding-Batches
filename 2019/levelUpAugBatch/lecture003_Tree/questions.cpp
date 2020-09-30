@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stack>
+#include <vector>
 using namespace std;
 
 struct TreeNode
@@ -230,3 +231,28 @@ public:
         return getRotation(root);
     }
 };
+
+
+// Leetcode BSTree from pre order
+int idx = 0;
+TreeNode* buildTree(vector<int>& arr,int lrange,int rrange){
+    if(idx >= arr.size() || arr[idx] < lrange || arr[idx] > rrange) return nullptr;
+
+    int data = arr[idx++];
+    TreeNode* node = new TreeNode(data);
+    
+    node->left = buildTree(arr,lrange,data);
+    node->right = buildTree(arr,data,rrange);
+
+    return node;
+}
+
+// BSTree from post order
+// BSTree from Level order
+
+
+
+
+
+
+
