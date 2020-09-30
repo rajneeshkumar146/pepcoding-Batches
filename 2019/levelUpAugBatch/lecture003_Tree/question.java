@@ -176,16 +176,82 @@ public class question{
         return isValidBST_(node).isBST;
     }
 
+    public TreeNode buildTree(int[] preorder,int psi,int pei, int[] inorder,int isi,int iei){
+        if(psi > pei) return null;
+
+        TreeNode node = new TreeNode(preorder[psi]);
+        int idx = isi;
+        while(inorder[idx]!=preorder[psi]){
+            idx++;
+        }
+
+        int count = idx - isi; // countOfNodesInLeftSubTree.
+
+        node.left = buildTree(preorder,psi+1,psi+count,inorder,isi,idx-1);
+        node.right = buildTree(preorder,psi+count+1,pei,inorder,idx+1,iei);
+
+        return node;
+    }
+
+
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder.length==0) return null;
+        int n = preorder.length;
+
+        return buildTree(preorder,0,n-1,inorder,0,n-1);
+    }
+
+    //106
+    public TreeNode buildTree(int[] postorder,int psi,int pei, int[] inorder,int isi,int iei) {
+        if(psi > pei) return null;
+
+        TreeNode node = new TreeNode(postorder[pei]);
+        int idx = isi;
+
+        while(inorder[idx] != postorder[pei]){
+            idx++;
+        }
+
+        int count = idx - isi;
+
+        node.left = buildTree(postorder,psi,psi + count - 1, inorder, isi,idx-1);
+        node.right = buildTree(postorder,psi + count,pei-1, inorder, idx+1,iei);
+
+        return node;
+    }
     
-
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+            if(postorder.length==0) return null;
+            int n = postorder.length;
     
+            return buildTree(postorder,0,n-1,inorder,0,n-1);
+    }
 
+    //Leetcode 889
+    public TreeNode buildTree(int[] postorder,int posi,int poei, int[] preorder,int psi,int pei) {
+        if(psi > pei) return null;
+        if(psi == pei) return new TreeNode(preorder[psi]); // leaf node
 
+        TreeNode node = new TreeNode(preorder[psi]);
+        int idx = posi;
 
+        while(postorder[idx] != preorder[psi + 1]){
+            idx++;
+        }
 
+        int count = idx - posi + 1;
 
+        node.left = buildTree(postorder,posi,posi + count - 1, preorder, psi+1,psi + count);
+        node.right = buildTree(postorder,posi + count,poei-1, preorder,psi + count + 1, pei);
 
+        return node;
+    }
 
-   
+ 
+    public TreeNode constructFromPrePost(int[] pre, int[] post) {
+        if(post.length==0) return null;
+        int n = post.length;
 
+        return buildTree(post,0,n-1,pre,0,n-1);        
+    }
 }

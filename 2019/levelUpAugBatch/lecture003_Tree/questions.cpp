@@ -117,8 +117,7 @@ TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
 }
 
 //Leetcode 173
-class BSTIterator
-{
+class BSTIterator{
 public:
     stack<TreeNode *> st;
     BSTIterator(TreeNode *root)
@@ -152,8 +151,7 @@ public:
 
 class Solution
 {
-    int getHeight(TreeNode *node)
-    {
+    int getHeight(TreeNode *node){
         return node == nullptr ? -1 : max(getHeight(node->left), getHeight(node->right)) + 1;
     }
 
