@@ -695,13 +695,282 @@ int minDistance(String word1, String word2) {
     for (int[] d : dp)
         Arrays.fill(d, -1);
      return editDistance(word1,word2,word1.length(),word2.length(),dp);
+}
 
+ public int numDecodings(String s,int idx,int[] dp){
+     if(idx >= s.length()){
+         return dp[idx] = 1;
+     }
+     
+     if(dp[idx] != 0) return dp[idx];
+     
+     
+     char ch = s.charAt(idx);
+     if(ch == '0') return 0;
+     
+     int count = 0;
+     
+     count += numDecodings(s,idx+1,dp);
+     if(idx < s.length()-1){
+         char ch1 = s.charAt(idx+1);
+         int num = ( ch - '0') * 10 + (ch1 - '0');
+         if(num <= 26){
+             count += numDecodings(s,idx + 2,dp);
+         }
+     }
+     
+     return dp[idx] = count;
+ }
+
+ public int numDecodings_DP(String s,int idx,int[] dp){
+    for(idx = s.length(); idx >= 0 ; idx--){
+        if(idx >= s.length()){
+            dp[idx] = 1;
+            continue;
+        }
+        
+        char ch = s.charAt(idx);
+        if(ch == '0'){
+            dp[idx] = 0;
+            continue;
+        }
+        dp[idx] += dp[idx + 1];
+        if(idx < s.length()-1){
+            char ch1 = s.charAt(idx+1);
+            int num = ( ch - '0') * 10 + (ch1 - '0');
+            if(num <= 26){
+                dp[idx] += dp[idx + 2];
+            }
+        }
+    }
+
+    return dp[0];
+ }
+
+ public int numDecodings_Opti(String s,int idx,int[] dp){
+    int a = 1;
+    int b = 0;
+    for(idx = s.length()-1; idx >= 0 ; idx--){
+
+        char ch = s.charAt(idx);
+        int sum = 0;
+        if(ch != '0'){
+            sum += a;
+            if(idx < s.length()-1){
+                char ch1 = s.charAt(idx+1);
+                int num = ( ch - '0') * 10 + (ch1 - '0');
+                if(num >= 10 && num <= 26){
+                    sum += b;
+                }
+            }
+        }
+
+        b = a;
+        a = sum;
+    }
+
+    return a;
+ }
+
+ 
+ 
+public int numDecodings(String s) {
+    if(s.length()==0) return 0;
+     int[] dp = new int[s.length() + 1];
+     
+    int ans = numDecodings(s, 0,dp);
+
+    for(int ele: dp) System.out.print(ele + " ");
+    return ans;
+ }
+ 
+
+ // Leetcode 639
+ long mod = (int) 1e9 + 7; 
+ public long numDecodings(String s,int idx,long[] dp){
+    if(idx >= s.length()){
+        return dp[idx] = 1;
+    }
+    
+    if(dp[idx] != 0) return dp[idx];
+    
+    
+    char ch = s.charAt(idx);
+    if(ch == '0') return 0;
+    
+    long count = 0;
+    
+    if(ch >= '1' && ch <= '9') count = (count % mod  + numDecodings(s,idx+1,dp) % mod ) % mod;
+    else if(ch == '*') count = (count % mod  + 9 * numDecodings(s,idx+1,dp) % mod ) % mod;
+    
+    if(idx < s.length()-1){
+        char ch1 = s.charAt(idx+1);
+        if(ch !='*' && ch1 != '*'){
+            int num = ( ch - '0') * 10 + (ch1 - '0');
+            if(num <= 26){
+                count = (count +  numDecodings(s,idx + 2,dp) % mod ) % mod;
+            }
+        }else if((ch >= '1' && ch <='2' && ch1 == '*')){
+            if(ch == '1') count = (count % mod  + 9 * numDecodings(s,idx+2,dp) % mod ) % mod;
+            if(ch == '2') count = (count % mod  + 6 * numDecodings(s,idx+2,dp) % mod ) % mod;
+        }else if(ch == '*' && ch1 != '*'){
+            if(ch1 >='0' && ch1 <= '6') count = (count % mod  + 2 * numDecodings(s,idx+2,dp) % mod ) % mod;
+            if(ch1 >='7' && ch1 <= '9') count = (count % mod  + numDecodings(s,idx+2,dp) % mod ) % mod;
+        }else if(ch == '*' && ch1 == '*') count = (count % mod  + 15 * numDecodings(s,idx+2,dp) % mod ) % mod;
+    }
+    
+    return dp[idx] = count % mod;
+}
+
+public int numDecodings(String s) {
+    if(s.length()==0) return 0;
+    long[] dp = new long[s.length() + 1];
+    
+    return (int)numDecodings(s, 0,dp);
+}
+
+// TargetSet/ CoinChange.==========================================================
+
+
+public static int coinChangePermutation(int[] arr,int tar){
+    if(tar == 0){
+        return dp[tar] = 1;
+    }
+
+    if(dp[tar] != 0) return dp[tar];
+
+    int count = 0;
+    for(int ele : arr){
+        if(tar - ele >= 0)
+          count += coinChangePermutation(arr,tar - ele); 
+    }
+
+    return dp[tar] = count;
+}
+
+public static int coinChangePermutation_DP(int[] arr,int tar){
+
+    int Tar = tar;
+    dp[0] = 1;
+    for(tar = 1 ;tar <= Tar;tar++){   
+        for(int ele : arr){
+            if(tar - ele >= 0)
+              dp[tar] += dp[tar - ele];
+        }
+    }
+
+    return dp[Tar];
+}
+
+public static int coinChangeCombination_DP(int[] arr,int tar){
+    int Tar = tar;
+    dp[0] = 1;
+    for(int ele : arr){
+        for(tar = ele ;tar <= Tar;tar++){   
+              dp[tar] += dp[tar - ele];
+        }
+    }
+
+    return dp[Tar];
 }
 
 
+//Leetcode 322
+
+public static int coinChange(int[] coins,int tar,int[] dp){
+    if(tar == 0){
+        return dp[tar] = 0;
+    }
+    
+    if(dp[tar] != -1) return dp[tar];
+
+    int minCoin = (int)1e9;
+    for(int ele: coins){
+        if(tar - ele >= 0){
+            int ans = coinChange(coins,tar-ele,dp);
+            if(ans != (int)1e9 && ans + 1 < minCoin) minCoin = ans + 1;
+        }
+    }
+
+    return dp[tar] = minCoin;
+}
+
+public static int coinChange(int[] coins,int tar,int[] dp){
+    int Tar = tar;
+    dp[0] = 0;
+    for(tar = 1; tar <= Tar; tar++){
+        int minCoin = (int)1e9;
+        for(int ele: coins){
+            if(tar - ele >= 0){
+              int ans = dp[tar - ele];
+              if(ans != (int)1e9 && ans + 1 < minCoin) minCoin = ans + 1;
+            }
+        }
+
+       dp[tar] = minCoin;
+    }
+
+    return dp[Tar];
+}
+
+public int coinChange(int[] coins, int amount) {
+    int[] dp=new int[amount+1];
+    Arrays.fill(dp,-1);
+    int ans = coinChange(coins,amount,dp);
+    
+    return ans!=(int)1e9?ans:-1;
+}
+
+//https://www.geeksforgeeks.org/find-number-of-solutions-of-a-linear-equation-of-n-variables/
+// same as coin change combination.
+
+public static int targetSum(int[] arr,int idx,int tar,int[][] dp){
+    if(tar == 0 || idx == arr.length){
+        return dp[idx][tar] = (tar == 0)? 1 : 0;
+    }
+
+    if(dp[idx][tar]!=0) return dp[idx][tar];
+    
+    if(tar - arr[idx] >= 0) dp[idx][tar] += targetSum(arr,idx+1,tar-arr[idx],dp);
+    dp[idx][tar] += targetSum(arr,idx+1,tar,dp); 
+
+    return dp[idx][tar];
+}
+
+public static int targetSum(int[] arr,int n,int tar,int[][] dp){
+    if(tar == 0 || n == 0){
+        return dp[n][tar] = (tar == 0)? 1 : 0;
+    }
+
+    if(dp[n][tar]!=0) return dp[idx][tar];
+    
+    if(tar - arr[ n - 1] >= 0) dp[n][tar] += targetSum(arr,n - 1,tar - arr[n - 1],dp);
+    dp[n][tar] += targetSum(arr,n - 1,tar,dp); 
+
+    return dp[n][tar];
+}
+
+public static int targetSum(int[] arr,int N,int Tar,int[][] dp){
+    for(int n = 0; n<=N;n++){
+        for(int tar = 0 ; tar<=Tar;tar++){
+            
+            if(tar == 0 || n == 0){
+                dp[n][tar] = (tar == 0)? 1 : 0;
+                continue;
+            }
+
+            if(tar - arr[ n - 1] >= 0) dp[n][tar] += dp[n-1][tar];
+            dp[n][tar] += dp[n-1][tar];             
+        }
+    }
+
+    return dp[N][Tar];
+}
+
+public static void targetSum(int[] arr,int tar){
 
 
-
+}
 
 
     public static void stringSet(){
