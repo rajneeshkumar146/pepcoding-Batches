@@ -118,7 +118,8 @@ TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
 }
 
 //Leetcode 173
-class BSTIterator{
+class BSTIterator
+{
 public:
     stack<TreeNode *> st;
     BSTIterator(TreeNode *root)
@@ -152,7 +153,8 @@ public:
 
 class Solution
 {
-    int getHeight(TreeNode *node){
+    int getHeight(TreeNode *node)
+    {
         return node == nullptr ? -1 : max(getHeight(node->left), getHeight(node->right)) + 1;
     }
 
@@ -232,17 +234,18 @@ public:
     }
 };
 
-
 // Leetcode BSTree from pre order
 int idx = 0;
-TreeNode* buildTree(vector<int>& arr,int lrange,int rrange){
-    if(idx >= arr.size() || arr[idx] < lrange || arr[idx] > rrange) return nullptr;
+TreeNode *buildTree(vector<int> &arr, int lrange, int rrange)
+{
+    if (idx >= arr.size() || arr[idx] < lrange || arr[idx] > rrange)
+        return nullptr;
 
     int data = arr[idx++];
-    TreeNode* node = new TreeNode(data);
-    
-    node->left = buildTree(arr,lrange,data);
-    node->right = buildTree(arr,data,rrange);
+    TreeNode *node = new TreeNode(data);
+
+    node->left = buildTree(arr, lrange, data);
+    node->right = buildTree(arr, data, rrange);
 
     return node;
 }
@@ -250,9 +253,24 @@ TreeNode* buildTree(vector<int>& arr,int lrange,int rrange){
 // BSTree from post order
 // BSTree from Level order
 
+void addAllLeft(TreeNode *node, stack<TreeNode *> &st)
+{
+    while (node != nullptr)
+    {
+        st.push(node);
+        node = node->left;
+    }
+}
+int kthSmallest(TreeNode *root, int k)
+{
+    stack<TreeNode *> st;
+    addAllLeft(root, st);
 
-
-
-
-
-
+    while (--k > 0)
+    {
+        TreeNode *rn = st.top();
+        st.pop();
+        addAllLeft(rn->right, st);
+    }
+    return st.top()->val;
+}

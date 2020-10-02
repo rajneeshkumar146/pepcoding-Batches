@@ -286,3 +286,106 @@ public class question{
     }
     
 }
+
+//https://practice.geeksforgeeks.org/problems/binary-tree-to-dll/1
+
+Node prevDLL = null;
+Node headDLL = null;
+
+void bToDLL_(Node node){
+    if(node==null) return;
+
+    bToDLL_(node.left);
+    
+    if(prevDLL==null) headDLL = node;
+    else{
+        prevDLL.right = node;
+        node.left = prevDLL;
+    }
+
+    prevDLL = node;
+
+    bToDLL_(node.right);
+}
+
+Node bToDLL(Node root)
+{
+    bToDLL_(root);
+    return headDLL;
+}
+
+// https://practice.geeksforgeeks.org/problems/binary-tree-to-cdll/1
+public Node bTreeToClist(Node root){
+    bToDLL_(root);
+
+    prevDLL.right = headDLL;
+    headDLL.left = prevDLL;
+    
+    return head;
+}
+
+//230
+public TreeNode rightMostNode(TreeNode node,TreeNode curr){
+    while(node.right != null && node.right != curr ){
+        node = node.right;
+    }
+    return node;
+}
+
+public int kthSmallest(TreeNode node, int k) {
+    TreeNode curr = node;
+    while(curr!=null){
+        TreeNode leftNode = curr.left;
+        if(leftNode == null){  // left null
+            if(--k == 0) break;
+            curr = curr.right;
+        }else{
+            TreeNode rmost = rightMostNode(leftNode,curr);
+            if(rmost.right == null){ // thread Creation
+                rmost.right = curr;
+                curr = curr.left;
+            }else{  // thread Break
+                rmost.right = null;
+                if(--k == 0) break;
+                
+                curr = curr.right;
+            }
+        }
+    }
+    return curr.val;
+}
+
+// https://www.geeksforgeeks.org/check-if-given-preorder-inorder-and-postorder-traversals-are-of-same-tree/
+int idx = 0;
+public boolean checkTree(int[] preorder,int psi,int pei, int[] inorder,int isi,int iei,int[] post){
+    if(psi > pei) return true;
+
+    int idx = isi;
+    boolean flag = false;
+    while(idx < iei){
+        if(inorder[idx] == preorder[psi]){
+            flag = true;
+            break;
+        }
+        idx++;
+    }
+
+    if(!flag) return false; 
+
+    int count = idx - isi; // countOfNodesInLeftSubTree.
+
+    if(!checkTree(preorder,psi+1,psi+count,inorder,isi,idx-1,post)) return  false;
+    if(!checkTree(preorder,psi+count+1,pei,inorder,idx+1,iei,post)) return  false;
+    
+    if(preorder[psi] != post[idx++]) return false;
+    
+    return true;
+}
+
+
+public TreeNode checkTree(int[] preorder, int[] inorder,int[] post) {
+    if(preorder.length==0) return null;
+    int n = preorder.length;
+
+    return checkTree(preorder,0,n-1,inorder,0,n-1,post);
+}

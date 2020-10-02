@@ -514,13 +514,95 @@ public class l001{
         ans.prev = node;
         
         allSolution(node.right,data,ans);
+    }
 
+    public static Node rightMostNode(Node node,Node curr){
+        while(node.right != null && node.right != curr ){
+            node = node.right;
+        }
+        return node;
+    }
+
+    public static void morrisInTraversal(Node node){
+        Node curr = node;
+        while(curr!=null){
+            Node leftNode = curr.left;
+            if(leftNode == null){  // left null
+                System.out.print(curr.data);
+                curr = curr.right;
+            }else{
+                Node rmost = rightMostNode(leftNode,curr);
+                if(rmost.right == null){ // thread Creation
+                    rmost.right = curr;
+                    curr = curr.left;
+                }else{  // thread Break
+                    rmost.right = null;
+                    System.out.print(curr.data);
+                    curr = curr.right;
+                }
+            }
+        }
     }
 
     
+    public static void morrisPreTraversal(Node node){
+        Node curr = node;
+        while(curr!=null){
+            Node leftNode = curr.left;
+            if(leftNode == null){  // left null
+                System.out.print(curr.data);
+                curr = curr.right;
+            }else{
+                Node rmost = rightMostNode(leftNode,curr);
+                if(rmost.right == null){ // thread Creation
+                    System.out.print(curr.data);
+                    
+                    rmost.right = curr;
+                    curr = curr.left;
+                }else{  // thread Break
+                    
+                    rmost.right = null;
+                    curr = curr.right;
+                }
+            }
+        }
+    }
 
+    public static class tPair{
+        Node node = null;
+        boolean selfdone=false;
+        boolean leftdone=false;
+        boolean rightdone=false;
 
+        tPair(Node node,boolean selfdone,boolean leftdone,boolean right){
+            this.selfdone = selfdone;
+            this.leftdone = leftdone;
+            this.right = rightdone;
+        }
+    }
 
+    public static void IterTraversal(Node node){
+
+        Stack<tPair> st = new Stack<>();
+        st.push(new tPair(node,false,false,false));
+
+        while(st.size()!=0){
+            tPair rp = st.peek();
+            
+            if(!rp.selfdone){
+                rp.selfdone = true;
+                System.out.print(rp.node.data + " ");
+            }else if(!rp.leftdone){
+                rp.leftdone = true;
+                if(rp.node.left != null) st.push(new tPair(rp.node.left,false,false,false));
+            }else if(!rp.rightdone){
+                rp.rightdone = true;
+                if(rp.node.right != null) st.push(new tPair(rp.node.right,false,false,false));
+            }else{
+                st.pop();
+            }
+        }
+    }
 
     public static void solve(){
         int[] arr={10,20,40,-1,-1,50,80,-1,-1,90,-1,-1,30,60,100,-1,-1,-1,70,110,-1,-1,120,-1,-1};
