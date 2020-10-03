@@ -967,10 +967,153 @@ public static int targetSum(int[] arr,int N,int Tar,int[][] dp){
     return dp[N][Tar];
 }
 
-public static void targetSum(int[] arr,int tar){
-
-
+// 494
+public int findTargetSumWays(int[] nums,int n,int sum, int tar,int[][] dp) {
+    if(n==0){
+        return dp[n][sum] = ( tar == sum ) ? 1: 0;
+        
+    }
+    
+    if(dp[n][sum] != -1) return dp[n][sum];
+    
+    int count = 0;
+    count += findTargetSumWays(nums,n - 1,sum - nums[n-1],tar,dp);    // num is positive
+    count += findTargetSumWays(nums,n - 1,sum + nums[n-1],tar,dp);   // num is negative
+    
+    return dp[n][sum] = count;
+    
 }
+   
+ public int findTargetSumWays_DP(int[] nums,int N,int Sum, int tar,int[][] dp) {
+     
+     dp[0][0 + Sum] = 1;
+     for(int n = 1; n <= N;n++){
+         for(int sum = 0 ; sum  <= 2*Sum;sum++) {
+    
+            int count = 0;
+            if(sum-nums[n-1] >=0 )count += dp[n-1][sum-nums[n-1]] ;
+            if(sum + nums[n-1] <= 2*Sum )count += dp[n-1][sum+nums[n-1]] ;
+            
+             dp[n][sum] = count;
+         }
+     }
+     
+     return dp[N][tar];
+}
+   
+public int findTargetSumWays(int[] nums, int tar) {
+    int n = nums.length;
+    if(n == 0) return 0;
+    
+    int sum = 0;
+    for(int ele: nums) sum += ele;
+    
+    if(tar > sum || tar < -sum) return 0;
+    
+    int[][] dp = new int[n+1][2 * sum + 1];
+    
+    // for(int[] a: dp) Arrays.fill(a,-1)
+    // int ans = findTargetSumWays(nums,n,sum,tar + sum,dp);
+    
+    int ans = findTargetSumWays_DP(nums,n,sum,tar + sum,dp);
+    
+    return ans;
+}
+
+
+// Leetcode 416
+public boolean canPartition(int[] nums) {
+    int N = nums.length;
+    if(N==0) return false;
+
+    int sum = 0;
+    for(int ele : nums) sum += ele;
+    if(sum%2 != 0) return false;
+
+    int Tar = sum/2;
+    boolean[][] dp = new boolean[N+1][Tar + 1];
+    
+    for(int n = 0 ; n <= N;n++){
+        for(int tar = 0 ; tar <= Tar;tar++){
+            if(n==0 || tar == 0){
+                dp[n][tar] = (tar == 0) ? true: false;
+                continue;
+            }
+
+            if(tar - nums[n-1] >= 0)
+               dp[n][tar] = dp[n][tar] || dp[n-1][tar - nums[n-1]];
+            dp[n][tar] = dp[n][tar] || dp[n-1][tar];
+        }
+    }
+
+    return dp[N][Tar];
+}
+
+public static int knapSack01(int[] weight,int[] price,int n,int cap,int[][] dp){
+    if(n == 0 || cap == 0){
+        return dp[n][cap] = 0;
+    }
+    
+    if(dp[n][cap] != -1) return dp[n][cap];
+    
+    int maxVal = 0;
+    if(cap - weight[n-1] >=0 ) maxVal = Math.max(maxVal, knapSack01(weight,price,n-1,cap-weight[n-1],dp) + price[n-1]);
+    maxVal = Math.max(maxVal, knapSack01(weight,price,n-1,cap,dp)); 
+
+    return dp[n][cap] = maxVal;
+}
+
+public static void knapSack(int[] weight,int[] value,int cap){
+    int n = weight.length;
+    int[][] dp = new int[n+1][cap+1];
+    for(int[] d: dp) Arrays.fill(d,-1);
+    
+    int ans = knapSack01(weight,value,n,cap,dp);
+}
+
+//https://practice.geeksforgeeks.org/problems/knapsack-with-duplicate-items4201/1
+public static int knapSack_unbounded(int N, int W, int val[], int wt[],int[][] dp){
+    if(N==0 || W==0){
+        return dp[N][W] = 0;
+    }
+    
+    if(dp[N][W]!= -1) return dp[N][W];
+    
+    int maxVal = 0;
+    if(W-wt[N-1]>=0) maxVal = Math.max(maxVal,knapSack_unbounded(N,W-wt[N-1],val,wt,dp) + val[N-1]);
+    maxVal = Math.max(maxVal,knapSack_unbounded(N-1,W,val,wt,dp));
+    
+    return dp[N][W] = maxVal;
+    
+}
+
+public static int knapSack_unbounded(int N, int W, int val[], int wt[],int[][] dp){
+    dp[0] = 0;
+    for(int i = 0;i<N;i++){
+        for(int w = wt[i]; w <= W;w++){
+            dp[w] = Math.max(dp[w],dp[w-wt[i]] + val[i]);
+        }
+    }
+
+    return dp[W];
+}
+
+static int knapSack(int N, int W, int val[], int wt[])
+{
+    int[][] dp = new int[N+1][W+1];
+    for(int[] d: dp) Arrays.fill(d,-1);
+    
+    return knapSack_unbounded(N,W,val,wt,dp);
+}
+
+
+
+
+
+
+
+
+
 
 
     public static void stringSet(){
