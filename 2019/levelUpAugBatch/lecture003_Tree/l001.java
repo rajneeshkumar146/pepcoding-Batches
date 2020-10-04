@@ -132,6 +132,29 @@ public class l001{
         System.out.println(LCA.data);
     }
 
+
+    static Node LCA = null;
+    public static boolean LCA_Better(Node node,int d1,int d2){
+        if(node == null) return false;
+        boolean sf = false;
+        if(node.data == d1 || node.data == d2) sf = true;
+
+        boolean lf = LCA_Better(node.left,d1,d2);
+        if(LCA!=null) return true;
+
+        boolean rf = LCA_Better(node.right,d1,d2);
+        if(LCA!=null) return true;
+
+        if( (lf && rf) || (lf && sf) || (rf && sf)) LCA = node;
+
+        return lf || rf || sf;
+    }
+
+    public static boolean LCA_Better(Node node,int d1,int d2){
+        LCA_Better(node,d1,d2);
+        return LCA;
+    }
+
     public static void kdown(Node node,Node block,int k,ArrayList<Integer> ans){
         if(node==null || node == block || k < 0) return;
 
