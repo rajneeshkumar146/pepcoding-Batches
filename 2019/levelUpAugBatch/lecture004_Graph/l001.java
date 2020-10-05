@@ -81,10 +81,43 @@ public class l001{
         for(Edge e: graph[src]){
             if(!vis[e.v])
             count+=allPath(e.v,dest,vis,psf + src + " ", wsf + e.w);
+            
         }
         
         vis[src] = false;
         return count;
+    }
+
+    public static class pair{
+        String path = "";
+        int weight = 0;
+
+        pair(String path,int weight){
+            this.path = path;
+            this.weight = weight;
+        }
+    }
+
+    public static pair maxWeightPath(int src,int dest,boolean[] vis){
+        if(src==dest){
+            return new pair(src + "",0);
+        }
+
+        vis[src] = true;
+        
+        pair myAns = new pair("",0);
+        for(Edge e : graph[src]){
+            if(!vis[e.v]){
+                pair recAns = maxWeightPath(e.v,dest,vis);
+                if(recAns.weight + e.w > myAns.weight){
+                    myAns.weight = recAns.weight + e.w;
+                    myAns.path = src + " " + recAns.path;
+                }
+            }
+        }
+
+        vis[src] = false;
+        return myAns;
     }
 
     public static void constructGraph(){
@@ -103,7 +136,9 @@ public class l001{
         display();
 
         boolean[] vis = new boolean[N];
-        System.out.println(allPath(0,6,vis,"",0));
+        // System.out.println(allPath(0,6,vis,"",0));
+        pair ans = maxWeightPath(0,6,vis);
+        System.out.println(ans.path + " @ " + ans.weight);
     }
 
     public static void main(String[] args){
