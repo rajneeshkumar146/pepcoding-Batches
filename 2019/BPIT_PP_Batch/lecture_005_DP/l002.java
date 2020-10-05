@@ -143,7 +143,20 @@ public class l002{
     // https://www.geeksforgeeks.org/maximum-sum-increasing-subsequence-dp-14/
     public static int maxSumIS(int arr[], int n)  
 	{  
-	    
+        int n = arr.length;
+	    int sum = 0;
+	    int[] dp = new int[n];
+	    for(int i = 0;i<n;i++){
+	        dp[i] = arr[i];
+	        for(int j = i - 1;j>=0 ; j--){
+	            if(arr[i] > arr[j]){
+	                dp[i] = Math.max(dp[i] , dp[j] + arr[i]);
+	            }
+	        }
+	        
+	        sum = Math.max(sum,dp[i]);
+	    }
+	    return sum;
 	}  
 
     public static int minNoOFDeletion(int[] arr){
@@ -288,14 +301,47 @@ public class l002{
     // https://www.geeksforgeeks.org/longest-alternating-subsequence/?ref=rp
     public static int longestAlternatingSubsequence(int[] arr){
 
+        int n = arr.length;
+        int[][] dp = new int[n][2];  // (decreasing slope, increasing slope)
 
+        int maxLen = 0;
+        for(int i = 0; i < n; i++){
+            dp[i][0] = dp[i][1] = 1;
+            for(int j = i-1; j >= 0 ; j--){   
+                if(arr[i] > arr[j]) dp[i][1] = Math.max(dp[i][1],dp[j][0] + 1);
+                if(arr[i] < arr[j]) dp[i][0] = Math.max(dp[i][0],dp[j][1] + 1);
+            }
+
+            maxLen = Math.max(maxLen, Math.max(dp[i][0],dp[i][1]));
+        }
+
+        return maxLen;
     }
 
     //For you --> https://www.geeksforgeeks.org/maximum-sum-alternating-subsequence-sum/
     
-    public static int BuildingBridges(int[] arr){
+    
+    public static int BuildingBridges(int[][] arr){
+        int n = arr.length;
+        Arrays.sort(arr,(a,b)->{
+            // if(a[0] == b[0]) return b[1] - a[1];
+            return a[0] - b[0];
+        });
+        
+        int[] dp = new int[n];
+        int len = 0;
 
+        for(int i=0;i<n;i++){
+            for(int j = i-1;j>=0;j--){
+                if(arr[i][1] > arr[j][1]){
+                    dp[i] = Math.max(dp[i],dp[j]+1);
+                }
+            }
 
+            len = Math.max(len,dp[i]);
+        }
+
+        return len;
     }
 
 
