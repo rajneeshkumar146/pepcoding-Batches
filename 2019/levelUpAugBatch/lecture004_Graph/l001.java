@@ -57,12 +57,34 @@ public class l001{
         }
     }
 
-    public static boolean hasPath(int src,int dest){
+    public static boolean hasPath(int src,int dest,boolean[] vis){
+        if(src == dest) return true;
 
+        vis[src] = true;
+        boolean res = false;
+        for(Edge e: graph[src]){
+            if(!vis[e.v])
+               res = res || hasPath(e.v,dest,vis);
+        }
+
+        return res;
     }
 
-    public static int allPath(int src,int dest){
+    public static int allPath(int src,int dest,boolean[] vis,String psf,int wsf){
+        if(src == dest){
+            System.out.println(psf + src + "@" + wsf);
+            return 1;
+        }
 
+        vis[src] = true;
+        int count = 0;
+        for(Edge e: graph[src]){
+            if(!vis[e.v])
+            count+=allPath(e.v,dest,vis,psf + src + " ", wsf + e.w);
+        }
+        
+        vis[src] = false;
+        return count;
     }
 
     public static void constructGraph(){
@@ -79,6 +101,9 @@ public class l001{
 
         // removeVtx(3);
         display();
+
+        boolean[] vis = new boolean[N];
+        System.out.println(allPath(0,6,vis,"",0));
     }
 
     public static void main(String[] args){
