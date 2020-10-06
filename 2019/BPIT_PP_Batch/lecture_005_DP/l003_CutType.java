@@ -58,12 +58,50 @@ public class l003_CutType{
         return dp[SI][EI];
     }
 
+    public static int mcm_DPString(int[] arr,int SI,int EI,int[][] dp){
+        int n = arr.length;
+        String[][] sdp = new String[n][n];
+
+        for(int gap = 1; gap < n;gap++){
+            for(int si = 0, ei = gap; ei < n; si++,ei++){
+                if(si + 1 == ei){
+                    String s = (char)( si + 'A');
+                    sdp[si][ei] = s;
+                    dp[si][ei] = 0;
+                    continue;
+                }
+        
+                int myAns = (int)1e8;
+                String s = "";
+                for(int cut = si + 1;cut<ei;cut++){
+                    int leftTree = dp[si][cut];
+                    int rightTree = dp[cut][ei];
+        
+                    int myCost = leftTree +  arr[si] * arr[cut] * arr[ei] + rightTree;
+                    
+                    myAns = Math.min(myAns, myCost);
+                    if(myCost < myAns){
+                        myAns = myCost;
+                        s = "("  + sdp[si][cut] + sdp[cut][ei] + ")";
+                    }
+                }
+        
+                dp[si][ei] = myAns;
+                sdp[si][ei] = s;
+            }
+        }
+
+        System.out.println(sdp[SI][EI])
+        return dp[SI][EI];
+    }
+
+
     public static void mcm(){
-        int[] arr = {1,2,3,4,3,7,5,10,45,234};
+        int[] arr = {1,2,3,4,3};
         int n = arr.length;
 
         int[][] dp = new int[n][n];
-        System.out.println(mcm_rec(arr,0,n-1,dp));
+        System.out.println(mcm_DPString(arr,0,n-1,dp));
 
         print2D(dp);
     }
