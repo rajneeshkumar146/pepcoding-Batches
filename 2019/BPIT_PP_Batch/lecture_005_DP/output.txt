@@ -1,0 +1,26 @@
+543 , 296352   
+(1, 1)null(3, 3)null(7, 9)null(11, 21)null(27, 105)null(29, 147)null(33, 441)null(36, 882)null(39, 1323)null(42, 1764)null(48, 5292)null(111, 42336)null(543, 296352)
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull
+nullnull(2, 2)null(6, 6)null(10, 14)null(26, 70)null(28, 98)null(32, 294)null(35, 588)null(38, 882)null(41, 1176)null(47, 3528)null(110, 28224)null(542, 197568)
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull
+nullnullnullnull(3, 3)null(7, 7)null(23, 35)null(25, 49)null(29, 147)null(32, 294)null(35, 441)null(38, 588)null(44, 1764)null(107, 14112)null(539, 98784)
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull
+nullnullnullnullnullnull(4, 4)null(20, 20)null(22, 28)null(26, 84)null(29, 168)null(32, 252)null(35, 336)null(41, 1008)null(104, 8064)null(536, 56448)
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull
+nullnullnullnullnullnullnullnull(5, 5)null(7, 7)null(11, 21)null(14, 42)null(17, 63)null(20, 84)null(26, 252)null(89, 2016)null(521, 14112)
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull
+nullnullnullnullnullnullnullnullnullnull(2, 2)null(6, 6)null(9, 12)null(12, 18)null(15, 24)null(21, 72)null(84, 576)null(516, 4032)
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull
+nullnullnullnullnullnullnullnullnullnullnullnull(3, 3)null(6, 6)null(9, 9)null(12, 12)null(18, 36)null(81, 288)null(513, 2016)
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull
+nullnullnullnullnullnullnullnullnullnullnullnullnullnull(3, 3)null(6, 6)null(9, 9)null(15, 27)null(78, 216)null(510, 1512)
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull(3, 3)null(6, 6)null(12, 18)null(75, 144)null(507, 1008)
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull(3, 3)null(9, 9)null(72, 72)null(504, 504)
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull(3, 3)null(24, 24)null(168, 168)
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull(8, 8)null(56, 56)
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull
+nullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnullnull(7, 7)
