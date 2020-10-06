@@ -65,7 +65,7 @@ public class l003_CutType{
         for(int gap = 1; gap < n;gap++){
             for(int si = 0, ei = gap; ei < n; si++,ei++){
                 if(si + 1 == ei){
-                    String s = (char)( si + 'A');
+                    String s = ""+(char)(si + 'A');
                     sdp[si][ei] = s;
                     dp[si][ei] = 0;
                     continue;
@@ -79,7 +79,6 @@ public class l003_CutType{
         
                     int myCost = leftTree +  arr[si] * arr[cut] * arr[ei] + rightTree;
                     
-                    myAns = Math.min(myAns, myCost);
                     if(myCost < myAns){
                         myAns = myCost;
                         s = "("  + sdp[si][cut] + sdp[cut][ei] + ")";
@@ -91,13 +90,13 @@ public class l003_CutType{
             }
         }
 
-        System.out.println(sdp[SI][EI])
+        System.out.println(sdp[SI][EI]);
         return dp[SI][EI];
     }
 
 
     public static void mcm(){
-        int[] arr = {1,2,3,4,3};
+        int[] arr = {4, 2, 3, 1, 3};
         int n = arr.length;
 
         int[][] dp = new int[n][n];
@@ -186,7 +185,7 @@ public class l003_CutType{
         return dp[SI][EI];
     }
 
-    public static minMaxPair evalCombination(minMaxPair p1,minMaxPair p2,char operator){
+    public static minMaxPair evalCombination(char operator,minMaxPair p1,minMaxPair p2){
 
         int a = evaluate(operator,p1.minVal,p2.minVal);
         int b = evaluate(operator,p1.minVal,p2.maxVal);
@@ -211,10 +210,10 @@ public class l003_CutType{
         minMaxPair myAns = new minMaxPair();
 
         for(int cut = si; cut < ei; cut++){
-            minMaxPair leftTree = minMaxValue(str,si , cut,dp);
-            minMaxPair rightTree = minMaxValue(str,cut + 1, ei,dp);
+            minMaxPair leftTree = minMaxValue_02(numArr,chArr,si , cut,dp);
+            minMaxPair rightTree = minMaxValue_02(numArr,chArr,cut + 1, ei,dp);
 
-            char ch = chArr[cut];
+            char operator = chArr[cut];
             minMaxPair p = evalCombination(operator,leftTree,rightTree);
 
             myAns.minVal = Math.min(myAns.minVal, p.minVal);
@@ -243,9 +242,39 @@ public class l003_CutType{
         }
     }
 
+    // Leetcode 312
+    public int maxCoins(int[] nums,int si,int ei ,int[][] dp) {
+        if(dp[si][ei] != -1) return dp[si][ei];
+        
+        int liVal = (si - 1 == -1) ? 1 : nums[si - 1];
+        int riVal = (ei + 1 == nums.length) ? 1 : nums[ei + 1];
+        
+        int myCost = 0;
+        
+        for(int cut = si;cut<=ei;cut++){
+            int leftTree = (cut == si)?0:maxCoins(nums,si,cut-1,dp);
+            int rightTree = (cut == ei)?0:maxCoins(nums,cut+1,ei,dp);
+            
+            myCost = Math.max(myCost, leftTree + liVal * nums[cut] * riVal + rightTree); 
+        }
+        
+        return dp[si][ei] = myCost;
+    }
+    
+    public int maxCoins(int[] nums) {
+        int n = nums.length;
+        if(n == 0) return 0;
+        
+        int[][] dp = new int[n][n];
+        for(int[] d: dp)Arrays.fill(d,-1);
+        
+        return maxCoins(nums,0,n-1,dp);
+        
+    }
+
     public static void solve(){
-        // mcm();
-        minMaxValue();
+        mcm();
+        // minMaxValue();
     }
 
     public static void main(String[] args){
