@@ -1,3 +1,4 @@
+import java.util.Arrays;
 public class l003_CutType{
 
     public static void print(int[] arr){
@@ -272,9 +273,109 @@ public class l003_CutType{
         
     }
 
+    public static int OBST(int[] freq,int si,int ei,int[][] dp,int[] prefixSum){
+        if(dp[si][ei]!=0) return dp[si][ei];
+
+        int myRes = (int) 1e8;
+        // int sum = 0;
+        for(int cut = si; cut<=ei;cut++){
+            int leftTree = cut == si ? 0 : OBST(freq,si,cut-1,dp,prefixSum);
+            int rightTree = cut == ei ? 0 : OBST(freq,cut + 1,ei,dp,prefixSum);
+
+            int myAns = leftTree +  (prefixSum[ei] - (si == 0 ? 0 : prefixSum[si-1]))  + rightTree;  
+            // int myAns = leftTree + rightTree;
+            
+            myRes = Math.min(myRes,myAns);
+            
+            // sum+=freq[cut];
+        }
+
+        return dp[si][ei] = myRes;
+    }
+
+    public static void OBST(){
+        int[] freq = {34, 8, 50};
+        int[] val = {10, 12, 20};
+
+        int n = val.length;
+
+        int[][] dp = new int[n][n];
+
+        int[] prefixSum = new int[n];
+        
+        int prev = 0;
+        for(int i = 0;i<n;i++){
+            prefixSum[i] = prev + freq[i];
+            prev = prefixSum[i];
+        }
+
+        System.out.println(OBST(freq,0,n-1,dp,prefixSum));
+        print2D(dp);
+    }
+
+    // 1039
+    public int minTriangulation(int[] A,int si,int ei,int[][] dp){
+        if(ei - si < 2) return dp[ei][si] = 0;
+        if(dp[ei][si] != -1 ) return dp[si][ei];
+
+        int minAns = (int) 1e8;
+        for(int cut = si + 1; cut < ei; cut++){
+            int leftTree = minTriangulation(A,si,cut,dp);
+            int rightTree = minTriangulation(A,cut,ei,dp);
+
+            int myAns = leftTree + arr[si] * arr[cut] * arr[ei] + rightTree;
+            minAns = Math.min(minAns,myAns);
+        }
+
+        return dp[si][ei] = minAns;
+    }
+
+    public int minScoreTriangulation(int[] A) {
+        int n = A.length;
+        int[][] dp = new int[n][n];
+        for(int[] d: dp) Arrays.fill(d,-1);
+        return minTriangulation(A,0,n-1,dp); 
+    }
+
+    //Leetcode 132
+    public static int minCut_01(String str,int si,int ei ,int[][] dp,boolean[][] isPalindrome){
+        if(isPalindrome[si][ei]) return 0;
+
+        if(dp[si][ei] != -1) return dp[si][ei];
+
+        int minAns = (int) 1e8;
+        for(int cut = si; cut < ei;cut++){
+            int leftTree = minCut_01(str,si,cut,dp);
+            int rightTree = minCut_01(str,cut + 1,ei,dp);
+
+            minAns = Math.min(minAns,leftTree + 1 + rightTree);
+        }
+
+        return dp[si][ei] = minAns;
+    }
+    
+    public static int minCut(String str) {
+        int n = str.length();
+        int[][] dp = new int[n][n];
+        for(int[] d: dp) Arrays.fill(d,-1);
+
+        boolean[][] isPalindrome = new boolean[n][n];
+        for(int gap = 0 ; gap < n ;gap++){
+            for(int i = 0, j = gap; j<n;i++,j++){
+                if(gap == 0) isPalindrome[i][j] = true;
+                else if(gap == 1) isPalindrome[i][j] = str.charAt(i) == str.charAt(j);
+                else isPalindrome[i][j] = str.charAt(i) == str.charAt(j) && isPalindrome[i + 1][j - 1];
+            }
+        }
+
+
+        return minCut_01(str,0,n-1,dp, isPalindrome);
+    }
+
     public static void solve(){
-        mcm();
+        // mcm();
         // minMaxValue();
+        OBST();
     }
 
     public static void main(String[] args){
