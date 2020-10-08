@@ -468,6 +468,149 @@ public class l003_CutType{
         return jump;
     }
 
+    
+    static int mod = 1003;
+    public static void evaluate (int[] left,int[] right,char ch , int[] ans){ 
+        int tleft = (left[0] % mod + left[1] % mod) % mod;
+        int tright = (right[0]% mod + right[1]% mod)% mod;
+        
+        int tTF = ((tleft % mod) * (tright% mod ))% mod;
+        
+        if(ch == '|'){
+            
+            ans[0] += (tTF % mod - (left[1]% mod) * (right[1])% mod + mod) % mod;
+            ans[1] += ((left[1]% mod) * (right[1])% mod) % mod;
+        
+            
+        }else if(ch == '&'){
+            
+            ans[0] += ((left[0]% mod) * (right[0])% mod) % mod;
+            ans[1] += (tTF % mod - (left[0]% mod) * (right[0])% mod + mod) % mod;
+        }else{
+            
+            ans[0] += ( ((left[0]% mod) * (right[1])% mod) % mod + ((left[1]% mod) * (right[0])% mod) % mod)
+                      %mod;
+            ans[1] += ( ((left[0]% mod) * (right[0])% mod) % mod + ((left[1]% mod) * (right[1])% mod) % mod)
+                      %mod;           
+        }
+        
+        ans[0] %= mod;
+        ans[1] %= mod;
+    }
+    
+    
+    
+    // 0 th - > true, 1st -> false.
+    public static int[] booleanParenthesization(String str,int si,int ei,int[][][] dp){
+        if(si == ei){
+            int[] base = new int[2];
+            base[0] = str.charAt(si) == 'T' ? 1 : 0;
+            base[1] = str.charAt(si) == 'F' ? 1 : 0;
+            
+            return base;
+        }
+        
+        if(dp[si][ei][0] != 0 || dp[si][ei][1] != 0) return dp[si][ei];
+        
+        for(int cut = si + 1; cut < ei; cut += 2){
+            
+            int[] left = booleanParenthesization(str,si,cut-1,dp);
+            int[] right = booleanParenthesization(str,cut + 1,ei,dp);
+            
+            char ch = str.charAt(cut);
+            evaluate(left,right,ch,dp[si][ei]);
+    }
+    
+        return dp[si][ei];
+    }
+
+    // Leetcode 1278
+    public int palindromePartition(String s,int k,int si,int ei,int[][] dp,int[][] pdp){
+        if(k >= (ei-si+1)){
+            return dp[k][ei] = (k == (ei-si+1))?0:(int)1e8;
+        }
+        
+        if(k == 1 || si  == ei){
+            return dp[k][ei] = ( si == ei ) ? 0 : pdp[0][ei];
+        }
+        
+        if(dp[k][ei] != -1) return dp[k][ei];
+        
+        int ans = (int)1e8;
+        for(int cut = si; cut < ei;cut++){
+            int recAns = palindromePartition(s,k-1,si,cut,dp,pdp);
+            
+            if(recAns!=(int)1e8)
+            ans = Math.min(ans,recAns + pdp[cut+1][ei]);
+        }
+        
+        return dp[k][ei] =  ans;
+    }
+    
+    
+    public int palindromePartition(String s, int k) {
+        int n = s.length();
+        if(k==0 || k == n ) return 0;
+        
+        int[][] dp = new int[k+1][n+1];
+        for(int[] d:dp) Arrays.fill(d,-1);
+        int[][] pdp = new int[n][n];
+        
+        for(int gap = 1 ;gap <n;gap++){
+            for(int i =0,j=gap;j<n;i++,j++){
+                pdp[i][j] += pdp[i+1][j-1];
+                if(s.charAt(i) != s.charAt(j)) pdp[i][j] += 1;
+            }
+        }
+        
+        
+        int ans = palindromePartition(s,k,0,n-1,dp,pdp);
+        return ans; 
+    }
+
+
+    // Leetcode 1216
+    public boolean isValidPalindrome(String s, int k) {
+        int n = s.length();
+        int[][] dp = new int[n][n];
+        for(int gap = 0 ;gap <n;gap++){
+            for(int i =0,j=gap;j<n;i++,j++){
+                if(gap ==0) dp[i][j] = 1;
+                else if(gap == 1 && s.charAt(i) == s.charAt(j)) dp[i][j] = 2;
+                else if(s.charAt(i) == s.charAt(j)) dp[i][j] = dp[i+1][j-1] + 2;
+                else dp[i][j] = Math.max(dp[i+1][j],dp[i][j-1]);    
+            }
+        }
+        return n - dp[0][n-1] <= k;   
+    }
+
+    //688
+    int dx[] = { -2, -1, 1, 2, -2, -1, 1, 2 }; 
+    int dy[] = { -1, -2, -2, -1, 1, 2, 2, 1 }; 
+    
+    public double knightProbability(int N, int K, int r, int c,double[][][] dp ) {
+        if(K == 0) dp[K][r][c] = 1;
+        
+        if(dp[K][r][c] != 0.0) return dp[K][r][c];
+        
+        double count = 0.0;
+        for(int d = 0;d<8;d++){
+            int x = r + dx[d];
+            int y = c + dy[d];
+            
+            if(x>=0 && y>=0 && x<N && y<N){
+                count += knightProbability(N,K-1,x,y,dp);
+            }
+        }
+        
+        return dp[K][r][c] = count/8.0;
+    }
+    
+    
+    public double knightProbability(int N, int K, int r, int c) {
+        double[][][] dp = new double[K+1][N+1][N+1];
+        return knightProbability(N,K,r,c,dp);
+    }
 
 
 
