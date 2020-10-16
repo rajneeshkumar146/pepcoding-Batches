@@ -109,6 +109,98 @@ public class l002_Directional{
         else System.out.println("Cycle"); 
     }
 
+    public int longestIncreasingPath(int[][] matrix) {
+        int n = matrix.length; if(n==0) return 0;
+        int m = matrix[0].length;if(m==0) return 0;
+ 
+        int[][] indegree=new int[n][m];
+        int[][] dir = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                for(int d=0;d<4;d++){
+                    int x = i + dir[d][0];
+                    int y = j + dir[d][1];
+                    if(x>=0 && y>=0 && x < n && y < m && matrix[x][y] > matrix[i][j]) indegree[x][y]++;
+                }
+            }
+        }
+
+        LinkedList<Integer> que = new LinkedList<>();
+        for(int i = 0; i < n; i++)
+            for(int j = 0; j < m; j++)
+               if(indegree[i][j]==0) que.addLast(i*m+j);   
+
+        int level = 0;
+        while(que.size()!=0){
+            int size = que.size();
+            while(size-->0){
+                int idx = que.removeFirst();
+                int i = idx / m;
+                int j = idx % m;
+    
+                for(int d=0;d<4;d++){
+                    int x = i + dir[d][0];
+                    int y = j + dir[d][1];
+                    if(x>=0 && y>=0 && x < n && y < m && matrix[x][y] > matrix[i][j] && --indegree[x][y] == 0) que.addLast(x*m+y);
+                }                
+            }
+            level++;
+        }
+
+        return  level;
+    }
+
+    //SCC.
+    public static void DFS_SSC(int src,boolean[] vis,ArrayList<Integer> path){
+        vis[src] = true;
+        for(int e : graph[src])
+            if(!vis[e])
+               DFS_SSC(e,vis,path);
+        
+        path.add(src);
+    }
+
+    public static void DFS_SSC2(int src,ArrayList<Integer>[] ngraph,boolean[] vis){
+        vis[src] = true;
+        System.out.print(src+" ");
+
+        for(int e : ngraph[src])
+            if(!vis[e])
+               DFS_SSC(e,vis,path);
+    }
+
+    public static void SCC(){
+
+        //Topological Order.
+        ArrayList<Integer> path = new ArrayList<>();
+        boolean[] vis = new boolean[N];
+        for(int i=0;i<N;i++){
+            if(!vis[i])
+               DFS_SSC(i,vis,path);
+        }
+
+        // Reverse graph.
+        ArrayList<Integer>[] ngraph = new ArrayList[N];
+        for(int i=0;i<N;i++) graph[i] = new ArrayList<>();
+
+        for(int i=0;i<N;i++){
+            for(int e: graph[i])
+               ngraph[e].add(i);
+        }
+
+        //DFS over topologicalOrder.
+        vis = new boolean[N];
+
+        int count = 0;
+        for(int i=path.size()-1;i>=0;i--){
+            if(!vis[i]){
+                count++;
+                DFS_SSC2(i,ngraph,vis);
+            }
+        }
+    }
+
 
 
 }
