@@ -170,6 +170,7 @@ public class l002_Directional{
                DFS_SSC(e,vis,path);
     }
 
+    //kosaraju algorithm
     public static void SCC(){
 
         //Topological Order.
@@ -194,13 +195,12 @@ public class l002_Directional{
 
         int count = 0;
         for(int i=path.size()-1;i>=0;i--){
-            if(!vis[i]){
+            if(!vis[path.get(i)]){
                 count++;
-                DFS_SSC2(i,ngraph,vis);
+                DFS_SSC2(path.get(i),ngraph,vis);
             }
         }
     }
-
 
 
 }
