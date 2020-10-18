@@ -590,4 +590,7 @@ public int[] findOrder(int N, int[][] arr) {
         
     }
 
+    // union find.================================================
+    
+
 
