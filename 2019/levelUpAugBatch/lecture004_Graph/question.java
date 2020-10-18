@@ -591,6 +591,64 @@ public int[] findOrder(int N, int[][] arr) {
     }
 
     // union find.================================================
+    int[] par;
+    int findPar(int u){
+       if (u == par[u])
+          return u;
+       return par[u] = findPar(par[u]);
+    }
+
+//684
+int[] findRedundantConnection(int[][] edges){
+    int n = edges.length;
+    par = new int[n+1];
+    for (int i = 0; i <= n; i++)
+        par[i] = i;
+
+    for (int[] a : edges)
+    {
+        int p1 = findPar(a[0]);
+        int p2 = findPar(a[1]);
+
+        if (p1 != p2)
+            par[p1] = p2;
+        else
+            return a;
+    }
+
+    return new int[0];
+}
+
+    // 1061
+    int[] par;
+    int findPar(int u ){
+        if(par[u] == u) return u;
+        return par[u] = findPar(par[u]);
+    }
     
+    public String smallestEquivalentString(String A, String B, String S) {
+        
+        par = new int[26];
+        for(int i=0;i<26;i++) par[i] = i;
+        
+        for(int i=0;i<A.length();i++){
+            int p1 = findPar(A.charAt(i) - 'a');
+             int p2 = findPar(B.charAt(i) - 'a');
+            
+            par[p1] = Math.min(p1,p2);
+            par[p2] = Math.min(p1,p2);
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<S.length();i++)
+        {
+            int p = findPar(S.charAt(i) - 'a');
+            sb.append((char)(p + 'a'));
+        }
+        
+        return sb.toString();
+        
+    }
+
 
 
