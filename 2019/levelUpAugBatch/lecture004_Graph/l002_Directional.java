@@ -80,9 +80,9 @@ public class l002_Directional{
     public static boolean TopoDFS(int src,int[] vis,ArrayList<Integer> ans){
         vis[src] = 1;
         for(Integer e : graph[src]){
-            if(vis[e] == 0)
+            if(vis[e] == 0){
                if(TopoDFS(e,vis,ans)) return true;
-            else if(vis[e] == 1) return true;
+            }else if(vis[e] == 1) return true;
         }
 
         ans.add(src);
