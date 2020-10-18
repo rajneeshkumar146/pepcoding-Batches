@@ -317,11 +317,237 @@ public class l002questionHashMap{
             }  
         }
         
-        return maxWater;
+        return maxWater;   
+    }
+
+    // 781
+public int numRabbits(int[] arr) {
+    if(arr.length == 0) return 0;
+    
+    int n = arr.length;
+    HashMap<Integer,Integer> map = new HashMap<Integer,Integer>();
+    
+
+    int ans = 0;
+    for(int ele : arr){
+        map.put(ele, map.getOrDefault( ele, 0 ) + 1);
+        if(map.get(ele) == 1) ans += ele + 1;
         
+        if(map.get(ele) == ele + 1) map.remove(ele);
+    }
+    
+    return ans;     
+}
+
+//560
+public int subarraySum(int[] nums, int k) {
+    int n = nums.length;
+    if(n == 0 ) return 0;
+    
+    
+    HashMap<Integer,Integer> map = new HashMap<>();
+    map.put(0,1);
+    int count = 0;
+    int sum = 0;
+    for(int ele: nums){
+        sum += ele;
+        if(map.containsKey(sum-k)) count += map.get(sum-k);
+        
+        map.put(sum,map.getOrDefault(sum,0)+1);
+    }
+    
+    return count;   
+}
+
+// Leetcode 974
+public int subarraysDivByK(int[] nums, int K) {
+    int n = nums.length;
+    if(n == 0 ) return 0;
+    
+    
+    HashMap<Integer,Integer> map = new HashMap<>();
+    map.put(0,1);
+    int count = 0;
+    int sum = 0;
+    for(int ele: nums){
+        sum += ele;
+        int val = (sum%K + K )%K;
+        if(map.containsKey(val)) count += map.get(val);
+        
+        map.put(val,map.getOrDefault(val,0)+1);
+    }
+    
+    return count;   
+}
+
+// https://practice.geeksforgeeks.org/problems/longest-sub-array-with-sum-k/0
+public static void main (String[] args)
+	{
+	    
+	    Scanner scn = new Scanner(System.in);
+	    int t = scn.nextInt();
+	    while(t-->0){
+	        int n = scn.nextInt();
+	        int k = scn.nextInt();
+	        
+	        HashMap<Integer,Integer> map = new HashMap<>();
+	        map.put(0,-1);
+	        int maxLen = 0;
+	        int sum = 0;
+	        
+	        for(int i=0;i<n;i++){
+	           sum  += scn.nextInt();
+	           int val = ( sum - k );
+	           
+	           if(map.containsKey(val)) maxLen = Math.max(maxLen, i - map.get(val));
+	           
+	           if(!map.containsKey(sum)) map.put(sum,i);
+	        }
+	        
+	        System.out.println(maxLen);
+	    }
+    }
+    
+    // https://practice.geeksforgeeks.org/problems/longest-subarray-with-sum-divisible-by-k1259/1
+    int longSubarrWthSumDivByK(int a[], int n, int k)
+    {
+        HashMap<Integer,Integer> map = new HashMap<>();
+	    map.put(0,-1);
+	    int maxLen = 0;
+	    int sum = 0;
+	        
+	        for(int i=0;i<n;i++){
+	           sum  += a[i];
+	           int val = ( sum%k + k )%k;
+	           
+	           if(map.containsKey(val)) maxLen = Math.max(maxLen, i - map.get(val));
+	           
+	           if(!map.containsKey(val)) map.put(val,i);
+	        }
+	        
+	        return maxLen;
+    }
+   
+    // 525 , equal no of 0 and 1 
+    public int findMaxLength(int[] nums) {
+        HashMap<Integer,Integer> map = new HashMap<>();
+        map.put(0,-1);
+        int maxLen = 0;
+        int sum = 0;
+             
+        for(int i=0;i<nums.length;i++){
+            sum  += nums[i] == 1?1:-1;
+            int val = sum - 0;
+            if(map.containsKey(val)) maxLen = Math.max(maxLen, i - map.get(val));
+                
+                if(!map.containsKey(sum)) map.put(sum,i);
+        }
+         
+         return maxLen;
+     }
+
+     // https://www.geeksforgeeks.org/count-subarrays-equal-number-1s-0s/
+     // Count of all subarray equal no of 0 and 1
+     public int findMaxLength(int[] nums) {
+        HashMap<Integer,Integer> map = new HashMap<>();
+        map.put(0,1);
+        int count = 0;
+        int sum = 0;
+             
+        for(int i=0;i<nums.length;i++){
+            sum  += nums[i]==1 ? 1 : -1;
+            int val = sum - 0;
+            if(map.containsKey(val)) count += map.get(val);   
+            map.put(sum,map.getOrDefault(sum,0) + 1);
+        }
+         
+         return count;
+     }
+
+    // 930
+    public int numSubarraysWithSum(int[] nums, int S) {
+       HashMap<Integer,Integer> map = new HashMap<>();
+	   map.put(0,1);
+	   int count = 0;
+	   int sum = 0;
+	        
+	   for(int i=0;i<nums.length;i++){
+           sum  += nums[i];
+           int val = sum - S;
+	       if(map.containsKey(val)) count += map.get(val);   
+	       map.put(sum,map.getOrDefault(sum,0) + 1);
+	   }
+        
+        return count;
+    }
+
+    public int numOfSubarraysSumLessK(int[] arr,int k){
+        int si = 0,ei=0;
+        int n = arr.length;
+
+        int count = 0;
+        int sum = 0;
+        while(ei < n){
+            sum += arr[ei++];
+            while(sum > k && si < ei){
+                sum -= arr[si++]; 
+            }
+
+            count += (ei - si);
+        }
+
+        return count;
+    }
+    
+    public int numSubarraysWithSum(int[] nums, int S) {
+        return numOfSubarraysSumLessK(nums,S) - numOfSubarraysSumLessK(nums, S-1);
+     }
+
+
+    //https://www.geeksforgeeks.org/number-subarrays-sum-less-k/
+    public static void numOfSubarraysSumLessK(int[] arr,int k){
+        int si = 0,ei=0;
+        int n = arr.length;
+
+        int count = 0;
+        int sum = 0;
+        while(ei < n){
+            sum += arr[ei++];
+            while(sum > k && si < ei){
+                sum -= arr[si++]; 
+            }
+
+            count += (ei - si);
+        }
+
+        return count;
     }
 
 
+    // Leetcode 003
+    public int lengthOfLongestSubstring(String s) {
+        if(s.length() <= 1) return s.length();
+        
+        int n = s.length();
+        
+        int[] freq = new int[256];
+        int si = 0,ei = 0,len = 0;
+        
+        int count = 0;
+        
+        while(ei < n){
+            if(freq[s.charAt(ei++)]++ > 0) count++;
+            
+            while(count > 0){
+                if(freq[s.charAt(si++)]-- > 1) count--;
+            }
+            
+            
+            len = Math.max(len, ei - si);            
+        }
+        
+        return len; 
+    }
 
 
 
