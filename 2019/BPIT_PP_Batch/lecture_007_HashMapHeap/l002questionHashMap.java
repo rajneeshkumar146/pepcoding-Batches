@@ -549,6 +549,167 @@ public static void main (String[] args)
         return len; 
     }
 
+    // 76
+    public String minWindow(String s, String t) {
+        
+        int ns = s.length();
+        int nt = t.length();
+        int[] freq = new int[128];
+        for(int i=0;i<nt;i++) freq[t.charAt(i)]++;
+        
+        int count = nt;
+        int si = 0,ei =0,len = (int)1e8;
+        int head = 0;
+        
+        while(ei < ns){
+            if(freq[s.charAt(ei++)]-- > 0) count--;
+            while(count == 0){
+                if(ei - si < len) len = ei - (head = si);
+                if(freq[s.charAt(si++)]++ == 0) count++;
+            }
+        }
+        
+        return  len == (int)1e8 ? "" : s.substring(head, head + len);
+    }
+
+    //https://www.geeksforgeeks.org/smallest-window-contains-characters-string/
+
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        int n = s.length();
+        
+        int[] freq = new int[128];
+        int si = 0,ei = 0,len = 0,count = 0;
+        while(ei < n){
+            if(freq[s.charAt(ei++)]++ == 0) count++;
+            
+            while(count > k){
+                if(freq[s.charAt(si++)]-- == 1) count--;
+            }
+            
+            len = Math.max(len, ei - si);            
+        }
+        
+        return len;         
+    }
+
+    // for you -> Leetcode 159
+
+    // 239
+    public int[] maxSlidingWindow(int[] arr, int k) {
+        int n = arr.length;
+        // arr[i], i
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->{
+            return b[0] - a[0];
+        });
+        
+        int[] ans = new int[n-k+1];
+        int idx = 0;
+        
+        for(int i=0;i<n;i++){
+            while(pq.size()!=0 && pq.peek()[1] <= i - k) pq.poll();
+            
+            pq.add(new int[]{arr[i],i});
+            
+            if(i >= k-1) ans[idx++] = pq.peek()[0];
+        }
+        
+        return ans;   
+    }
+
+    public int[] maxSlidingWindow(int[] arr, int k){
+        int n = arr.length;
+        ArrayDeque<Integer> que = new ArrayDeque<>();
+        
+        int[] ans = new int[n-k+1];
+        int idx = 0;
+        
+        for(int i = 0; i < n; i++){
+
+            while(que.size()!=0 && i - k >= que.getFirst()) que.removeFirst();
+            while(que.size() !=0 && arr[que.getLast()] <= arr[i]) que.removeLast();
+
+            que.addLast(i);
+
+            if(i >= k-1) ans[idx++] = arr[que.getFirst()];
+        }
+
+        return ans;
+    }
+
+    // https://www.geeksforgeeks.org/length-largest-subarray-contiguous-elements-set-1/
+    // without duplicate
+    public static void largestSubarray(int[] arr){
+        int len = 0;
+        int n = arr.length;
+
+        int min = 0, max = 0;
+        for(int i=0;i < n;i++){
+            min = max = arr[i];
+
+            for(int j = i+1;j<n;j++){
+                min = Math.min(min,arr[j]);
+                max = Math.max(max,arr[j]);
+
+                if(max - min == j - i) len = Math.max(len, j - i);
+            }
+        }
+    }
+
+    //https://www.geeksforgeeks.org/length-largest-subarray-contiguous-elements-set-2/
+    // with duplicate
+    public static void largestSubarray(int[] arr){
+        int len = 0;
+        int n = arr.length;
+
+        int min = 0, max = 0;
+        HashSet<Integer> set = new HashSet<>();
+        for(int i=0;i < n;i++){
+            
+            min = max = arr[i];
+            set.add(arr[i]);
+
+            for(int j = i+1;j<n;j++){
+                if(set.contains(arr[j])) break;
+                set.add(arr[j]);
+
+                min = Math.min(min,arr[j]);
+                max = Math.max(max,arr[j]);
+
+                if(max - min == j - i) len = Math.max(len, j - i);
+            }
+
+            set.clear();
+        }
+    }
+
+    // 954
+    public boolean canReorderDoubled(int[] arr) {
+        if(arr.length == 0) return true;
+          
+        int n = arr.length;
+        HashMap<Integer,Integer> map = new HashMap<>();
+        for(int ele : arr) map.put(ele, map.getOrDefault(ele,0)+1);
+        
+        Integer[] ar = new Integer[n];
+        for(int i =0 ;i<n;i++) ar[i] = arr[i];
+        
+        Arrays.sort(ar,(a,b)->{
+            return Math.abs(a) - Math.abs(b);
+        });
+        
+        for(int ele: ar){
+            if(map.get(ele)==0) continue;
+            if(map.getOrDefault(2 * ele,0) <= 0 ) return false;
+            
+            map.put(ele, map.getOrDefault(ele,0) - 1);
+            map.put(2 * ele, map.getOrDefault(2 * ele,0) - 1);
+            
+            
+        }       
+        return true;
+    }
+
+
 
 
 
