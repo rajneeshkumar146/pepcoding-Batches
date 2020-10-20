@@ -362,5 +362,65 @@ public class questions{
         return cameras;
     }
 
+    //337
+      // [] - >  {store the max value without robbing current node, store the max value with robing current node}
+      public int[] rob_(TreeNode node){
+        if(node == null) return new int[]{0,0};
+        
+        int[] left = rob_(node.left);
+        int[] right = rob_(node.right);
+        
+        int[] myAns = new int[2];
+        myAns[0] = Math.max(left[0],left[1]) + Math.max(right[0],right[1]);
+        myAns[1] = left[0] + node.val + right[0];
+        
+        return myAns;
+         
+    }
+    public int rob(TreeNode root) {
+        int[] ans = rob_(root);
+        return Math.max(ans[0],ans[1]);
+    }
+
+    public static Node midNode(Node node){
+
+        Node slow = node,fast = node;
+        while(fast.right!=null && fast.right.right!=null){
+            slow = slow.right;
+            fast = fast.right.right;
+        }
+
+        return slow;
+    }
+
+    // ---> right
+    // <--- left
+    public static Node BST(Node head,Node tail){
+        if(head == tail) return head;
+
+        Node mid = midNode(head);
+        Node prev = mid.left;
+        Node next = mid.right;
+        if(prev != null) prev.right = null;
+        if(next != null) next.left = null;
+        
+        mid.left = BST(head,prev);
+        mid.right = BST(next,tail);
+
+        return mid;
+    }
+
+    // 1325
+    public TreeNode removeLeafNodes(TreeNode root, int target) {
+        
+        if(root==null) return null;
+        root.left = removeLeafNodes(root.left,target);
+        root.right = removeLeafNodes(root.right,target);
+
+        if(root.left == null && root.right==null && root.val == target) return null;
+        return root;
+    }
+
+
     
 }
