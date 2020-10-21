@@ -421,6 +421,118 @@ public class questions{
         return root;
     }
 
+    //116
+    public Node connect(Node node) {
+        if(node == null) return null;
+        
+        if(node.left != null) node.left.next = node.right;
+        if(node.right != null && node.next != null) node.right.next = node.next.left; 
+        
+        node.left = connect(node.left);
+        node.right=connect(node.right);
+        
+        return node;
+    }
+    
+    //116
+    public Node connect(Node nnode) {
+        if(nnode == null ) return nnode;
+        Node curr = nnode;
+        while(curr.left!=null){
+            Node node = curr;
+            while(node != null){
+               
+                node.left.next = node.right;
+                if(node.next != null)node.right.next = node.next.left;
+                
+                node = node.next;
+            }
+            
+            curr = curr.left;
+        }
+        
+        return nnode;
+    }
+
+    // using HashMap
+    public static Node createTree_HM_dfs1(Node node,HashMap<Node,Node> map){
+        if(node == null) return null;
+
+        Node nnode = new Node(node.data);
+        map.put(node,nnode);
+        nnode.left = createTree_HM_dfs1(node.left,map);
+        nnode.right = createTree_HM_dfs1(node.right,map);
+
+        return nnode;
+    }
+
+    public static void setRandom_HM_dfs1(Node node,HashMap<Node,Node> map){
+        if(node == null) return;
+
+        if(node.random!=null) map.get(node).random = map.get(node.random);
+        setRandom_HM_dfs1(node.left,map);
+        setRandom_HM_dfs1(node.right,map);
+    }
+
+    public static void cloneBT(Node node){
+        HashMap<Node,Node> map = new HashMap<>();
+
+        Node nroot = createTree_HM_dfs1(node,map);
+        setRandom_HM_dfs1(node,map);
+
+        return root;
+    }
+
+    // without using hashmap.
+
+    public static Node cloneBT_WithoutRandom(Node root){
+        if(root == null) return null;
+
+        Node node = new Node(root.data);
+        node.left = cloneBT_WithoutRandom(root.left);
+        root.right = cloneBT_WithoutRandom(root.right);
+
+        root.left = node;
+        return root;
+    }
+
+    public static void setRandoms(Node root){
+        if(root==null) return;
+
+        if(root.random != null) root.left.random = root.random.left;
+
+        setRandoms(root.left.left);
+        setRandoms(root.right);
+    }
+
+    public static Node extractTree(Node root){
+        Node lcNode = null;
+        Node rcNode = null;
+        Node cloneNode = root.left;
+
+        if(root.left.left != null) lcNode = extractTree(root.left.left);
+        if(root.right != null) rcNode = extractTree(root.right);
+
+        root.left = cloneNode.left;
+        cloneNode.left = lcNode;
+        cloneNode.right = rcNode;
+
+        return cloneNode;
+    }
+
+    public static void cloneBT(Node node){
+        cloneBT_WithoutRandom(node);
+        setRandoms(node);
+        return extractTree(node);
+    }
+
+
+
+
+    public static void setRandoms(){
+
+    }
+
 
     
 }

@@ -319,8 +319,6 @@ public class l002{
     }
 
     //For you --> https://www.geeksforgeeks.org/maximum-sum-alternating-subsequence-sum/
-    
-    
     public static int BuildingBridges(int[][] arr){
         int n = arr.length;
         Arrays.sort(arr,(a,b)->{
