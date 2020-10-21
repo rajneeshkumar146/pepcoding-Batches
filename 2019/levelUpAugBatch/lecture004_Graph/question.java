@@ -646,9 +646,123 @@ int[] findRedundantConnection(int[][] edges){
             sb.append((char)(p + 'a'));
         }
         
-        return sb.toString();
-        
+        return sb.toString();   
     }
+
+    // Leetcode 305
+    public List<Integer> numIslands2(int n, int m, int[][] positions) {
+        // par.resize(n*m,0);
+        
+        int[][] dir = {{0,1},{1,0},{0,-1},{-1,0}};
+        par = new int[n*m];
+        for(int i=0;i<n*m;i++) par[i] = i;
+        int count = 0;
+        List<Integer> ans = new ArrayList<>();
+            
+        int[][] grid = new int[n][m];
+        for(int[] p : positions){
+            int i = p[0];
+            int j = p[1];
+            if(grid[i][j] == 0){
+            
+            grid[i][j] = 1;
+            count++;
+            
+            int p1 = findPar(i*m+j);
+            
+            for(int d =0;d<4;d++){
+                int r = i + dir[d][0];
+                int c = j + dir[d][1];
+                
+                if(r >= 0 && c >= 0 && r < n && c < m && grid[r][c] == 1){
+                    int p2 = findPar(r*m+c);
+                    if(p1!=p2){
+                        count--;
+                        par[p2] = p1;
+                    }
+                }
+              }
+            }
+            ans.add(count);
+        }
+        
+        return ans;
+    }
+
+    //839
+    public static boolean isSimilar(String s,String t){
+        int count = 0;
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i) != t.charAt(i) && ++count > 2) return false;
+        }
+
+        return true;
+    }
+
+    public int numSimilarGroups(String[] A) {  
+        int n = A.length;
+        
+        par = new int[n];
+        for(int i=0;i<n;i++) par[i] = i;
+
+        int count = n;
+        for(int i=0 ; i < n; i++){
+
+            int p1 = findPar(i);
+            for(int j = i+1 ; j < n; j++){
+
+                if(isSimilar(A[i],A[j])){
+                    int p2 = findPar(j);
+                    if(p1 != p2){
+                        par[p2] = p1;
+                        count--;
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+
+    int[] par;
+    public int findPar(int u){
+        if(par[u] == u) return u;
+        return par[u] = findPar(par[u]);
+    }
+
+    
+    // 1168
+    public int minCostToSupplyWater(int n, int[] wells, int[][] pipes) {
+        ArrayList<int[]> edges = new ArrayList<>();
+        for(int i=0;i<n;i++){
+            edges.add(new int[]{0,i+1,wells[i]});
+        }
+        
+        for(int[] e: pipes) edges.add(e);
+        
+        Collections.sort(edges,(a,b)->{
+            return a[2]-b[2];
+        });
+        
+        par = new int[n+1];
+        // Arrays.fill(par,-1);
+        for(int i=0;i<n+1;i++) par[i] = i;
+        
+        int cost = 0;
+        for(int[] e : edges){
+            int p1 = findPar(e[0]);
+            int p2 = findPar(e[1]);
+            
+            if(p1 != p2){
+                par[p1] = p2;
+                cost += e[2];
+            }
+        }
+        
+        return cost;
+    }
+
+
 
 
 
