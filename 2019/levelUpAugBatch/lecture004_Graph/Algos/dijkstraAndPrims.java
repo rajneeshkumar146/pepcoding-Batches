@@ -90,7 +90,7 @@ public class dijkstraAndPrims{
         que.add(new primsPair(0,-1,0));
         dis[0] = 0;
 
-        int EdgesCount = 0;
+        int EdgesCount = 1;
         while(EdgesCount <= N - 1){
             primsPair pair = que.remove();
             
@@ -141,7 +141,7 @@ public class dijkstraAndPrims{
         que.add(new dijkstraPair(0,-1,0));
         dis[0] = 0;
 
-        int EdgesCount = 0;
+        int EdgesCount = 1;
         while(EdgesCount <= N - 1){
             dijkstraPair pair = que.remove();
             
@@ -175,9 +175,13 @@ public class dijkstraAndPrims{
             for(int i=0;i<N;i++) ndis[i] = dis[i];
 
             for(int[] e : edges){
-                if(dis[e[0]]!= (int)1e8 && dis[e[0]] + e[2] < ndis[e[1]])
-                   ndis[e[1]] = dis[e[0]] + e[2];
+                if(dis[e[0]]!= (int)1e8 && dis[e[0]] + e[2] < ndis[e[1]]){
+                    ndis[e[1]] = dis[e[0]] + e[2];
+                    isAnyUpdate = true;
+                }
             }
+
+            dis = ndis;
 
 
             if(isAnyUpdate && i == N) negativeCycle = true;
@@ -195,8 +199,10 @@ public class dijkstraAndPrims{
             boolean isAnyUpdate = false;
             
             for(int[] e : edges){
-                if(dis[e[0]]!= (int)1e8 && dis[e[0]] + e[2] < dis[e[1]])
+                if(dis[e[0]]!= (int)1e8 && dis[e[0]] + e[2] < dis[e[1]]){
                    dis[e[1]] = dis[e[0]] + e[2];
+                   isAnyUpdate = true;
+                }
             }
 
 
