@@ -224,7 +224,7 @@ int minPathSumDP(int sr, int sc, int er, int ec, vector<vector<int>> &grid, vect
             }
 
             if (sr + 1 <= er)
-                dp[sr][sc] = min(dp[sr][sc], dp[sr+1][sc]);
+                dp[sr][sc] = min(dp[sr][sc], dp[sr + 1][sc]);
             if (sc + 1 <= ec)
                 dp[sr][sc] = min(dp[sr][sc], dp[sr][sc + 1]);
 
@@ -246,6 +246,148 @@ int minPathSum(vector<vector<int>> &grid)
     int ans = minPathSum(0, 0, n - 1, m - 1, grid, dp);
 
     return ans;
+}
+int goldMine(int r, int c, int n, int m, vector<vector<int>> &arr, vector<vector<int>> &dp, vector<vector<int>> &dir)
+{
+    if (c == m - 1)
+    {
+        return dp[r][c] = arr[r][c];
+    }
+
+    if (dp[r][c] != 0)
+        return dp[r][c];
+
+    int maxVal = 0;
+    for (int d = 0; d < 3; d++)
+    {
+        int x = r + dir[d][0];
+        int y = c + dir[d][1];
+
+        if (x >= 0 && y >= 0 && x < n && y < m)
+        {
+            maxVal = max(maxVal, goldMine(x, y, n, m, arr, dp, dir) + arr[r][c]);
+        }
+    }
+
+    return dp[r][c] = maxVal;
+}
+
+int goldMineDP(int R, int C, int n, int m, vector<vector<int>> &arr, vector<vector<int>> &dp, vector<vector<int>> &dir)
+{
+    for (int c = C - 1; c >= 0; c--)
+    {
+        for (int r = R - 1; r >= 0; r--)
+        {
+            if (c == m - 1)
+            {
+                dp[r][c] = arr[r][c];
+                continue;
+            }
+
+            int maxVal = 0;
+            for (int d = 0; d < 3; d++)
+            {
+                int x = r + dir[d][0];
+                int y = c + dir[d][1];
+
+                if (x >= 0 && y >= 0 && x < n && y < m)
+                {
+                    maxVal = max(maxVal, dp[x][y] + arr[r][c]);
+                }
+            }
+
+            dp[r][c] = maxVal;
+        }
+    }
+
+    int maxVal = 0;
+    for (int r = 0; r < n; r++)
+    {
+        maxVal = max(maxVal, dp[r][0]);
+    }
+}
+
+void goldMine()
+{
+    vector<vector<int>> arr;
+    int n = arr.size();
+    int m = arr[0].size();
+
+    vector<vector<int>> dp(n, vector<int>(m, 0));
+    vector<vector<int>> dir{{-1, 1}, {0, 1}, {1, 1}};
+
+    int maxVal = 0;
+    for (int r = 0; r < n; r++)
+    {
+        maxVal = max(maxVal, goldMine(r, 0, n, m, arr, dp, dir));
+    }
+
+    cout << maxVal << endl;
+}
+
+int friendsPairing(int n, vector<int> &dp)
+{
+    if (n <= 1)
+    {
+        return dp[n] = 1;
+    }
+
+    if (dp[n] != 0)
+        return dp[n];
+
+    int single = friendsPairing(n - 1, dp);
+    int pairUp = friendsPairing(n - 2, dp) * (n - 1);
+
+    return dp[n] = single + pairUp;
+}
+
+int friendsPairing(int N, vector<int> &dp)
+{
+
+    int c = (int)1e9 + 7;
+    for (int n = 0; n <= N; n++)
+    {
+        if (n <= 1)
+        {
+            dp[n] = 1;
+            continue;
+        }
+
+        // int single = dp[n-1];//friendsPairing(n - 1, dp);
+        // int pairUp = dp[n-2]*(n-1);//friendsPairing(n - 2, dp) * (n - 1);
+
+        // dp[n] = single + pairUp;
+
+        dp[n] = (dp[n-1] % c + (dp[n-2] % c * (n-1) % c)%c)%c;
+    }
+
+    return dp[N];
+}
+
+int minCostClimbingStairs(int n,vector<int>& cost,vector<int>& dp) {
+        if(n<=1) return dp[n] = cost[n];
+        
+        if(dp[n]!=0) return dp[n];
+        
+        int val = min(minCostClimbingStairs(n-1,cost,dp),minCostClimbingStairs(n-2,cost,dp));
+        
+        return dp[n] = val +  ((n < cost.size()) ? cost[n] : 0);
+    }
+    
+    int minCostClimbingStairs(vector<int>& cost) {
+        if(cost.size() == 0) return 0;
+        
+        int n = cost.size();
+        vector<int> dp(n+1,0);
+        
+        return minCostClimbingStairs(n,cost,dp);
+}
+
+int friendsPairing()
+{
+    int n = 10;
+    vector<int> dp(n+1,0);
+
 }
 
 void twoPointer()
