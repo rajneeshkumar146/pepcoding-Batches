@@ -201,6 +201,71 @@ public class questions{
         return true;
     }
 
+    //Leetcode 33
+    public int search(int[] arr, int target) {
+        int lo = 0;
+        int hi = arr.length-1;
+        
+        while(lo <= hi){
+            int mid = (lo + hi ) >> 1;
+            if(arr[mid] == target) return mid;
+            else if(arr[lo] <= arr[mid]){
+                if(arr[lo] <= target && target < arr[mid]) hi = mid - 1;
+                else lo = mid + 1;
+            }else{
+                if(arr[mid] < target && target <= arr[hi]) lo = mid + 1;
+                else hi = mid - 1;
+            }
+        }
+        
+        return -1;
+    }
+ 
+    // Leetcode 81
+    public boolean search(int[] arr, int data) {
+        int lo = 0;
+        int hi = arr.length-1;
+        
+        while(lo <= hi){
+            int mid = (lo + hi) >> 1;
+            
+            if(arr[mid] == data || arr[lo] == data) return true;
+            else if(arr[lo] < arr[mid]){
+                if(arr[lo] <= data && data < arr[mid]) hi = mid - 1;
+                else lo = mid + 1;
+            }else if(arr[mid] < arr[hi]){
+                if(arr[mid] < data && data <= arr[hi]) lo = mid + 1;
+                else hi = mid - 1;
+            }else lo++;  
+        }
+        
+        return false;
+    }
+
+    //Leetcode 786
+    
+    public int[] kthSmallestPrimeFraction(int[] A, int k) {
+        int n = A.length;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->{
+            return A[a[0]]*A[b[1]] - A[b[0]]*A[a[1]];
+        });
+
+        for(int i=0;i<n;i++){
+            pq.add(new int[]{0,i});
+        }
+
+        while(--k>0){
+            int[] a = pq.remove();
+            a[0]++;
+            if(a[0] < a[1]) pq.add(a);
+        }
+        
+        int[] a = pq.remove();
+        a[0] = A[a[0]];
+        a[1] = A[a[1]];
+        
+        return a;
+    }
 
 
 
