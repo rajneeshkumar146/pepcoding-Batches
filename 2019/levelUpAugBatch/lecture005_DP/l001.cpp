@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <list>
 
 using namespace std;
 
@@ -358,36 +359,292 @@ int friendsPairing(int N, vector<int> &dp)
 
         // dp[n] = single + pairUp;
 
-        dp[n] = (dp[n-1] % c + (dp[n-2] % c * (n-1) % c)%c)%c;
+        dp[n] = (dp[n - 1] % c + (dp[n - 2] % c * (n - 1) % c) % c) % c;
     }
 
     return dp[N];
 }
 
-int minCostClimbingStairs(int n,vector<int>& cost,vector<int>& dp) {
-        if(n<=1) return dp[n] = cost[n];
-        
-        if(dp[n]!=0) return dp[n];
-        
-        int val = min(minCostClimbingStairs(n-1,cost,dp),minCostClimbingStairs(n-2,cost,dp));
-        
-        return dp[n] = val +  ((n < cost.size()) ? cost[n] : 0);
-    }
-    
-    int minCostClimbingStairs(vector<int>& cost) {
-        if(cost.size() == 0) return 0;
-        
-        int n = cost.size();
-        vector<int> dp(n+1,0);
-        
-        return minCostClimbingStairs(n,cost,dp);
+int minCostClimbingStairs(int n, vector<int> &cost, vector<int> &dp)
+{
+    if (n <= 1)
+        return dp[n] = cost[n];
+
+    if (dp[n] != 0)
+        return dp[n];
+
+    int val = min(minCostClimbingStairs(n - 1, cost, dp), minCostClimbingStairs(n - 2, cost, dp));
+
+    return dp[n] = val + ((n < cost.size()) ? cost[n] : 0);
+}
+
+int minCostClimbingStairs(vector<int> &cost)
+{
+    if (cost.size() == 0)
+        return 0;
+
+    int n = cost.size();
+    vector<int> dp(n + 1, 0);
+
+    return minCostClimbingStairs(n, cost, dp);
 }
 
 int friendsPairing()
 {
     int n = 10;
-    vector<int> dp(n+1,0);
+    vector<int> dp(n + 1, 0);
+}
 
+int boardPath(int sp, int ep, vector<int> &dp)
+{
+    if (sp == ep)
+    {
+        return dp[sp] = 1;
+    }
+    if (dp[sp] != 0)
+        return dp[sp];
+
+    int count = 0;
+    for (int dice = 1; dice <= 6 && sp + dice <= ep; dice++)
+    {
+        count += boardPath(sp + dice, ep, dp);
+    }
+
+    return dp[sp] = count;
+}
+
+int boardPathDP(int sp, int ep, vector<int> &dp)
+{
+    for (sp = ep; sp >= 0; sp--)
+    {
+        if (sp == ep)
+        {
+            dp[sp] = 1;
+            continue;
+        }
+
+        for (int dice = 1; dice <= 6 && sp + dice <= ep; dice++)
+            dp[sp] += dp[sp + dice];
+    }
+
+    return dp[0];
+}
+
+int boardPath_Opti(int n)
+{
+    list<int> ll;
+
+    for (int si = n; si >= 0; si--)
+    {
+        if (ll.size() <= 1)
+            ll.push_front(1);
+        else if (ll.size() <= 6)
+            ll.push_front(2 * ll.front());
+        else
+        {
+            ll.push_front(2 * ll.front() - ll.back());
+            ll.pop_back();
+        }
+    }
+
+    return ll.front();
+}
+
+int numDecodings(string &s, int idx, vector<int> &dp)
+{
+    if (idx == s.length())
+    {
+        return dp[idx] = 1;
+    }
+
+    if (dp[idx] != -1)
+        return dp[idx];
+
+    char ch = s[idx];
+    if (ch == '0')
+        return dp[idx] = 0;
+
+    int count = 0;
+    count += numDecodings(s, idx + 1, dp);
+
+    if (idx < s.length() - 1)
+    {
+        int num = (s[idx] - '0') * 10 + (s[idx + 1] - '0');
+        if (num <= 26)
+            count += numDecodings(s, idx + 2, dp);
+    }
+    return dp[idx] = count;
+}
+
+int numDecodingsDP(string &s, int idx, vector<int> &dp)
+{
+
+    for (idx = s.length(); idx >= 0; idx--)
+    {
+        if (idx == s.length())
+        {
+            dp[idx] = 1;
+            continue;
+        }
+
+        char ch = s[idx];
+        if (ch == '0')
+        {
+            dp[idx] = 0;
+            continue;
+        }
+
+        int count = 0;
+        count += dp[idx + 1];
+        if (idx < s.length() - 1)
+        {
+            int num = (s[idx] - '0') * 10 + (s[idx + 1] - '0');
+            if (num <= 26)
+                count += dp[idx + 2];
+        }
+        dp[idx] = count;
+    }
+
+    return dp[0];
+}
+
+int numDecodingsOpti(string &s)
+{
+    int a = 1;  // for single call.
+    int b = 0;  // for doubl character call.
+
+    for (int idx = s.length() - 1; idx >= 0; idx--)
+    {
+        int sum = 0;
+        char ch = s[idx];
+        if (ch == '0')
+            sum = 0;
+        else
+        {
+            sum = a;
+            if (idx < s.length() - 1)
+            {
+                int num = (s[idx] - '0') * 10 + (s[idx + 1] - '0');
+                if (num <= 26)
+                    sum += b;
+            }
+        }
+
+        b = a;
+        a = sum;
+    }
+
+    return a;
+}
+
+int numDecodings(string s)
+{
+    if (s.length() == 0 || s[0] == '0')
+        return 0;
+
+    vector<int> dp(s.length() + 1, -1);
+    // return numDecodings(s, 0, dp);
+    return numDecodingsDP(s, 0, dp);
+}
+
+// 639
+int mod = 1e9 + 7;
+
+long long numDecodings(string &s, int idx, vector<long long> &dp)
+{
+    if (idx == s.length())
+        return dp[idx] = 1;
+    if (s[idx] == '0')
+        return dp[idx] = 0;
+    if (dp[idx] != -1)
+        return dp[idx];
+
+    long long count = 0;
+    char ch = s[idx];
+
+    if (s[idx] == '*')
+    {
+        count = (count + 9 * numDecodings(s, idx + 1, dp) % mod) % mod;
+        if (idx < s.length() - 1 && s[idx + 1] >= '0' && s[idx + 1] <= '6')
+            count = (count + 2 * numDecodings(s, idx + 2, dp) % mod) % mod;
+        else if (idx < s.length() - 1 && s[idx + 1] >= '7')
+            count = (count + numDecodings(s, idx + 2, dp) % mod) % mod;
+        else if (idx < s.length() - 1 && s[idx + 1] == '*')
+            count = (count + 15 * numDecodings(s, idx + 2, dp) % mod) % mod;
+    }
+    else
+    {
+        count = (count + numDecodings(s, idx + 1, dp) % mod) % mod;
+        if (idx < s.length() - 1 && s[idx + 1] == '*')
+        {
+            if (ch == '1')
+                count = (count + 9 * numDecodings(s, idx + 2, dp) % mod) % mod;
+            else if (ch == '2')
+                count = (count + 6 * numDecodings(s, idx + 2, dp) % mod) % mod;
+        }
+        else if (idx < s.length() - 1)
+        {
+            int num = (ch - '0') * 10 + (s[idx + 1] - '0');
+            if (num <= 26)
+                count = (count + numDecodings(s, idx + 2, dp) % mod) % mod;
+        }
+    }
+
+    return dp[idx] = count;
+}
+
+long long numDecodings(string &s)
+{
+
+    long long a = 1;
+    long long b= 0;
+    for (int idx = s.length() - 1; idx >= 0; idx--)
+    {
+        long long count = 0;
+        char ch = s[idx];
+        
+        if(s[idx] == '0') count = 0;
+        else if (s[idx] == '*')
+        {
+            count = (count + 9 * a % mod) % mod;
+            if (idx < s.length() - 1 && s[idx + 1] >= '0' && s[idx + 1] <= '6')
+                count = (count + 2 * b % mod) % mod;
+            else if (idx < s.length() - 1 && s[idx + 1] >= '7')
+                count = (count + b % mod) % mod;
+            else if (idx < s.length() - 1 && s[idx + 1] == '*')
+                count = (count + 15 * b % mod) % mod;
+        }
+        else
+        {
+            count = (count + a % mod) % mod;
+            if (idx < s.length() - 1 && s[idx + 1] == '*')
+            {
+                if (ch == '1')
+                    count = (count + 9 * b % mod) % mod;
+                else if (ch == '2')
+                    count = (count + 6 * b % mod) % mod;
+            }
+            else if (idx < s.length() - 1)
+            {
+                int num = (ch - '0') * 10 + (s[idx + 1] - '0');
+                if (num <= 26)
+                    count = (count + b % mod) % mod;
+            }
+        }
+
+        b = a;
+        a = count;
+    }
+    return a;
+}
+
+int numDecodings(string s)
+{
+    int n = s.length();
+    if (n == 0)
+        return 0;
+    vector<int> dp(n + 1, -1);
+    return numDecodings(s, 0, dp);
 }
 
 void twoPointer()
