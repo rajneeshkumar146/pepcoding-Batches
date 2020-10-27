@@ -524,15 +524,5 @@ public class questions{
         cloneBT_WithoutRandom(node);
         setRandoms(node);
         return extractTree(node);
-    }
-
-
-
-
-    public static void setRandoms(){
-
-    }
-
-
-    
+    }    
 }

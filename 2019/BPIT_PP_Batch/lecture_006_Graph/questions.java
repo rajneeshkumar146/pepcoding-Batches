@@ -1047,6 +1047,36 @@ public class Solution {
         else if(b == -1) return edges[cycle];
         else return edges[a];
     }
+    
+    //802
+    public boolean isCyclePresent(int[][] graph,int src,int[] vis) {
+        vis[src] = 1;
+        for(int e : graph[src]){
+            if(vis[e]==0){
+                if(isCyclePresent(graph,e,vis)) return true;
+            }else if(vis[e] == 1) return true;
+        }
+
+        vis[src] = 2;
+        return false;
+    }
+
+    public List<Integer> eventualSafeNodes(int[][] graph) {
+        int n = graph.length;
+        int[] vis = new int[n+1];
+
+        List<Integer> ans = new ArrayList<>();
+        for(int i = 0;i < n;i++){
+            if(vis[i] == 1) continue;
+            if(vis[i]==2 || !isCyclePresent(graph,i,vis))
+              ans.add(i);
+        }
+
+        return ans;
+    }
+
+
+
 
 
 

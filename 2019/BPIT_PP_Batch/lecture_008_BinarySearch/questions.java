@@ -266,6 +266,43 @@ public class questions{
         
         return a;
     }
+// Leetcode 4
+double findMedianSortedArrays(int[] nums1, int[] nums2) {
+    int n = nums1.length;
+    int m = nums2.length;
+    if(n > m)
+        return findMedianSortedArrays(nums2,nums1);
+    
+    int omid = (n + m + 1) >> 1;
+    int si = 0;
+    int ei = n;
+    while(si <= ei){
+        int sMid = (si + ei) >> 1;
+        int lMid = omid - sMid;
+
+        int sl = (sMid == 0) ? -(int)1e8 : nums1[sMid - 1];
+        int sr = (sMid == n) ? (int)1e8 : nums1[sMid];
+
+        int ll = (lMid == 0) ? -(int)1e8 : nums2[lMid - 1];
+        int lr = (lMid == m) ? (int)1e8 : nums2[lMid];
+
+        if(sl > lr)
+            ei = sMid - 1;
+        else if(ll > sr)
+            si = sMid + 1;
+        else{
+            int boundaryOfLeft = Math.max(sl,ll);
+            int boundaryOfright = Math.min(sr,lr);
+
+            if((n + m) % 2 != 0) return boundaryOfLeft;
+            else return (boundaryOfLeft + boundaryOfright) / 2.0;
+        }
+    }
+
+    return 0.0;
+}
+
+
 
 
 
