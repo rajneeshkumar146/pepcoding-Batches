@@ -170,13 +170,12 @@ public class l002_StringSet{
         else{
             if(dp[i+1][j] > dp[i][j-1]) generateString(dp,s,i+1,j,ls,rs);
             else if(dp[i+1][j] < dp[i][j-1]) generateString(dp,s,i,j-1,ls,rs);
-            else{
-                generateString(dp,s,i,j-1,ls,rs);
-                generateString(dp,s,i+1,j,ls,rs);
-            }
+            // else{
+            //     generateString(dp,s,i,j-1,ls,rs);
+            //     generateString(dp,s,i+1,j,ls,rs);
+            // }
         }
     }
-
 
     public int longestPalindromeSubseq(String s) {
         int n = s.length();
@@ -186,6 +185,9 @@ public class l002_StringSet{
 
         return ans;
     }
+
+    
+    //Leetcode 115
 
     public static void main(String[] args){
 
