@@ -1135,4 +1135,207 @@ public class Solution {
         }
         return count;
     }
+
+    import java.util.*;
+import java.io.*;
+class TestClass {
+    public static void main(String args[] ) throws Exception {
+         chocolateJourney();
+    }
+
+    
+    
+    public static void dijkstra(int src,ArrayList<int[]>[] graph,int[] dis){
+        // {vtx, dis}
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->{
+            return a[1] - b[1];
+        });
+
+        pq.add(new int[]{src,0});
+        dis[src] = 0;
+
+        while(pq.size()!=0){
+            int[] vtx = pq.remove();
+
+            if(dis[vtx[0]] < vtx[1]) continue;
+
+            for(int[] e: graph[vtx[0]]){
+                if(vtx[1] + e[1] < dis[e[0]]){
+                    dis[e[0]] = vtx[1] + e[1];
+                    pq.add(new int[]{e[0],dis[e[0]]});
+                }
+            }
+        }
+    }
+
+    public static void chocolateJourney() throws IOException{
+        // Scanner scn = new Scanner(new BufferedReader(new InputStreamReader(System.in)));
+        Scan scn = new Scan(System.in);
+        int n=scn.scanInt();
+        int m=scn.scanInt();
+        int k=scn.scanInt();
+        int x=scn.scanInt();
+        
+        boolean[]  chocolateCity = new boolean[n];
+        for(int i=0;i<k;i++){
+            int val = scn.scanInt();
+            chocolateCity[val - 1] = true;
+        }
+
+        ArrayList<int[]>[] graph = new ArrayList[n];
+        for(int i=0;i<n;i++) graph[i] = new ArrayList<>();
+        for(int i=0;i<m;i++){
+            int u = scn.scanInt();
+            int v = scn.scanInt();
+            int d = scn.scanInt();
+            u--;
+            v--;
+            
+            graph[u].add(new int[]{v,d});
+            graph[v].add(new int[]{u,d});
+        }
+
+        int src = scn.scanInt();
+        int dest = scn.scanInt();
+        src--;
+        dest--;
+
+        int[] sdis = new int[n];
+        int[] ddis = new int[n];
+        Arrays.fill(sdis,(int)1e9);
+        Arrays.fill(ddis,(int)1e9);
+
+        dijkstra(src,graph,sdis);
+        dijkstra(dest,graph,ddis);
+
+        int ans = (int)1e9;
+        for(int i=0;i<n;i++){
+            if(chocolateCity[i]){
+                if(ddis[i] < x && sdis[i] != (int)1e9)
+                  ans = Math.min(ans,sdis[i] + ddis[i]);
+            }
+        }
+        
+        if(ans!=(int)1e9)System.out.println(ans);
+        else System.out.println(-1);
+    }
+
+    static class Scan {
+		private InputStream in;
+		private byte[] buf = new byte[1024 * 1024];
+		private int index;
+		private int total;
+
+		public Scan(InputStream in) {
+			this.in = in;
+		}
+
+		public int scan() throws IOException {
+			if (total < 0)
+				throw new InputMismatchException();
+			if (index >= total) {
+				index = 0;
+				total = in.read(buf);
+				if (total <= 0)
+					return -1;
+			}
+			return buf[index++];
+		}
+
+		public int scanInt() throws IOException {
+			int integer = 0;
+			int n = scan();
+			while (isWhiteSpace(n))
+				n = scan();
+			int neg = 1;
+			if (n == '-') {
+				neg = -1;
+				n = scan();
+			}
+			while (!isWhiteSpace(n)) {
+				if (n >= '0' && n <= '9') {
+					integer *= 10;
+					integer += n - '0';
+					n = scan();
+				} else
+					throw new InputMismatchException();
+			}
+			return neg * integer;
+		}
+
+		public long scanLong() throws IOException {
+			long integer = 0;
+			int n = scan();
+			while (isWhiteSpace(n))
+				n = scan();
+			int neg = 1;
+			if (n == '-') {
+				neg = -1;
+				n = scan();
+			}
+			while (!isWhiteSpace(n)) {
+				if (n >= '0' && n <= '9') {
+					integer *= 10;
+					integer += n - '0';
+					n = scan();
+				} else
+					throw new InputMismatchException();
+			}
+			return neg * integer;
+		}
+
+		public double scanDouble() throws IOException {
+			double doub = 0;
+			int n = scan();
+			while (isWhiteSpace(n))
+				n = scan();
+			int neg = 1;
+			if (n == '-') {
+				neg = -1;
+				n = scan();
+			}
+			while (!isWhiteSpace(n) && n != '.') {
+				if (n >= '0' && n <= '9') {
+					doub *= 10;
+					doub += n - '0';
+					n = scan();
+				} else
+					throw new InputMismatchException();
+			}
+			if (n == '.') {
+				n = scan();
+				double temp = 1;
+				while (!isWhiteSpace(n)) {
+					if (n >= '0' && n <= '9') {
+						temp /= 10;
+						doub += (n - '0') * temp;
+						n = scan();
+					} else
+						throw new InputMismatchException();
+				}
+			}
+			return doub * neg;
+		}
+
+		public String scanString() throws IOException {
+			StringBuilder sb = new StringBuilder();
+			int n = scan();
+			while (isWhiteSpace(n))
+				n = scan();
+			while (!isWhiteSpace(n)) {
+				sb.append((char) n);
+				n = scan();
+			}
+			return sb.toString();
+		}
+
+		private boolean isWhiteSpace(int n) {
+			if (n == ' ' || n == '\n' || n == '\r' || n == '\t' || n == -1)
+				return true;
+			return false;
+		}
+	}
+
+}
+
 }
