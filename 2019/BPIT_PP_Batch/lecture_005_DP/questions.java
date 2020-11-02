@@ -165,3 +165,35 @@ long countStrings(int n) {
 }
 
 //https://www.geeksforgeeks.org/count-possible-ways-to-construct-buildings/
+
+
+//887
+public int superEggDrop(int K, int N,int[][] dp) {
+    if(N <= 2) return dp[N][K] = N;
+    if(K == 1) return dp[N][K] =N;
+    
+    if(dp[N][K]!=0) return dp[N][K];
+    
+    int ans = (int)1e8, lo = 1, hi = N;
+    while(lo <= hi){
+        
+        int mid = (lo + hi) >> 1;
+        int EggBreak = superEggDrop(K-1,mid-1,dp);
+        int EggNotBreak = superEggDrop(K,N- mid,dp);
+        
+        if(EggBreak < EggNotBreak) lo = mid + 1;
+        else hi = mid - 1;
+        
+        ans = Math.min(ans, 1 + Math.max(EggBreak,EggNotBreak));
+    }
+    
+    return dp[N][K] = ans;
+}
+
+public int superEggDrop(int K, int N) {
+    int[][] dp = new int[N+1][K+1];
+    
+    return superEggDrop(K,N,dp);
+}
+
+
