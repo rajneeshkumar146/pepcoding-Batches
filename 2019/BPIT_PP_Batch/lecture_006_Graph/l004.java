@@ -183,6 +183,61 @@ public class l004{
         display(N,dijiGraph);
     }
 
+    //{u,v,w}
+    public static void bellmanFord(int src,int N ,ArrayList<int[]> edges){
+        int[] prevdis = new int[N];
+        int[] currDis = new int[N];
+        Arrays.fill(prevdis,(int)1e9);
+        prevdis[src] = 0;
+
+        int vtx = 1;
+        while(vtx <= N){
+            for(int i=0;i<N;i++) currDis[i] = prevdis[i];
+            boolean isAnyUpdate = false;
+            for(int[] e: edges){
+                int u = e[0], v = e[1], w = e[2];
+                if(prevdis[u] + w  < currDis[v]){
+                    currDis[v] = prevdis[u] + w;
+                    isAnyUpdate = true;
+                } 
+            }
+
+            if(!isAnyUpdate) break;
+            if(isAnyUpdate && vtx == N){
+                System.out.println("Negative Cycle");
+            }
+
+            prevdis = currdis;
+            vtx++;
+        }
+    }
+
+    //{u,v,w}
+    public static void bellmanFord2(int src,int N ,ArrayList<int[]> edges){
+        int[] currDis = new int[N];
+        Arrays.fill(currdis,(int)1e9);
+        currdis[src] = 0;
+
+        int vtx = 1;
+        while(vtx <= N){
+            boolean isAnyUpdate = false;
+            for(int[] e: edges){
+                int u = e[0], v = e[1], w = e[2];
+                if(currdis[u] + w  < currDis[v]){
+                    currDis[v] = currdis[u] + w;
+                    isAnyUpdate = true;
+                } 
+            }
+
+            if(!isAnyUpdate) break;
+            if(isAnyUpdate && vtx == N){
+                System.out.println("Negative Cycle");
+            }
+
+            vtx++;
+        }
+    }
+
 
     public static void solve(){    
         int N = 9;
