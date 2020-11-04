@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <algorithm>
+
 
 using namespace std;
 
@@ -156,36 +158,76 @@ int minNoOfDeletions(vector<int> &arr)
 int findNumberOfLIS(vector<int> &nums)
 {
     int n = nums.size();
-    if(n==0) return 0;
+    if (n == 0)
+        return 0;
 
-    vector<int> dp(n,0);
-    vector<int> count(n,0);
-    
-    int maxLen = 0,maxCount = 0;
-    for(int i=0;i<n;i++){
+    vector<int> dp(n, 0);
+    vector<int> count(n, 0);
+
+    int maxLen = 0, maxCount = 0;
+    for (int i = 0; i < n; i++)
+    {
         dp[i] = 1;
         count[i] = 1;
-        for(int j=i-1;j>=0;j--){
-            if(nums[i] > nums[j]){
-                if(dp[j] + 1 > dp[i]){
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (nums[i] > nums[j])
+            {
+                if (dp[j] + 1 > dp[i])
+                {
                     dp[i] = dp[j] + 1;
                     count[i] = count[j];
-                }else if(dp[j] + 1 == dp[i]){
+                }
+                else if (dp[j] + 1 == dp[i])
+                {
                     count[i] += count[j];
                 }
             }
         }
 
-        if(dp[i] > maxLen){
+        if (dp[i] > maxLen)
+        {
             maxLen = dp[i];
             maxCount = count[i];
-        }else if(dp[i] == maxLen){
+        }
+        else if (dp[i] == maxLen)
+        {
             maxCount += count[i];
         }
     }
 
     return maxCount;
 }
+
+//354
+int maxEnvelopes(vector<vector<int>> &arr)
+{
+
+    int n = arr.size();
+    vector<int> dp(n, 0);
+
+    sort(arr.begin(), arr.end(), [](auto a, auto b) {
+        if (a[1] == b[1])
+            return b[0] < a[0];
+        return a[1] < b[1]; // this - other, default behaviour.
+    });
+
+    int maxStack = 0;
+    for (int i = 0; i < n; i++)
+    {
+        dp[i] = 1;
+        for (int j = i - 1; j >= 0; j--)
+        {
+            if (arr[i][0] > arr[j][0])
+                dp[i] = max(dp[i], dp[j] + 1);
+        }
+
+        maxStack = max(maxStack, dp[i]);
+    }
+    return maxStack;
+}
+
+//https://www.geeksforgeeks.org/dynamic-programming-building-bridges/
 
 void solve()
 {
