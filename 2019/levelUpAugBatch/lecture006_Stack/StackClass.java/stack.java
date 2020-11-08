@@ -3,7 +3,7 @@ public class stack{
     private int tos;   // top of stack
     private int elementCount; // total elements present in stack.
 
-    private void intializeValues(int size){
+    protected void intializeValues(int size){   // -> can be protected
         this.arr = new int[size];
         this.tos = -1;
         this.elementCount = 0;
@@ -25,7 +25,7 @@ public class stack{
         return this.elementCount == 0;
     }
 
-    private int capacity(){
+    protected int capacity(){   // can be protected
         return this.arr.length;
     }
 
@@ -71,18 +71,3 @@ public class stack{
         return rv;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
