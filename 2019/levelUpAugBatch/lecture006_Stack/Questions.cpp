@@ -210,31 +210,122 @@ string minRemoveToMakeValid(string s)
 //         Stack<Integer> st = new Stack<>();
 //         // StringBuilder sb = new StringBuilder(s);
 //         char[] arr  = s.toCharArray();
-        
+
 //         int  n = s.length();
 //         for(int i=0;i<n;i++){
 //            char ch =  arr[i];
 //            if(ch == ')'){
 //                if(st.size() != 0) st.pop();
 //                else arr[i] = '#';
-               
+
 //            }else if(ch == '('){
 //                st.push(i);
 //            }
 //         }
-        
+
 //         while(st.size() != 0){
 //             arr[st.pop()] = '#';
 //         }
-        
+
 //         StringBuilder sb = new StringBuilder();
 //         for(int i=0;i<n;i++){
 //             if(arr[i] != '#') sb.append(arr[i]);
 //         }
-        
+
 //         return sb.toString();
 //     }
 
-int main()
+//Leetcode 32
+int longestValidParentheses(string s)
 {
+    stack<int> st;
+    st.push(-1);
+    int len = 0;
+    for (int i = 0; i < s.length(); i++)
+    {
+        if (st.top() != -1 && s[st.top()] == '(' && s[i] == ')')
+        {
+            st.pop();
+            len = max(len, i - st.top());
+        }
+        else
+            st.push(i);
+    }
+
+    return len;
 }
+
+vector<int> asteroidCollision(vector<int> &arr)
+{
+    stack<int> st;
+    for (int ele : arr)
+    {
+        if (ele > 0)
+            st.push(ele);
+        else
+        {
+            while (st.size() != 0 && st.top() > 0 && st.top() < -ele)
+                st.pop();
+
+            if (st.size() != 0 && st.top() == -ele)
+                st.pop();
+            else if (st.size() == 0 || st.top() < 0)
+                st.push(ele);
+            else
+            {
+                //negative asteroid will destroy
+            }
+        }
+    }
+
+    vector<int> ans(st.size(), 0);
+    for (int i = st.size() - 1; i >= 0; i--)
+        ans[i] = st.top(), st.pop();
+    return ans;
+}
+
+class StockSpanner
+{
+public:
+    stack<pair<int, int>> st;
+    int idx = 0;
+
+    StockSpanner()
+    {
+        st.push({-1, -1});
+    }
+
+    int next(int price)
+    {
+        while (st.top().first != -1 && st.top().second <= price)
+            st.pop();
+        int span = idx - st.top().first;
+        st.push({idx++, price});
+        return span;
+    }
+};
+
+// class StockSpanner
+// {
+//     Stack<int[]> st = new Stack<>();
+//     int idx = 0;
+// public
+//     StockSpanner()
+//     {
+//         st.push(new int[]{-1, -1});
+//     }
+
+// public
+//     int next(int price)
+//     {
+
+//         while (st.peek()[0] != -1 && st.peek()[1] <= price)
+//         {
+//             st.pop();
+//         }
+
+//         int span = idx - st.peek()[0];
+//         st.push(new int[]{idx++, price});
+//         return span;
+//     }
+// }

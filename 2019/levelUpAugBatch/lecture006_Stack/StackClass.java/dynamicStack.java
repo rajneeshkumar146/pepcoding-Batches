@@ -10,7 +10,7 @@ public class dynamicStack extends stack{
 
     
     @Override
-    public void push(int data){
+    public void push(int data) throw Exception {
         if(super.size() == super.capacity()){
             int cap = super.capacity();
             
