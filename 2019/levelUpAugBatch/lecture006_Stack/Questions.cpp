@@ -40,7 +40,7 @@ void ngol(vector<int> &arr)
     }
 }
 
-void nsor(vector<int> &arr)
+vector<int> nsor(vector<int> &arr)
 {
     int n = arr.size();
     vector<int> ans(n, n);
@@ -56,9 +56,11 @@ void nsor(vector<int> &arr)
 
         st.push(i);
     }
+
+    return ans;
 }
 
-void nsol(vector<int> &arr)
+vector<int> nsol(vector<int> &arr)
 {
     int n = arr.size();
     vector<int> ans(n, -1);
@@ -74,6 +76,8 @@ void nsol(vector<int> &arr)
 
         st.push(i);
     }
+
+    return ans;
 }
 
 //20
@@ -329,3 +333,116 @@ public:
 //         return span;
 //     }
 // }
+
+//85
+int maximalRectangle(vector<vector<char>> &matrix)
+{
+    if (matrix.size() == 0 || matrix[0].size() == 0)
+        return 0;
+    int n = matrix.size();
+    int m = matrix[0].size();
+    vector<int> arr(m, 0);
+
+    int area = 0;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            arr[j] = matrix[i][j] == '1' ? arr[j] + 1 : 0;
+        }
+
+        area = max(largestRectangleArea(arr), area);
+    }
+
+    return area;
+}
+
+int largestRectangleArea(vector<int> &heights)
+{
+    int n = heights.size();
+    stack<int> st;
+    st.push(-1);
+
+    int area = 0;
+    for (int i = 0; i < n; i++)
+    {
+        while (st.top() != -1 && heights[st.top()] >= heights[i])
+        {
+            int h = heights[st.top()];
+            st.pop();
+
+            int w = i - st.top() - 1;
+            area = max(area, h * w);
+        }
+        st.push(i);
+    }
+
+    while (st.size() != 1)
+    {
+        int h = heights[st.top()];
+        st.pop();
+
+        int w = n - st.top() - 1;
+        area = max(area, h * w);
+    }
+
+    return area;
+}
+
+// 84
+int largestRectangleArea(vector<int> &heights)
+{
+    int n = heights.size();
+    vector<int> left = nsol(heights);
+    vector<int> right = nsor(heights);
+
+    int area = 0;
+    for (int i = 0; i < n; i++)
+    {
+        int h = heights[i];
+        int w = right[i] - left[i] - 1;
+        area = max(area, h * w);
+    }
+
+    return area;
+}
+
+vector<int> nsor(vector<int> &arr)
+{
+    int n = arr.size();
+    vector<int> ans(n, n);
+
+    stack<int> st;
+    for (int i = 0; i < n; i++)
+    {
+        while (st.size() != 0 && arr[st.top()] > arr[i])
+        {
+            ans[st.top()] = i;
+            st.pop();
+        }
+
+        st.push(i);
+    }
+
+    return ans;
+}
+
+vector<int> nsol(vector<int> &arr)
+{
+    int n = arr.size();
+    vector<int> ans(n, -1);
+
+    stack<int> st;
+    for (int i = n - 1; i >= 0; i--)
+    {
+        while (st.size() != 0 && arr[st.top()] > arr[i])
+        {
+            ans[st.top()] = i;
+            st.pop();
+        }
+
+        st.push(i);
+    }
+
+    return ans;
+}
