@@ -446,3 +446,48 @@ vector<int> nsol(vector<int> &arr)
 
     return ans;
 }
+
+//155
+class MinStack {
+public:
+    stack<long> st;
+    long minEle = 0;
+    MinStack() {
+            
+    }
+    
+    void push(int x) {
+        if(st.size()==0){
+            st.push(x);
+            minEle = x;
+            return;
+        }
+        
+        if(x >= minEle) st.push(x);
+        else{
+            st.push((x - minEle) + x);
+            minEle = x;
+        }
+        
+    }
+    
+    void pop() {
+        if(st.top() < minEle){
+            minEle = (minEle - st.top()) + minEle;
+         }
+        
+        st.pop();
+    }
+    
+    int top() {
+        if(st.top() < minEle) return (int)minEle;
+        
+        return (int)st.top();
+        
+    }
+    
+    int getMin() {
+        return (int)minEle;
+        
+    }
+};
