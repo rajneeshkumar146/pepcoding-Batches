@@ -448,46 +448,160 @@ vector<int> nsol(vector<int> &arr)
 }
 
 //155
-class MinStack {
+class MinStack
+{
 public:
     stack<long> st;
     long minEle = 0;
-    MinStack() {
-            
+    MinStack()
+    {
     }
-    
-    void push(int x) {
-        if(st.size()==0){
+
+    void push(int x)
+    {
+        if (st.size() == 0)
+        {
             st.push(x);
             minEle = x;
             return;
         }
-        
-        if(x >= minEle) st.push(x);
-        else{
+
+        if (x >= minEle)
+            st.push(x);
+        else
+        {
             st.push((x - minEle) + x);
             minEle = x;
         }
-        
     }
-    
-    void pop() {
-        if(st.top() < minEle){
+
+    void pop()
+    {
+        if (st.top() < minEle)
+        {
             minEle = (minEle - st.top()) + minEle;
-         }
-        
+        }
+
         st.pop();
     }
-    
-    int top() {
-        if(st.top() < minEle) return (int)minEle;
-        
+
+    int top()
+    {
+        if (st.top() < minEle)
+            return (int)minEle;
+
         return (int)st.top();
-        
     }
-    
-    int getMin() {
+
+    int getMin()
+    {
         return (int)minEle;
-        
     }
 };
+
+//402
+string removeKdigits(string num, int k)
+{
+    int n = num.length();
+    vector<char> st;
+
+    for (int i = 0; i < n; i++)
+    {
+        char ch = num[i];
+        while (st.size() != 0 && k > 0 && st.back() > ch)
+        {
+            k--;
+            st.pop_back();
+        }
+
+        if (st.size() == 0 && ch == '0')
+            continue;
+
+        st.push_back(ch);
+    }
+
+    while (st.size() != 0 && k-- > 0)
+        st.pop_back();
+
+    string ans = "";
+    for (int i = 0; i < st.size(); i++)
+        ans += st[i];
+
+    return ans.length() == 0 ? "0" : ans;
+}
+
+//Leetcode 316
+string removeDuplicateLetters(string s)
+{
+    if (s.length() == 0)
+        return s;
+
+    int n = s.length();
+    vector<int> freq(26, 0);
+    vector<bool> vis(26, false);
+
+    for (char ch : s)
+        freq[ch - 'a']++;
+
+    vector<char> st;
+    for (char ch : s)
+    {
+
+        freq[ch - 'a']--;
+
+        if (vis[ch - 'a'])
+            continue;
+
+        while (st.size() != 0 && st.back() > ch && freq[st.back() - 'a'] > 0)
+        {
+            vis[st.back() - 'a'] = false;
+            st.pop_back();
+        }
+
+        vis[ch - 'a'] = true;
+        st.push_back(ch);
+    }
+
+    string ans = "";
+    for (char ch : st)
+        ans += ch;
+    return ans;
+}
+
+// 316
+string removeDuplicateLetters(string s)
+{
+    if (s.length() == 0)
+        return s;
+
+    int n = s.length();
+    vector<int> freq(26, 0);
+    vector<bool> vis(26, false);
+
+    for (char ch : s)
+        freq[ch - 'a']++;
+
+    string st = "";
+    for (char ch : s)
+    {
+
+        freq[ch - 'a']--;
+
+        if (vis[ch - 'a'])
+            continue;
+
+        while (st.length() != 0 && st.back() > ch && freq[st.back() - 'a'] > 0)
+        {
+            vis[st.back() - 'a'] = false;
+            st.pop_back();
+        }
+
+        vis[ch - 'a'] = true;
+        st += ch;
+    }
+
+    return st;
+}
+
+// leetcode 1081
+
