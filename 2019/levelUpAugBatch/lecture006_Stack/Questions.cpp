@@ -677,3 +677,22 @@ int trap(vector<int> &height)
 
     return water;
 }
+
+//1541
+int minInsertions(string s) {
+     int ans = 0;
+        int open = 0;
+        
+        for(int i=0;i<s.length();i++){
+            if(s[i] == '(') open++;
+            else{
+                if(i+1 == s.length() || s[i + 1] != ')') ans++;
+                else i++;
+
+                if(open > 0) open--; // balance open bracket.
+                else ans++;  // requirement of open brackets.
+            }
+        }
+        
+        return ans + 2*open;
+    }
