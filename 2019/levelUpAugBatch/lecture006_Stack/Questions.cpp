@@ -605,3 +605,75 @@ string removeDuplicateLetters(string s)
 
 // leetcode 1081
 
+//42
+int trap1(vector<int> &height)
+{
+    int n = height.size();
+    vector<int> left(n, 0);
+    vector<int> right(n, 0);
+
+    int prev = 0;
+    for (int i = 0; i < n; i++)
+    {
+        left[i] = max(prev, height[i]);
+        prev = left[i];
+    }
+
+    prev = 0;
+    for (int i = n - 1; i >= 0; i--)
+    {
+        right[i] = max(prev, height[i]);
+        prev = right[i];
+    }
+
+    int water = 0;
+    for (int i = 0; i < n; i++)
+    {
+        water += min(left[i], right[i]) - height[i];
+    }
+
+    return water;
+}
+
+int trap2(vector<int> &height)
+{
+    int n = height.size();
+    stack<int> st;
+    int water = 0;
+    for (int i = 0; i < n; i++)
+    {
+        while (st.size() != 0 && height[st.top()] <= height[i])
+        {
+            int h = height[st.top()];
+            st.pop();
+
+            if (st.size() == 0)
+                break;
+
+            int w = i - st.top() - 1;
+            water += w * (min(height[st.top()], height[i]) - h);
+        }
+
+        st.push(i);
+    }
+
+    return water;
+}
+
+int trap(vector<int> &height)
+{
+    int n = height.size();
+    int water = 0, i = 0, j = n - 1, lmax = 0, rmax = 0;
+    while (i < j)
+    {
+        lmax = max(lmax, height[i]);
+        rmax = max(rmax, height[j]);
+
+        //if(lmax <= rmax) water += lmax - height[i++];
+        //else water += rmax - height[j--]
+
+        water += lmax <= rmax ? lmax - height[i++] : rmax - height[j--];
+    }
+
+    return water;
+}
