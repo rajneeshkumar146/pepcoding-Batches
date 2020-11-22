@@ -12,3 +12,23 @@ public class questions{
         return pq.peek();
     }
 }
+
+// 703
+class KthLargest {
+    PriorityQueue<Integer> pq = new PriorityQueue<>();
+    int K = 0;
+    
+    public KthLargest(int k, int[] nums) {
+         this.K = k;
+        for(int ele : nums){
+            pq.add(ele);
+            if(pq.size() > k) pq.remove();
+        }
+    }
+    
+    public int add(int val) {
+        pq.add(val);
+        if(pq.size() > this.K) pq.remove();
+        return pq.peek();
+    }
+}
