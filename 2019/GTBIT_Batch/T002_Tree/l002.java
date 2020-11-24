@@ -79,6 +79,17 @@ public class l002{
         return node;
     }
 
+    static int idx = 0;
+    public static TreeNode constructFromPreOrder(int[] arr,int lRange,int rRange){
+        if(idx == arr.length || arr[idx] < lRange || arr[idx] > rRange) return null;
+
+        TreeNode node = new TreeNode(arr[idx++]);
+        node.left = constructFromPreOrder(arr,lRange, node.val);
+        node.right = constructFromPreOrder(arr,node.val,rRange);
+
+        return node;
+    }
+
 
 
 
