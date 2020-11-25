@@ -171,8 +171,8 @@ public class l006_CutType{
     //https://www.geeksforgeeks.org/optimal-binary-search-tree-dp-24/
 
     // only for memoization
-    public static int OBST(int[] keys,int[] freq,int si,int ei,int level,int[][] dp){
-        if(dp[si][ei] != -1) return dp[si][ei];
+    public static int OBST(int[] keys,int[] freq,int si,int ei,int level,int[][][] dp){
+        if(dp[si][ei][level] != -1) return dp[si][ei][level];
 
         int minCost = (int) 1e9;
         for(int cut = si; cut<=ei;cut++){
@@ -182,7 +182,7 @@ public class l006_CutType{
             minCost = Math.min(minCost, leftTree + freq[cut] * level  + rightTree);
         }
 
-        return dp[si][ei] = minCost;
+        return dp[si][ei][level] = minCost;
     }
 
     public static int OBST_01(int[] keys,int[] freq,int si,int ei,int[] psum,int[][] dp){
@@ -221,7 +221,7 @@ public class l006_CutType{
                 int minCost = (int) 1e9;
                 int sum = 0;
                 for(int cut = si; cut<=ei;cut++){
-                    int leftTree = (cut == si) ? 0 : dp[si][cut-1]
+                    int leftTree = (cut == si) ? 0 : dp[si][cut-1];
                     int rightTree = (cut == ei) ? 0 : dp[cut+1][ei];
                     sum += arr[cut];
                     minCost = Math.min(minCost, leftTree + rightTree);
@@ -234,8 +234,8 @@ public class l006_CutType{
     }
 
     public static void OBST(){
-        int[] keys;
-        int[] freq;
+        int[] keys={10, 12, 20};
+        int[] freq ={34, 8, 50};
         int n = keys.length;
         int[] psum = new int[n];
         int prev = 0;
@@ -243,6 +243,10 @@ public class l006_CutType{
             psum[i] = prev + freq[i];
             prev = psum[i];
         }
+
+        int[][][] dp = new int[n][n][n+1];
+        for(int[][] D:dp) for(int[] d:D) Arrays.fill(d,-1);
+        System.out.println(OBST(keys,freq,0,n-1,1,dp));
     }
 
     //1039
@@ -266,12 +270,13 @@ public class l006_CutType{
     public int minScoreTriangulation(int[] A) {
         int n = A.length;
         int[][] dp = new int[n][n];
-        return minTriangulation(A,0,n-1,dp); 
+        return minScoreTriangulation(A,0,n-1,dp); 
     }
     
 
     public static void main(String[] args){
         // MCM();
-        minMaxEvaluation();
+        // minMaxEvaluation();
+        OBST();
     }
 }
