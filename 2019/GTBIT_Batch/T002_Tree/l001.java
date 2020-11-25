@@ -418,15 +418,61 @@ public class l001{
         return maxNodeToNode;
     }
 
-    
+    public static void zigZagTraversal(TreeNode node){
+        LinkedList<TreeNode> que = new LinkedList<>();
+        LinkedList<TreeNode> st = new LinkedList<>();
+        
+        que.addLast(node);
+        int level = 0;
 
+        while(que.size()!=0){
+            int size = que.size();
+            while(size-->0){
+                TreeNode rnode = que.removeFirst();
+                System.out.print(rnode.val + " ")
+                if(level % 2 == 0){
+                    if(rnode.left != null) st.addFirst(rnode.left);
+                    if(rnode.right != null) st.addFirst(rnode.right);
+                }else{
+                    if(rnode.right != null) st.addFirst(rnode.right);
+                    if(rnode.left != null) st.addFirst(rnode.left);
+                }
+            }
+            
+            LinkedList<TreeNode> temp = que;
+            que= st;
+            st = temp;
 
+            level++; 
+        }
+    }
 
+    //Leetcode 116 (Next Right Pointer)
+    public static void nextRightPointer(TreeNode node){
+        LinkedList<TreeNode> que = new LinkedList<>();
+        que.addLast(node);
+        
+        while(que.size()!=0){
+            int size = que.size();
+            
+            while(size-->0){
+                TreeNode rnode = que.removeFirst();
+                rnode.right = que.size() > 0 ? que.getFirst() : null;
+                if(rnode.left != null) que.addFirst(rnode.left);
+                if(rnode.right != null) que.addFirst(rnode.right);
+            }
+        }
+    }
 
+    //Leetcode 116 (Next Right Pointer)
+    public static void nextRightPointer(TreeNode node){
+        if(node == null) return;
 
+        node.left = node.right;
+        if(node.right!= null) node.right = if(node.next != null) node.next.left;
 
-
-
-
+        nextRightPointer(node.left);
+        nextRightPointer(node.right);
+    }
 
 }
