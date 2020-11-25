@@ -455,6 +455,23 @@ public int kthSmallest(int[][] matrix, int k) {
 }
 
 
+public int trap(int[] height) {
+    if(height.length == 0) return 0;
+    int n = height.length;
+
+    int water = 0, lmax = 0,rmax = 0, li = 0, ri = n-1;
+    while(li < ri){
+        lmax = Math.max(lmax,height[li]);
+        rmax = Math.max(rmax,height[ri]);
+
+        if(lmax <= rmax) water += lmax - height[li++];
+        else water += rmax - height[ri--];
+    }
+    
+    return water;
+}
+
+
 
 
 
