@@ -472,6 +472,265 @@ public int trap(int[] height) {
 }
 
 
+public void numIslands(int r,int c,char[][] grid,int[][] dir) {
+        
+    grid[r][c] = '0';
+    for(int d = 0; d < 4; d++){
+        int x = r + dir[d][0];
+        int y = c + dir[d][1];
+        
+        if(x >= 0 && y >= 0 && x < grid.length && y < grid[0].length && grid[x][y] == '1')
+           numIslands(x,y,grid,dir); 
+    }
+    
+}
+
+public int numIslands(char[][] grid) {
+    int[][] dir = {{0,1},{0,-1},{1,0},{-1,0}};
+    int count = 0;
+    for(int i =0; i<grid.length;i++){
+        for(int j=0;j<grid[0].length;j++){
+            if(grid[i][j]=='1'){
+                numIslands(i,j,grid,dir);
+                count++;
+            }
+        }
+    }
+    
+    return count;
+}
+
+
+public int maxAreaOfIsland(int r,int c,int[][] grid,int[][] dir) {
+        
+    grid[r][c] = 0;
+        int area = 0;
+    for(int d = 0; d < 4; d++){
+        int x = r + dir[d][0];
+        int y = c + dir[d][1];
+        
+        if(x >= 0 && y >= 0 && x < grid.length && y < grid[0].length && grid[x][y] == 1)
+           area +=maxAreaOfIsland(x,y,grid,dir); 
+    }
+        return area + 1;
+}
+
+    
+    public int maxAreaOfIsland(int[][] grid) {
+        int[][] dir = {{0,1},{0,-1},{1,0},{-1,0}};
+    int area = 0;
+    for(int i =0; i<grid.length;i++){
+        for(int j=0;j<grid[0].length;j++){
+            if(grid[i][j]==1){
+                area = Math.max(area,maxAreaOfIsland(i,j,grid,dir));
+            }
+        }
+    }
+    
+    return area;
+    }
+
+    //Leetcode 994
+    public int orangesRotting(int[][] grid) {
+        if(grid.length==0 || grid[0].length==0) return 0;
+        
+        int n = grid.length;
+        int m = grid[0].length;
+        int[][] dir = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+
+        LinkedList<Integer> que = new LinkedList<Integer>();
+        int freshOranges = 0;
+        for(int i=0;i<n;i++){
+            for(int j = 0;j<m;j++){
+                if(grid[i][j] == 2){
+                    que.addLast(i*m+j);
+                    grid[i][j] = 2;
+                }else if(grid[i][j] == 1){
+                    freshOranges++;
+                }
+            }
+        }
+
+        if(freshOranges == 0) return 0;
+        int time = 0;
+        while(que.size() != 0){
+            int size = que.size();
+            while(size-->0){
+                int idx = que.removeFirst();
+                int r = idx / m;
+                int c = idx % m;
+                
+                for(int d = 0; d < 4; d++){
+                    int x = r = dir[d][0];
+                    int y = c = dir[d][1];
+
+                    if(x >= 0 && y >= 0 && x < n && y < m && grid[x][y] == 1){
+                        grid[x][y] = 2;
+                        que.addLast(x * m + y);
+                        freshOranges--;       
+                        if(freshOranges == 0) return time + 1;
+                    }
+                }
+            }
+            time++;
+        }
+        return -1;
+    }
+
+    public boolean isBipartite(int src,int[][] graph,int[] vis) {
+        LinkedList<Integer> que = new LinkedList<>();
+        que.add(src);
+        int color = 0;
+        while(que.size()!=0){
+            int size = que.size();
+            while(size-->0){
+                
+            int rvtx = que.removeFirst();
+            if(vis[rvtx] != -1){
+                if(vis[rvtx] != color) return false;
+                continue;
+            }
+            
+            vis[rvtx] = color;
+            for(int e : graph[rvtx]){
+                if(vis[e] == -1){
+                    que.addLast(e);
+                }
+            }
+            
+            }
+            
+            color = (color + 1) % 2;
+        }
+        
+        return true;
+    }
+    
+    public boolean isBipartite(int[][] graph){
+        if(graph.length == 0) return true;
+        int[] vis = new int[graph.length];
+        Arrays.fill(vis,-1);
+        
+        for(int i=0;i<graph.length;i++){
+            if(vis[i]==-1){
+                 if(!isBipartite(i,graph,vis)) return false;
+            }  
+        }
+        
+        return true;
+    }
+
+
+    //210`
+    public int[] findOrder(int N, int[][] arr) {
+        ArrayList<Integer>[] graph = new ArrayList[N];
+         for(int i=0;i<N;i++) graph[i] = new ArrayList<>();
+         
+         int[] indegree = new int[N];
+         for(int[] a: arr){
+             indegree[a[1]]++;
+             graph[a[0]].add(a[1]);
+         }
+         
+         LinkedList<Integer> que = new LinkedList<>();
+         for(int i=0;i<N;i++) if(indegree[i]==0) que.addLast(i);
+ 
+         int[] ans = new int[N];
+         int idx = N - 1;
+         while(que.size()!=0){
+             int vtx = que.removeFirst();
+             ans[idx--] = vtx;
+             
+             for(int e : graph[vtx]){
+                 if(--indegree[e] == 0) que.addLast(e);
+             }
+         }
+         
+         
+         if(idx == -1) return ans;
+         return new int[0];
+     }
+
+     public static int findUniqueInUnSortedArray(int[] arr,int k){
+        int ans = 0;
+        for(int i=0;i<32;i++){
+            int mask =  (1 << i); 
+            int count = 0;
+            for(int ele : arr){
+                if((ele & mask) != 0) count++;
+            }
+
+            if(count % k != 0) ans |= mask;
+        }
+
+        return ans;
+     }
+
+     public static int[] extractNumber(int[] arr){
+        int A = 0;
+        int B = 0;
+
+        int mask = 0;
+        for(int ele : arr) mask ^= ele;
+
+        mask = (mask & (-mask));
+
+        for(int ele: arr){
+            if((mask & ele) == 0){
+                B ^= ele; 
+            }else A ^= ele;
+        }
+
+        return int[]{A,B};
+     }
+
+     public int subarraysWithKDistinct_(int[] A, int K) {   
+        int si = 0, ei = 0, count = 0,ans = 0;
+        int[] freq = new int[20000 + 5];
+        while(ei < A.length){
+            if(freq[A[ei++]]++ == 0){
+                count++;
+            }
+            
+            while(count > K){
+                if(freq[A[si++]]-- == 1) count--;
+            }
+            
+            ans += (ei - si);
+        }
+        
+        return ans;
+    }
+    
+    public int subarraysWithKDistinct(int[] A, int K) {
+       return subarraysWithKDistinct_(A,K) - subarraysWithKDistinct_(A,K-1);
+    }
+
+    public int lengthOfLongestSubstring(String s) {
+        if(s.length() <= 1) return s.length();
+        int n = s.length();
+        
+        int[] freq = new int[256];
+        int si = 0,ei = 0,len = 0;
+        
+        int count = 0;
+        
+        while(ei < n){
+            if(freq[s.charAt(ei++)]++ > 0) count++;
+            
+            while(count > 0){
+                if(freq[s.charAt(si++)]-- > 1) count--;
+            }
+            
+            
+            len = Math.max(len, ei - si);            
+        }
+        
+        return len; 
+    }
+
+
+
 
 
 
