@@ -94,15 +94,20 @@ int numIslands(vector<vector<char>> &grid)
     int m = grid[0].size();
     int countIslands = 0;
     vector<vector<int>> dir = {{1, 0}, {0, 1}};
-    
+
     vector<int> size;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<m;j++){
-            if(grid[i][j]=='1'){
-                par.push_back(i*m+j);
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (grid[i][j] == '1')
+            {
+                par.push_back(i * m + j);
                 size.push_back(1);
                 countIslands++;
-            }else{
+            }
+            else
+            {
                 par.push_back(-1);
                 size.push_back(0);
             }
@@ -119,14 +124,17 @@ int numIslands(vector<vector<char>> &grid)
         {
             if (grid[i][j] == '1')
             {
-                int p1 = findPar(i*m+j);
-                for(int d = 0;d<2;d++){
+                int p1 = findPar(i * m + j);
+                for (int d = 0; d < 2; d++)
+                {
                     int x = i + dir[d][0];
                     int y = j + dir[d][1];
 
-                    if(x >= 0 && y >=0 && x < n && y < m && grid[x][y] == '1'){
-                        int p2 = findPar(x*m+y);
-                        if(p1 != p2){
+                    if (x >= 0 && y >= 0 && x < n && y < m && grid[x][y] == '1')
+                    {
+                        int p2 = findPar(x * m + y);
+                        if (p1 != p2)
+                        {
                             par[p2] = p1;
                             countIslands--;
                             size[p1] += size[p2];
@@ -137,6 +145,52 @@ int numIslands(vector<vector<char>> &grid)
         }
     }
 
-
     return countIslands;
+}
+
+static const int N = 100000 + 5;
+int low[N] = {0};
+int disc[N] = {0};
+int time = 0;
+bool vis[N] = {false};
+vector<vector<int>> ans;
+vector<vector<int>> criticalConnections(int n, vector<vector<int>> &connections)
+{
+
+    vector<vector<int>> graph(n);
+    for (vector<int> &a : connections)
+    {
+        graph[a[0]].push_back(a[1]);
+        graph[a[1]].push_back(a[0]);
+    }
+
+    for (int i = 0; i < n; i++)
+    {
+        if (!vis[i])
+        {
+            dfs_APB(i, -1, graph);
+        }
+    }
+
+    return ans;
+}
+
+void dfs_APB(int src, int par, vector<vector<int>> &graph)
+{
+    low[src] = disc[src] = time++;
+    vis[src] = true;
+    for (int e : graph[src])
+    {
+        if (!vis[e])
+        {
+            dfs_APB(e, src, graph);
+
+            if (disc[src] < low[e])
+                ans.push_back({e, src});
+
+            low[src] = min(low[src], low[e]);
+        }
+        else if (e != par)
+            low[src] = min(low[src], disc[e]);
+    }
 }
