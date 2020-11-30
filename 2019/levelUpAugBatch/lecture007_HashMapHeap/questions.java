@@ -407,5 +407,123 @@ public Node copyRandomList(Node head) {
     return map.get(head);
  }
 
+ //895
+ class FreqStack {
+    HashMap<Integer,Integer> freq;
+    ArrayList<Stack<Integer>> map;
+    int maxFreq = 0;
+
+    public FreqStack() {
+        this.freq = new HashMap<>();
+        this.map = new ArrayList<>();
+        this.maxFreq = 0;
+        
+        map.add(new Stack<>());  // dummy stack
+    }
+    
+    public void push(int x) {
+        freq.put(x,freq.getOrDefault(x,0) + 1);
+        maxFreq = Math.max(maxFreq,freq.get(x));
+
+        if(map.size() == maxFreq) map.add(new Stack<>());
+        map.get(freq.get(x)).push(x);
+    }
+    
+    public int pop() {
+        int rv = map.get(maxFreq).pop();
+        
+        if(map.get(maxFreq).size() == 0) maxFreq--;
+        freq.put(rv,freq.get(rv) - 1);
+        if(freq.get(rv) == 0) freq.remove(rv);
+        
+        return rv;
+    }
+}
+
+//49
+public List<List<String>> groupAnagrams(String[] strs) {
+        
+    HashMap<String,ArrayList<String>> map = new HashMap<>();
+    for(String str: strs){
+       
+       char[] arr = str.toCharArray();
+       Arrays.sort(arr);
+       String key = new String(arr);
+       map.putIfAbsent(key,new ArrayList<>());
+       map.get(key).add(str);
+    }
+    
+    List<List<String>> ans = new ArrayList<>();
+    for(String s: map.keySet()){
+        ans.add(map.get(s));
+    }
+    
+    return ans;   
+}
+
+vector<vector<string>> groupAnagrams(vector<string>& strs) {
+    unordered_map<string,vector<string>> map;
+    
+    for(string &str: strs){
+        string s = str;
+        sort(str.begin(),str.end());
+        map[str].push_back(s);
+    }
+    
+    vector<vector<string>> ans;
+    for(auto keys: map){
+        ans.push_back(keys.second);
+    }
+    return ans;
+}
+
+//407
+public int trapRainWater(int[][] heightMap) {
+    if(heightMap.length == 0 || heightMap[0].length == 0) return 0;
+    int n = heightMap.length;
+    int m = heightMap[0].length;
+    
+    PriorityQueue<Integer> pq = new PriorityQueue<>((a,b)->{
+        return heightMap[a/m][a%m] - heightMap[b/m][b%m];
+    });
+
+    int[][] dir = {{0,1},{0,-1},{1,0},{-1,0}};
+    boolean[][] vis = new boolean[n][m];
+
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(i==0 || j==0 || i == n-1 || j == m-1)
+            {
+                pq.add(i*m+j);
+                vis[i][j] = true;
+            }
+        }
+    }
+    
+    int maxHeight = 0;
+    int water = 0;
+    
+    while(pq.size()!=0){
+        int idx = pq.remove();
+        int r = idx / m;
+        int c = idx % m;
+        
+        maxHeight = Math.max(maxHeight,heightMap[r][c]);
+        water += maxHeight - heightMap[r][c];
+        for(int d = 0 ;d< 4;d++){
+            int x = r + dir[d][0];
+            int y = c + dir[d][1];
+            if(x>=0 && y>=0 && x < n && y < m && !vis[x][y]){
+                 vis[x][y] = true;
+                 pq.add(x * m + y);
+            }   
+        }
+    }
+    
+    return water;
+}
+
+
+
 
  

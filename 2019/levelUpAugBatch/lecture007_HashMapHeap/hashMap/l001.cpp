@@ -43,5 +43,3 @@ int main(){
     set1();
     return 0;
 }
-
-
