@@ -1,0 +1,2 @@
+Value of A: ->10
+Value of B: ->20
