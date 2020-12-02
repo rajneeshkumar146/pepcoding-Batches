@@ -102,7 +102,7 @@ public class l001{
         }
         
         while(div != 0){
-            System.out.println(n/div);
+            System.out.println(n/div); 
             n = n % div;
             div /=10;
         }   
@@ -119,6 +119,30 @@ public static int inverse(int n){
     }
     
     return res;
+}
+
+public static int LCM(int a,int b,int gcd){
+    return ((a / gcd) * b);
+
+}
+
+public static int GCD(int a,int b){
+    int dividend = a;
+    int divisior = b;
+
+    while(dividend % divisior != 0){
+        int rem = dividend % divisior;
+        dividend = divisior;
+        divisior = rem;
+    }
+
+    return divisior;
+}
+
+public static boolean isPythagorean(int a,int b,int c){
+    if((a*a + b*b == c*c ) || (b*b + c*c == a*a) || (a*a + c*c == b*b)) return true;
+    
+    return false;
 }
 
     public static void main(String[] args){

@@ -108,6 +108,23 @@ int rotateNumber(int n,int r){
     return A * mul + B;
 }
 
+
+// cout<<(boolalpha)<<isPythagorean(a,b,c)<<endl;
+bool isPythagorean(int a,int b,int c){
+    if((a*a + b*b == c*c ) || (b*b + c*c == a*a) || (a*a + c*c == b*b)) return true;
+    
+    return false;
+}
+
+void benjaminBulbs(int n){
+    for(int i = 1; i*i <= n ; i++){
+        cout << i * i << endl;
+    }  
+}
+
+
+
+
 int main()
 {
     // printHello();
