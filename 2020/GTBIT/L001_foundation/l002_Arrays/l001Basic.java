@@ -89,14 +89,21 @@ public class l001Basic{
             if(arr[i] < minEle) minele = arr[i];
         }
 
-
-
         return maxEle - minEle;
-
     }
 
-
     
+    public static void reverse(int[] arr){
+        int i = 0, j = arr.length - 1;
+        while(i < j){
+          int temp = arr[i];
+          arr[i] = arr[j];
+          arr[j] = temp;
+        
+          i++;
+          j--;
+       }
+    }
     
     public static void main(String[] args){
         int n = scn.nextInt();
