@@ -109,4 +109,51 @@ public String minWindow(String s, String t) {
     return len == (int)1e8 ? "" : s.substring(head, head + len); 
 }
 
+//https://www.geeksforgeeks.org/smallest-window-contains-characters-string/
+
+public int minWindow(String s) {
+    int n = s.length();
+    
+    int[] freq = new int[128];
+    for(int i=0;i<nt;i++) freq[s.charAt(i)] = 1;
+
+    int requirement = 0, si = 0, ei = 0,head = 0, len = (int)1e8;
+    for(int ele : freq) requirement += ele;
+
+    while(ei < n){
+        if(freq[s.charAt(ei++)]-- > 0) requirement--;
+
+        while(requirement == 0){
+            len = (ei - si <= len) ? ei - (head = si) : len;
+
+            if(freq[s.charAt(si++)]++ == 0) requirement++;
+        }
+    }
+
+    return len;
+}
+
+public int[] maxSlidingWindow(int[] nums, int k) {
+    if(nums.length == 1 || k == 1) return nums;
+
+    PriorityQueue<Integer> pq = new PriorityQueue<>((a,b)->{
+        // return nums[a] - nums[b];  // this - other for default behaviour,min PQ.
+        return nums[b] - nums[a];  // other - this for reverse of default behaviour,max PQ
+    });
+
+
+    int n = nums.length;
+    int[] ans = new int[n - k + 1];
+    int idx = 0;
+
+    for(int i = 0;i<n;i++){
+        while(pq.size() != 0 && pq.peek() <= i - k) pq.remove();
+        pq.add(i);
+
+        if(i >= k - 1) ans[idx++] = nums[pq.peek()];
+    }
+
+    return ans;
+}
+
 }
