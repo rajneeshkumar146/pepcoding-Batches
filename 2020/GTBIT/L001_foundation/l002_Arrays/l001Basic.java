@@ -104,6 +104,48 @@ public class l001Basic{
           j--;
        }
     }
+
+    public static int[] inverse(int[] arr){
+        int n = arr.length;
+        int[] ans = new int[n];
+        for(int i=0;i<n;i++){
+            ans[arr[i]] = i;
+        }
+
+        // for(int ele : ans){
+        //     System.out.println(ele + " ");
+        // }
+
+        return ans;
+    }
+
+    
+    public static void printAllSubArrays(int[] arr){
+        int n = arr.length;
+        for(int i=0;i<n;i++){
+            for(int j=i;j<n;j++){
+                for(int k=i;k<=j;k++){
+                    System.out.print(arr[k]+ "\t");
+                }
+                System.out.println();
+            }   
+        }
+    }
+
+    // array should be in sorted order 
+    public static int BinarySearch(int[] arr,int data){
+        int si = 0, ei = arr.length - 1;
+        while(si <= ei){
+            int mid = (si + ei) / 2;
+            if(arr[mid] == data)
+                return mid;
+            else if(data < arr[mid]){
+                ei = mid - 1;
+            }else si = mid + 1;
+        }
+
+        return -1;
+    }
     
     public static void main(String[] args){
         int n = scn.nextInt();
@@ -112,7 +154,7 @@ public class l001Basic{
 
         int data = scn.nextInt();
         System.out.println(lastIndex(arr,data));
-
-
     }
+
+
 }
