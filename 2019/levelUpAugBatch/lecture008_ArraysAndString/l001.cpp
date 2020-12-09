@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <unordered_map>
 
 using namespace std;
 
@@ -132,18 +133,90 @@ int maxVowels(string s, int k)
 vector<int> maxSlidingWindow(vector<int> &nums, int k)
 {
     // {arr[i],i}
-    priority_queue<pair<int,int>> pq;  // max PQ.
-    
+    priority_queue<pair<int, int>> pq; // max PQ.
+
     int n = nums.size();
     vector<int> ans;
-    for(int i=0;i<n;i++){
-        while(pq.size() != 0 && pq.top().second <= i - k) pq.pop();
-        pq.push({nums[i],i});
+    for (int i = 0; i < n; i++)
+    {
+        while (pq.size() != 0 && pq.top().second <= i - k)
+            pq.pop();
+        pq.push({nums[i], i});
 
-        if(i >= k - 1) ans.push_back(pq.top().first);
+        if (i >= k - 1)
+            ans.push_back(pq.top().first);
     }
 
     return ans;
+}
+
+// https://practice.geeksforgeeks.org/problems/largest-subarray-of-0s-and-1s/1
+int maxLen(int arr[], int N)
+{
+    if (N == 0)
+        return 0;
+    int len = 0;
+    unordered_map<int, int> map;   // sum , index
+    map[0] = -1;
+
+    int sum = 0;
+    for (int i = 0; i < N; i++)
+    {
+        int val = arr[i];
+        if(val == 0) val = -1;
+        sum += val;
+
+        if(map.find(sum) != map.end()) len = max(len, i - map[sum]);
+        else map[sum] = i;
+    }
+
+    return len;
+}
+
+int maxLen(int arr[], int N)
+{
+    if (N == 0)
+        return 0;
+
+    unordered_map<int, int> map;   // sum , index
+    map[0] = 1;
+
+    int sum = 0, count = 0;
+    for (int i = 0; i < N; i++)
+    {
+        int val = arr[i];
+        if(val == 0) val = -1;
+        sum += val;
+        count += map[sum];
+        map[sum]++;
+
+    }
+
+    // for(pair<int,int> key : map){
+    //     count += (key.second * (key.second - 1)) / 2;
+    // }
+
+    return count;
+}
+
+int longSubarrWthSumDivByK(int arr[], int n, int k){
+    if (n == 0)
+        return 0;
+        
+    int len = 0;
+    vector<int> map(1000000 + 1,-2);
+    map[0] = -1;
+
+    int sum = 0;
+    for (int i = 0; i < n; i++){
+        sum += arr[i];
+
+        int SUM = (sum % k + k) % k;
+        if(map[SUM] != -2) len = max(len, i - map[SUM]);
+        else map[SUM] = i;
+    }
+
+    return len;
 }
 
 int main()

@@ -156,4 +156,124 @@ public int[] maxSlidingWindow(int[] nums, int k) {
     return ans;
 }
 
+public static void longestSubArrayDivisibleByK(int[] arr,int k){
+    int n = arr.length;
+    int[] psum = new int[n + 1];
+
+    for(int i = 0; i < n; i++){
+        psum[i + 1] = psum[i] + arr[i]; 
+    }
+
+    int len = 0;
+    for(int i =0 ;i < n ;i++){
+        for(int j = i;j < n; j++){
+            if((psum[j + 1] - psum[i]) % k == 0) len = Math.max(j - i + 1, len);
+        }
+    }
+}
+
+int maxLen(int[] arr, int N){
+    if(N <= 1) return 0;
+
+    HashMap<Integer,Integer> map = new HashMap<>();
+    map.put(0,-1);
+
+    int sum = 0,len = 0;
+    for(int i = 0 ; i < N ; i++){
+        int val = arr[i];
+        if(val == 0) val = -1;
+        sum += val;
+
+        if(map.containsKey(sum)) len = Math.max(len, i - map.get(sum));
+        else map.put(sum,i);
+    }
+
+    return len;
+}
+
+
+int countLen(int[] arr, int N){
+    if(N <= 1) return 0;
+
+    HashMap<Integer,Integer> map = new HashMap<>();
+    map.put(0,1);
+
+    int sum = 0,count = 0;
+    for(int i = 0 ; i < N ; i++){
+        int val = arr[i];
+        if(val == 0) val = -1;
+        sum += val;
+
+        count += map.getOrDefault(sum,0);
+        map.put(sum,map.getOrDefault(sum,0) + 1);
+    }
+
+    // for(Integer key : map.keySet()){
+    //     count += (map.get(key) * (map.get(key) - 1)) / 2
+    // }
+
+    return len;
+}
+
+//https://practice.geeksforgeeks.org/problems/longest-subarray-with-sum-divisible-by-k1259/1
+int longSubarrWthSumDivByK(int arr[], int n, int k){
+    if (n == 0)
+        return 0;
+        
+    int len = 0;
+    unordered_map<int, int> map;   // sum , index
+    map[0] = -1;
+
+    int sum = 0;
+       for (int i = 0; i < n; i++)
+      {
+        sum += arr[i];
+
+        int SUM = (sum % k + k) % k;
+        if(map.find(SUM) != map.end()) len = max(len, i - map[SUM]);
+        else map[SUM] = i;
+       }
+
+       return len;
+}
+
+// 974
+public int subarraysDivByK(int[] arr, int k) {
+    if(arr.length == 0) return 0;
+
+   int[] map = new int[k + 1];
+   map[0] = 1;
+  
+   int sum = 0,count = 0;
+   for(int i = 0 ; i < arr.length ; i++){
+       sum += arr[i];
+       int SUM = (sum % k + k) % k;
+       count += map[SUM];
+       map[SUM]++;
+   }
+
+   return count;
+}
+
+public int numRabbits(int[] arr) {
+    if(arr.length == 0) return 0;
+    
+    int n = arr.length;
+    HashMap<Integer,Integer> map = new HashMap<>();
+    
+    int ans = 0;
+    for(int ele : arr){
+        if(!map.containsKey(ele)){
+            ans += (ele + 1);
+            map.put(ele, 1);
+        }else{
+            map.put(ele,map.get(ele) + 1);
+        }
+        
+        if(map.get(ele) == ele + 1) map.remove(ele);
+    }
+    
+    return ans;
+}
+
 }
