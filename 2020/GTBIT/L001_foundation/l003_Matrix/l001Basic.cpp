@@ -92,6 +92,17 @@ void exitPoint(vector<vector<int>>& arr,int row,int col){
     }
 }
 
+void printDiangonals(vector<vector<int>>& arr){
+        
+        int n = arr.size();
+        int m = arr[0].size();
+        for(int gap = 0; gap < n; gap++){
+            for(int i = 0, j = gap; i < n && j < m;i++,j++){
+                cout<<(arr[i][j])<<endl;
+            }
+        }
+    }
+
 
 
 int main(){
