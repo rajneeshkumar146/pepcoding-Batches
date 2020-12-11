@@ -276,4 +276,95 @@ public int numRabbits(int[] arr) {
     return ans;
 }
 
+// 930
+public int numSubarraysWithSum(int[] arr, int S) {
+    int n = arr.length;
+    if(n == 0) return 0;
+    
+    int ei = 0, count = 0, psum = 0;
+    
+    // int[] freq = new int[30000 + 1];
+    // freq[0] = 1;
+    
+    HashMap<Integer,Integer> map = new HashMap<>();
+    map.put(0,1);
+    while(ei < n){
+        psum +=  arr[ei++];
+        // if(psum - S >= 0)count += freq[psum - S];
+        count += map.getOrDefault(psum - S,0);
+        map.put(psum,map.getOrDefault(psum,0) + 1);            
+    }
+    
+    return count;
+}
+
+public int numSubarraysWithAtMostSum(int[] arr,int S){
+    int si = 0, ei = 0, count = 0, sum = 0, n = arr.length;
+
+    while(ei < n){
+        sum += arr[ei++];
+
+        while(sum > k){
+            sum -= arr[si++];
+        }
+
+        count += ei - si;
+    }
+
+    return count;
+}
+
+public int numSubarraysWithSum(int[] arr, int S) {
+    int n = arr.length;
+    if(n == 0) return 0;
+    return numSubarraysWithAtMostSum(arr,S) - (S > 0 ? numSubarraysWithAtMostSum(arr,S - 1) : 0);
+}
+
+//1248
+public int numberOfSubarraysAtMost(int[] arr, int k) {
+    int n = arr.length;
+    int si = 0, ei = 0, oddCount = 0, res = 0;
+
+    while(ei < n){
+        if((arr[ei++] & 1) != 0) oddCount++;
+
+        while(oddCount > k){
+            if((arr[si++] & 1) != 0) oddCount--;
+        }
+
+        res += ei - si;
+    }
+
+    return res;
+}
+
+public int numberOfSubarrays(int[] arr, int k) {
+    int n = arr.length;
+    if(n == 0) return 0;
+
+    return numberOfSubarraysAtMost(arr,k) - numberOfSubarraysAtMost(arr,k - 1);
+}
+
+
+// 1004
+public int longestOnes(int[] arr, int K) {
+        
+    int n = arr.length, ei = 0, si = 0, len = 0;
+    int zeroCount  = 0;
+    while(ei < n){
+        if(arr[ei++] == 0) zeroCount++;
+        
+        while(zeroCount > K){
+            if(arr[si++] == 0) zeroCount--;    
+        }
+        
+        len = Math.max(len, ei - si);
+    }
+    
+    
+    return len;
+}
+
+// ======================================== 904 -> for you
+
 }
