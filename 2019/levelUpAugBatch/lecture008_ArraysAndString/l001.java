@@ -367,4 +367,127 @@ public int longestOnes(int[] arr, int K) {
 
 // ======================================== 904 -> for you
 
+public static void kadanesAlgo(int[] arr){
+    int gMaxSum = -(int)1e8, runningSum = 0;
+    for(int ele : arr){
+        runningSum += ele;
+        
+        if(runningSum > gMaxSum) gMaxSum = runningSum;
+        
+        if(runningSum <= 0) runningSum = 0;
+    }
+
+    return gMaxSum;
+}
+
+public static void kadanesAlgoSubarray(int[] arr){
+    int gMaxSum = -(int)1e8, runningSum = 0;
+    int gsi = 0, gei = 0, rsi = 0; // gsi : gloabl start index, rsi : running start index
+    for(int rei = 0; rei < arr.length; rei++){
+        runningSum += arr[rei];
+        
+        if(runningSum > gMaxSum){
+            gMaxSum = runningSum;
+            gsi = rsi;
+            gei = rei;
+        }
+
+        if(runningSum <= 0){
+            runningSum = 0;
+            rsi = rei + 1;
+        }
+    }
+    return gMaxSum;
+}
+
+public static long kadanesAlgoGeneric(int[] arr){
+    long gMaxSum = arr[0], runningSum = arr[0];
+    for(int i = 1; i < arr.length; i++){
+        runningSum = Math.max(arr[i],runningSum + arr[i]);
+        gMaxSum = Math.max(gMaxSum, runningSum);
+    }
+    
+    return gMaxSum;
+}
+
+// sum from starting
+public long prefixSum(int[] arr){
+    long gSum = -(int)1e9;
+    long cSum = 0;
+    for(int ele : arr){
+        cSum = (cSum + ele) % mod;
+        gSum = Math.max(gSum, cSum); 
+    }
+
+    return gSum;
+}
+
+// sum from last
+public long suffixSum(int[] arr){
+    long gSum = -(int)1e9;
+    long cSum = 0;
+    for(int i = arr.length - 1; i >= 0; i--){
+        cSum = (cSum + arr[i]) % mod;
+        gSum = Math.max(gSum, cSum); 
+    }
+
+    return gSum;
+}
+
+public int kConcatenationMaxSum(int[] arr, int k) {
+    long KadanesSum = kadanesAlgo(arr) % mod;
+    if(k == 1) return (int)KadanesSum;
+
+    long sumOfArray = 0;
+    for(int ele : arr) sumOfArray += ele;
+
+    long prefixSum = prefixSum(arr);
+    long suffixSum = suffixSum(arr);
+
+    if(sumOfArray > 0){
+        long APSum = ((k - 2) * sumOfArray  % mod + suffixSum % mod + prefixSum % mod) % mod;
+        return (int)Math.max(APSum, KadanesSum);
+    }else{
+        return (int)(Math.max(suffixSum + prefixSum, KadanesSum));
+    }
+}
+
+// Best method
+ 
+public long kadanesSum(int[] arr,int k){
+    int gMaxSum = 0, runningSum = 0;
+    int n = arr.length;
+    
+    for(int i = 0; i < n * k; i++){
+        runningSum = (runningSum + arr[i % n]) % mod;
+        
+        if(runningSum > gMaxSum) gMaxSum = runningSum;
+        
+        if(runningSum <= 0) runningSum = 0;
+    }
+
+    return gMaxSum % mod;
+}
+
+public int kConcatenationMaxSum(int[] arr, int k) {
+    long prevSum = 0;
+    for(int i = 1 ; i <= k && i <= 3;i++){
+        long KSum =  kadanesSum(arr, i);
+        if(i == k) return (int)KSum;
+        
+        if(i == 3){
+            return (int)((prevSum + (k - 2) * (KSum - prevSum)) % mod);
+        }
+
+        prevSum = KSum;
+    }
+    return  0;
+}
+
+
+
+
+
+
+
 }
