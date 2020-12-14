@@ -484,10 +484,90 @@ public int kConcatenationMaxSum(int[] arr, int k) {
     return  0;
 }
 
+// 1074
+public int numSubmatrixSumTarget(int[][] matrix, int k){    
+    int n = matrix.length, m = matrix[0].length;
+    for(int i = 1;i<n;i++){
+        for(int j = 0;j<m;j++)
+            matrix[i][j] += matrix[i-1][j];
+    }
+    
+    int count = 0;
+    for(int base = 0; base < n;base++){ 
+        for(int row = base;row < n;row++){
+            HashMap<Integer,Integer> map = new HashMap<>();
+            map.put(0,1);
+            int sum = 0;
+            for(int j = 0;j < m; j++){
+                
+                sum += matrix[row][j] - (base != 0 ? matrix[base - 1][j] : 0);
+                count += map.getOrDefault(sum - k, 0);
+                map.put(sum,map.getOrDefault(sum,0)+1);
+            }
+        } 
+    }
+    
+    return count;
+}
 
+public int maxSumSubmatrix(int[][] matrix, int k) {
+    int n = matrix.length, m = matrix[0].length;
+    for(int i = 1;i<n;i++){
+        for(int j = 0;j<m;j++)
+            matrix[i][j] += matrix[i-1][j];
+    }
+    
+    int maxSum = -(int)1e9;
+    for(int base = 0; base < n;base++){ 
 
+        for(int row = base;row < n;row++){
+            
+            
+            int gSum = -(int)1e9, rsum = 0;
+            for(int j = 0; j < m; j++){
+                int val  = matrix[row][j] - (base != 0 ? matrix[base - 1][j] : 0);
+               
+                rsum = Math.max(val,rsum + val);
+                gSum = Math.max(gSum, rsum);
 
+                if(gSum == k) return k;
+            }
+            
+            if(gSum < k){
+                maxSum = Math.max(maxSum, gSum);
+                continue;
+            }
+            
+            
+           TreeSet<Integer> map = new TreeSet<>();
+           int sum = 0;
+           map.add(0);
 
+           for(int j = 0; j <m ; j++){
+               sum += matrix[row][j] - (base != 0 ? matrix[base - 1][j] : 0);
+               
+               if(map.contains(sum - k)) return k;
+               
+               Integer val = map.ceiling(sum - k);
+               if(val != null){
+                   maxSum = Math.max(maxSum,sum - val);
+               }
+               map.add(sum);
+           }
+        } 
+    }
 
+    return maxSum;
+}
 
+//152
+public int maxProduct(int[] A) {
+    int n = A.length, res = A[0], l = 0, r = 0;
+    for (int i = 0; i < n; i++) {
+        l =  (l == 0 ? 1 : l) * A[i];
+        r =  (r == 0 ? 1 : r) * A[n - 1 - i];
+        res = Math.max(res, Math.max(l, r));
+    }
+    return res;
+}
 }
