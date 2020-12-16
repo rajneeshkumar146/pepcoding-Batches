@@ -26,9 +26,43 @@ void test2()
     cout << str << endl;
 }
 
+//Question=======================================================
+
+string compress(string str)
+{
+    if (str.length() == 0)
+        return "";
+    string ans = "";
+
+    char prevChar = str[0];
+    int i = 1, count = 0;
+
+    while (i <= str.length())
+    {
+        count = 1;
+        while (i < str.length() && prevChar == str[i])
+        {
+            count++;
+            prevChar = str[i];
+            i++;
+        }
+
+        ans += prevChar;
+        ans += to_string(count);
+        if (i == str.length())
+            break;
+        prevChar = str[i];
+        i++;
+    }
+
+    return ans;
+}
+
 int main()
 {
     // test1();
-    test2();
+    // test2();
+    // string str; cin >> str;
+    cout << compress("aaaaabbbbbbxxxdsfdxxxxxvvvvfvvvvrrrrrtttttyghf");
     return 0;
 }

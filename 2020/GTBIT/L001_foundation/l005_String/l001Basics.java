@@ -38,7 +38,52 @@ public class l001Basics{
         System.out.println(str);
     }
 
+    // Questions.===========================================================
+
+    public static String compress(String str){
+        if(str.length() == 0) return "";
+        StringBuilder sb = new StringBuilder();
+        
+        char prevChar = str.charAt(0);
+        int i = 1;
+        while(i <= str.length()){
+            int count = 1;
+            while(i < str.length() && prevChar == str.charAt(i)){
+                  count++;
+                  prevChar = str.charAt(i);
+                  i++;
+            }
+
+            sb.append(prevChar);
+            sb.append(count);
+            if(i == str.length()) break;
+            prevChar = str.charAt(i);
+            i++;
+        } 
+
+        return sb.toString();
+    }
+
+    public static String compress1(String str){
+        int[] freq = new int[26];
+        for(int i=0;i<str.length();i++){
+            freq[str.charAt(i) - 'a']++;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<freq.length;i++){
+            if(freq[i] > 0){
+                sb.append((char)(i + 'a'));
+                sb.append(freq[i]);
+            }
+        }
+
+
+    }
+
     public static void main(String[] args){
-        test2();
+        // test2();
+        // String str = scn.nextLine();
+        System.out.println(compress("aaaaabbbbbbxxxdsfdxxxxxvvvvfvvvvrrrrrtttttyghf"));
     }
 }
