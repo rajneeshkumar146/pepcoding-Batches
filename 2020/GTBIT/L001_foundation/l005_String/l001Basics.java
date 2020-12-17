@@ -77,6 +77,71 @@ public class l001Basics{
                 sb.append(freq[i]);
             }
         }
+    }
+
+    public static String toggleString(String str){
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<str.length();i++){
+            char ch = str.charAt(i);
+            if(ch >= 'a' && ch <= 'z')
+               sb.append((char)(ch - 'a' + 'A'));
+            else sb.append((char)(ch - 'A' + 'a'));
+        }
+
+        return  sb.toString();
+    }
+
+    public static boolean isPlaindrome(String str){
+        int i = 0, j = str.length() - 1;
+        while(i < j){
+            if(str.charAt(i++) != str.charAt(j--)) return false;
+            // i++;
+            // j--;
+        }
+
+        return true;
+    }
+
+    public static void PlaindromicSubstring(String str){
+        for(int i = 0;i < str.length();i++){
+            for(int j = i; j < str.length();j++){
+                String s = str.substring(i,j+1);
+                if(isPlaindrome(s)) System.out.println(s);
+            }
+        }
+    }
+
+    public static String consecutiveCharacter(String str){
+        if(str.length() <= 1) return str;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(str.charAt(0));
+        for(int i = 1;i < str.length();i++){
+            char ch = str.charAt(i);
+            char ch0 = str.charAt(i - 1);
+
+            sb.append(ch - ch0);
+            sb.append(ch);
+        }
+
+        return sb.toString();
+    }
+
+    public static void permutation(String str){
+        ArrayList<String> ans = new ArrayList<>();
+        ans.add(str.charAt(0)+"");
+
+        for(int i=1;i<str.length();i++){
+            char ch = str.charAt(i);
+            ArrayList<String> smallAns = new ArrayList<>();
+            for(String s : ans){
+                for(int j = 0;j <= s.length();j++){
+                    String ns = s.substring(0,j) + ch + s.substring(j);
+                    smallAns.add(ns);
+                }
+            }
+            ans = smallAns;
+        }
 
 
     }

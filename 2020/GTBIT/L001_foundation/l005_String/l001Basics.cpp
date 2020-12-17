@@ -58,6 +58,31 @@ string compress(string str)
     return ans;
 }
 
+bool isPlaindrome(string str)
+{
+    int i = 0, j = str.length() - 1;
+    while (i < j)
+    {
+        if (str[i++] != str[j--])
+            return false;
+    }
+
+    return true;
+}
+
+void PlaindromicSubstring(string str)
+{
+    for (int i = 0; i < str.length(); i++)
+    {
+        for (int j = i; j < str.length(); j++)
+        {
+            string s = str.substr(i, j - i + 1);
+            if (isPlaindrome(s))
+                cout << s << endl;
+        }
+    }
+}
+
 int main()
 {
     // test1();
