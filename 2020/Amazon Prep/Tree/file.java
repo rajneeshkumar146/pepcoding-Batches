@@ -211,18 +211,192 @@ public class file{
         return nnMaxSum;
     }
 
+    // View.=================================================
+
+    public static void BFS(TreeNode node){
+
+        LinkedList<TreeNode> que = new LinkedList<>(); // for que: addLast, removeFirst
+        int level = 0;
+        que.addLast(node);
+        
+        List<List<Integer>> ans = new ArrayList<>();
+
+        while(que.size() != 0){
+            int size = que.size();
+            while(size-- > 0){
+                TreeNode rnode = que.removeFirst();
+
+                if(ans.size() == level) ans.add(new ArrayList<>());
+                ans.get(level).add(rnode.val);
+
+                if(rnode.left != null) que.addLast(rnode.left);
+                if(rnode.right != null) que.addLast(rnode.right);
+            }
+
+            level++;
+        }
+    }
+
+    public static List<Integer> LeftView(TreeNode node){
+        LinkedList<TreeNode> que = new LinkedList<>(); // for que: addLast, removeFirst
+        int level = 0;
+        que.addLast(node);
+        
+        List<Integer> ans = new ArrayList<>();
+
+        while(que.size() != 0){
+            int size = que.size();
+            ans.add(que.getFirst().val);
+
+            while(size-- > 0){
+                TreeNode rnode = que.removeFirst();
+
+                if(rnode.left != null) que.addLast(rnode.left);
+                if(rnode.right != null) que.addLast(rnode.right);
+            }
+
+            level++;
+        }
+    }
+
     
+    public static List<Integer> rightView(TreeNode node){
+        LinkedList<TreeNode> que = new LinkedList<>(); // for que: addLast, removeFirst
+        int level = 0;
+        que.addLast(node);
+        
+        List<Integer> ans = new ArrayList<>();
 
+        while(que.size() != 0){
+            int size = que.size();
 
+            TreeNode prev = null;
 
+            while(size-- > 0){
+                TreeNode rnode = que.removeFirst();
+                prev = rnode;
 
+                if(rnode.left != null) que.addLast(rnode.left);
+                if(rnode.right != null) que.addLast(rnode.right);
+            }
 
+            ans.add(prev);
+            level++;
+        }
+    }
 
+    public static class pair{
+        TreeNode node = null;
+        int level = 0;
 
+        pair(TreeNode node,int level){
+            this.node = node;
+            this.level = level;
+        }
+    }
 
+    public static HashMap<Integer, ArrayList<Integer>> verticalOrder(TreeNode root){
+        LinkedList<pair> que = new LinkedList<>(); // for que: addLast, removeFirst
+        int level = 0;
+        que.addLast(new pair(root, 0));
+        
+        HashMap<Integer, ArrayList<Integer>> ans = new HashMap<>();
 
+        while(que.size() != 0){
+            int size = que.size();
+            while(size-- > 0){
+                pair p = que.removeFirst();
+                TreeNode node = p.node;
+                int lev = p.level;
 
+                map.putIfAbsent(lev,new ArrayList<>());
+                map.get(lev).add(node.val);
+                
+                if(node.left != null) que.addLast(new pair(node.left,lev - 1));
+                if(node.right != null) que.addLast(new pair(node.right,lev + 1));
+            }
+        }
 
+        return ans;
+    }
 
+    public static void topBottomView(TreeNode node){
+        HashMap<Integer, ArrayList<Integer>> ans = verticalOrder(node);
+        
+        int minIdx = 0;
+        int maxIdx = 0;
+        
+        for(int key : map.keySet()){
+            minIdx = Math.min(minIdx,key);
+            maxIdx = Math.max(maxIdx,key);    
+        }
 
+        // for verticl order 
+        // List<List<Integer>> res = new ArrayList<>();
+        // while(minIdx <= maxidx){
+        //     res.add(map.get(minIdx++));
+        // }
+
+        // Top View
+        List<Integer> res = new ArrayList<>();
+        while(minIdx <= maxIdx){
+            res.add(map.get(minIdx++).get(0));
+        }
+
+        
+        // Bottom View
+        List<Integer> res = new ArrayList<>();
+        while(minIdx <= maxIdx){
+            int size = map.get(minIdx).size();
+            res.add(map.get(minIdx++).get(size - 1));
+        }
+    }
+
+    public static void verticalSum(TreeNode root){
+        LinkedList<pair> que = new LinkedList<>(); // for que: addLast, removeFirst
+        int level = 0;
+        que.addLast(new pair(root, 0));
+        
+        HashMap<Integer, Integer> ans = new HashMap<>();
+
+        while(que.size() != 0){
+            int size = que.size();
+            while(size-- > 0){
+                pair p = que.removeFirst();
+                TreeNode node = p.node;
+                int lev = p.level;
+
+                map.put(lev,map.getOrDefault(lev,0) + node.val);
+                
+                if(node.left != null) que.addLast(new pair(node.left,lev - 1));
+                if(node.right != null) que.addLast(new pair(node.right,lev + 1));
+            }
+        }
+
+        return ans;
+    }
+
+    public static void diagonalSum(TreeNode root){
+        LinkedList<pair> que = new LinkedList<>(); // for que: addLast, removeFirst
+        int level = 0;
+        que.addLast(new pair(root, 0));
+        
+        HashMap<Integer, Integer> ans = new HashMap<>();
+
+        while(que.size() != 0){
+            int size = que.size();
+            while(size-- > 0){
+                pair p = que.removeFirst();
+                TreeNode node = p.node;
+                int lev = p.level;
+
+                map.put(lev,map.getOrDefault(lev,0) + node.val);
+                
+                if(node.left != null) que.addLast(new pair(node.left,lev - 1));
+                if(node.right != null) que.addLast(new pair(node.right,lev));
+            }
+        }
+
+        return ans;
+    }
 }
