@@ -285,14 +285,19 @@ public class file{
         }
     }
 
-    public static class pair{
+    public static class pair implements Comparable<pair>{
         TreeNode node = null;
         int level = 0;
 
-        pair(TreeNode node,int level){
+        public pair(TreeNode node,int level){
             this.node = node;
             this.level = level;
         }
+
+        public int compareTo(pair o){
+            if(this.level == o.level) return this.node.val - o.node.val;
+            else return this.level - o.level;
+        } 
     }
 
     public static HashMap<Integer, ArrayList<Integer>> verticalOrder(TreeNode root){
@@ -309,8 +314,8 @@ public class file{
                 TreeNode node = p.node;
                 int lev = p.level;
 
-                map.putIfAbsent(lev,new ArrayList<>());
-                map.get(lev).add(node.val);
+                ans.putIfAbsent(lev,new ArrayList<>());
+                ans.get(lev).add(node.val);
                 
                 if(node.left != null) que.addLast(new pair(node.left,lev - 1));
                 if(node.right != null) que.addLast(new pair(node.right,lev + 1));
@@ -321,7 +326,7 @@ public class file{
     }
 
     public static void topBottomView(TreeNode node){
-        HashMap<Integer, ArrayList<Integer>> ans = verticalOrder(node);
+        HashMap<Integer, ArrayList<Integer>> map = verticalOrder(node);
         
         int minIdx = 0;
         int maxIdx = 0;
@@ -333,7 +338,7 @@ public class file{
 
         // for verticl order 
         // List<List<Integer>> res = new ArrayList<>();
-        // while(minIdx <= maxidx){
+        // while(minIdx <= maxIdx){
         //     res.add(map.get(minIdx++));
         // }
 
@@ -399,4 +404,58 @@ public class file{
 
         return ans;
     }
+
+   //987
+   public static HashMap<Integer, ArrayList<Integer>> verticalOrder(TreeNode root){
+    PriorityQueue<pair> que = new PriorityQueue<>(); // for que: addLast, removeFirst
+    PriorityQueue<pair> cque = new PriorityQueue<>();
+    int level = 0;
+    que.add(new pair(root, 0));
+    
+    HashMap<Integer, ArrayList<Integer>> ans = new HashMap<>();
+
+    while(que.size() != 0){
+        int size = que.size();
+        while(size-- > 0){
+            pair p = que.remove();
+            TreeNode node = p.node;
+            int lev = p.level;
+
+            ans.putIfAbsent(lev,new ArrayList<>());
+            ans.get(lev).add(node.val);
+            
+            if(node.left != null) cque.add(new pair(node.left,lev - 1));
+            if(node.right != null) cque.add(new pair(node.right,lev + 1));
+        }
+        
+        
+        PriorityQueue<pair> temp = que;
+        que = cque;
+        cque = temp;
+    }
+
+    return ans;
+}
+
+public List<List<Integer>> verticalTraversal(TreeNode node) {
+    HashMap<Integer, ArrayList<Integer>> ans = verticalOrder(node);
+    
+    int minIdx = 0;
+    int maxIdx = 0;
+    
+    for(int key : ans.keySet()){
+        minIdx = Math.min(minIdx,key);
+        maxIdx = Math.max(maxIdx,key);    
+    }
+
+    // for verticl order 
+    List<List<Integer>> res = new ArrayList<>();
+    while(minIdx <= maxIdx){
+        res.add(ans.get(minIdx++));
+    }
+
+    return  res;
+}
+
+
 }
