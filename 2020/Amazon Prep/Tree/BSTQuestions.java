@@ -102,11 +102,145 @@ public class BSTQuestions{
         }
     }
 
+    public static TreeNode addData(TreeNode node,int data){
+        if(node == null){
+            return new Node(data);
+        }
 
+        if(node.val < data) node.right = addData(node.right,data);
+        else node.left = addData(node.left,data);
+        return node;
+    }
 
+    public static TreeNode removeData(TreeNode node,int data){
+        if(node == null) return null;
 
+        if(node.val < data) node.right = removeData(node.right,data);
+        else if(node.val > data) node.left = removeData(node.left,data);
+        else{
+            if(node.left == null || node.right == null) 
+               return node.left != null ? node.left : node.right;
+            
+            int maxChild = maxValue(node.left);
+            node.val = maxChild;
+            node.left = removeData(node.left, maxChild);
+        }
 
+        return node;
+    }
 
+    
+    //105
+    public TreeNode buildTree(int[] preorder,int psi,int pei, int[] inorder,int isi,int iei) {
+        if(psi > pei) return null;
 
+        int idx = isi;
+        while(preorder[psi] != inorder[idx]) idx++;
+        int count = idx - isi;
 
+        TreeNode node = new TreeNode(preorder[psi]);
+        node.left = buildTree(preorder, psi + 1,psi + count, inorder, isi , idx - 1);
+        node.right = buildTree(preorder, psi + count + 1, pei, inorder, idx + 1 , iei);
+        
+        return node;
+    }
+
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+
+        return buildTree(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+        
+    }
+
+    //106
+    public TreeNode buildTree(int[] inorder,int isi,int iei, int[] postorder,int psi,int pei) {
+        if(psi > pei) return null;
+
+        int idx = isi;
+        while(postorder[pei] != inorder[idx]) idx++;
+        int count = idx - isi;
+        TreeNode node = new TreeNode(postorder[pei]);
+
+        node.left = buildTree(inorder, isi , idx - 1, postorder, psi ,psi + count - 1);
+        node.right = buildTree(inorder, idx + 1 , iei, postorder, psi + count, pei - 1);
+        
+        return node;
+    }
+
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        return buildTree(inorder, 0, inorder.length - 1, postorder, 0, postorder.length - 1);
+    }
+
+    // 114
+    public TreeNode flatten_(TreeNode root) {
+        if(root == null) return null;
+        if(root.left == null && root.right == null) return root; // tail
+        
+        TreeNode lastNodeOfLeftSubtree = flatten_(root.left);
+        TreeNode lastNodeOfrightSubtree = flatten_(root.right);
+        
+        if(root.left != null){
+            lastNodeOfLeftSubtree.right = root.right;
+            root.right = root.left;
+            root.left = null;
+        }
+        
+        
+        return lastNodeOfrightSubtree != null ? lastNodeOfrightSubtree : lastNodeOfLeftSubtree;
+    }
+    
+    public void flatten(TreeNode root) {
+        flatten_(root);
+    }
+
+    // https://practice.geeksforgeeks.org/problems/binary-tree-to-dll/1
+    Node head = null;
+    Node prev = null;
+    void bToDLL_(Node node){
+        if(node == null) return;
+        
+        bToDLL_(node.left);
+
+        if(head == null) head = node;
+        else{
+            prev.right = node;
+            node.left = prev;
+        }
+        
+        prev = node;
+        bToDLL_(node.right);
+    }
+
+    Node bToDLL(Node root){
+      bToDLL_(root);
+      return head;
+    }
+
+    // CDLL
+    // BT -> BST
+
+    //889
+    public TreeNode constructFromPrePost(int[] pre,int psi,int pei, int[] post,int posi,int poei) {
+        if(psi > pei) return null;
+        if(psi == pei) return  new TreeNode(pre[psi]);
+        
+        int idx = posi;
+        while(pre[psi + 1] != post[idx]){
+            idx++;
+        }
+        
+        int count = idx - posi + 1;
+        TreeNode node = new TreeNode(pre[psi]);
+        node.left = constructFromPrePost(pre,psi + 1, psi + count, post, posi, idx);
+        node.right = constructFromPrePost(pre,psi + count + 1, pei, post, idx + 1, poei - 1);
+        
+        return node;
+        
+    }
+
+    public TreeNode constructFromPrePost(int[] pre, int[] post) {
+        int n = pre.length;
+        
+        return constructFromPrePost(pre, 0, n - 1, post,0, n - 1); 
+        
+    }
 }
