@@ -114,7 +114,7 @@ vector<int> findClosestElements(vector<int> &arr, int k, int x)
 
         // int idx = binarySearch(arr, x); // where we suppose to find the x element.
         int idx = (lower_bound(arr.begin(), arr.end(), x) - arr.begin());
-        
+
         int si = max(0, idx - k);
         int ei = min(n - 1, idx + k);
 
@@ -129,6 +129,27 @@ vector<int> findClosestElements(vector<int> &arr, int k, int x)
         vector<int> ans(arr.begin() + si, arr.begin() + ei + 1);
         return ans;
     }
+}
+
+//300
+int lengthOfLIS(vector<int> &arr)
+{
+    if (arr.size() <= 1)
+        return arr.size();
+    int n = arr.size();
+
+    vector<int> list;
+    for (int ele : arr)
+    {
+        // int idx = (lower_bound(list.begin(), list.end(), ele) - list.begin());
+        int idx = binarySearch(list,ele);
+        if (idx == list.size())
+            list.push_back(ele);
+
+        list[idx] = ele;
+    }
+
+    return list.size();
 }
 
 int main()

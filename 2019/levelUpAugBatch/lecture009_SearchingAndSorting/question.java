@@ -139,8 +139,95 @@ public List<Integer> findClosestElements(int[] A, int k, int x) {
     }
 }
 
+//300
+public int binarySearch(ArrayList<Integer> arr,int data){
+    int si = 0, ei = arr.size();
+    while(si < ei){
+        int mid = (si + ei) / 2; 
+        if(data > arr.get(mid)) si = mid + 1;
+        else ei = mid;
+    }
+
+    return si;
+}
+
+public int lengthOfLIS(int[] arr)
+{
+    if (arr.length <= 1)
+        return arr.length;
+    int n = arr.length;
+
+    ArrayList<Integer> list = new ArrayList<>();
+
+    for (int ele : arr)
+    {
+        // int idx = Collections.binarySearch(list,ele);
+        // if(idx < 0) idx = -idx - 1;
+        
+        int idx = binarySearch(list,ele);
+        if (idx == list.size())
+            list.add(ele);
+
+        list.set(idx, ele);
+    }
+
+    return list.size();
+}
+
+//875
+bool isPossibleToEat(vector<int>&piles,int eatingSpeed,int H){
+    int hours = 0;
+    for(int i = piles.size()-1;i>=0;i--){
+        hours += ceil(piles[i] / (eatingSpeed * 1.0));
+        if(hours > H) return false;
+    }
+    
+    return true;
+}
+
+int minEatingSpeed(vector<int>& piles, int H) {    
+    // sort(piles.begin(),piles.end());
+    int n = piles.size();
+    int minSpeed = 1, maxSpeed = (int)1e9;
+    
+    while(minSpeed < maxSpeed){
+        int eatingSpeed = minSpeed + (maxSpeed - minSpeed) / 2;
+        
+        if(isPossibleToEat(piles,eatingSpeed,H)) maxSpeed = eatingSpeed;
+        else minSpeed = eatingSpeed + 1;
+    }
+    
+    return maxSpeed;
+}
 
 
+public static void isPossibleToServe(double[] area,double area,int k){
+    int count = 0;
+    for(double ele : area){
+        count += ele / area;
+        if(count >= k) return true;
+    }
+
+    return false;
+}
 
 
+public static void servingAreaCake(int[] radii,int k){
+    int n = radii.length;
+    double[] area = new double[n];
+
+    double lo = 0.0, hi = 0.0,mid = 0.0;
+    for(int i = 0;i < n; i++){
+        area[i] = radii[i] * radii[i] * Math.PI;
+        hi = Math.max(hi,area[i]);
+    }
+
+    while(hi - lo > 1e-5){
+        mid = lo + (hi - lo) / 2.0;
+        if(isPossibleToServe(area,mid,k)) lo = mid;
+        else hi = mid;
+    }
+
+    return mid;
+}
 }
