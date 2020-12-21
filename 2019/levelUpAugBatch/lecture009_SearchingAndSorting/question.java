@@ -230,4 +230,48 @@ public static void servingAreaCake(int[] radii,int k){
 
     return mid;
 }
+
+public boolean checkIsValid(int[] arr,double mid,int K){
+    int count = 0;
+    for(int i = 1;i<arr.length;i++){
+        count += (int)((arr[i] - arr[i-1])/mid);
+        if(count > K) return true;
+    }
+    
+    return false;
+}
+
+public double minmaxGasDist(int[] arr, int K) {
+    double lo = 0.0, hi = 1e9, mid = 0.0;
+    while((hi - lo) >= 1e-5 ){
+        mid = lo + (hi - lo) / 2.0;
+        
+        if(checkIsValid(arr,mid,K)) lo = mid + 1e-6;
+        else hi = mid ;
+    }
+    
+    return hi;
+}
+
+public int search(int[] arr, int data) {
+    int lo = 0, hi = arr.length - 1;
+    while(lo <= hi){
+        int mid = (hi + lo) / 2;
+        
+        if(arr[mid] == data) return mid;
+        else if(arr[lo] <= arr[mid]){
+            if(arr[lo] <= data && data < arr[mid]) hi = mid - 1;
+            else lo = mid + 1; 
+        }else{
+            if(arr[mid] < data && data <= arr[hi]) lo = mid + 1;
+            else hi = mid - 1;
+        }
+    }
+    
+    return -1;
+}
+
+public double minmaxGasDist(int[] stations, int K) {
+        
+}
 }
