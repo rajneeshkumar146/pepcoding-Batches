@@ -40,16 +40,33 @@ public class l001Basics{
         }
     }
 
+    public static void printNTime(int n){
+        for(int i = 1; i <= n; i++){
+            System.out.println("Hello!");
+        }
+    }
+
+    public static void printTableOfN(int n){
+        for(int i = 1;i <= 10;i++){
+            System.out.println(n + " X " +  i + " = " + n * i);
+        }
+    } 
+
     public static void main(String[] args){
     //     System.out.println("Hello");
     //     System.out.println("Pepcoder");
-    int a = scn.nextInt();
-    int b = scn.nextInt();
-
-    System.out.println(multiply(a,b));
-    System.out.println(multiply(a,b));
-    System.out.println(add(a,b));
-    System.out.println(subtract(a,b));
-    printmessage();
+    // int a = scn.nextInt();
+    // int b = scn.nextInt();
+    
+    // int c = multiply(a,b);
+    // System.out.println(multiply(a,b));
+    // System.out.println(multiply(a,b));
+    // System.out.println(add(a,b));
+    // System.out.println(subtract(a,b));
+    // printmessage();
+    
+    int n = scn.nextInt();
+    // printNTime(n);
+    printTableOfN(n);
    }
 }
