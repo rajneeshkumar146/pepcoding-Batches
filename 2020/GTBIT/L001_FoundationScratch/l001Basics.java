@@ -52,6 +52,32 @@ public class l001Basics{
         }
     } 
 
+    public static boolean isPrime(int n){
+        for(int i = 2; i*i <= n; i++){
+            if(n % i == 0) return false;
+        }
+        return true;
+    }
+
+    public static void primeNumbers(){
+        int t = scn.nextInt();
+        for(int i = 1; i <= t; i++){
+            int n = scn.nextInt();
+            
+            if(isPrime()){
+                System.out.println("prime");
+            }else{
+                System.out.println("not prime");
+            }
+        }
+    }
+
+    public static void primeTillN(int n,int m){
+        for(int i = n; i <= m; i++){
+            if(isPrime(i)) System.out.println(i);
+        }
+    }
+    
     public static void main(String[] args){
     //     System.out.println("Hello");
     //     System.out.println("Pepcoder");
