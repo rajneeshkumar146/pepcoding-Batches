@@ -68,8 +68,13 @@ public class l002{
     }
 
     public static void main(String[] args){
-        String str = scn.nextLine();
-        allSubString(str);
+        // String str = scn.nextLine();
+        // allSubString(str);
+
+        int n = scn.nextInt(); scn.nextLine();
+        while(n-->0){
+            System.out.println(withoutX2(scn.nextLine()));
+        }
     }
 
 }
