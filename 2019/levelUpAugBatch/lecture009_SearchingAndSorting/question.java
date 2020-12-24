@@ -253,6 +253,8 @@ public double minmaxGasDist(int[] arr, int K) {
     return hi;
 }
 
+
+//33
 public int search(int[] arr, int data) {
     int lo = 0, hi = arr.length - 1;
     while(lo <= hi){
@@ -271,7 +273,105 @@ public int search(int[] arr, int data) {
     return -1;
 }
 
+//81
+public boolean search(int[] arr, int data) {
+    int lo = 0, hi = arr.length - 1;
+    while(lo <= hi){
+    int mid = (hi + lo) / 2;
+    
+    if(arr[mid] == data || arr[lo] == data) return true;
+    else if(arr[lo] < arr[mid]){
+        if(arr[lo] <= data && data < arr[mid]) hi = mid - 1;
+        else lo = mid + 1; 
+    }else if(arr[mid] < arr[hi]){
+        if(arr[mid] < data && data <= arr[hi]) lo = mid + 1;
+        else hi = mid - 1;
+    }else lo++;
+}
+
+return false;
+}
+
+//153
+public int findMin(int[] arr) {
+    int lo = 0, hi = arr.length - 1;
+    if(arr[lo] <= arr[hi]) return arr[lo];
+    
+    while(lo < hi){
+        int mid = (lo + hi) / 2;
+        
+        if(arr[mid] < arr[hi]) hi = mid;
+        else if(arr[lo] <= arr[mid]) lo = mid + 1;
+        // else lo++; // if ele is duplicate.
+    }
+    
+    return arr[lo];
+}
+
+// 001
+
+public int[] twoSum(int[] nums, int target) {    
+    HashMap<Integer,Integer> map = new HashMap<>();
+    for(int i = 0;i<nums.length;i++){
+        int ele = nums[i];
+        if(map.containsKey(target - ele)) return new int[]{map.get(target-ele),i};
+        
+        map.put(ele,i);
+    }
+    
+    return new int[]{-1,-1};
+}
+
+public int[] twoSum(int[] arr, int data) {
+        
+    int si = 0, ei = arr.length - 1;
+    while(si < ei){
+        int sum = arr[si] + arr[ei];
+        if(sum == data) return new int[]{si + 1,ei + 1};
+        else if(sum < data) si++;
+        else ei--;
+    }
+    return new int[]{-1,-1};
+}
+
+public List<List<Integer>> threeSum(int[] arr) {
+    Arrays.sort(arr);
+    int n = arr.length;
+    int data = 0;
+    List<List<Integer>> res = new ArrayList<>();
+    
+    for(int i = 0;i < n;i++){
+        while( i != 0 && i < n && arr[i] == arr[i-1]) i++;
+        int j = i + 1, k = n - 1;
+        
+        while(j < k){
+            int sum = arr[i] + arr[j] + arr[k];
+            if(sum == data){
+                // List<Integer> ar = new ArrayList<>();
+                // ar.add(arr[i]);
+                // ar.add(arr[j]);
+                // ar.add(arr[k]);
+                // res.add(ar);
+                
+                res.add(Arrays.asList(arr[i],arr[j],arr[k]));
+                
+                j++;
+                k--;
+                
+                while( j < k && arr[j] == arr[j-1]) j++;
+                while( j < k && arr[k] == arr[k+1]) k--;
+            }else if(sum < data)
+                 j++;
+            else 
+                 k--;
+        }
+    }
+    
+    return res;
+}
+
 public double minmaxGasDist(int[] stations, int K) {
         
 }
+
 }

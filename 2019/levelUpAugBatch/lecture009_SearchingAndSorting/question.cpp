@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <unordered_map>
 
 using namespace std;
 
@@ -142,7 +143,7 @@ int lengthOfLIS(vector<int> &arr)
     for (int ele : arr)
     {
         // int idx = (lower_bound(list.begin(), list.end(), ele) - list.begin());
-        int idx = binarySearch(list,ele);
+        int idx = binarySearch(list, ele);
         if (idx == list.size())
             list.push_back(ele);
 
@@ -150,6 +151,79 @@ int lengthOfLIS(vector<int> &arr)
     }
 
     return list.size();
+}
+
+//001
+vector<int> twoSum(vector<int> &nums, int target)
+{
+
+    unordered_map<int, int> map;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        int ele = nums[i];
+        if (map.find(target - ele) != map.end())
+            return {map[target - ele], i};
+
+        map[ele] = i;
+    }
+
+    return {-1, -1};
+}
+
+vector<int> twoSum(vector<int> &arr, int data)
+{
+
+    int si = 0, ei = arr.size() - 1;
+    while (si < ei)
+    {
+        int sum = arr[si] + arr[ei];
+        if (sum == data)
+            return {si + 1, ei + 1};
+        else if (sum < data)
+            si++;
+        else
+            ei--;
+    }
+
+    return {-1, -1};
+}
+
+vector<vector<int>> threeSum(vector<int> &arr)
+{
+    sort(arr.begin(), arr.end()); // java : Arrays.sort(arr);
+
+    int n = arr.size();
+    int data = 0;
+    vector<vector<int>> res;
+
+    for (int i = 0; i < n; i++)
+    {
+        while (i != 0 && i < n && arr[i] == arr[i - 1])
+            i++;
+        int j = i + 1, k = n - 1;
+
+        while (j < k)
+        {
+            int sum = arr[i] + arr[j] + arr[k];
+            if (sum == data)
+            {
+                res.push_back({arr[i], arr[j], arr[k]});
+                j++;
+                k--;
+
+                while (j < k && arr[j] == arr[j - 1])
+                    j++;
+                while (j < k && arr[k] == arr[k + 1])
+                    k--;
+            }
+            else if (sum < data)
+                j++;
+            else
+                k--;
+        }
+    }
+
+    return res;
 }
 
 int main()
