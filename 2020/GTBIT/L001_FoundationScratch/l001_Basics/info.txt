@@ -1,0 +1,9 @@
+for java:
+        compile    : javac fileName.java 
+        run        : java fileName
+        InOneLine  : javac fileName.java && java fileName < input.txt > output.txt
+
+for c++:
+       compile     : g++ fileName.cpp -o out
+       run         : ./out (Mac and Linux), out (Window)
+       InOneLine   : g++ fileName.cpp -o out && ./out < input.txt > output.txt

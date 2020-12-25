@@ -1,0 +1,15 @@
+1256 -> even
+152 -> even
+4512 -> even
+841 -> odd
+5464 -> even
+12 -> even
+123 -> odd
+78 -> even
+895 -> odd
+5555 -> odd
+2222236 -> even
+5454 -> even
+515 -> odd
+15484 -> even
+48456 -> even
