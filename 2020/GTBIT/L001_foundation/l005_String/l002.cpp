@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 bool isPlaindrome(string str)
@@ -51,10 +52,28 @@ string withoutX2(string str)
     return ans;
 }
 
+vector<int> occuOfChar(string str, char ch)
+{
+    vector<int> arr;
+
+    for (int i = 0; i < str.length(); i++)
+    {
+        if (str[i] == ch)
+            arr.push_back(i);
+    }
+
+    return arr;
+}
+
 int main()
 {
     string str;
     cin >> str;
-    allSubString(str);
+    // allSubString(str);
+    
+    vector<int> ans = occuOfChar(str, 'a'); 
+    
+    for(int ele : ans) cout << ele << " ";
+
     return 0;
 }

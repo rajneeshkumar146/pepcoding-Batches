@@ -1,7 +1,1 @@
-hiiixxxii
-hi 
-hi
-
- 
-
-hixixi 
+[, a, b, ab, c, ac, bc, abc, d, ad, bd, abd, cd, acd, bcd, abcd]
