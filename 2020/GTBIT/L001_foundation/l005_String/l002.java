@@ -142,14 +142,7 @@ public class l002{
         for(int ele : ans) al.add(ele);
     }
 
-    public static boolean isPrime(int n){
-        for(int i = 2;i * i <= n;i++){
-            if(n % i == 0) return false;
-        }
-        return true;
-    }
-
-    public static void solution(ArrayList < Integer > al) {
+    public static void solution2(ArrayList < Integer > al) {
         ArrayList<Integer> ans = new ArrayList<>();
         for(int ele : al){
             if(!isPrime(ele)) ans.add(ele);
@@ -159,8 +152,102 @@ public class l002{
         for(int ele : ans) al.add(ele);
     }
 
+    //Permutation
+    public static void appendCharInString(String str,char ch,ArrayList<String> ans){
+        for(int i=0;i<=str.length();i++){
+            String s = str.substring(0,i) + ch + str.substring(i);
+            ans.add(s);
+        }
+    }
+    public static ArrayList<String> permutation(String str){
+        ArrayList<String> ans = new ArrayList<>();
+        ans.add("");
+        for(int i = 0; i <str.length();i++){
+            char ch = str.charAt(i);
+            
+            ArrayList<String> smallAns = new ArrayList<>();
+            for(String s : ans)
+                appendCharInString(s,ch,smallAns);
+
+            ans = smallAns;
+        }
+
+        return ans;
+    }
+
+    //541
+    void reverseRange(char[] arr,int i,int j){
+        while(i < j){
+            char ch = arr[i];
+            arr[i] = arr[j];
+            arr[j] = ch;
+            
+            i++;
+            j--;
+        }
+     }
+     
+     public String reverseStr(String s, int k) {
+         if(k == 0 || k == 1 || s.length() <= 1)return s;
+         
+         int i = 0, n = s.length();
+         
+         char[] arr  = s.toCharArray();
+         while(i < n){
+             if(i + k - 1 < n){
+                 reverseRange(arr,i,i+k-1);
+                 i+=2 * k;
+             }else{
+                 reverseRange(arr,i,n-1);
+                 break;
+             }
+         }
+         
+ //         StringBuilder sb = new StringBuilder();
+ //         for(char ch : arr) sb.append(ch);
+         
+ //         return sb.toString();
+         
+            return new String(arr);
+     }
+
+    public static void primeNumbers(int n,ArrayList<Integer> ans){
+        for(int i = 2; i * i <= n; i++){
+            if(isPrime(i)) ans.add(i);
+        }
+    }
+
+    public static void primeFactors(int num,ArrayList<Integer> list){
+
+        int idx = 0;
+        while(num != 1 && idx < list.size()){
+            int count = 0;
+            while(num % list.get(idx) == 0){
+                num /= list.get(idx);
+                count++;
+            }
+            if(count > 0)
+               System.out.print(list.get(idx) + "^" + count + " ");
+            idx++;
+        }
+        
+        if(num > 1)
+            System.out.print(num + "^" + 1);
+        
+        System.out.println();
+    }
+
+    public static void primeFactorsForQuery(int[] query){
+        ArrayList<Integer> list = new ArrayList<>();
+        primeNumbers(10000,list);
+
+        for(int ele : query){
+            primeFactors(ele,list);
+        }
+    }
+
     public static void main(String[] args){
-        String str = scn.nextLine();
+        // String str = scn.nextLine();
         // allSubString(str);
 
         // int n = scn.nextInt(); scn.nextLine();
@@ -172,7 +259,13 @@ public class l002{
         // System.out.println(ans);
 
         // for(int ele : ans) System.out.println(ele);
-        System.out.println(subSeq(str));   
+        // System.out.println(subSeq(str));   
+    
+        // System.out.println(permutation("abc"));
+        
+        int[] arr = new int[scn.nextInt()];
+        for(int i=0;i<arr.length;i++) arr[i] = scn.nextInt();
+        primeFactorsForQuery(arr);
     }
 
 }
