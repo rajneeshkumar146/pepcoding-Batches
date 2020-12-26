@@ -192,6 +192,10 @@ vector<vector<int>> threeSum(vector<int> &arr)
 {
     sort(arr.begin(), arr.end()); // java : Arrays.sort(arr);
 
+//    sort(arr.begin(), arr.end(),[](int& a,int& b){
+//        return b < a; // replace '-' with '<';
+//    });
+
     int n = arr.size();
     int data = 0;
     vector<vector<int>> res;
