@@ -130,7 +130,6 @@ void printDigits(int n){
     }
 }
 
-
 int gcd(int a,int b){
     
     int divisor = a;
