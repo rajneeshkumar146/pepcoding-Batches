@@ -15,10 +15,11 @@ public class dtab{
         return res;
     }
     
-    
     public static void main(String[] args){
         long n = scn.nextLong();
         long base = scn.nextLong();
+        
         System.out.println(DecimalToBase(n,base));
+    
     }
 }
