@@ -54,6 +54,22 @@ public class l001Basic {
         return (n % 2 == 0 ? smallAns : smallAns * x); 
     }
 
+    public static int[] allIndices(int[] arr, int data, int idx, int count) {
+        if (idx == arr.length) {
+            int[] base = new int[count];
+            return base;
+        }
+
+        if (arr[idx] == data) count++;
+
+        int[] ans = allIndices(arr, data, idx + 1, count);
+
+        if (arr[idx] == data) ans[count - 1] = idx;
+
+        return ans;
+    }
+
+
     public static void main(String[] args) {
         // printDecreasing(5);
         fun(5);

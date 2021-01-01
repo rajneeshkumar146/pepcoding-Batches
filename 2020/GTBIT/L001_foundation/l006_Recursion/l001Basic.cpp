@@ -74,6 +74,14 @@ int lastIndex(vector<int>& arr,int idx,int data){
     return lastIndex(arr,idx - 1,data);
 }
 
+int lastIndex2(vector<int>& arr,int idx,int data){
+    if(idx == arr.size()) return -1;
+    int ans = lastIndex(arr,idx+1,data);
+    if(ans != -1) return ans;
+    
+    return arr[idx] == data ? idx : -1;
+}
+
 void input(vector<int>& arr){
     for(int i = 0; i < arr.size(); i++) cin >> arr[i];
 }
