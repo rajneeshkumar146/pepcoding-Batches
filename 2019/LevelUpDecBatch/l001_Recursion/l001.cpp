@@ -96,6 +96,33 @@ vector<string> subsequence(string str, int idx)
     return myAns;
 }
 
+int subseq(string ques,string ans){
+    if(ques.length() == 0){
+        cout<< ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    count += subseq(ques.substr(1),ans + ques[0]);
+    count += subseq(ques.substr(1),ans);
+
+    return count;
+}
+
+int subseq(string ques,int idx,string ans){
+    if(idx == ques.length()){
+        cout<< ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    count += subseq(ques,idx + 1,ans + ques[idx]);
+    count += subseq(ques, idx + 1,ans);
+
+    return count;
+}
+
+
 vector<string> codes = {".;", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tu", "vwx", "yz"};
 
 vector<string> getKPC(string str, int idx)
