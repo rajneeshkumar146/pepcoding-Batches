@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class l001Basic {
 
     public static void printDecreasing(int n) {
@@ -47,11 +49,12 @@ public class l001Basic {
     }
 
     public static int power(int x, int n) {
-        if(n == 0) return 1;
-        int smallAns = power(x,n/2);
+        if (n == 0)
+            return 1;
+        int smallAns = power(x, n / 2);
         smallAns *= smallAns;
-        
-        return (n % 2 == 0 ? smallAns : smallAns * x); 
+
+        return (n % 2 == 0 ? smallAns : smallAns * x);
     }
 
     public static int[] allIndices(int[] arr, int data, int idx, int count) {
@@ -60,16 +63,77 @@ public class l001Basic {
             return base;
         }
 
-        if (arr[idx] == data) count++;
+        if (arr[idx] == data)
+            count++;
 
         int[] ans = allIndices(arr, data, idx + 1, count);
 
-        if (arr[idx] == data) ans[count - 1] = idx;
+        if (arr[idx] == data)
+            ans[count - 1] = idx;
 
         return ans;
     }
 
+    public static ArrayList<String> gss(String str) {
+        if (str.length() == 0) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
 
+        char ch = str.charAt(0);
+        String ros = str.substring(1);
+
+        ArrayList<String> smallAns = gss(ros);
+        ArrayList<String> myAns = new ArrayList<>(smallAns);
+
+        for (String s : smallAns)
+            myAns.add(ch + s);
+
+        return myAns;
+    }
+
+    public static ArrayList<String> gss2(String str, int idx) {
+        if (idx == str.length()) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
+
+        char ch = str.charAt(idx);
+
+        ArrayList<String> smallAns = gss2(str, idx + 1);
+        ArrayList<String> myAns = new ArrayList<>(smallAns);
+
+        for (String s : smallAns)
+            myAns.add(ch + s);
+
+        return myAns;
+    }
+
+    static String[] codes = { ".;", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tu", "vwx", "yz" };
+    
+    public static ArrayList < String > getKPC(String str, int idx) {
+        if (idx == str.length()) {
+            ArrayList < String > base = new ArrayList < > ();
+            base.add("");
+            return base;
+        }
+
+        char ch = str.charAt(idx);
+        int codeIdx = ch - '0';
+        String code = codes[codeIdx];
+        ArrayList<String> smallAns = getKPC(str,idx + 1);
+        ArrayList<String> ans = new ArrayList<>();
+
+        for(int i = 0;i < code.length();i++){
+            for(String s : smallAns){
+                ans.add(code.charAt(i) + s);
+            }
+        }
+
+        return ans;
+    }
     public static void main(String[] args) {
         // printDecreasing(5);
         fun(5);
