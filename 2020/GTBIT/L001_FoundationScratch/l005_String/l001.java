@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class l001 {
 
     public static boolean isPalindrome(String str) {
@@ -84,7 +86,58 @@ public class l001 {
         return sb.toString();
     }
 
+    public static String diffrenceOfTwoNumber(String str) {
+        if (str.length() <= 1)
+            return str;
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(str.charAt(0));
+        for (int i = 1; i < str.length(); i++) {
+            char ch0 = str.charAt(i - 1);
+            char ch1 = str.charAt(i);
+            sb.append(ch1 - ch0);
+            sb.append(ch1);
+        }
+
+        return sb.toString();
+    }
+
+    public static ArrayList<String> subseq(String str) {
+        ArrayList<String> ans = new ArrayList<>();
+        ans.add("");
+
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            int size = ans.size();
+            for (int j = 0; j < size; j++) {
+                ans.add(ans.get(j) + ch);
+            }
+        }
+
+        return ans;
+    }
+
+    public static void solution(String str) {
+        ArrayList<String> ans = new ArrayList<>();
+        ans.add("");
+         for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            ArrayList<String> myAns = new ArrayList<>();
+            
+            for(String s : ans){
+                for(int j=0;j<=s.length();j++){
+                    myAns.add(s.substring(0,j) + ch + s.substring(j));
+                }
+            }
+            
+            ans = myAns;
+         }
+         
+         System.out.println(ans);
+    }
+
     public static void main(String[] args) {
+        System.out.println();
 
     }
 }
