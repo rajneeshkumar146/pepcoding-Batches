@@ -111,7 +111,51 @@ vector<string> subseq(string str)
     return ans;
 }
 
+bool isPrime(int num)
+{
+    for (int i = 2; i * i <= num; i++)
+    {
+        if (num % i == 0)
+            return false;
+    }
+
+    return true;
+}
+
+void deleteNonPrime(vector<int> &al)
+{
+    vector<int> list;
+    for (int ele : al)
+    {
+        if (!isPrime(ele))
+            list.push_back(ele);
+    }
+
+    al.clear();
+    for (int ele : list)
+        al.push_back(ele);
+}
+
 int main()
 {
+    int n;
+    cin >> n;
+    vector<int> arr(n, 0);
+    for (int i = 0; i < n; i++)
+        cin >> arr[i];
+    deleteNonPrime(arr);
+
+    string str = "[";
+    int idx = 0;
+    for (int ele : arr){
+        str += to_string(ele);
+        if(idx < arr.size() - 1);
+        
+        str += ", ";
+        idx++;
+    }
+    
+    cout << str + "]";
+
     return 0;
 }

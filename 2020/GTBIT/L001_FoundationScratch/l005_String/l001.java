@@ -120,24 +120,83 @@ public class l001 {
     public static void solution(String str) {
         ArrayList<String> ans = new ArrayList<>();
         ans.add("");
-         for (int i = 0; i < str.length(); i++) {
+        for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
             ArrayList<String> myAns = new ArrayList<>();
-            
-            for(String s : ans){
-                for(int j=0;j<=s.length();j++){
-                    myAns.add(s.substring(0,j) + ch + s.substring(j));
+
+            for (String s : ans) {
+                for (int j = 0; j <= s.length(); j++) {
+                    myAns.add(s.substring(0, j) + ch + s.substring(j));
                 }
             }
-            
+
             ans = myAns;
-         }
-         
-         System.out.println(ans);
+        }
+
+        System.out.println(ans);
+    }
+
+    public static boolean isPrime(int num) {
+        for (int i = 2; i * i <= num; i++) {
+            if (num % i == 0)
+                return false;
+        }
+
+        return true;
+    }
+
+    public static void solution(ArrayList<Integer> al) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int ele : al) {
+            if (!isPrime(ele))
+                list.add(ele);
+        }
+
+        al.clear();
+        for (int ele : list)
+            al.add(ele);
+    }
+
+    public static ArrayList<Integer> allPrimes(int n) {
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int i = 2; i * i <= n; i++) {
+            if (isPrime(i))
+                list.add(i);
+        }
+        return list;
+    }
+
+    public static void powerForm(int num, ArrayList<Integer> list) {
+        System.out.print(num + " -> ");
+        int idx = 0;
+        while (idx < list.size() && num > 1) {
+            int count = 0;
+            while (num % list.get(idx) == 0 && num > 1) {
+                num /= list.get(idx);
+                count++;
+            }
+
+            if (count > 0)
+                System.out.print(list.get(idx) + "^" + count + " ");
+            idx++;
+        }
+
+        if (num > 1)
+            System.out.print(num + "^" + 1 + " ");
+        System.out.println();
+    }
+
+    public static void exponForm(int[] query) {
+        ArrayList<Integer> list = allPrimes(1000000);
+        // System.out.println(list);
+        for (int ele : query) {
+            powerForm(ele, list);
+        }
     }
 
     public static void main(String[] args) {
-        System.out.println();
+        int[] arr = { 11, 97, 197, 339, 55, 498, 44, 39, 454545, 23, 2312, 676, 256, 555, 222222 };
+        exponForm(arr);
 
     }
 }
