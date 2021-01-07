@@ -79,49 +79,8 @@ int coinChangePermutation(vector<int> &arr, int tar, string ans)
     return count;
 }
 
-int coinChangeCombinationSubSeq(vector<int> &arr, int idx, int tar, string ans)
-{
-    if (idx == arr.size() || tar == 0)
-    {
-        if (tar == 0)
-        {
-            cout << ans << endl;
-            return 1;
-        }
-        return 0;
-    }
-
-    int count = 0;
-    if (tar - arr[idx] >= 0)
-        count += coinChangeCombinationSubSeq(arr, idx + 1, tar - arr[idx], ans + to_string(arr[idx]));
-    count += coinChangeCombinationSubSeq(arr, idx + 1, tar, ans);
-
-    return count;
-}
-
-int coinChangeCombinationSubSeq(vector<int> &arr, int idx, int tar, string ans)
-{
-    if (idx == arr.size() || tar == 0)
-    {
-        if (tar == 0)
-        {
-            cout << ans << endl;
-            return 1;
-        }
-        return 0;
-    }
-
-    int count = 0;
-    if (tar - arr[idx] >= 0)
-        count += coinChangeCombinationSubSeq(arr, idx + 1, tar - arr[idx], ans + to_string(arr[idx]));
-    count += coinChangeCombinationSubSeq(arr, idx + 1, tar, ans);
-
-    return count;
-}
-
 int coinChangeCombinationInfiSubSeq(vector<int> &arr, int idx, int tar, string ans)
 {
-
     if (idx == arr.size() || tar == 0)
     {
         if (tar == 0)
@@ -136,6 +95,26 @@ int coinChangeCombinationInfiSubSeq(vector<int> &arr, int idx, int tar, string a
     if (tar - arr[idx] >= 0)
         count += coinChangeCombinationInfiSubSeq(arr, idx, tar - arr[idx], ans + to_string(arr[idx]));
     count += coinChangeCombinationInfiSubSeq(arr, idx + 1, tar, ans);
+
+    return count;
+}
+
+int coinChangeCombinationSubSeq(vector<int> &arr, int idx, int tar, string ans)
+{
+    if (idx == arr.size() || tar == 0)
+    {
+        if (tar == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    if (tar - arr[idx] >= 0)
+        count += coinChangeCombinationSubSeq(arr, idx + 1, tar - arr[idx], ans + to_string(arr[idx]));
+    count += coinChangeCombinationSubSeq(arr, idx + 1, tar, ans);
 
     return count;
 }
@@ -179,7 +158,7 @@ int coinChangePermutationSubSeq(vector<int> &arr, int idx, int tar, string ans)
     if (tar - ele >= 0 && arr[idx] > 0)
     {
         arr[idx] = -arr[idx];
-        count += coinChangePermutationSubSeq(arr, idx, tar - ele, ans + to_string(ele));
+        count += coinChangePermutationSubSeq(arr, 0, tar - ele, ans + to_string(ele));
         arr[idx] = -arr[idx];
     }
     count += coinChangePermutationSubSeq(arr, idx + 1, tar, ans);
@@ -196,10 +175,10 @@ int main()
     // cout << coinChangeCombination(arr, 0, tar, "")<<endl;
     // cout << coinChangePermutation(arr,tar, "");
 
-    cout << coinChangePermutationInfiSubSeq(arr, 0, tar, "") << endl;
+    // cout << coinChangePermutationInfiSubSeq(arr, 0, tar, "") << endl;
     // cout << coinChangeCombinationInfiSubSeq(arr, 0, tar, "") << endl;
     // cout << coinChangeCombinationSubSeq(arr, 0, tar, "") << endl;
-    // cout << coinChangePermutationSubSeq(arr, 0, tar, "") << endl;
+    cout << coinChangePermutationSubSeq(arr, 0, tar, "") << endl;
 
     return 0;
 }
