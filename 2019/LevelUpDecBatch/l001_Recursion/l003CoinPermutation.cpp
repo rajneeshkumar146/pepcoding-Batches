@@ -121,7 +121,7 @@ int coinChangeCombinationSubSeq(vector<int> &arr, int idx, int tar, string ans)
 
 int coinChangeCombinationInfiSubSeq(vector<int> &arr, int idx, int tar, string ans)
 {
-    
+
     if (idx == arr.size() || tar == 0)
     {
         if (tar == 0)
@@ -142,7 +142,7 @@ int coinChangeCombinationInfiSubSeq(vector<int> &arr, int idx, int tar, string a
 
 int coinChangePermutationInfiSubSeq(vector<int> &arr, int idx, int tar, string ans)
 {
-    
+
     if (idx == arr.size() || tar == 0)
     {
         if (tar == 0)
@@ -155,16 +155,15 @@ int coinChangePermutationInfiSubSeq(vector<int> &arr, int idx, int tar, string a
 
     int count = 0;
     if (tar - arr[idx] >= 0)
-        count += coinChangePermutationInfiSubSeq(arr, idx, tar - arr[idx], ans + to_string(arr[idx]));
+        count += coinChangePermutationInfiSubSeq(arr, 0, tar - arr[idx], ans + to_string(arr[idx]));
     count += coinChangePermutationInfiSubSeq(arr, idx + 1, tar, ans);
 
     return count;
-
 }
 
 int coinChangePermutationSubSeq(vector<int> &arr, int idx, int tar, string ans)
 {
-    
+
     if (idx == arr.size() || tar == 0)
     {
         if (tar == 0)
@@ -176,12 +175,16 @@ int coinChangePermutationSubSeq(vector<int> &arr, int idx, int tar, string ans)
     }
 
     int count = 0;
-    if (tar - arr[idx] >= 0)
-        count += coinChangePermutationSubSeq(arr, idx, tar - arr[idx], ans + to_string(arr[idx]));
+    int ele = arr[idx];
+    if (tar - ele >= 0 && arr[idx] > 0)
+    {
+        arr[idx] = -arr[idx];
+        count += coinChangePermutationSubSeq(arr, idx, tar - ele, ans + to_string(ele));
+        arr[idx] = -arr[idx];
+    }
     count += coinChangePermutationSubSeq(arr, idx + 1, tar, ans);
 
     return count;
-    
 }
 
 int main()
@@ -193,7 +196,10 @@ int main()
     // cout << coinChangeCombination(arr, 0, tar, "")<<endl;
     // cout << coinChangePermutation(arr,tar, "");
 
+    cout << coinChangePermutationInfiSubSeq(arr, 0, tar, "") << endl;
+    // cout << coinChangeCombinationInfiSubSeq(arr, 0, tar, "") << endl;
     // cout << coinChangeCombinationSubSeq(arr, 0, tar, "") << endl;
+    // cout << coinChangePermutationSubSeq(arr, 0, tar, "") << endl;
 
     return 0;
 }
