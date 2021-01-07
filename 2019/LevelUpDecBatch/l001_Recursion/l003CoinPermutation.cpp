@@ -99,6 +99,91 @@ int coinChangeCombinationSubSeq(vector<int> &arr, int idx, int tar, string ans)
     return count;
 }
 
+int coinChangeCombinationSubSeq(vector<int> &arr, int idx, int tar, string ans)
+{
+    if (idx == arr.size() || tar == 0)
+    {
+        if (tar == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    if (tar - arr[idx] >= 0)
+        count += coinChangeCombinationSubSeq(arr, idx + 1, tar - arr[idx], ans + to_string(arr[idx]));
+    count += coinChangeCombinationSubSeq(arr, idx + 1, tar, ans);
+
+    return count;
+}
+
+int coinChangeCombinationInfiSubSeq(vector<int> &arr, int idx, int tar, string ans)
+{
+    
+    if (idx == arr.size() || tar == 0)
+    {
+        if (tar == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    if (tar - arr[idx] >= 0)
+        count += coinChangeCombinationInfiSubSeq(arr, idx, tar - arr[idx], ans + to_string(arr[idx]));
+    count += coinChangeCombinationInfiSubSeq(arr, idx + 1, tar, ans);
+
+    return count;
+}
+
+int coinChangePermutationInfiSubSeq(vector<int> &arr, int idx, int tar, string ans)
+{
+    
+    if (idx == arr.size() || tar == 0)
+    {
+        if (tar == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    if (tar - arr[idx] >= 0)
+        count += coinChangePermutationInfiSubSeq(arr, idx, tar - arr[idx], ans + to_string(arr[idx]));
+    count += coinChangePermutationInfiSubSeq(arr, idx + 1, tar, ans);
+
+    return count;
+
+}
+
+int coinChangePermutationSubSeq(vector<int> &arr, int idx, int tar, string ans)
+{
+    
+    if (idx == arr.size() || tar == 0)
+    {
+        if (tar == 0)
+        {
+            cout << ans << endl;
+            return 1;
+        }
+        return 0;
+    }
+
+    int count = 0;
+    if (tar - arr[idx] >= 0)
+        count += coinChangePermutationSubSeq(arr, idx, tar - arr[idx], ans + to_string(arr[idx]));
+    count += coinChangePermutationSubSeq(arr, idx + 1, tar, ans);
+
+    return count;
+    
+}
+
 int main()
 {
     vector<int> arr{2, 3, 5, 7};
