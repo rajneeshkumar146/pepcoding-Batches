@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class l002 {
 
     public static void main(String[] args) {
@@ -147,3 +149,18 @@ public class l002 {
     // https://www.geeksforgeeks.org/rat-in-a-maze-with-multiple-steps-jump-allowed/?ref=rp
     // https://www.geeksforgeeks.org/rat-in-a-maze-problem-when-movement-in-all-possible-directions-is-allowed/?ref=rp
 }
+
+    public static void fun(ArrayList<Integer> arr) {
+        System.out.println(arr.get(0));
+        int val = arr.get(0) + 10;
+        arr.set(0, val);
+        arr.set(0, val - 10);
+    }
+
+    public static void fun1() {
+        ArrayList<Integer> arr = new ArrayList<>();
+        arr.add(1);
+        fun(arr);
+        System.out.println(arr.get(0));
+
+    }

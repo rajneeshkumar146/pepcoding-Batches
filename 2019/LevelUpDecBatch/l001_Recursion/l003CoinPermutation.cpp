@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 int coinChangePermutationInfi(vector<int> &arr, int tar, string ans)
@@ -164,6 +165,97 @@ int coinChangePermutationSubSeq(vector<int> &arr, int idx, int tar, string ans)
     count += coinChangePermutationSubSeq(arr, idx + 1, tar, ans);
 
     return count;
+}
+
+//  Questions.====================================================================
+
+vector<int> smallAns;
+vector<vector<int>> res;
+
+void combinationSum(vector<int> &arr, int idx, int target)
+{
+    if (idx == arr.size() || target == 0)
+    {
+        if (target == 0)
+        {
+            res.push_back(smallAns);
+        }
+        return;
+    }
+
+    if (target - arr[idx] >= 0)
+    {
+        smallAns.push_back(arr[idx]);
+        combinationSum(arr, idx, target - arr[idx]);
+        smallAns.pop_back();
+    }
+    combinationSum(arr, idx + 1, target);
+}
+
+vector<vector<int>> combinationSum(vector<int> &arr, int target)
+{
+    combinationSum(arr, 0, target);
+    return res;
+}
+
+void combinationSum2(vector<int> &arr, int idx, int target)
+{
+    if (target == 0)
+    {
+        res.push_back(smallAns);
+        return;
+    }
+
+    int prev = -1;
+    for (int i = idx; i < arr.size(); i++)
+    {
+        if (prev != -1 && arr[prev] == arr[i])
+            continue;
+
+        if (target - arr[i] >= 0)
+        {
+            smallAns.push_back(arr[i]);
+            combinationSum2(arr, i + 1, target - arr[i]);
+            smallAns.pop_back();
+        }
+
+        prev = i;
+    }
+}
+
+vector<vector<int>> combinationSum2(vector<int> &arr, int target)
+{
+    sort(arr.begin(), arr.end());
+    combinationSum2(arr, 0, target);
+    return res;
+}
+
+// leetcode 46
+void permute(vector<int> &nums, int count, vector<bool> &vis)
+{
+    if (count == nums.size())
+    {
+        res.push_back(smallAns);
+        return;
+    }
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (!vis[i])
+        {
+            vis[i] = true;
+            smallAns.push_back(nums[i]);
+            permute(nums, count + 1, vis);
+            smallAns.pop_back();
+            vis[i] = false;
+        }
+    }
+}
+
+vector<vector<int>> permute(vector<int> &nums)
+{
+    vector<bool> vis(nums.size(), false);
+    permute(nums, 0, vis);
+    return res;
 }
 
 int main()
