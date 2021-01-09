@@ -251,10 +251,64 @@ void permute(vector<int> &nums, int count, vector<bool> &vis)
     }
 }
 
-vector<vector<int>> permute(vector<int> &nums)
+// leetcode 47
+void permuteUnique(vector<int> &nums, int count, vector<bool> &vis)
 {
+    if (count == nums.size())
+    {
+        res.push_back(smallAns);
+        return;
+    }
+
+    vector<int> visLev(21, 0);
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (!vis[i] && !visLev[nums[i] + 10])
+        {
+            vis[i] = true;
+            visLev[nums[i] + 10] = true;
+
+            smallAns.push_back(nums[i]);
+            permuteUnique(nums, count + 1, vis);
+            smallAns.pop_back();
+            vis[i] = false;
+        }
+    }
+}
+
+// leetcode 47
+void permuteUnique(vector<int> &nums, int count, vector<bool> &vis)
+{
+    if (count == nums.size())
+    {
+        res.push_back(smallAns);
+        return;
+    }
+
+    int prev = -1;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        if (prev != -1 && nums[prev] == nums[i])
+            continue;
+
+        if (!vis[i])
+        {
+            vis[i] = true;
+
+            smallAns.push_back(nums[i]);
+            permuteUnique(nums, count + 1, vis);
+            smallAns.pop_back();
+            vis[i] = false;
+
+            prev = i;
+        }
+    }
+}
+vector<vector<int>> permuteUnique(vector<int> &nums)
+{
+    sort(nums.begin(),nums.end());
     vector<bool> vis(nums.size(), false);
-    permute(nums, 0, vis);
+    permuteUnique(nums, 0, vis);
     return res;
 }
 
