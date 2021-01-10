@@ -132,7 +132,22 @@ public class l003CoinPermutation {
     // nQueen_Problem==================================================================
 
     public static boolean isSafeToPlaceQueen(boolean[][] boxes, int r, int c) {
+        int[][] dir = { { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 } };
+        for (int d = 0; d < dir.length; d++) {
+            for (int rad = 1; rad < boxes.length; rad++) {
+                int x = r + rad * dir[d][0];
+                int y = c + rad * dir[d][1];
 
+                if (x >= 0 && y >= 0 && x < boxes.length && y < boxes[0].length) {
+                    if (boxes[x][y])
+                        return false;
+
+                } else
+                    break;
+            }
+        }
+
+        return true;
     }
 
     public static int nQueen01(boolean[][] boxes, int idx, int tnq, String ans) {
@@ -156,6 +171,37 @@ public class l003CoinPermutation {
         return count;
     }
 
+    static boolean[] rowA;
+    static boolean[] colA;
+    static boolean[] diagA;
+    static boolean[] aDiagA;
+
+    public static void toggleNQueen(int r, int c, int n) {
+        rowA[r] = !rowA[r];
+        colA[c] = !colA[c];
+        diagA[r - c + n - 1] = !diagA[r - c + n - 1];
+        aDiagA[r + c] = !aDiagA[r + c];
+    }
+
+    public static int nQueen02(int n, int idx, int tnq, String ans) {
+        if (tnq == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count = 0;
+        for (int i = idx; i < n * n; i++) {
+            int r = i / n;
+            int c = i % n;
+            if (!rowA[r] && !colA[c] && !diagA[r - c + n - 1] && !aDiagA[r + c]) {
+                toggleNQueen(r, c, n);
+                count += nQueen02(n, i + 1, tnq - 1, ans + "(" + r + "," + c + ") ");
+                toggleNQueen(r, c, n);
+            }
+        }
+        return count;
+    }
+
     public static void main(String[] args) {
         // System.out.println(queenCombination1D(5, 0, 3, 0, ""));
         // boolean[] tnb = new boolean[5];
@@ -163,8 +209,16 @@ public class l003CoinPermutation {
 
         int n = 4;
         boolean[][] tnb = new boolean[n][n];
-        System.out.println(queenCombination2D(tnb, 0, n, ""));
+        // System.out.println(queenCombination2D(tnb, 0, n, ""));
         // System.out.println(queenPermutation2D(tnb, n, ""));
+
+        // System.out.println(nQueen01(tnb, 0, n, ""));
+        rowA = new boolean[n];
+        colA = new boolean[n];
+        diagA = new boolean[n + n - 1];
+        aDiagA = new boolean[n + n - 1];
+        System.out.println(nQueen02(n, 0, n, ""));
+
     }
 
 }
