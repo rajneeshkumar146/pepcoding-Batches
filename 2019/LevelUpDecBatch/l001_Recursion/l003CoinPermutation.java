@@ -55,7 +55,7 @@ public class l003CoinPermutation {
     // Queen
 
     // tnq = total no of queens, qpsf = queen placed so far
-    // tnb = totak no of boxes, bno : box no
+    // tnb = total no of boxes, bno : box no
     public static int queenCombination1D(int tnb, int bno, int tnq, int qpsf, String ans) {
         if (qpsf == tnq) {
             System.out.println(ans);
@@ -68,6 +68,7 @@ public class l003CoinPermutation {
         }
 
         return count;
+
     }
 
     public static int queenPermutation1D(boolean[] tnb, int tnq, int qpsf, String ans) {
@@ -88,11 +89,82 @@ public class l003CoinPermutation {
         return count;
     }
 
+    public static int queenCombination2D(boolean[][] tnb, int idx, int tnq, String ans) {
+        if (tnq == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count = 0;
+        int n = tnb.length;
+        int m = tnb[0].length;
+        for (int i = idx; i < n * m; i++) {
+            int r = i / m;
+            int c = i % m;
+            count += queenCombination2D(tnb, i + 1, tnq - 1, ans + "(" + r + "," + c + ") ");
+        }
+
+        return count;
+    }
+
+    public static int queenPermutation2D(boolean[][] tnb, int tnq, String ans) {
+        if (tnq == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count = 0;
+        int n = tnb.length;
+        int m = tnb[0].length;
+        for (int i = 0; i < n * m; i++) {
+            int r = i / m;
+            int c = i % m;
+            if (!tnb[r][c]) {
+                tnb[r][c] = true;
+                count += queenPermutation2D(tnb, tnq - 1, ans + "(" + r + "," + c + ") ");
+                tnb[r][c] = false;
+            }
+        }
+
+        return count;
+    }
+
+    // nQueen_Problem==================================================================
+
+    public static boolean isSafeToPlaceQueen(boolean[][] boxes, int r, int c) {
+
+    }
+
+    public static int nQueen01(boolean[][] boxes, int idx, int tnq, String ans) {
+        if (tnq == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count = 0;
+        int n = boxes.length;
+        int m = boxes[0].length;
+        for (int i = idx; i < n * m; i++) {
+            int r = i / m;
+            int c = i % m;
+            if (isSafeToPlaceQueen(boxes, r, c)) {
+                boxes[r][c] = true;
+                count += nQueen01(boxes, i + 1, tnq - 1, ans + "(" + r + "," + c + ") ");
+                boxes[r][c] = false;
+            }
+        }
+        return count;
+    }
+
     public static void main(String[] args) {
         // System.out.println(queenCombination1D(5, 0, 3, 0, ""));
-        boolean[] tnb = new boolean[5];
-        System.out.println(queenPermutation1D(tnb, 3, 0, ""));
+        // boolean[] tnb = new boolean[5];
+        // System.out.println(queenPermutation1D(tnb, 3, 0, ""));
 
+        int n = 4;
+        boolean[][] tnb = new boolean[n][n];
+        System.out.println(queenCombination2D(tnb, 0, n, ""));
+        // System.out.println(queenPermutation2D(tnb, n, ""));
     }
 
 }
