@@ -306,10 +306,71 @@ void permuteUnique(vector<int> &nums, int count, vector<bool> &vis)
 }
 vector<vector<int>> permuteUnique(vector<int> &nums)
 {
-    sort(nums.begin(),nums.end());
+    sort(nums.begin(), nums.end());
     vector<bool> vis(nums.size(), false);
     permuteUnique(nums, 0, vis);
     return res;
+}
+
+int nQueen01(vector<vector<bool>> &boxes, int idx, int tnq, string ans)
+{
+    if (tnq == 0)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    int n = boxes.size();
+    int m = boxes[0].size();
+    for (int i = idx; i < n * m; i++)
+    {
+        int r = i / m;
+        int c = i % m;
+        if (isSafeToPlaceQueen(boxes, r, c))
+        {
+            boxes[r][c] = true;
+            count += nQueen01(boxes, i + 1, tnq - 1, ans + "(" + to_string(r) + "," + to_string(c) + ") ");
+            boxes[r][c] = false;
+        }
+    }
+    return count;
+}
+
+vector<bool> rowA;
+vector<bool> colA;
+vector<bool> diagA;
+vector<bool> aDiagA;
+
+void toggleNQueen(int r, int c, int n)
+{
+    rowA[r] = !rowA[r];
+    colA[c] = !colA[c];
+    diagA[r - c + n - 1] = !diagA[r - c + n - 1];
+    aDiagA[r + c] = !aDiagA[r + c];
+}
+
+int nQueen02(int n, int idx, int tnq, string ans)
+{
+    if (tnq == 0)
+    {
+        cout << (ans) << endl;
+        return 1;
+    }
+
+    int count = 0;
+    for (int i = idx; i < n * n; i++)
+    {
+        int r = i / n;
+        int c = i % n;
+        if (!rowA[r] && !colA[c] && !diagA[r - c + n - 1] && !aDiagA[r + c])
+        {
+            toggleNQueen(r, c, n);
+            count += nQueen02(n, i + 1, tnq - 1, ans + "(" + to_string(r) + "," + to_string(c) + ") ");
+            toggleNQueen(r, c, n);
+        }
+    }
+    return count;
 }
 
 int main()
@@ -325,6 +386,8 @@ int main()
     // cout << coinChangeCombinationInfiSubSeq(arr, 0, tar, "") << endl;
     // cout << coinChangeCombinationSubSeq(arr, 0, tar, "") << endl;
     cout << coinChangePermutationSubSeq(arr, 0, tar, "") << endl;
+    rowA.resize(n,false);
+
 
     return 0;
 }

@@ -202,6 +202,18 @@ public class l003CoinPermutation {
         return count;
     }
 
+    public static void subseq(String str, int idx, String ans) {
+        if (idx == str.length()) {
+            return;
+        }
+
+        for (int i = idx; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            System.out.println(ans + ch);
+            subseq(str, i + 1, ans + ch);
+        }
+    }
+
     public static void main(String[] args) {
         // System.out.println(queenCombination1D(5, 0, 3, 0, ""));
         // boolean[] tnb = new boolean[5];
@@ -213,12 +225,13 @@ public class l003CoinPermutation {
         // System.out.println(queenPermutation2D(tnb, n, ""));
 
         // System.out.println(nQueen01(tnb, 0, n, ""));
-        rowA = new boolean[n];
-        colA = new boolean[n];
-        diagA = new boolean[n + n - 1];
-        aDiagA = new boolean[n + n - 1];
-        System.out.println(nQueen02(n, 0, n, ""));
+        // rowA = new boolean[n];
+        // colA = new boolean[n];
+        // diagA = new boolean[n + n - 1];
+        // aDiagA = new boolean[n + n - 1];
+        // System.out.println(nQueen02(n, 0, n, ""));
 
+        subseq("abc", 0, "");
     }
 
 }
