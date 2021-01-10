@@ -168,12 +168,13 @@ void reverseDisplay(int arr[], int idx, int n)
     cout << arr[idx] << endl;
 }
 
-int maxOfArray(int arr[], int idx,int n) {
-    if (idx == n) return -1e9;
+int maxOfArray(int arr[], int idx, int n)
+{
+    if (idx == n)
+        return -1e9;
 
-    return max(arr[idx], maxOfArray(arr, idx + 1,n));
+    return max(arr[idx], maxOfArray(arr, idx + 1, n));
 }
-
 
 int firstIndex(int arr[], int idx, int x, int n)
 {
@@ -183,6 +184,16 @@ int firstIndex(int arr[], int idx, int x, int n)
     if (arr[idx] == x)
         return idx;
     return firstIndex(arr, idx + 1, x, n);
+}
+
+int lastIndex(int arr[], int idx, int x, int n)
+{
+    if (idx == -1)
+        return -1;
+
+    if (arr[idx] == x)
+        return idx;
+    return lastIndex(arr, idx - 1, x, n);
 }
 
 int main()
