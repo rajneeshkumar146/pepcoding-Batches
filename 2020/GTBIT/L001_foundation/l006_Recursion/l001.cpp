@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 void printIncreasing(int a, int b)
@@ -194,6 +195,32 @@ int lastIndex(int arr[], int idx, int x, int n)
     if (arr[idx] == x)
         return idx;
     return lastIndex(arr, idx - 1, x, n);
+}
+
+//=============================================================
+
+bool isPalindrome(vector<int> &arr, int vsi, int vli)
+{
+    if (vsi >= vli)
+        return true;
+
+    if (arr[vsi] != arr[vli])
+        return false;
+
+    return isPalindrome(arr, vsi + 1, vli - 1);
+}
+
+void reverseOfArray(vector<int>& arr,int si,int ei){
+    if(si >= ei) return; 
+    swap(arr[si],arr[ei]);
+    reverseOfArray(arr,si + 1,ei - 1);
+}
+
+void inverse(vector<int>& arr,int idx){
+    if(idx == arr.size()) return;
+    int val = arr[idx];
+    inverse(arr, idx + 1);
+    arr[val] = idx;
 }
 
 int main()
