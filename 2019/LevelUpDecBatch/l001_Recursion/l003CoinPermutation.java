@@ -242,6 +242,28 @@ public class l003CoinPermutation {
 
         return count;
     }
+    static int rowB = 0;
+    static int colB = 0;
+    static int diagB = 0;
+    static int aDiagB = 0;
+
+    public static int nQueen04BitMask(int n, int r, int tnq, String ans) {
+        if (tnq == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count = 0;
+        for (int c = 0; c < n; c++) {
+            if (!rowA[r] && !colA[c] && !diagA[r - c + n - 1] && !aDiagA[r + c]) {
+                toggleNQueen(r, c, n);
+                count += nQueen04BitMask(n, r + 1, tnq - 1, ans + "(" + r + "," + c + ") ");
+                toggleNQueen(r, c, n);
+            }
+        }
+
+        return count;
+    }
 
     public static void subseq(String str, int idx, String ans) {
         if (idx == str.length()) {
