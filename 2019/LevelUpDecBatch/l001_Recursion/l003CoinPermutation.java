@@ -242,10 +242,16 @@ public class l003CoinPermutation {
 
         return count;
     }
-    static int rowB = 0;
+
     static int colB = 0;
     static int diagB = 0;
     static int aDiagB = 0;
+
+    public static void toggleNQueenBit(int r, int c, int n) {
+        colB ^= (1 << c);
+        diagB ^= (1 << (r - c + n - 1));
+        aDiagB ^= (1 << (r + c));
+    }
 
     public static int nQueen04BitMask(int n, int r, int tnq, String ans) {
         if (tnq == 0) {
@@ -255,10 +261,10 @@ public class l003CoinPermutation {
 
         int count = 0;
         for (int c = 0; c < n; c++) {
-            if (!rowA[r] && !colA[c] && !diagA[r - c + n - 1] && !aDiagA[r + c]) {
-                toggleNQueen(r, c, n);
+            if ((colB & (1 << c)) == 0 && (diagB & (1 << (r - c + n - 1))) == 0 && (aDiagB & (1 << (r + c))) == 0) {
+                toggleNQueenBit(r, c, n);
                 count += nQueen04BitMask(n, r + 1, tnq - 1, ans + "(" + r + "," + c + ") ");
-                toggleNQueen(r, c, n);
+                toggleNQueenBit(r, c, n);
             }
         }
 
@@ -292,7 +298,7 @@ public class l003CoinPermutation {
         // colA = new boolean[n];
         // diagA = new boolean[n + n - 1];
         // aDiagA = new boolean[n + n - 1];
-        // System.out.println(nQueen02(n, 0, n, ""));
+        // // System.out.println(nQueen02(n, 0, n, ""));
 
         subseq("abc", 0, "");
     }
