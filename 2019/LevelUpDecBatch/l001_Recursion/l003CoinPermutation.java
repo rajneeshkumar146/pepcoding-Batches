@@ -202,6 +202,47 @@ public class l003CoinPermutation {
         return count;
     }
 
+    public static int nQueen03_Perm(boolean[][] boxes, int tnq, String ans) {
+        if (tnq == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count = 0;
+        int n = boxes.length;
+        for (int i = 0; i < n * n; i++) {
+            int r = i / n;
+            int c = i % n;
+            if (!boxes[r][c] && !rowA[r] && !colA[c] && !diagA[r - c + n - 1] && !aDiagA[r + c]) {
+                toggleNQueen(r, c, n);
+                boxes[r][c] = true;
+
+                count += nQueen03_Perm(boxes, tnq - 1, ans + "(" + r + "," + c + ") ");
+                toggleNQueen(r, c, n);
+                boxes[r][c] = false;
+            }
+        }
+        return count;
+    }
+
+    public static int nQueen04(int n, int r, int tnq, String ans) {
+        if (tnq == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count = 0;
+        for (int c = 0; c < n; c++) {
+            if (!rowA[r] && !colA[c] && !diagA[r - c + n - 1] && !aDiagA[r + c]) {
+                toggleNQueen(r, c, n);
+                count += nQueen04(n, r + 1, tnq - 1, ans + "(" + r + "," + c + ") ");
+                toggleNQueen(r, c, n);
+            }
+        }
+
+        return count;
+    }
+
     public static void subseq(String str, int idx, String ans) {
         if (idx == str.length()) {
             return;
