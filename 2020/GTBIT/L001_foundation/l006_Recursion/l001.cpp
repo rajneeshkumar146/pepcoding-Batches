@@ -210,17 +210,45 @@ bool isPalindrome(vector<int> &arr, int vsi, int vli)
     return isPalindrome(arr, vsi + 1, vli - 1);
 }
 
-void reverseOfArray(vector<int>& arr,int si,int ei){
-    if(si >= ei) return; 
-    swap(arr[si],arr[ei]);
-    reverseOfArray(arr,si + 1,ei - 1);
+void reverseOfArray(vector<int> &arr, int si, int ei)
+{
+    if (si >= ei)
+        return;
+    swap(arr[si], arr[ei]);
+    reverseOfArray(arr, si + 1, ei - 1);
 }
 
-void inverse(vector<int>& arr,int idx){
-    if(idx == arr.size()) return;
+void inverse(vector<int> &arr, int idx)
+{
+    if (idx == arr.size())
+        return;
     int val = arr[idx];
     inverse(arr, idx + 1);
     arr[val] = idx;
+}
+
+long stringToNumber(string str, int idx, long pow)
+{
+    if (idx == -1)
+        return 0;
+    long recAns = stringToNumber(str, idx - 1, pow * 10);
+    return recAns + (str[idx] - '0') * pow;
+}
+
+bool PlaindromeOfString(string str, int i, int j)
+{
+    if (i >= j)
+        return true;
+
+    char ch1 = str[i];
+    char ch2 = str[j];
+
+    int diff1 = (ch1 >= 'A' && ch1 <= 'Z') ? ch1 - 'A' : ch1 - 'a';
+    int diff2 = (ch2 >= 'A' && ch2 <= 'Z') ? ch2 - 'A' : ch2 - 'a';
+
+    if (diff1 != diff2)
+        return false;
+    return PlaindromeOfString(str, i + 1, j - 1);
 }
 
 int main()
