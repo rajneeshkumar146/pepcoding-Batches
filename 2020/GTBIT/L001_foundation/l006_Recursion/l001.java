@@ -76,6 +76,32 @@ public class l001 {
             seprateDuplicates_wayUp(str,idx + 1,ans + ch);
     }
 
+    public static void removeAdjacentDuplicates(String str,int idx,String ans){
+        if(idx == str.length() - 1){
+            System.out.println(ans + str.charAt(idx));
+            return;
+        }
+        
+        char ch = str.charAt(idx);
+        if(ch != str.charAt(idx + 1))  
+            removeAdjacentDuplicates(str,idx + 1, ans + ch);
+        else 
+            removeAdjacentDuplicates(str,idx + 1, ans);
+    }
+    
+    public static String removeAdjacentDuplicates(String str){
+        if(str.length() == 1)
+           return str;
+        
+        char ch = str.charAt(0);
+        String ros = str.substring(1);
+        
+        String res = removeAdjacentDuplicates(ros);
+        
+        if(ch != res.charAt(0)) return ch + res;
+        return res;
+    }
+
     public static void main(String[] args) {
 
     }
