@@ -1,9 +1,27 @@
 abc
+ab99
 ab
+a98c
+a9899
+a98
 ac
+a99
 a
+97bc
+97b99
+97b
+9798c
+979899
+9798
+97c
+9799
+97
 bc
+b99
 b
+98c
+9899
+98
 c
+99
 
- c b bc a ac ab abc 
