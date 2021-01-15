@@ -45,11 +45,23 @@ public class l002 {
         return myAns;
     }
 
+    public static void printASCIISS(String str, int idx, String ans) {
+        if (idx == str.length()) {
+            System.out.println(ans);
+            return;
+        }
+
+        printASCIISS(str, idx + 1, ans + str.charAt(idx));
+        printASCIISS(str, idx + 1, ans + (int) str.charAt(idx));
+        printASCIISS(str, idx + 1, ans);
+    }
+
     public static void subsequence() {
         String str = "abc";
         // printSS(str, 0, "");
         // printSS_02(str,0,new StringBuilder());
-        System.out.println(subseq_03(str, 0));
+        // System.out.println(subseq_03(str, 0));
+        printASCIISS(str,0,"")''
     }
 
     public static void main(String[] args) {
