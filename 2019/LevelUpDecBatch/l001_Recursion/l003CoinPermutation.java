@@ -283,6 +283,8 @@ public class l003CoinPermutation {
         }
     }
 
+    static char[][] board; 
+
     public static void main(String[] args) {
         // System.out.println(queenCombination1D(5, 0, 3, 0, ""));
         // boolean[] tnb = new boolean[5];

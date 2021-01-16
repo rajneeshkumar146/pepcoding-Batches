@@ -277,7 +277,7 @@ void permuteUnique(vector<int> &nums, int count, vector<bool> &vis)
 }
 
 // leetcode 47
-void permuteUnique(vector<int> &nums, int count, vector<bool> &vis)
+void permuteUnique_(vector<int> &nums, int count, vector<bool> &vis)
 {
     if (count == nums.size())
     {
@@ -296,7 +296,7 @@ void permuteUnique(vector<int> &nums, int count, vector<bool> &vis)
             vis[i] = true;
 
             smallAns.push_back(nums[i]);
-            permuteUnique(nums, count + 1, vis);
+            permuteUnique_(nums, count + 1, vis);
             smallAns.pop_back();
             vis[i] = false;
 
@@ -310,6 +310,28 @@ vector<vector<int>> permuteUnique(vector<int> &nums)
     vector<bool> vis(nums.size(), false);
     permuteUnique(nums, 0, vis);
     return res;
+}
+bool isSafeToPlaceQueen(vector<vector<bool>> &boxes, int r, int c)
+{
+    vector<vector<int>> dir = {{0, -1}, {-1, -1}, {-1, 0}, {-1, 1}};
+    for (int d = 0; d < dir.size(); d++)
+    {
+        for (int rad = 1; rad < boxes.size(); rad++)
+        {
+            int x = r + rad * dir[d][0];
+            int y = c + rad * dir[d][1];
+
+            if (x >= 0 && y >= 0 && x < boxes.size() && y < boxes[0].size())
+            {
+                if (boxes[x][y])
+                    return false;
+            }
+            else
+                break;
+        }
+    }
+
+    return true;
 }
 
 int nQueen01(vector<vector<bool>> &boxes, int idx, int tnq, string ans)
@@ -373,10 +395,132 @@ int nQueen02(int n, int idx, int tnq, string ans)
     return count;
 }
 
+vector<vector<int>> board = {{3, 0, 0, 0, 0, 0, 0, 0, 0},
+                             {5, 2, 0, 0, 0, 0, 0, 0, 0},
+                             {0, 8, 7, 0, 0, 0, 0, 3, 1},
+                             {0, 0, 3, 0, 1, 0, 0, 8, 0},
+                             {9, 0, 0, 8, 6, 3, 0, 0, 5},
+                             {0, 5, 0, 0, 9, 0, 6, 0, 0},
+                             {1, 3, 0, 0, 0, 0, 2, 5, 0},
+                             {0, 0, 0, 0, 0, 0, 0, 7, 4},
+                             {0, 0, 5, 2, 0, 6, 3, 0, 0}};
+
+void display()
+{
+    for (vector<int> &ar : board)
+    {
+        for (int ele : ar)
+        {
+            cout << ele << " ";
+        }
+        cout << endl;
+    }
+}
+
+bool isSafeToPlaceNumber(int r, int c, int num)
+{
+    // Row
+    for (int i = 0; i < board[0].size(); i++)
+        if (board[r][i] == num)
+            return false;
+
+    //Col
+    for (int i = 0; i < board.size(); i++)
+        if (board[i][c] == num)
+            return false;
+
+    // 3 X 3 matrix
+    r = (r / 3) * 3;
+    c = (c / 3) * 3;
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (board[r + i][c + j] == num)
+                return false;
+        }
+    }
+
+    return true;
+}
+
+bool sudokuSolver(int idx)
+{
+    if (idx == board.size() * board[0].size())
+    {
+        display();
+        cout << endl;
+        return true;
+    }
+
+    int r = idx / board[0].size();
+    int c = idx % board[0].size();
+    bool res = false;
+
+    if (board[r][c] != 0)
+    {
+        return sudokuSolver(idx + 1);
+    }
+
+    for (int num = 1; num <= 9; num++)
+    {
+        if (isSafeToPlaceNumber(r, c, num))
+        {
+            board[r][c] = num;
+            res = res || sudokuSolver(idx + 1);
+            board[r][c] = 0;
+        }
+    }
+
+    return res;
+}
+
+bool sudokuSolver_01(vector<int> &loc, int idx)
+{
+    if (idx == loc.size())
+    {
+        display();
+        cout << endl;
+        return true;
+    }
+
+    int r = loc[idx] / board[0].size();
+    int c = loc[idx] % board[0].size();
+    bool res = false;
+
+    for (int num = 1; num <= 9; num++)
+    {
+        if (isSafeToPlaceNumber(r, c, num))
+        {
+            board[r][c] = num;
+            res = res || sudokuSolver_01(loc, idx + 1);
+            board[r][c] = 0;
+        }
+    }
+
+    return res;
+}
+
+void sudoku()
+{
+    vector<int> loc;
+    int n = board.size();
+    int m = board[0].size();
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (board[i][j] == 0)
+                loc.push_back(i * m + j);
+        }
+    }
+    cout << sudokuSolver_01(loc, 0) << endl;
+}
+
 int main()
 {
-    vector<int> arr{2, 3, 5, 7};
-    int tar = 10;
+    // vector<int> arr{2, 3, 5, 7};
+    // int tar = 10;
     // cout << coinChangePermutationInfi(arr, tar, "");
     // cout << coinChangeCombinationInfi(arr, 0,tar, "");
     // cout << coinChangeCombination(arr, 0, tar, "")<<endl;
@@ -385,9 +529,10 @@ int main()
     // cout << coinChangePermutationInfiSubSeq(arr, 0, tar, "") << endl;
     // cout << coinChangeCombinationInfiSubSeq(arr, 0, tar, "") << endl;
     // cout << coinChangeCombinationSubSeq(arr, 0, tar, "") << endl;
-    cout << coinChangePermutationSubSeq(arr, 0, tar, "") << endl;
-    rowA.resize(n,false);
+    // cout << coinChangePermutationSubSeq(arr, 0, tar, "") << endl;
+    // rowA.resize(n, false);
 
+    sudoku();
 
     return 0;
 }
