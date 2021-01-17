@@ -130,6 +130,54 @@ public class l002 {
         return count;
     }
 
+    public static void getMazePaths_multiMoves(int sr, int sc, int dr, int dc, String ans) {
+        if (sr == dr && sc == dc) {
+            System.out.println(ans);
+            return;
+        }
+
+        for (int jump = 1; sc + jump <= dc; jump++)
+            getMazePaths_multiMoves(sr, sc + jump, dr, dc, ans + 'h' + jump);
+        for (int jump = 1; sr + jump <= dr; jump++)
+            getMazePaths_multiMoves(sr + jump, sc, dr, dc, ans + 'v' + jump);
+        for (int jump = 1; sr + jump <= dr && sc + jump <= dc; jump++)
+            getMazePaths_multiMoves(sr + jump, sc + jump, dr, dc, ans + 'd' + jump);
+
+    }
+
+    public static ArrayList<String> getMazePaths_multiMoves(int sr, int sc, int dr, int dc) {
+
+        if (sr == dr && sc == dc) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
+
+        ArrayList<String> myAns = new ArrayList<>();
+        for (int jump = 1; sc + jump <= dc; jump++) {
+            ArrayList<String> Horizontal = getMazePaths_multiMoves(sr, sc + jump, dr, dc);
+            for (String s : Horizontal) {
+                myAns.add("h" + jump + s);
+            }
+        }
+
+        for (int jump = 1; sr + jump <= dr; jump++) {
+            ArrayList<String> Vertical = getMazePaths_multiMoves(sr + jump, sc, dr, dc);
+            for (String s : Vertical) {
+                myAns.add("v" + jump + s);
+            }
+        }
+
+        for (int jump = 1; sr + jump <= dr && sc + jump <= dc; jump++) {
+            ArrayList<String> Digonal = getMazePaths_multiMoves(sr + jump, sc + jump, dr, dc);
+            for (String s : Digonal) {
+                myAns.add("d" + jump + s);
+            }
+        }
+
+        return myAns;
+    }
+
     public static void main(String[] args) {
         subsequence();
     }
