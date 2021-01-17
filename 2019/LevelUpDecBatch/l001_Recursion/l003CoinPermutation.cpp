@@ -501,6 +501,49 @@ bool sudokuSolver_01(vector<int> &loc, int idx)
     return res;
 }
 
+vector<int> row(9, 0);
+vector<int> col(9, 0);
+vector<vector<int>> mat(3, vector<int>(3, 0));
+
+void toggleSudokuBit(int r, int c, int num)
+{
+    int mask = (1 << num);
+    row[r] ^= mask;
+    col[c] ^= mask;
+    mat[r / 3][c / 3] ^= mask;
+}
+
+bool sudokuSolver_Bit(vector<int> &loc, int idx)
+{
+    if (idx == loc.size())
+    {
+        display();
+        cout << endl;
+        return true;
+    }
+
+    int r = loc[idx] / board[0].size();
+    int c = loc[idx] % board[0].size();
+    bool res = false;
+
+    for (int num = 1; num <= 9; num++)
+    {
+        int mask = (1 << num);
+        if ((row[r] & mask) == 0 && (col[c] & mask) == 0 && (mat[r / 3][c / 3] & mask) == 0)
+        {
+            board[r][c] = num;
+            toggleSudokuBit(r, c, num);
+
+            res = res || sudokuSolver_Bit(loc, idx + 1);
+
+            board[r][c] = 0;
+            toggleSudokuBit(r, c, num);
+        }
+    }
+
+    return res;
+}
+
 void sudoku()
 {
     vector<int> loc;
@@ -512,6 +555,8 @@ void sudoku()
         {
             if (board[i][j] == 0)
                 loc.push_back(i * m + j);
+            else
+                toggleSudokuBit(i, j, board[i][j]);
         }
     }
     cout << sudokuSolver_01(loc, 0) << endl;
