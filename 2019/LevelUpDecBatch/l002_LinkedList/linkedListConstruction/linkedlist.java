@@ -67,6 +67,8 @@ public class linkedlist {
     protected void addNodeAt(Node node, int idx) {
         if (idx == 0)
             addFirstNode(node);
+        else if (idx == size())
+            addLastNode(node);
         else {
             Node nodeAt = getNodeAt(idx - 1);
             Node forw = nodeAt.next;
@@ -84,7 +86,6 @@ public class linkedlist {
 
         Node node = new Node(data);
         addNodeAt(node, idx);
-
     }
 
     // ==================================================
@@ -149,6 +150,61 @@ public class linkedlist {
 
         Node node = removeLastNode();
         return node.data;
+    }
+
+    protected Node removeNodeAt(int idx) {
+        if (idx == 0)
+            return removeFirstNode();
+        else if (idx == size() - 1)
+            return removeLastNode();
+        else {
+            Node prevNode = getNodeAt(idx - 1);
+            Node removeNode = prevNode.next;
+            Node forwardNode = removeNode.next;
+
+            prevNode.next = forwardNode;
+            removeNode.next = null;
+
+            this.NumberOfNodes--;
+            return removeNode;
+        }
+
+    }
+
+    public int removeAt(int idx) throws Exception {
+        if (size() == 0)
+            throw new Exception("LinkedList Is Empty");
+        else if (idx < 0 || idx >= size())
+            throw new Exception("Invalid Index");
+
+        Node node = removeNodeAt(idx);
+        return node.data;
+    }
+
+    // ==============================================
+
+    public int getFirst() throws Exception {
+        if (size() == 0)
+            throw new Exception("LinkedList Is Empty");
+
+        return this.head.data;
+
+    }
+
+    public int getLast() throws Exception {
+        if (size() == 0)
+            throw new Exception("LinkedList Is Empty");
+    
+        return this.tail.data;
+    }
+
+    public int getAt(int idx) throws Exception {
+        if (size() == 0)
+            throw new Exception("LinkedList Is Empty");
+        else if (idx < 0 || idx >= size())
+            throw new Exception("Invalid Index");
+
+        return getNodeAt(idx).data;
     }
 
 }
