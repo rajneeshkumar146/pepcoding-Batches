@@ -20,21 +20,18 @@ public class l001_Sorting {
 
     }
 
-    public static int moveToStart(int[]arr,int si,int ei){
-        int smallIdx = si;
-        for(int i=si + 1;i <= ei;i++){
-            if(arr[smallIdx] > arr[i]) smallIdx = i;
+    public static void moveToStart(int[] arr, int si, int ei) {
+        for (int i = si + 1; i <= ei; i++) {
+            if (arr[si] > arr[i])
+                swap(arr, si, i);
         }
-        return smallIdx;
     }
-    
+
     public static void selectionSort(int arr[]) {
         int n = arr.length;
         int ei = n - 1;
-        for(int i = 0;i < n-1; i++){
-            int idx = moveToStart(arr,i, ei);
-            swap(arr,i,idx);
+        for (int i = 0; i < n - 1; i++) {
+            moveToStart(arr, i, ei);
         }
-        
     }
 }
