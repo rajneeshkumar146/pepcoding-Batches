@@ -113,7 +113,6 @@ void dataReverse(ListNode *head)
     ListNode *curr1 = head;
     ListNode *curr2 = nhead;
 
-    bool res = true;
     while (curr1 != nullptr && curr2 != nullptr)
     {
 
@@ -127,4 +126,115 @@ void dataReverse(ListNode *head)
 
     nhead = reverseList(nhead);
     mid->next = nhead;
+}
+
+//143
+void reorderList(ListNode *head)
+{
+    if (head == nullptr || head->next == nullptr)
+        return;
+
+    ListNode *mid = midNode(head);
+    ListNode *nhead = mid->next;
+    mid->next = nullptr;
+
+    nhead = reverseList(nhead);
+
+    ListNode *c1 = head;
+    ListNode *c2 = nhead;
+
+    ListNode *f1 = nullptr;
+    ListNode *f2 = nullptr;
+
+    while (c1 != nullptr && c2 != nullptr)
+    {
+        f1 = c1->next; // backup
+        f2 = c2->next;
+
+        c1->next = c2; // links
+        c2->next = f1;
+
+        c1 = f1; // move
+        c2 = f2;
+    }
+
+    // cout<<"Reorder List: ";
+    // printList(head);
+
+    // cout<<"Actual List: ";
+    // againReorderList(head);
+    // printList(head);
+}
+
+void printList(ListNode *node)
+{
+    ListNode *curr = node;
+    while (curr != nullptr)
+    {
+        cout << curr->val << " ";
+        curr = curr->next;
+    }
+    cout << endl;
+}
+
+void againReorderList(ListNode *head)
+{
+    if (head == nullptr || head->next == nullptr)
+        return;
+
+    ListNode *h1 = head;
+    ListNode *h2 = head->next;
+
+    ListNode *c1 = h1;
+    ListNode *c2 = h2;
+
+    while (c2 != nullptr && c2->next != nullptr)
+    {
+        ListNode *f = c2->next; // Backup
+
+        c1->next = f; // links
+        c2->next = f->next;
+
+        c1 = c1->next;
+        c2 = c2->next;
+    }
+
+    // c1->next = nullptr;
+    h2 = reverseList(h2);
+    c1->next = h2;
+}
+
+ListNode *mergeTwoLists(ListNode *l1, ListNode *l2)
+{
+    if (l1 == nullptr || l2 == nullptr)
+        return l1 != nullptr ? l1 : l2;
+
+    ListNode *dummy = new ListNode(-1);
+    ListNode *prev = dummy;
+
+    ListNode *c1 = l1;
+    ListNode *c2 = l2;
+
+    while (c1 != nullptr && c2 != nullptr)
+    {
+        if (c1->val <= c2->val)
+        {
+            prev->next = c1;
+            c1 = c1->next;
+        }
+        else
+        {
+            prev->next = c2;
+            c2 = c2->next;
+        }
+
+        prev = prev->next;
+    }
+
+    prev->next = c1 != nullptr ? c1 : c2;
+
+    ListNode *h = dummy->next;
+    dummy->next = nullptr;
+    delete dummy;   
+    return h;
 }
