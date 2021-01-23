@@ -1,3 +1,4 @@
+import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -104,7 +105,15 @@ public class leetcodeSolutions {
     }
 
     public static boolean isPossibleToPlaceH(char[][] arr, String word, int r, int c) {
+        for (int i = 0; i < word.length(); i++) {
+            if (c + i >= arr[0].length)
+                return false;
 
+            if (arr[r][c + i] != '-' && arr[r][c + i] != word.charAt(i))
+                return false;
+        }
+
+        return true;
     }
 
     public static boolean[] placeH(char[][] arr, String word, int r, int c) {
@@ -128,7 +137,15 @@ public class leetcodeSolutions {
     }
 
     public static boolean isPossibleToPlaceV(char[][] arr, String word, int r, int c) {
+        for (int i = 0; i < word.length(); i++) {
+            if (r + i >= arr.length)
+                return false;
 
+            if (arr[r + i][c] != '-' && arr[r + i][c] != word.charAt(i))
+                return false;
+        }
+
+        return true;
     }
 
     public static boolean[] placeV(char[][] arr, String word, int r, int c) {
@@ -187,7 +204,17 @@ public class leetcodeSolutions {
         }
 
         return count;
+    }
 
+    public static void main(String[] args) {
+        Scanner scn = new Scanner(System.in);
+        char[][] arr = new char[10][];
+        for (int i = 0; i < 10; i++) {
+            arr[i] = scn.nextLine().toCharArray();
+        }
+
+        String[] words = scn.nextLine().split(";");
+        crossWord(arr, words, 0);
     }
 
 }
