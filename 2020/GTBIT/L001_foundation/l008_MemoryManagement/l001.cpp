@@ -91,7 +91,7 @@ void test3()
 void inputVector(vector<int> *arr)
 {
     for (int i = 0; i < arr->size(); i++)
-        cin >> arr->at(i); 
+        cin >> arr->at(i);
     for (int i = 0; i < arr->size(); i++)
         cout << arr->at(i) << " ";
     cout << endl;
@@ -107,8 +107,18 @@ void test4()
 
 // & -======================================================================
 
+void test5()
+{
+    int a = 10;
+    int *b = &a;
+    int **c = &b;
+
+    cout << a << " "<< &a << endl;
+    cout << b << " "<<  &b << endl;
+    cout << c << " "<<  &c << endl;
+}
 
 int main()
 {
-    test4();
+    test5();
 }
