@@ -107,18 +107,25 @@ void test4()
 
 // & -======================================================================
 
-void test5()
+int **test5()
 {
     int a = 10;
     int *b = &a;
     int **c = &b;
 
-    cout << a << " "<< &a << endl;
-    cout << b << " "<<  &b << endl;
-    cout << c << " "<<  &c << endl;
+    cout << a << " " << &a << endl;
+    cout << *b << " " << &b << endl;
+    cout << **c << " " << &c << endl;
+
+    int **arr = new int *[1];
+    arr[0] = &a;
+    return arr;
 }
 
 int main()
 {
-    test5();
+    int **arr = test5();
+    test1();
+    cout << *arr[0] << endl;
+    return 0;
 }
