@@ -279,12 +279,64 @@ ListNode *mergeKLists(vector<ListNode *> &lists)
 {
     if (lists.size() == 0)
         return nullptr;
-    
-    ListNode* refList = nullptr;
-    for(int i=0;i<lists.size();i++){
-        refList = mergeTwoLists(refList,lists[i]);
+
+    ListNode *refList = nullptr;
+    for (int i = 0; i < lists.size(); i++)
+    {
+        refList = mergeTwoLists(refList, lists[i]);
     }
 
     return refList;
 }
 
+bool hasCycle(ListNode *head)
+{
+    if (head == nullptr || head->next == nullptr)
+        return false;
+
+    ListNode *slow = head;
+    ListNode *fast = head;
+
+    while (fast != nullptr && fast->next != nullptr)
+    {
+        fast = fast->next->next;
+        slow = slow->next;
+        if (fast == slow)
+            return true;
+    }
+
+    return false;
+}
+
+
+//143
+ListNode *detectCycle(ListNode *head)
+{
+
+    if (head == nullptr || head->next == nullptr)
+        return nullptr;
+
+    ListNode *slow = head;
+    ListNode *fast = head;
+
+    while (fast != nullptr && fast->next != nullptr)
+    {
+        fast = fast->next->next;
+        slow = slow->next;
+        if (fast == slow)
+            break;
+    }
+
+    if (fast != slow)
+        return nullptr;
+
+    slow = head;
+    while (slow != fast)
+    {
+        slow = slow->next;
+        fast = fast->next;
+
+    }
+
+    return slow;
+}
