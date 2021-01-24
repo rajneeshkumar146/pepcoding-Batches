@@ -273,3 +273,18 @@ ListNode *mergeKLists(vector<ListNode *> &lists)
 
     return mergeKLists(lists, 0, lists.size() - 1);
 }
+
+// NK2
+ListNode *mergeKLists(vector<ListNode *> &lists)
+{
+    if (lists.size() == 0)
+        return nullptr;
+    
+    ListNode* refList = nullptr;
+    for(int i=0;i<lists.size();i++){
+        refList = mergeTwoLists(refList,lists[i]);
+    }
+
+    return refList;
+}
+
