@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 struct ListNode
@@ -235,6 +236,40 @@ ListNode *mergeTwoLists(ListNode *l1, ListNode *l2)
 
     ListNode *h = dummy->next;
     dummy->next = nullptr;
-    delete dummy;   
+    delete dummy;
     return h;
+}
+
+//148
+ListNode *sortList(ListNode *head)
+{
+    if (head == nullptr || head->next == nullptr)
+        return head;
+
+    ListNode *mid = midNode(head);
+    ListNode *nHead = mid->next;
+    mid->next = nullptr;
+
+    return mergeTwoLists(sortList(head), sortList(nHead));
+}
+
+//23
+ListNode *mergeKLists(vector<ListNode *> &lists, int si, int ei)
+{
+    if (si == ei)
+        return lists[si];
+
+    int mid = (si + ei) / 2;
+    ListNode *list1 = mergeKLists(lists, si, mid);
+    ListNode *list2 = mergeKLists(lists, mid + 1, ei);
+
+    return mergeTwoLists(list1, list2);
+}
+
+ListNode *mergeKLists(vector<ListNode *> &lists)
+{
+    if (lists.size() == 0)
+        return nullptr;
+
+    return mergeKLists(lists, 0, lists.size() - 1);
 }
