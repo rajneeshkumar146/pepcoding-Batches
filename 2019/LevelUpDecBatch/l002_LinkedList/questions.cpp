@@ -289,6 +289,7 @@ ListNode *mergeKLists(vector<ListNode *> &lists)
     return refList;
 }
 
+//142
 bool hasCycle(ListNode *head)
 {
     if (head == nullptr || head->next == nullptr)
