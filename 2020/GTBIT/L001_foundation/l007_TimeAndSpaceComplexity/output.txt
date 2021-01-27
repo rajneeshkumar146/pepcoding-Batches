@@ -1,0 +1,40 @@
+Merging these two arrays 
+left array -> 4 
+right array -> 9 
+Merging these two arrays 
+left array -> 13 
+right array -> 35 
+Merging these two arrays 
+left array -> 4 9 
+right array -> 13 35 
+Merging these two arrays 
+left array -> -18 
+right array -> -15 
+Merging these two arrays 
+left array -> -18 -15 
+right array -> 77 
+Merging these two arrays 
+left array -> 4 9 13 35 
+right array -> -18 -15 77 
+Merging these two arrays 
+left array -> 0 
+right array -> 105 
+Merging these two arrays 
+left array -> -19 
+right array -> 22 
+Merging these two arrays 
+left array -> 0 105 
+right array -> -19 22 
+Merging these two arrays 
+left array -> 88 
+right array -> 2 
+Merging these two arrays 
+left array -> 2 88 
+right array -> 4 
+Merging these two arrays 
+left array -> -19 0 22 105 
+right array -> 2 4 88 
+Merging these two arrays 
+left array -> -18 -15 4 9 13 35 77 
+right array -> -19 0 2 4 22 88 105 
+Sorted Array -> -19 -18 -15 0 2 4 4 9 13 22 35 77 88 105 
