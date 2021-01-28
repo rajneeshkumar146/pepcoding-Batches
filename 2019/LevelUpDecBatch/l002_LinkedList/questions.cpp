@@ -309,7 +309,6 @@ bool hasCycle(ListNode *head)
     return false;
 }
 
-
 //143
 ListNode *detectCycle(ListNode *head)
 {
@@ -336,8 +335,156 @@ ListNode *detectCycle(ListNode *head)
     {
         slow = slow->next;
         fast = fast->next;
-
     }
 
     return slow;
+}
+
+//160
+ListNode *getIntersectionNode(ListNode *headA, ListNode *headB)
+{
+    if (headA == nullptr || headB == nullptr)
+        return nullptr;
+
+    ListNode *tail = headA;
+    while (tail->next != nullptr)
+        tail = tail->next;
+    tail->next = headB;
+
+    ListNode *ans = detectCycle(headA);
+    tail->next = nullptr;
+    return ans;
+}
+
+int lengthOfLL(ListNode *node)
+{
+    if (node == nullptr)
+        return 0;
+
+    int len = 0;
+    while (node != nullptr)
+    {
+        node = node->next;
+        len++;
+    }
+
+    return len;
+}
+
+ListNode *getIntersectionNode(ListNode *headA, ListNode *headB)
+{
+    if (headA == nullptr || headB == nullptr)
+        return nullptr;
+
+    int l1 = lengthOfLL(headA);
+    int l2 = lengthOfLL(headB);
+
+    ListNode *biggerList = l1 > l2 ? headA : headB;
+    ListNode *smallerList = l1 > l2 ? headB : headA;
+
+    int diff = max(l1, l2) - min(l1, l2);
+    while (diff-- > 0)
+        biggerList = biggerList->next;
+
+    while (biggerList != smallerList)
+    {
+        biggerList = biggerList->next;
+        smallerList = smallerList->next;
+    }
+
+    return biggerList;
+}
+
+//19
+ListNode *removeNthFromEnd(ListNode *head, int n)
+{
+    if (head == nullptr)
+        return head;
+
+    ListNode *c1 = head;
+    ListNode *c2 = head;
+
+    while (n-- > 0)
+        c2 = c2->next;
+
+    if (c2 == nullptr)
+    {
+        ListNode *temp = head;
+        head = head->next;
+        temp->next = nullptr;
+        return head;
+    }
+
+    while (c2->next != nullptr)
+    {
+        c2 = c2->next;
+        c1 = c1->next;
+    }
+
+    ListNode *temp = c1->next;
+    c1->next = c1->next->next;
+    temp->next = nullptr;
+
+    return head;
+}
+
+// temporary head, temporary tail
+ListNode *th = nullptr;
+ListNode *tt = nullptr;
+
+void addFirstNode(ListNode *node)
+{
+    if (th == nullptr)
+    {
+        th = node;
+        tt = node;
+    }
+    else
+    {
+        node->next = th;
+        th = node;
+    }
+}
+
+ListNode *reverseKGroup(ListNode *head, int k)
+{
+    if (head == nullptr || head->next == nullptr || k == 1)
+        return head;
+
+    // original head, original tail
+    ListNode *oh = nullptr;
+    ListNode *ot = nullptr;
+
+    int len = lengthOfLL(head);
+    ListNode *curr = head;
+
+    while (len >= k)
+    {
+        int tempK = k;
+        while (tempK-- > 0)
+        {
+            ListNode *forw = curr->next;
+            curr->next = nullptr;
+            addFirstNode(curr);
+            curr = forw;
+        }
+
+        if (oh == nullptr)
+        {
+            oh = th;
+            ot = tt;
+        }
+        else
+        {
+            ot->next = th;
+            ot = tt;
+        }
+
+        th = nullptr;
+        tt = nullptr;
+        len -= k;
+    }
+
+    ot->next = curr;
+    return oh;
 }
