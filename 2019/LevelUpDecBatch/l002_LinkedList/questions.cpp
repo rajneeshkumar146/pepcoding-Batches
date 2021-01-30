@@ -533,3 +533,61 @@ ListNode *reverseBetween(ListNode *head, int m, int n)
 
     return head;
 }
+
+//138
+void copyNodes(Node *head)
+{
+    Node *curr = head;
+    while (curr != nullptr)
+    {
+        Node *forw = curr->next; // backup
+
+        Node *node = new Node(curr->val);
+
+        node->next = forw; // links
+        curr->next = node;
+
+        curr = forw; // move
+    }
+}
+
+void setRandoms(Node *head)
+{
+    Node *curr = head;
+    while (curr != nullptr)
+    {
+        if (curr->random != nullptr)
+            curr->next->random = curr->random->next;
+
+        curr = curr->next->next;
+    }
+}
+
+Node *extractLL(Node *head)
+{
+    Node *dummy = new Node(-1);
+    Node *copyCurr = dummy;
+    Node *curr = head;
+
+    while (curr != nullptr)
+    {
+        copyCurr->next = curr->next;
+        curr->next = curr->next->next;
+
+        curr = curr->next;
+        copyCurr = copyCurr->next;
+    }
+
+    return dummy->next;
+}
+
+Node *copyRandomList(Node *head)
+{
+    if (head == nullptr)
+        return head;
+
+    copyNodes(head);
+    setRandoms(head);
+
+    return extractLL(head);
+}
