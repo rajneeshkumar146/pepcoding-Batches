@@ -135,6 +135,37 @@ public class question {
         return ans;
     }
 
+    // better solution for k far
+    public int distanceK2(TreeNode node, TreeNode target, int K, List<Integer> ans) {
+        if (node == null)
+            return -1;
+
+        if (node == target) {
+            printKDown(node, null, K, ans);
+            return 1;
+        }
+
+        int lans = distanceK2(node.left, target, K, ans);
+        if (lans != -1) {
+            printKDown(node, node.left, K - lans, ans);
+            return lans + 1;
+        }
+
+        int rans = distanceK2(node.right, target, K, ans);
+        if (rans != -1) {
+            printKDown(node, node.right, K - rans, ans);
+            return rans + 1;
+        }
+
+        return -1;
+    }
+
+    public List<Integer> distanceK2(TreeNode root, TreeNode target, int K) {
+        List<Integer> ans = new ArrayList<>();
+        distanceK2(root, target, K, ans);
+        return ans;
+    }
+
     public static int rootToNodeDistance(TreeNode node, TreeNode data) {
         if (node == null)
             return -1;
