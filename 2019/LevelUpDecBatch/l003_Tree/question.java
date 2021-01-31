@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class question {
     public class TreeNode {
@@ -105,5 +106,52 @@ public class question {
 
         return LCA;
     }
+
+    public void printKDown(TreeNode node, TreeNode block, int depth, List<Integer> ans) {
+        if (node == null || depth < 0 || node == block)
+            return;
+
+        if (depth == 0) {
+            ans.add(node.val);
+            return;
+        }
+
+        printKDown(node.left, block, depth - 1, ans);
+        printKDown(node.right, block, depth - 1, ans);
+    }
+
+    // 863
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int K) {
+        ArrayList<TreeNode> list = new ArrayList<>();
+        rootToNodePath(root, target, list);
+
+        List<Integer> ans = new ArrayList<>();
+        TreeNode blockNode = null;
+
+        for (int i = 0; i < list.size(); i++) {
+            printKDown(list.get(i), blockNode, K - i, ans);
+            blockNode = list.get(i);
+        }
+        return ans;
+    }
+
+    public static int rootToNodeDistance(TreeNode node, TreeNode data) {
+        if (node == null)
+            return -1;
+        if (node == data)
+            return 0;
+
+        int lans = rootToNodeDistance(node.left, data);
+        if (lans != -1)
+            return lans + 1;
+
+        int rans = rootToNodeDistance(node.right, data);
+        if (rans != -1)
+            return rans + 1;
+
+        return -1;
+    }
+
+    // https://www.geeksforgeeks.org/burn-the-binary-tree-starting-from-the-target-node/
 
 }
