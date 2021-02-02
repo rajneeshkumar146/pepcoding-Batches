@@ -224,13 +224,25 @@ public class question {
         return Math.max(lh, rh) + 1;
     }
 
+    public int diameterOfBinaryTree_03(TreeNode root, int[] ans) {
+        if (root == null)
+            return -1;
+        int lh = diameterOfBinaryTree_03(root.left);
+        int rh = diameterOfBinaryTree_03(root.right);
+
+        ans[0] = Math.max(ans[0], lh + rh + 2);
+
+        return Math.max(lh, rh) + 1;
+    }
+
     public int diameterOfBinaryTree(TreeNode root) {
         if (root == null)
             return 0;
         // return diameterOfBinaryTree_01(root);
         // return diameterOfBinaryTree_02(root)[0];
-        diameterOfBinaryTree_03(root);
-        return maxDia;
+        int[] ans = new int[1];
+        diameterOfBinaryTree_03(root, ans);
+        return ans[0];
     }
 
 }
