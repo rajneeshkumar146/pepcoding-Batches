@@ -286,4 +286,31 @@ public class question {
 
     }
 
+    // https://www.geeksforgeeks.org/find-maximum-path-sum-two-leaves-binary-tree/
+    int maxLeafToLeaf = -(int) 1e9;
+
+    int maxPathSum_(Node root) {
+        if (root == null)
+            return -(int) 1e9;
+        if (root.left == null && root.right == null)
+            return root.data;
+
+        int leftNodeToLeafMaxSum = maxPathSum_(root.left);
+        int rightNodeToLeafMaxSum = maxPathSum_(root.right);
+
+        if (root.left != null && root.right != null)
+            maxLeafToLeaf = Math.max(maxLeafToLeaf, leftNodeToLeafMaxSum + root.data + rightNodeToLeafMaxSum);
+
+        return Math.max(leftNodeToLeafMaxSum, rightNodeToLeafMaxSum) + root.data;
+    }
+
+    int maxPathSum(Node root) {
+        if (root == null)
+            return Integer.MIN_VALUE;
+
+        maxPathSum_(root);
+        return maxLeafToLeaf;
+
+    }
+
 }

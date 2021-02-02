@@ -44,6 +44,5 @@ vector<vector<int>> pathSum(TreeNode *root, int targetSum)
 }
 
 
-//https://www.geeksforgeeks.org/find-maximum-path-sum-two-leaves-binary-tree/
 
 // 124
