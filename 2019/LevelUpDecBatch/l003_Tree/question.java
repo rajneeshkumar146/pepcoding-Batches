@@ -245,4 +245,45 @@ public class question {
         return ans[0];
     }
 
+    // 112
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if (root == null)
+            return false;
+        if (root.left == null && root.right == null)
+            return (targetSum - root.val == 0);
+
+        return hasPathSum(root.left, targetSum - root.val) || hasPathSum(root.right, targetSum - root.val);
+    }
+
+    // 113
+    public void pathSum(TreeNode root, int tar, List<List<Integer>> res, List<Integer> smallAns) {
+        if (root == null)
+            return;
+
+        if (root.left == null && root.right == null) {
+            if (tar - root.val == 0) {
+                ArrayList<Integer> base = new ArrayList<>(smallAns);
+                base.add(root.val);
+                res.add(base);
+            }
+
+            return;
+        }
+
+        smallAns.add(root.val);
+
+        pathSum(root.left, tar - root.val, res, smallAns);
+        // print("hello");
+        pathSum(root.right, tar - root.val, res, smallAns);
+
+        smallAns.remove(smallAns.size() - 1);
+    }
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> res = new ArrayList<>();
+        pathSum(root, targetSum, res, new ArrayList<>());
+        return res;
+
+    }
+
 }
