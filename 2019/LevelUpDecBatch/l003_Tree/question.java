@@ -185,4 +185,52 @@ public class question {
 
     // https://www.geeksforgeeks.org/burn-the-binary-tree-starting-from-the-target-node/
 
+    public int diameterOfBinaryTree_01(TreeNode root) {
+        if (root == null)
+            return -1;
+        int leftTreeDia = diameterOfBinaryTree_01(root.left);
+        int rightTreeDia = diameterOfBinaryTree_01(root.right);
+
+        int leftHeight = height(root.left);
+        int rightHeight = height(root.right);
+
+        return Math.max(Math.max(leftTreeDia, rightTreeDia), leftHeight + rightHeight + 2);
+    }
+
+    // {dia,height}
+    public int[] diameterOfBinaryTree_02(TreeNode root) {
+        if (root == null)
+            return new int[] { -1, -1 };
+        int[] leftAns = diameterOfBinaryTree_02(root.left);
+        int[] rightAns = diameterOfBinaryTree_02(root.right);
+
+        int[] ans = new int[2];
+        ans[0] = Math.max(Math.max(leftAns[0], rightAns[0]), leftAns[1] + rightAns[1] + 2);
+        ans[1] = Math.max(leftAns[1], rightAns[1]) + 1;
+
+        return ans;
+    }
+
+    int maxDia = 0;
+
+    public int diameterOfBinaryTree_03(TreeNode root) {
+        if (root == null)
+            return -1;
+        int lh = diameterOfBinaryTree_03(root.left);
+        int rh = diameterOfBinaryTree_03(root.right);
+
+        maxDia = Math.max(maxDia, lh + rh + 2);
+
+        return Math.max(lh, rh) + 1;
+    }
+
+    public int diameterOfBinaryTree(TreeNode root) {
+        if (root == null)
+            return 0;
+        // return diameterOfBinaryTree_01(root);
+        // return diameterOfBinaryTree_02(root)[0];
+        diameterOfBinaryTree_03(root);
+        return maxDia;
+    }
+
 }
