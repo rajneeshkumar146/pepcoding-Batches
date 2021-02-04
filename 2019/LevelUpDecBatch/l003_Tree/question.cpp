@@ -43,6 +43,58 @@ vector<vector<int>> pathSum(TreeNode *root, int targetSum)
     return res;
 }
 
-
-
 // 124
+class maxNodeToNodePair
+{
+public:
+    int NTN_sum = -(int)1e9; // Node to Node sum
+    int NTR_sum = 0;         // Node to root sum
+
+    maxNodeToNodePair(int NTN_sum, int NTR_sum)
+    {
+        this->NTN_sum = NTN_sum;
+        this->NTR_sum = NTR_sum;
+    }
+
+    maxNodeToNodePair()
+    {
+    }
+};
+
+int maxValue(vector<int> arr)
+{
+    int max_ = arr[0];
+    for (int ele : arr)
+    {
+        max_ = max(max_, ele);
+    }
+
+    return max_;
+}
+
+// {nodeToNode, rootToNode}
+
+maxNodeToNodePair maxPathSum2_(TreeNode *node)
+{
+    if (node == nullptr)
+        return maxNodeToNodePair();
+
+    maxNodeToNodePair lpair = maxPathSum2_(node->left);
+    maxNodeToNodePair rpair = maxPathSum2_(node->right);
+
+    maxNodeToNodePair myAns;
+
+    myAns.NTN_sum = maxValue({lpair.NTN_sum, rpair.NTN_sum, node->val, lpair.NTR_sum + node->val,
+                              rpair.NTR_sum + node->val, lpair.NTR_sum + node->val + rpair.NTR_sum});
+
+    myAns.NTR_sum = maxValue({node->val, lpair.NTR_sum + node->val, rpair.NTR_sum + node->val});
+
+    return myAns;
+}
+
+int maxPathSum(TreeNode *root)
+{
+    if (root == nullptr)
+        return 0;
+    return maxPathSum2_(root).NTN_sum;
+}
