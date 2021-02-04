@@ -1,5 +1,4 @@
-import java.util.HashMap;
-
+import java.util.*
 class LRUCache {
     private class Node {
         int key = 0; // app name
@@ -15,7 +14,7 @@ class LRUCache {
     }
 
     // Key , Node
-    private HashMap<Integer, Node> map = new HashMap<>();
+    private Node[] map;
     private int maximumSize = 0;
     private int currSize = 0;
 
@@ -24,6 +23,7 @@ class LRUCache {
 
     public LRUCache(int capacity) {
         this.maximumSize = capacity;
+        map = new Node[3000 + 1];
     }
 
     public void removeTailNode() {
@@ -83,29 +83,30 @@ class LRUCache {
     }
 
     public int get(int key) {
-        if (!map.containsKey(key))
+        if (map[key] == null)
             return -1;
 
-        Node node = map.get(key);
+        Node node = map[key];
         makeMostRecent(node);
         return node.value;
     }
 
     // appp name, app state
     public void put(int key, int value) {
-        if (map.containsKey(key)) {
-            Node node = map.get(key);
+        if (map[key] != null) {
+            Node node = map[key];
             node.value = value;
             get(key);
         } else {
             if (this.currSize == this.maximumSize) {
+                map[this.tail.key] = null;
                 removeTailNode();
-                map.remove(key);
+
             }
 
             Node node = new Node(key, value);
             addFirstNode(node);
-            map.put(key, node);
+            map[key] = node;
         }
 
     }
