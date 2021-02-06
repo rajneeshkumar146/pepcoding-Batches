@@ -1,4 +1,6 @@
 import java.util.LinkedList;
+import java.util.List;
+import java.util.ArrayList;
 
 public class l001 {
     public class TreeNode {
@@ -89,7 +91,7 @@ public class l001 {
         while (que.size() != 0) {
             int size = que.size();
             System.out.print("Level " + level + " : ");
-           
+
             while (size-- > 0) {
                 TreeNode rn = que.removeFirst(); // rn : remove Node
                 System.out.print(rn.val + " ");
@@ -99,7 +101,83 @@ public class l001 {
                 if (rn.right != null)
                     que.addLast(rn.right);
             }
-           
+
+            level++;
+            System.out.println();
+        }
+    }
+
+    // 102
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        if (root == null)
+            return new ArrayList<>();
+
+        LinkedList<TreeNode> que = new LinkedList<>();
+        List<List<Integer>> ans = new ArrayList<>();
+
+        que.addLast(root);
+
+        int level = 0;
+        while (que.size() != 0) {
+            int size = que.size();
+
+            while (size-- > 0) {
+                TreeNode rn = que.removeFirst(); // rn : remove Node
+                if (level == ans.size())
+                    ans.add(new ArrayList<>());
+                ans.get(level).add(rn.val);
+
+                if (rn.left != null)
+                    que.addLast(rn.left);
+                if (rn.right != null)
+                    que.addLast(rn.right);
+            }
+
+            level++;
+        }
+
+        return ans;
+    }
+
+    public static void leftView(TreeNode root) {
+        LinkedList<TreeNode> que = new LinkedList<>();
+        que.addLast(root);
+
+        int level = 0;
+        while (que.size() != 0) {
+            int size = que.size();
+            System.out.print(que.getFirst().val + " ");
+            while (size-- > 0) {
+                TreeNode rn = que.removeFirst(); // rn : remove Node
+
+                if (rn.left != null)
+                    que.addLast(rn.left);
+                if (rn.right != null)
+                    que.addLast(rn.right);
+            }
+
+            level++;
+            System.out.println();
+        }
+    }
+
+    public static void rightView(TreeNode root) {
+        LinkedList<TreeNode> que = new LinkedList<>();
+        que.addLast(root);
+
+        int level = 0;
+        while (que.size() != 0) {
+            int size = que.size();
+            System.out.print(que.getFirst().val + " ");
+            while (size-- > 0) {
+                TreeNode rn = que.removeFirst(); // rn : remove Node
+
+                if (rn.right != null)
+                    que.addLast(rn.right);
+                if (rn.left != null)
+                    que.addLast(rn.left);
+            }
+
             level++;
             System.out.println();
         }
