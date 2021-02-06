@@ -1,6 +1,7 @@
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class l001 {
     public class TreeNode {
@@ -181,6 +182,125 @@ public class l001 {
             level++;
             System.out.println();
         }
+    }
+
+    public static class verticalPair {
+        TreeNode node = null;
+        int hl = 0; // horizontal Level
+
+        verticalPair(TreeNode node, int hl) {
+            this.node = node;
+            this.hl = hl;
+        }
+    }
+
+    public static List<List<Integer>> verticalOrderTraversal(TreeNode root) {
+        LinkedList<verticalPair> que = new LinkedList<>();
+        que.addLast(new verticalPair(root, 0));
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+
+        int minHL = 0;
+        int maxHL = 0;
+
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                verticalPair rp = que.removeFirst();
+
+                map.putIfAbsent(rp.hl, new ArrayList<>());
+                // if (!map.containsKey(rp.hl))
+                // map.put(rp.hl, new ArrayList<>());
+
+                map.get(rp.hl).add(rp.node.val);
+
+                minHL = Math.min(minHL, rp.hl);
+                maxHL = Math.max(maxHL, rp.hl);
+
+                if (rp.node.left != null)
+                    que.addLast(new verticalPair(rp.node.left, rp.hl - 1));
+
+                if (rp.node.right != null)
+                    que.addLast(new verticalPair(rp.node.right, rp.hl + 1));
+            }
+        }
+
+        List<List<Integer>> ans = new ArrayList<>();
+        while (minHL <= maxHL) {
+            ans.add(map.get(minHL));
+            minHL++;
+        }
+
+        return ans;
+    }
+
+    // ans = {minHl,maxHL}
+    public static void width(TreeNode root, int hl, int[] ans) {
+        if (root == null)
+            return;
+
+        ans[0] = Math.min(hl, ans[0]);
+        ans[1] = Math.max(hl, ans[1]);
+
+        width(root.left, hl - 1, ans);
+        width(root.right, hl + 1, ans);
+    }
+
+    public static List<List<Integer>> verticalOrderTraversal2(TreeNode root) {
+        LinkedList<verticalPair> que = new LinkedList<>();
+
+        int[] minMax = new int[2];
+        width(root, 0, minMax);
+        int length = minMax[1] - minMax[0] + 1;
+        List<List<Integer>> ans = new ArrayList<>();
+        for (int i = 0; i < length; i++)
+            ans.add(new ArrayList<>());
+
+        que.addLast(new verticalPair(root, -minMax[0]));
+
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                verticalPair rp = que.removeFirst();
+
+                ans.get(rp.hl).add(rp.node.val);
+
+                if (rp.node.left != null)
+                    que.addLast(new verticalPair(rp.node.left, rp.hl - 1));
+
+                if (rp.node.right != null)
+                    que.addLast(new verticalPair(rp.node.right, rp.hl + 1));
+            }
+        }
+
+        return ans;
+    }
+
+    public static int[] verticalSum(TreeNode root) {
+        LinkedList<verticalPair> que = new LinkedList<>();
+
+        int[] minMax = new int[2];
+        width(root, 0, minMax);
+        int length = minMax[1] - minMax[0] + 1;
+        int[] ans = new int[length];
+
+        que.addLast(new verticalPair(root, -minMax[0]));
+
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                verticalPair rp = que.removeFirst();
+
+                ans[rp.hl] += rp.node.val;  // ans.set(rp.hl,ans.get(rp.hl) + rp.node.val);
+
+                if (rp.node.left != null)
+                    que.addLast(new verticalPair(rp.node.left, rp.hl - 1));
+
+                if (rp.node.right != null)
+                    que.addLast(new verticalPair(rp.node.right, rp.hl + 1));
+            }
+        }
+
+        return ans;
     }
 
     public static void main(String[] args) {
