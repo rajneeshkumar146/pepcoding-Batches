@@ -170,7 +170,7 @@ vector<int> bottomView(TreeNode *root)
     vector<int> minMax(2, 0);
     width(root, 0, minMax);
     int len = minMax[1] - minMax[0] + 1;
-    
+
     vector<int> res(len, 0);
     vector<bool> resVis(len, false);
 
@@ -194,6 +194,63 @@ vector<int> bottomView(TreeNode *root)
                 que.push(verticalPair(rp.node->left, rp.hl - 1));
             if (rp.node->right != nullptr)
                 que.push(verticalPair(rp.node->right, rp.hl + 1));
+        }
+    }
+
+    return res;
+}
+
+class verticalPair2
+{
+public:
+    TreeNode *node = nullptr;
+    int x = 0; // horizontal Level
+    int y = 0; // vertical Level
+
+    verticalPair2(TreeNode *node, int x, int y)
+    {
+        this->node = node;
+        this->x = x;
+        this->y = y;
+    }
+};
+
+struct comp
+{
+public:
+    bool operator()(const verticalPair2 a, const verticalPair2 b) const
+    {
+        if (a.y != b.y)
+            return a.y > b.y;   // this - other, '-' replace with '>';
+        else
+            return a.node->val > b.node->val;
+    }
+};
+
+vector<vector<int>> verticalOrderTraversal_02(TreeNode *root)
+{
+    priority_queue<verticalPair2, vector<verticalPair2>, comp> que;
+    vector<int> minMax(2, 0);
+    width(root, 0, minMax);
+    int len = minMax[1] - minMax[0] + 1;
+    vector<vector<int>> res(len);
+
+    que.push(verticalPair2(root, -minMax[0], 0));
+
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            verticalPair2 rp = que.top();
+            que.pop();
+
+            res[rp.x].push_back(rp.node->val);
+
+            if (rp.node->left != nullptr)
+                que.push(verticalPair2(rp.node->left, rp.x - 1, rp.y + 1));
+            if (rp.node->right != nullptr)
+                que.push(verticalPair2(rp.node->right, rp.x + 1, rp.y + 1));
         }
     }
 
