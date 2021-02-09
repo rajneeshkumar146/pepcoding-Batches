@@ -109,9 +109,9 @@ public class l002BST {
             return null;
 
         if (root.val > key)
-            root.left = insertIntoBST(root.left, key);
+            root.left = deleteNode(root.left, key);
         else if (root.val < key)
-            root.right = insertIntoBST(root.right, key);
+            root.right = deleteNode(root.right, key);
         else {
             if (root.left == null || root.right == null)
                 return root.left != null ? root.left : root.right;
