@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class l003AVL {
     public static class TreeNode {
         int val;
@@ -5,7 +7,7 @@ public class l003AVL {
         TreeNode right;
 
         int bal = 0;
-        int height = -1;
+        int height = 0;
 
         TreeNode(int val) {
             this.val = val;
@@ -54,20 +56,22 @@ public class l003AVL {
         return B;
     }
 
-    public static TreeNode getRotation(TreeNode node) {
+    public static TreeNode getRotation(TreeNode node) { // O(1)
         updateBalanceAndHeight(node);
         if (node.bal == 2) { // ll, lr
             if (node.left.bal == 1) { // ll
                 return rightRotation(node);
             } else { // lr
-
+                node.left = leftRotation(node.left);
+                return rightRotation(node);
             }
 
         } else if (node.bal == -2) { // rr, rl
             if (node.right.bal == -1) { // rr
                 return leftRotation(node);
             } else { // rl
-
+                node.right = rightRotation(node.right);
+                return leftRotation(node);
             }
         }
 
@@ -75,15 +79,6 @@ public class l003AVL {
     }
 
     // Basic_BST.======================================================================
-
-    public static int maximumEle(TreeNode node) {
-        TreeNode curr = node;
-        while (curr.right != null) {
-            curr = curr.right;
-        }
-
-        return curr.val;
-    }
 
     public static TreeNode insertIntoBST(TreeNode root, int val) {
         if (root == null) {
@@ -95,7 +90,17 @@ public class l003AVL {
         else
             root.right = insertIntoBST(root.right, val);
 
-        return getRotation(root);
+        root = getRotation(root);
+        return root;
+    }
+
+    public static int maximumEle(TreeNode node) {
+        TreeNode curr = node;
+        while (curr.right != null) {
+            curr = curr.right;
+        }
+
+        return curr.val;
     }
 
     public static TreeNode deleteNode(TreeNode root, int key) {
@@ -117,6 +122,45 @@ public class l003AVL {
         }
 
         return getRotation(root);
+    }
+
+    // for created BST.
+    public static TreeNode postOrder(TreeNode node) {
+        if (node == null)
+            return null;
+
+        node.left = postOrder(node.left);
+        node.right = postOrder(node.right);
+
+        return getRotation(node);
+    }
+
+    public static void display(TreeNode node) {
+        if (node == null)
+            return;
+        StringBuilder sb = new StringBuilder();
+        sb.append(node.left == null ? "." : node.left.val);
+        sb.append(" -> " + node.val + "(" + node.bal + ")" + " <- ");
+        sb.append(node.right == null ? "." : node.right.val);
+        System.out.println(sb.toString());
+
+        display(node.left);
+        display(node.right);
+    }
+
+    public static void main(String[] args) {
+        TreeNode root = null;
+        Random rand = new Random();
+
+        for (int i = 1; i <= 7; i++) {
+            root = insertIntoBST(root, i * 10);
+            // display(root);
+
+            // System.out.println("===========================================================");
+            // System.out.println();
+        }
+
+        display(root);
     }
 
 }
