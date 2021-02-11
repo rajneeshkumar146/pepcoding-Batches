@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedList;
 
 public class question {
     public class TreeNode {
@@ -476,6 +477,88 @@ public class question {
         int temp = a.val;
         a.val = b.val;
         b.val = temp;
+    }
+
+    public static class allSolPair {
+        TreeNode prev = null;
+        TreeNode pred = null;
+        TreeNode succ = null;
+
+        int ceil = (int) 1e8;
+        int floor = -(int) 1e8;
+    }
+
+    public static void allSolution(TreeNode node, int data, allSolPair pair) {
+        if (node == null)
+            return;
+
+        if (node.val < data)
+            pair.floor = Math.max(pair.floor, node.val);
+
+        if (node.val > data)
+            pair.ceil = Math.min(pair.ceil, node.val);
+
+        allSolution(node.left, data, pair);
+
+        if (node.val == data && pair.pred == null)
+            pair.pred = pair.prev;
+        if (pair.prev != null && pair.prev.val == data && pair.succ == null)
+            pair.succ = node;
+
+        pair.prev = node;
+
+        allSolution(node.right, data, pair);
+    }
+
+    // 173
+    class BSTIterator {
+        LinkedList<TreeNode> st = new LinkedList<>(); // addFirst(), removeFirst();
+
+        public BSTIterator(TreeNode root) {
+            addAllLeft(root);
+        }
+
+        public void addAllLeft(TreeNode node) {
+            if (node == null)
+                return;
+
+            TreeNode curr = node;
+            while (curr != null) {
+                st.addFirst(curr);
+                curr = curr.left;
+            }
+
+        }
+
+        public int next() {
+            TreeNode rn = st.removeFirst();
+            addAllLeft(rn.right);
+            return rn.val;
+        }
+
+        public boolean hasNext() {
+            return st.size() != 0;
+        }
+    }
+
+    //510
+    public Node inorderSuccessor(Node node) {
+        
+        if(node.right != null){
+            node = node.right;
+            while(node.left != null) node = node.left;
+            
+            return node;
+        }else{
+            while(node != null){
+                if(node.parent != null && node.parent.left == node) {
+                    return node.parent;    
+                }
+                node = node.parent;   
+            }
+            
+            return null;
+        } 
     }
 
 }

@@ -140,7 +140,8 @@ public class l002BST {
     }
 
     public TreeNode createBST(int[] arr, int si, int ei) {
-        if(si > ei) return  null;
+        if (si > ei)
+            return null;
 
         int mid = (si + ei) / 2;
         TreeNode node = new TreeNode(arr[mid]);
@@ -150,6 +151,42 @@ public class l002BST {
 
         return node;
     }
+
+    public static void predSuccInBST(TreeNode node, int data) {
+
+        TreeNode curr = node;
+        TreeNode pred = null;
+        TreeNode succ = null;
+        boolean isDataPresent = false;
+
+        while (curr != null) {
+
+            if (curr.val == data) {
+                isDataPresent = true;
+                if (curr.left != null) {
+                    pred = curr.left;
+                    while (pred.right != null)
+                        pred = pred.right;
+                }
+
+                if (curr.right != null) {
+                    succ = curr.right;
+                    while (succ.left != null)
+                        succ = succ.left;
+                }
+
+                break;
+            } else if (curr.val < data) {
+                pred = curr;
+                curr = curr.right;
+            } else {
+                succ = curr;
+                curr = curr.left;
+            }
+        }
+    }
+
+    
 
     public static void main(String[] args) {
 

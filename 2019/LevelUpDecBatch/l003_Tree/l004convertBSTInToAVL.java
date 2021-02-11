@@ -14,6 +14,14 @@ public class l004convertBSTInToAVL {
         }
     }
 
+    public static int height(TreeNode node) {
+        return node == null ? -1 : Math.max(height(node.left), height(node.right)) + 1;
+    }
+
+    public static int getBalance(TreeNode node) {
+        return height(node.left) - height(node.right);
+    }
+
     public static void updateBalanceAndHeight(TreeNode node) { // O(1)
         if (node == null)
             return;
