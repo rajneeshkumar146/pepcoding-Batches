@@ -562,6 +562,7 @@ public class question {
         }
     }
 
+    // T -> avg : O(nlogn), worst : O(n^2).
     // psi = pre starting index, isi = in-order starting index.
     public TreeNode preInTree(int[] preorder, int psi, int pei, int[] inorder, int isi, int iei) {
         if (psi > pei)
@@ -583,6 +584,56 @@ public class question {
 
     public TreeNode buildTree(int[] preorder, int[] inorder) {
         return preInTree(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+    }
+
+    // 106
+    public TreeNode postInTree(int[] post, int psi, int pei, int[] in, int isi, int iei) {
+        if (psi > pei)
+            return null;
+
+        TreeNode node = new TreeNode(post[pei]);
+        int idx = isi;
+        while (in[idx] != post[pei])
+            idx++;
+
+        int tnel = idx - isi;
+
+        node.left = postInTree(post, psi, psi + tnel - 1, in, isi, idx - 1);
+        node.right = postInTree(post, psi + tnel, pei - 1, in, idx + 1, iei);
+
+        return node;
+    }
+
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        int n = postorder.length;
+        return postInTree(postorder, 0, n - 1, inorder, 0, n - 1);
+    }
+
+    // 889
+    public TreeNode postPreTree(int[] post, int ppsi, int ppei, int[] pre, int psi, int pei) {
+        if (psi > pei)
+            return null;
+
+        TreeNode node = new TreeNode(pre[psi]);
+
+        if (psi == pei)
+            return node;
+
+        int idx = ppsi;
+        while (post[idx] != pre[psi + 1])
+            idx++;
+
+        int tnel = idx - ppsi + 1;
+        node.left = postPreTree(post, ppsi, idx, pre, psi + 1, psi + tnel);
+        node.right = postPreTree(post, idx + 1, ppei - 1, pre, psi + tnel + 1, pei);
+
+        return node;
+    }
+
+    public TreeNode constructFromPrePost(int[] pre, int[] post) {
+        int n = post.length;
+
+        return postPreTree(post, 0, n - 1, pre, 0, n - 1);
     }
 
 }
