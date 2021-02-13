@@ -636,4 +636,89 @@ public class question {
         return postPreTree(post, 0, n - 1, pre, 0, n - 1);
     }
 
+    // 114, T -> O(n^2)
+    public TreeNode getTail(TreeNode root) {
+        if (root == null)
+            return null;
+        TreeNode curr = root;
+        while (curr.right != null) {
+            curr = curr.right;
+        }
+
+        return curr;
+
+    }
+
+    public void flatten(TreeNode root) {
+        if (root == null)
+            return;
+
+        flatten(root.left);
+        flatten(root.right);
+
+        TreeNode tail = getTail(root.left);
+        if (tail != null) {
+            tail.right = root.right;
+            root.right = root.left;
+            root.left = null;
+        }
+    }
+
+    // T -> O(n)
+    public TreeNode flattern_(TreeNode node) {
+        if (node == null || (node.left == null && node.right == null))
+            return node;
+
+        TreeNode leftTail = flattern_(node.left);
+        TreeNode rightTail = flattern_(node.right);
+
+        if (leftTail != null) {
+            leftTail.right = node.right;
+            node.right = node.left;
+            node.left = null;
+        }
+
+        return rightTail != null ? rightTail : leftTail;
+    }
+
+    public void flatten(TreeNode root) {
+        if (root == null)
+            return;
+        flattern_(root);
+    }
+
+    Node dummy = new Node(-1);
+    Node prev = dummy;
+
+    public void treeToDoublyList_(Node root) {
+        if (root == null)
+            return;
+
+        treeToDoublyList_(root.left);
+
+        prev.right = root;
+        root.left = prev;
+
+        prev = root;
+
+        treeToDoublyList_(root.right);
+
+    }
+
+    public Node treeToDoublyList(Node root) {
+
+        if (root == null)
+            return root;
+        treeToDoublyList_(root);
+
+        Node head = dummy.right;
+        head.left = null;
+        dummy.right = null;
+
+        prev.right = head;
+        head.left = prev;
+        return head;
+
+    }
+
 }
