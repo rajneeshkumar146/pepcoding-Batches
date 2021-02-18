@@ -832,4 +832,69 @@ public class question {
         }
     }
 
+    // 1008
+    // lr -> left range, rr = right range
+    int bst_idx = 0;
+
+    public TreeNode constructBSTFromPreOrder(int[] arr, int lr, int rr) {
+        if (bst_idx == arr.length || arr[bst_idx] < lr || arr[bst_idx] > rr)
+            return null;
+
+        TreeNode node = new TreeNode(arr[bst_idx++]);
+        node.left = constructBSTFromPreOrder(arr, lr, node.val);
+        node.right = constructBSTFromPreOrder(arr, node.val, rr);
+
+        return node;
+    }
+
+    public TreeNode bstFromPreorder(int[] preorder) {
+        return constructBSTFromPreOrder(preorder, -(int) 1e8, (int) 1e8);
+    }
+
+    public class levelPair {
+        TreeNode par = null;
+        int lb = -(int) 1e8;
+        int rb = (int) 1e8;
+
+        levelPair() {
+
+        }
+
+        levelPair(TreeNode par, int lb, int rb) {
+            this.par = par;
+            this.lb = lb;
+            this.rb = rb;
+        }
+    }
+
+    public TreeNode constructBSTFromLevel(int[] arr) {
+        int idx = 0;
+        LinkedList<levelPair> que = new LinkedList<>();
+        que.add(new levelPair());
+        TreeNode root = null;
+
+        while (que.size() != 0 && idx < arr.length) {
+            levelPair pair = que.removeFirst();
+
+            if(arr[idx] < pair.lb || arr[idx] > pair.rb) continue;
+            
+            TreeNode node = new TreeNode(arr[idx++]);
+            if (pair.par == null)
+                root = node;
+            else {
+                if (node.val < pair.par.val)
+                    pair.par.left = node;
+                else
+                    pair.par.right = node;
+            }
+
+            que.addFirst(new levelPair(node, pair.lb, node.val));
+            que.addFirst(new levelPair(node, node.val, pair.rb));
+        }
+
+    }
+
+    
+
+
 }
