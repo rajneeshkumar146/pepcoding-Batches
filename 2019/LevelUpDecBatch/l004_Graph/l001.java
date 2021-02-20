@@ -59,6 +59,42 @@ public class l001 {
         }
     }
 
+    public static class heavyPair {
+        int weight = 0;
+        String path = "";
+
+        heavyPair(int weight, String path) {
+            this.weight = weight;
+            this.path = path;
+        }
+    }
+
+    // heavy Path -> print : path and weight
+
+    public static heavyPair heavyPath(int src, int dest, boolean[] vis) {
+        if (src == dest) {
+            heavyPair base = new heavyPair(0, dest + "");
+            return base;
+        }
+
+        vis[src] = true;
+
+        heavyPair myAns = new heavyPair(-(int) 1e8, "");
+
+        for (Edge e : graph[src]) {
+            if (!vis[e.v]) {
+                heavyPair recAns = heavyPath(e.v, dest, vis);
+                if (recAns.weight != -1e8 && recAns.weight + e.w > myAns.weight) {
+                    myAns.weight = recAns.weight + e.w;
+                    myAns.path = src + " " + recAns.path;
+                }
+            }
+        }
+
+        vis[src] = false;
+        return myAns;
+    }
+
     public static void constructGraph() {
         for (int i = 0; i < N; i++)
             graph[i] = new ArrayList<>();

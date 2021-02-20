@@ -71,15 +71,84 @@ void removeVtx(int u)
     }
 }
 
-bool hasPath(int src, int dest)
+bool hasPath(int src, int dest, vector<bool> &vis)
 {
+    if (src == dest)
+        return true;
+
+    vis[src] = true;
+    bool res = false;
+    for (Edge e : graph[src])
+    {
+        if (!vis[e.v])
+            res = res || hasPath(e.v, dest, vis);
+    }
+
+    return res;
 }
 
-int printAllPath(int src, int dest)
+int printAllPath(int src, int dest, vector<bool> &vis, string psf)
 {
+    if (src == dest)
+    {
+        cout << psf << dest << endl;
+        return 1;
+    }
+
+    int count = 0;
+    vis[src] = true;
+    for (Edge e : graph[src])
+    {
+        if (!vis[e.v])
+            count += printAllPath(e.v, dest, vis, psf + to_string(src) + " ");
+    }
+
+    vis[src] = false;
+    return count;
 }
+
+class heavyPair
+{
+public:
+    int weight = 0;
+    string path = "";
+
+    heavyPair(int weight, string path)
+    {
+        this->weight = weight;
+        this->path = path;
+    }
+};
 
 // heavy Path -> print : path and weight
+
+heavyPair heavyPath(int src, int dest, vector<bool> &vis)
+{
+    if (src == dest)
+    {
+        heavyPair base(0, to_string(dest));
+        return base;
+    }
+
+    vis[src] = true;
+    heavyPair myAns(-1e8, "");
+
+    for (Edge e : graph[src])
+    {
+        if (!vis[e.v])
+        {
+            heavyPair recAns = heavyPath(e.v, dest, vis);
+            if (recAns.weight != -1e8 && recAns.weight + e.w > myAns.weight)
+            {
+                myAns.weight = recAns.weight + e.w;
+                myAns.path = to_string(src) + " " +recAns.path;
+            }
+        }
+    }
+
+    vis[src] = false;
+    return myAns;
+}
 
 void constructGraph()
 {
@@ -101,5 +170,8 @@ void constructGraph()
 
 int main()
 {
+    constructGraph();
+    vector<bool> vis(N, false);
+    cout << printAllPath(0, 6, vis, "") << endl;
     return 0;
 }
