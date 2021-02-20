@@ -22,6 +22,36 @@ public class l001 {
         graph[v].add(new Edge(u, w));
     }
 
+    public static void display() {
+        for (int i = 0; i < N; i++) {
+            System.out.print(i + " -> ");
+            for (Edge e : graph[i]) {
+                System.out.print("(" + e.v + ", " + e.w + ") ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static int findEdge(int u, int v) {
+        int idx = -1;
+        for (int i = 0; i < graph[u].size(); i++) {
+            if (graph[u].get(i).v == v) {
+                idx = i;
+                break;
+            }
+        }
+
+        return idx;
+    }
+
+    public static void removeEdge(int u, int v) {
+        int idx1 = findEdge(u, v);
+        int idx2 = findEdge(v, u);
+
+        graph[u].remove(idx1);
+        graph[v].remove(idx2);
+    }
+
     public static void constructGraph() {
         for (int i = 0; i < N; i++)
             graph[i] = new ArrayList<>();
