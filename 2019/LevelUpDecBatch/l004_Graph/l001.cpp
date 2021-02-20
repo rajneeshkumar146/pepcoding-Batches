@@ -75,13 +75,11 @@ bool hasPath(int src, int dest)
 {
 }
 
-int printAllPath(int src,int dest){
-
+int printAllPath(int src, int dest)
+{
 }
 
 // heavy Path -> print : path and weight
-
-
 
 void constructGraph()
 {

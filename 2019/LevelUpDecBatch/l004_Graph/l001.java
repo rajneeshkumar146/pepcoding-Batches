@@ -52,6 +52,13 @@ public class l001 {
         graph[v].remove(idx2);
     }
 
+    public static void removeVtx(int u) {
+        for (int i = graph[u].size() - 1; i >= 0; i--) {
+            int v = graph[u].get(i).v;
+            removeEdge(u, v);
+        }
+    }
+
     public static void constructGraph() {
         for (int i = 0; i < N; i++)
             graph[i] = new ArrayList<>();
