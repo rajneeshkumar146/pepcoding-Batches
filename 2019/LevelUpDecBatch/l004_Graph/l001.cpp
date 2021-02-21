@@ -181,9 +181,36 @@ int hamintonialPathAndCycle(int src)
     cout << hamintonialPathAndCycle(src, src, 0, vis, "") << endl;
 }
 
-// get conected components 
-int gcc(){
+void dfs(int src, vector<bool> &vis, vector<int> &ans)
+{
+    vis[src] = true;
+    for (Edge e : graph[src])
+    {
+        if (!vis[e.v])
+            dfs(e.v, vis, ans);
+    }
 
+    ans.push_back(src);
+}
+
+// get conected components
+int gcc()
+{
+    vector<vector<int>> res;
+    vector<bool> vis(N, false);
+    int components = 0;
+    for (int i = 0; i < N; i++)
+    {
+        if (!vis[i])
+        {
+            vector<int> ans;
+            dfs(i, vis, ans);
+            res.push_back(ans);
+            components++;
+        }
+    }
+
+    return components;
 }
 
 void constructGraph()
