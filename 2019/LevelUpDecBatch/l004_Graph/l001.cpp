@@ -141,13 +141,49 @@ heavyPair heavyPath(int src, int dest, vector<bool> &vis)
             if (recAns.weight != -1e8 && recAns.weight + e.w > myAns.weight)
             {
                 myAns.weight = recAns.weight + e.w;
-                myAns.path = to_string(src) + " " +recAns.path;
+                myAns.path = to_string(src) + " " + recAns.path;
             }
         }
     }
 
     vis[src] = false;
     return myAns;
+}
+
+int hamintonialPathAndCycle(int src, int osrc, int totalNoEdges, vector<bool> &vis, string psf)
+{
+    if (totalNoEdges == N - 1)
+    {
+        int idx = findEdge(osrc, src);
+        if (idx != -1)
+            cout << "Cycle : " + psf + to_string(src);
+        else
+            cout << "Path : " + psf + to_string(src);
+        cout << endl;
+        return 1;
+    }
+
+    vis[src] = true;
+    int count = 0;
+    for (Edge e : graph[src])
+    {
+        if (!vis[e.v])
+            count += hamintonialPathAndCycle(e.v, osrc, totalNoEdges + 1, vis, psf + to_string(src) + " ");
+    }
+
+    vis[src] = false;
+    return count;
+}
+
+int hamintonialPathAndCycle(int src)
+{
+    vector<bool> vis(N, false);
+    cout << hamintonialPathAndCycle(src, src, 0, vis, "") << endl;
+}
+
+// get conected components 
+int gcc(){
+
 }
 
 void constructGraph()
@@ -162,16 +198,19 @@ void constructGraph()
     addEdge(0, 3, 10);
     addEdge(1, 2, 10);
     addEdge(2, 3, 40);
-    addEdge(3, 4, 2);
+    // addEdge(3, 4, 2);
     addEdge(4, 5, 2);
     addEdge(4, 6, 8);
     addEdge(5, 6, 3);
+
+    // addEdge(0, 6, 3);
 }
 
 int main()
 {
     constructGraph();
-    vector<bool> vis(N, false);
-    cout << printAllPath(0, 6, vis, "") << endl;
+    // vector<bool> vis(N, false);
+    // cout << printAllPath(0, 6, vis, "") << endl;
+    hamintonialPathAndCycle(0);
     return 0;
 }
