@@ -876,8 +876,9 @@ public class question {
         while (que.size() != 0 && idx < arr.length) {
             levelPair pair = que.removeFirst();
 
-            if(arr[idx] < pair.lb || arr[idx] > pair.rb) continue;
-            
+            if (arr[idx] < pair.lb || arr[idx] > pair.rb)
+                continue;
+
             TreeNode node = new TreeNode(arr[idx++]);
             if (pair.par == null)
                 root = node;
@@ -894,7 +895,62 @@ public class question {
 
     }
 
-    
+    // 230
+    public int kthSmallest(TreeNode root, int k) {
+        TreeNode curr = root;
+        while (curr != null) {
+            TreeNode next = curr.left;
 
+            if (next == null) {
+                if (k == 1)
+                    return curr.val;
+                k--;
+                curr = curr.right;
 
+            } else {
+                TreeNode rightMost = rightMostNode(next, curr);
+                if (rightMost.right == null) { // thread create
+                    rightMost.right = curr;
+                    curr = curr.left;
+                } else { // thread break
+                    rightMost.right = null;
+                    if (k == 1)
+                        return curr.val;
+                    k--;
+                    curr = curr.right;
+
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    // 437
+    int ans = 0;
+
+    public void pathSumIII(TreeNode node, HashMap<Integer, Integer> map, int tar, int prefixSum) {
+        if (node == null)
+            return;
+
+        prefixSum += node.val;
+        ans += map.getOrDefault(prefixSum - tar, 0);
+
+        map.put(prefixSum, map.getOrDefault(prefixSum, 0) + 1);
+
+        pathSumIII(node.left, map, tar, prefixSum);
+        pathSumIII(node.right, map, tar, prefixSum);
+
+        map.put(prefixSum, map.get(prefixSum) - 1);
+        if (map.get(prefixSum) == 0)
+            map.remove(prefixSum);
+    }
+
+    public int pathSum(TreeNode root, int K) {
+        // prefix sum , Frequency
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        pathSumIII(root, map, K, 0);
+        return ans;
+    }
 }
