@@ -953,4 +953,48 @@ public class question {
         pathSumIII(root, map, K, 0);
         return ans;
     }
+
+    public class pair {
+        TreeNode node = null;
+        long w = 0;
+
+        pair(TreeNode node, long w) {
+            this.node = node;
+            this.w = w;
+        }
+    }
+
+    // 662
+    public int widthOfBinaryTree(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        LinkedList<pair> que = new LinkedList<>();
+        que.addLast(new pair(root, 1));
+        int ans = 0;
+
+        while (que.size() != 0) {
+            int size = que.size();
+            long fi = que.getFirst().w;
+            long li = que.getFirst().w;
+
+            while (size-- > 0) {
+                pair p = que.removeFirst();
+
+                TreeNode node = p.node;
+                long w = p.w;
+                li = w;
+
+                if (node.left != null)
+                    que.addLast(new pair(node.left, 2 * w));
+                if (node.right != null)
+                    que.addLast(new pair(node.right, 2 * w + 1));
+
+            }
+
+            ans = Math.max(ans, (int) (li - fi + 1));
+        }
+
+        return ans;
+    }
 }
