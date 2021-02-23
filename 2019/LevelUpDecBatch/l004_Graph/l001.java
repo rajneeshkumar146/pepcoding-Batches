@@ -11,7 +11,7 @@ public class l001 {
         }
     }
 
-    static int N = 7;
+    static int N = 8;
 
     @SuppressWarnings("unchecked")
     // public static ArrayList<Edge>[] graph = new ArrayList[N];

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -16,7 +17,7 @@ public:
     }
 };
 
-const int N = 7;
+const int N = 8;
 vector<vector<Edge>> graph(N);
 
 void addEdge(int u, int v, int w)
@@ -213,6 +214,148 @@ int gcc()
     return components;
 }
 
+void BFS_Cycle(int src, vector<bool> &vis)
+{
+    queue<int> que;
+    que.push(src);
+
+    int dest = 6;
+    int atLevel = -1;
+
+    bool isCycle = false;
+    int level = 0;
+
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        cout << level << " -> ";
+        while (size-- > 0)
+        {
+            int rvtx = que.front();
+            que.pop();
+
+            cout << rvtx << " ";
+            if (vis[rvtx])
+            {
+                isCycle = true;
+                continue;
+            }
+
+            if (rvtx == dest)
+            {
+                atLevel = level;
+            }
+
+            vis[rvtx] = true;
+            for (Edge e : graph[rvtx])
+            {
+                if (!vis[e.v])
+                    que.push(e.v);
+            }
+        }
+        level++;
+        cout << endl;
+    }
+
+    cout << dest << " present at : " << atLevel << endl;
+    cout << "isCycle : " << (boolalpha) << isCycle << endl;
+}
+
+void BFS_shortestPath(int src, vector<bool> &vis)
+{
+    queue<int> que;
+    que.push(src);
+
+    int dest = 6;
+    int atLevel = -1;
+
+    int level = 0;
+    vis[src] = true;
+
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int rvtx = que.front();
+            que.pop();
+            for (Edge e : graph[rvtx])
+            {
+                if (!vis[e.v])
+                {
+                    vis[e.v] = true;
+                    que.push(e.v);
+                }
+
+                if (e.v == dest)
+                    atLevel = level + 1;
+            }
+        }
+        level++;
+    }
+
+    cout << dest << " present at : " << atLevel << endl;
+}
+
+void BFS_printshortestPath(int src, vector<bool> &vis)
+{
+    queue<int> que;
+    que.push(src);
+
+    int dest = 6;
+    int atLevel = -1;
+
+    int level = 0;
+    vis[src] = true;
+
+    vector<int> par(N, -1);
+
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int rvtx = que.front();
+            que.pop();
+            for (Edge e : graph[rvtx])
+            {
+                if (!vis[e.v])
+                {
+                    vis[e.v] = true;
+                    que.push(e.v);
+                    par[e.v] = rvtx;
+                }
+
+                if (e.v == dest)
+                    atLevel = level + 1;
+            }
+        }
+        level++;
+    }
+
+    cout << dest << " present at : " << atLevel << endl;
+    int idx = dest;
+    while (idx != -1)
+    {
+        cout << idx << " -> ";
+        idx = par[idx];
+    }
+}
+
+void BFS_GCC()
+{
+    vector<bool> vis(N, 0);
+    int components = 0;
+    for (int i = 0; i < N; i++)
+    {
+        if (!vis[i])
+        {
+            components++;
+            BFS_Cycle(i, vis);
+        }
+    }
+}
+
 void constructGraph()
 {
 
@@ -225,12 +368,15 @@ void constructGraph()
     addEdge(0, 3, 10);
     addEdge(1, 2, 10);
     addEdge(2, 3, 40);
-    // addEdge(3, 4, 2);
+    addEdge(3, 4, 2);
     addEdge(4, 5, 2);
     addEdge(4, 6, 8);
     addEdge(5, 6, 3);
 
     // addEdge(0, 6, 3);
+    addEdge(7, 2, 3);
+    addEdge(6, 2, 3);
+    addEdge(6, 7, 3);
 }
 
 int main()
@@ -238,6 +384,7 @@ int main()
     constructGraph();
     // vector<bool> vis(N, false);
     // cout << printAllPath(0, 6, vis, "") << endl;
-    hamintonialPathAndCycle(0);
+    // hamintonialPathAndCycle(0);
+    
     return 0;
 }
