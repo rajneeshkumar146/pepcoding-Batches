@@ -251,6 +251,7 @@ void BFS_Cycle(int src, vector<bool> &vis)
             {
                 if (!vis[e.v])
                     que.push(e.v);
+
             }
         }
         level++;
@@ -326,7 +327,7 @@ void BFS_printshortestPath(int src, vector<bool> &vis)
                     par[e.v] = rvtx;
                 }
 
-                if (e.v == dest)
+                if (atLevel == -1 && e.v == dest)
                     atLevel = level + 1;
             }
         }
@@ -351,10 +352,12 @@ void BFS_GCC()
         if (!vis[i])
         {
             components++;
-            BFS_Cycle(i, vis);
+            //BFS_Cycle(i, vis);
+            BFS_printshortestPath(i,vis);
         }
     }
 }
+
 
 void constructGraph()
 {
@@ -385,6 +388,6 @@ int main()
     // vector<bool> vis(N, false);
     // cout << printAllPath(0, 6, vis, "") << endl;
     // hamintonialPathAndCycle(0);
-    
+
     return 0;
 }
