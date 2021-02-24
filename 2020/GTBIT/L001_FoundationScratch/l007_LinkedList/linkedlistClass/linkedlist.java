@@ -21,19 +21,28 @@ public class linkedlist {
         return this.sizeOfLL;
     }
 
+    public void display() {
+        Node curr = this.head;
+        while (curr != null) {
+            System.out.print(curr.data + " -> ");
+            curr = curr.next;
+        }
+        System.out.println();
+    }
+
     // Exceptions
-    public void EmptyException() throws Exception {
+    private void EmptyException() throws Exception {
         if (this.sizeOfLL == 0) {
             throw new Exception("LinkedList is Empty: -1 pepcoding");
         }
     }
 
-    public void IndexOutOfBoundSizeExclusiveException(int idx) throws Exception {
+    private void IndexOutOfBoundSizeExclusiveException(int idx) throws Exception {
         if (idx < 0 || idx >= this.sizeOfLL)
             throw new Exception("Index Out Of Bound : -1");
     }
 
-    public void IndexOutOfBoundSizeInclusiveException(int idx) throws Exception {
+    private void IndexOutOfBoundSizeInclusiveException(int idx) throws Exception {
         if (idx < 0 || idx > this.sizeOfLL)
             throw new Exception("Index Out Of Bound : -1");
     }
@@ -52,10 +61,14 @@ public class linkedlist {
     }
 
     private Node getNodeAt(int idx) {
-
+        Node curr = this.head;
+        while (idx-- > 0) {
+            curr = curr.next;
+        }
+        return curr;
     }
 
-    public int getAt(int idx) {
+    public int getAt(int idx) throws Exception {
         IndexOutOfBoundSizeExclusiveException(idx);
         Node node = getNodeAt(idx);
         return node.data;
@@ -112,7 +125,7 @@ public class linkedlist {
         }
     }
 
-    public void addAt(int idx, int data) {
+    public void addAt(int idx, int data) throws Exception {
         IndexOutOfBoundSizeInclusiveException(idx);
         Node node = new Node(data);
         addAtNode(idx, node);
@@ -157,14 +170,36 @@ public class linkedlist {
 
     }
 
-    public int removeLast() {
+    public int removeLast() throws Exception {
         EmptyException();
         Node node = removeLastNode();
         return node.data;
     }
 
-    public int removeAt(int idx) {
+    private Node removeNodeAt(int idx) {
+        if (idx == 0)
+            return removeFirstNode();
+        else if (idx == this.sizeOfLL - 1)
+            return removeLastNode();
+        else {
+            Node prev = getNodeAt(idx - 1);
+            Node curr = prev.next;
+            Node forw = curr.next;
 
+            prev.next = forw;
+            curr.next = null;
+
+            this.sizeOfLL--;
+            return curr;
+        }
+
+    }
+
+    public int removeAt(int idx) throws Exception {
+        EmptyException();
+        IndexOutOfBoundSizeExclusiveException(idx);
+        Node node = removeNodeAt(idx);
+        return node.data;
     }
 
 }

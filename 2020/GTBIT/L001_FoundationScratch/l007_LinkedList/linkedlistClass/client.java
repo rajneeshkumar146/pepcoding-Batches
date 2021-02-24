@@ -1,16 +1,17 @@
-public class client{
-    public static void main(String[] args) throws Exception{
-        linkedlist ll1 = new linkedlist();
-        for(int i=0;i<10;i++) ll1.addFirst(i * 10);
+public class client {
+    public static void main(String[] args) throws Exception {
+        linkedlist ll = new linkedlist();
 
-        linkedlist ll2 = new linkedlist();
-        for(int i=0;i<10;i++) ll2.addFirst(i * 100);
+        for (int i = 1; i <= 10; i++) {
+            ll.addLast(i * 10);
+        }
 
-        linkedlist ll3 = new linkedlist();
-        for(int i=0;i<10;i++) ll3.addFirst(i * 1000);
+        ll.display();
 
-        linkedlist ll4 = new linkedlist();
-        for(int i=0;i<10;i++) ll4.addFirst(i * 20);
+        // System.out.println(ll.getLast());
 
     }
+
+
+
 }
