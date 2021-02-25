@@ -64,6 +64,45 @@ void topologicalOrder_DFS()
         cout << ele << " ";
 }
 
+void kahnsAlgo()
+{
+    vector<int> indegree(N, 0);
+    for (int i = 0; i < N; i++)
+        for (Edge e : graph[i])
+            indegree[e.v]++;
+
+    vector<int> ans;
+    queue<int> que;
+
+    for (int i = 0; i < N; i++)
+        if (indegree[i] == 0)
+            que.push(i);
+
+    int level = 0;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int rvtx = que.front();
+            que.pop();
+
+            ans.push_back(rvtx);
+
+            for (Edge e : graph[rvtx])
+            {
+                if (--indegree[e.v] == 0)
+                    que.push(e.v);
+            }
+        }
+
+        level++;
+    }
+
+    for (int ele : ans)
+        cout << ele << " ";
+}
+
 void constructGraph()
 {
     addEdge(5, 0, 10);
@@ -78,7 +117,7 @@ void constructGraph()
     addEdge(8, 9, 10);
     addEdge(9, 10, 10);
     addEdge(10, 3, 10);
-    
+
     topologicalOrder_DFS();
 }
 
