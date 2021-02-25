@@ -316,7 +316,6 @@ int orangesRotting(vector<vector<int>> &grid)
             int idx = que.front();
             que.pop();
 
-            
             int r = idx / m;
             int c = idx % m;
 
@@ -333,8 +332,6 @@ int orangesRotting(vector<vector<int>> &grid)
                         return time + 1;
                 }
             }
-
-
         }
 
         time++;
@@ -388,4 +385,46 @@ void wallsAndGates(vector<vector<int>> &rooms)
         }
         distance++;
     }
+}
+
+//207
+bool kahnsAlgo(int N, vector<vector<int>> &graph)
+{
+    vector<int> indegree(N, 0);
+    for (int i = 0; i < N; i++)
+        for (Edge e : graph[i])
+            indegree[e.v]++;
+
+    queue<int> que;
+    int count = 0;
+
+    for (int i = 0; i < N; i++)
+        if (indegree[i] == 0)
+            que.push(i);
+
+    int level = 0;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int rvtx = que.front();
+            que.pop();
+
+            count++;
+            for (Edge e : graph[rvtx])
+            {
+                if (--indegree[e.v] == 0)
+                    que.push(e.v);
+            }
+        }
+
+        level++;
+    }
+
+    return count == N;
+}
+
+bool canFinish(int numCourses, vector<vector<int>> &prerequisites)
+{
 }
