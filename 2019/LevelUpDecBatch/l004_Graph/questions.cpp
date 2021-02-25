@@ -283,3 +283,109 @@ bool isBipartite(vector<vector<int>> &graph)
 
     return res;
 }
+
+//994
+int orangesRotting(vector<vector<int>> &grid)
+{
+
+    int n = grid.size();
+    int m = grid[0].size();
+
+    queue<int> que;
+    vector<vector<int>> dir = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
+    int time = 0, freshOranges = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (grid[i][j] == 2)
+                que.push(i * m + j);
+            else if (grid[i][j] == 1)
+                freshOranges++;
+        }
+    }
+
+    if (freshOranges == 0)
+        return 0;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int idx = que.front();
+            que.pop();
+
+            
+            int r = idx / m;
+            int c = idx % m;
+
+            for (int d = 0; d < 4; d++)
+            {
+                int x = r + dir[d][0];
+                int y = c + dir[d][1];
+                if (x >= 0 && y >= 0 && x < n && y < m && grid[x][y] == 1)
+                {
+                    freshOranges--;
+                    grid[x][y] = 2;
+                    que.push(x * m + y);
+                    if (freshOranges == 0)
+                        return time + 1;
+                }
+            }
+
+
+        }
+
+        time++;
+    }
+
+    return -1;
+}
+
+//286
+void wallsAndGates(vector<vector<int>> &rooms)
+{
+
+    int n = rooms.size();
+    int m = rooms[0].size();
+
+    vector<vector<int>> dir = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
+
+    queue<int> que;
+    int countOfRooms = 0, distance = 0;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++)
+            if (rooms[i][j] == 0) // gates
+                que.push(i * m + j);
+            else if (rooms[i][j] == 2147483647)
+                countOfRooms++;
+
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int idx = que.front();
+            que.pop();
+            int r = idx / m;
+            int c = idx % m;
+
+            for (int d = 0; d < 4; d++)
+            {
+                int x = r + dir[d][0];
+                int y = c + dir[d][1];
+                if (x >= 0 && y >= 0 && x < n && y < m && rooms[x][y] == 2147483647)
+                {
+                    countOfRooms--;
+                    rooms[x][y] = distance + 1;
+                    que.push(x * m + y);
+
+                    if (countOfRooms == 0)
+                        return;
+                }
+            }
+        }
+        distance++;
+    }
+}
