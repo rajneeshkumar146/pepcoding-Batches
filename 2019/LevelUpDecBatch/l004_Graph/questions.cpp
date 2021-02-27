@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 
@@ -387,17 +388,15 @@ void wallsAndGates(vector<vector<int>> &rooms)
     }
 }
 
-//207
-bool kahnsAlgo(int N, vector<vector<int>> &graph)
+vector<int> kahnsAlgo(int N, vector<vector<int>> &graph)
 {
     vector<int> indegree(N, 0);
     for (int i = 0; i < N; i++)
-        for (Edge e : graph[i])
-            indegree[e.v]++;
+        for (int e : graph[i])
+            indegree[e]++;
 
     queue<int> que;
-    int count = 0;
-
+    vector<int> ans;
     for (int i = 0; i < N; i++)
         if (indegree[i] == 0)
             que.push(i);
@@ -411,20 +410,173 @@ bool kahnsAlgo(int N, vector<vector<int>> &graph)
             int rvtx = que.front();
             que.pop();
 
-            count++;
-            for (Edge e : graph[rvtx])
+            ans.push_back(rvtx);
+            for (int e : graph[rvtx])
             {
-                if (--indegree[e.v] == 0)
-                    que.push(e.v);
+                if (--indegree[e] == 0)
+                    que.push(e);
             }
         }
 
         level++;
     }
 
-    return count == N;
+    return ans;
 }
 
-bool canFinish(int numCourses, vector<vector<int>> &prerequisites)
+bool canFinish(int N, vector<vector<int>> &arr)
 {
+
+    vector<vector<int>> graph(N);
+    for (vector<int> ar : arr)
+    {
+        graph[ar[0]].push_back(ar[1]);
+    }
+
+    return kahnsAlgo(N, graph).size() == N;
+}
+
+//210
+vector<int> findOrder(int N, vector<vector<int>> &arr)
+{
+    vector<vector<int>> graph(N);
+    for (vector<int> ar : arr)
+    {
+        graph[ar[0]].push_back(ar[1]);
+    }
+
+    vector<int> ans = kahnsAlgo(N, graph);
+    if (ans.size() != N)
+        return {};
+    reverse(ans.begin(), ans.end());
+    return ans;
+}
+
+// 207
+bool isCyclePresent_DFSTopo(int src, vector<int> &vis, vector<vector<int>> &graph)
+{
+    vis[src] = 0;
+    bool res = false;
+    for (int v : graph[src])
+    {
+        if (vis[v] == -1) // unvisited
+            res = res || isCyclePresent_DFSTopo(v, vis, graph);
+        else if (vis[v] == 0)
+            return true; // there is cycle.
+    }
+
+    vis[src] = 1;
+    return res;
+}
+
+bool canFinish(int N, vector<vector<int>> &arr)
+{
+    vector<vector<int>> graph(N);
+    for (vector<int> ar : arr)
+    {
+        graph[ar[0]].push_back(ar[1]);
+    }
+    vector<int> vis(N, -1);
+
+    bool res = false;
+    for (int i = 0; i < N; i++)
+    {
+        if (vis[i] == -1)
+        {
+            if (isCyclePresent_DFSTopo(i, vis, graph))
+                return false;
+        }
+    }
+
+    return true;
+}
+
+// 210
+bool isCyclePresent_DFSTopo(int src, vector<int> &vis, vector<int> &ans, vector<vector<int>> &graph)
+{
+    vis[src] = 0;
+    bool res = false;
+    for (int v : graph[src])
+    {
+        if (vis[v] == -1) // unvisited
+            res = res || isCyclePresent_DFSTopo(v, vis, ans, graph);
+        else if (vis[v] == 0)
+            return true; // there is cycle.
+    }
+
+    vis[src] = 1;
+    ans.push_back(src);
+    return res;
+}
+
+vector<int> findOrder(int N, vector<vector<int>> &arr)
+{
+    vector<vector<int>> graph(N);
+    for (vector<int> ar : arr)
+    {
+        graph[ar[0]].push_back(ar[1]);
+    }
+    vector<int> vis(N, -1);
+    vector<int> ans;
+
+    bool res = false;
+    for (int i = 0; i < N; i++)
+        if (vis[i] == -1)
+            res = res || isCyclePresent_DFSTopo(i, vis, ans, graph);
+
+    if (res)
+        ans.clear();
+    return ans;
+}
+
+int longestIncreasingPath(vector<vector<int>> &matrix)
+{
+    int n = matrix.size();
+    int m = matrix[0].size();
+    vector<vector<int>> indegree(n, vector<int>(m, 0));
+
+    vector<vector<int>> dir = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++)
+            for (int d = 0; d < 4; d++)
+            {
+                int x = i + dir[d][0];
+                int y = j + dir[d][1];
+
+                if (x >= 0 && y >= 0 && x < n && y < m && matrix[x][y] > matrix[i][j])
+                    indegree[x][y]++;
+            }
+
+    queue<int> que;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < m; j++)
+            if (indegree[i][j] == 0)
+                que.push(i * m + j);
+
+    int level = 0;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int idx = que.front();
+            que.pop();
+            int r = idx / m;
+            int c = idx % m;
+
+            for (int d = 0; d < 4; d++)
+            {
+                int x = r + dir[d][0];
+                int y = c + dir[d][1];
+
+                if (x >= 0 && y >= 0 && x < n && y < m && matrix[x][y] > matrix[r][c] && --indegree[x][y] == 0)
+                    que.push(x * m + y);
+            }
+        }
+
+        level++;
+    }
+
+    return level;
 }

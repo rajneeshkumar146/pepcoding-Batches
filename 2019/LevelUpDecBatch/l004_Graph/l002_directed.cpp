@@ -103,6 +103,46 @@ void kahnsAlgo()
         cout << ele << " ";
 }
 
+bool isCyclePresent_DFSTopo(int src, vector<int> &vis, vector<int> &ans)
+{
+    vis[src] = 0;
+    bool res = false;
+    for (Edge e : graph[src])
+    {
+        if (vis[e.v] == -1)
+        { // unvisited
+            res = res || isCyclePresent_DFSTopo(e.v, vis, ans);
+        }
+        else if (vis[e.v] == 0)
+        {
+            return true; // there is cycle.
+        }
+    }
+
+    vis[src] = 1;
+    ans.push_back(src);
+    return res;
+}
+
+vector<int> isCyclePresent_DFS()
+{
+    vector<int> vis(N, -1);
+    vector<int> ans;
+
+    bool res = false;
+    for (int i = 0; i < N; i++)
+    {
+        if (vis[i] == -1)
+        {
+            res = res || isCyclePresent_DFSTopo(i, vis, ans);
+        }
+    }
+
+    if (res)
+        ans.clear();
+    return ans;
+}
+
 void constructGraph()
 {
     addEdge(5, 0, 10);
