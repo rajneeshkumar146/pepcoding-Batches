@@ -49,6 +49,29 @@ public class questions {
         return -1;
     }
 
-    
+    int[] par;
+    int findPar(int u) {
+        return par[u] == -1 ? u : (par[u] = findPar(par[u]));
+    }
+
+    public int[] findRedundantConnection(int[][] edges) {
+        int N = edges.length + 1;
+        par = new int[N];
+        Arrays.fill(par, -1);
+
+        for (int[] edge : edges) {
+            int p1 = findPar(edge[0]);
+            int p2 = findPar(edge[1]);
+
+            if (p1 != p2)
+                par[p1] = p2;
+            else
+                return edge;
+
+        }
+
+        return new int[0];
+
+    }
 
 }
