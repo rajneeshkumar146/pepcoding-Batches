@@ -98,13 +98,37 @@ public class l001 {
         return Math.min(Math.min(leftMax, rightMax), root.data);
     }
 
-    public static int sum(Node root){
+    public static int sum(Node root) {
+        if (root == null)
+            return 0;
 
+        int leftSum = sum(root.left);
+        int rightSum = sum(root.right);
 
+        return leftSum + root.data + rightSum;
     }
 
-    public static boolean findData(Node root,int data){
+    public static boolean findData(Node root, int data) {
+        if (root == null)
+            return false;
 
+        return root.data == data || findData(root.left, data) || findData(root.right, data);
+    }
+
+    public static boolean findData2(Node root, int data) {
+        if (root == null)
+            return false;
+
+        if (root.data == data)
+            return true;
+
+        boolean left = findData(root.left, data);
+        if(left) return true;
+        
+        boolean right = findData(root.right, data);
+        if(right) return true;
+        
+        return false;
     }
 
 }
