@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class l001 {
 
     public static class Node {
@@ -123,12 +125,37 @@ public class l001 {
             return true;
 
         boolean left = findData(root.left, data);
-        if(left) return true;
-        
+        if (left)
+            return true;
+
         boolean right = findData(root.right, data);
-        if(right) return true;
-        
+        if (right)
+            return true;
+
         return false;
+    }
+
+    public static boolean rootToNodePath(Node root, int data, ArrayList<Node> ans) {
+        if (root == null)
+            return false;
+        boolean res = (root.data == data) || rootToNodePath(root.left, data, ans)
+                || rootToNodePath(root.right, data, ans);
+
+        if (res)
+            ans.add(root);
+        return res;
+    }
+
+    public static void printAtKDepth(Node root, int k, ArrayList<Integer> ans) {
+        if(root == null || k < 0) return;
+
+        if(k == 0){
+            ans.add(root.data);
+            return;
+        }
+
+        printAtKDepth(root.left, k - 1, ans);
+        printAtKDepth(root.right, k - 1, ans);
     }
 
 }

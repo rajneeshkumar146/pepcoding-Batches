@@ -17,7 +17,6 @@ public:
 };
 
 // Traversal Of Tree
-
 void preOrderTraversal(Node *root, vector<int> &ans)
 {
     if (root == nullptr)
