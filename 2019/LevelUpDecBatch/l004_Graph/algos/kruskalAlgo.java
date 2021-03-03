@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class unionfind {
+public class kruskalAlgo {
 
     public static class Edge {
         int v = 0;
@@ -65,7 +65,6 @@ public class unionfind {
             par[i] = i;
         }
 
-        boolean cycle = false;
         for (int[] edge : Edges) {
             int u = edge[0], v = edge[1], w = edge[2];
             int p1 = findPar(u);
@@ -74,14 +73,28 @@ public class unionfind {
             if (p1 != p2) {
                 merge(p1, p2);
                 addEdge(graph, u, v, w);
-            } else
-                cycle = true;
+            }
         }
 
         display(N, graph);
-        System.out.println(cycle);
     }
 
-    
+    public static void solve() {
+        int N = 9;
+        int[][] edges = { { 0, 1, 4 }, { 0, 7, 8 } };
+
+        // default behaviour is increasing order.
+        Arrays.sort(edges, (a, b) -> {
+            return a[2] - b[2]; // this - other, default behaviour.
+            // return b[2] - a[2]; // other - this, reverse of default behaviour.
+        });
+
+        unionFind(N, edges);
+
+    }
+
+    public static void main(String[] args) {
+        solve();
+    }
 
 }
