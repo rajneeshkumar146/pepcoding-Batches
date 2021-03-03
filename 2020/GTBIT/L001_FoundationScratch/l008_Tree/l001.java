@@ -146,16 +146,55 @@ public class l001 {
         return res;
     }
 
-    public static void printAtKDepth(Node root, int k, ArrayList<Integer> ans) {
-        if(root == null || k < 0) return;
+    public static void printAtDepthK(Node root, Node block, int k, ArrayList<Integer> ans) {
+        if (root == null || root == block || k < 0)
+            return;
 
-        if(k == 0){
+        if (k == 0) {
             ans.add(root.data);
             return;
         }
 
-        printAtKDepth(root.left, k - 1, ans);
-        printAtKDepth(root.right, k - 1, ans);
+        printAtDepthK(root.left, block, k - 1, ans);
+        printAtDepthK(root.right, block, k - 1, ans);
+    }
+
+    public ArrayList<Integer> distanceK(Node root, Node target, int k) {
+        ArrayList<Node> path = new ArrayList<>();
+        rootToNodePath(root, target.data, path);
+
+        Node block = null;
+        ArrayList<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < path.size(); i++) {
+            printAtDepthK(path.get(i), block, k - i, ans);
+            block = path.get(i);
+        }
+
+        return ans;
+    }
+
+    public static void printSingleChildNodes(Node node, Node parent) {
+        if (node == null)
+            return;
+        if (parent != null && (parent.left == null || parent.right == null)) {
+            System.out.println(node.data);
+        }
+
+        printSingleChildNodes(node.left, node);
+        printSingleChildNodes(node.right, node);
+    }
+
+    public static Node removeLeaves(Node node){
+        if(node == null) return null;
+        if(node.left == null && node.right == null) return null;
+        
+        node.left = removeLeaves(node.left);
+        node.right = removeLeaves(node.right);
+        return node; 
+    }
+
+    public static void removeLeaves(Node node,??){
+         
     }
 
 }
