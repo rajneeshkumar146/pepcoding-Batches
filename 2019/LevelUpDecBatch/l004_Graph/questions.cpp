@@ -772,3 +772,130 @@ vector<int> numIslands2(int m, int n, vector<vector<int>> &positions)
 
     return ans;
 }
+
+vector<int> par;
+int minCostToSupplyWater_(int N, vector<vector<int>> &Edges)
+{
+
+    for (int i = 0; i <= N; i++)
+    {
+        par.push_back(i);
+    }
+
+    int cost = 0;
+
+    for (vector<int> &edge : Edges)
+    {
+        int u = edge[0], v = edge[1], w = edge[2];
+        int p1 = findPar(u);
+        int p2 = findPar(v);
+
+        if (p1 != p2)
+        {
+            par[p1] = p2;
+            cost += w;
+        }
+    }
+
+    return cost;
+}
+
+int minCostToSupplyWater(int n, vector<int> &wells, vector<vector<int>> &pipes)
+{
+    for (int i = 0; i < wells.size(); i++)
+    {
+        pipes.push_back({0, i + 1, wells[i]});
+    }
+
+    sort(pipes.begin(), pipes.end(), [](vector<int> &a, vector<int> &b) {
+        return a[2] < b[2];
+    });
+
+    return minCostToSupplyWater_(n, pipes);
+}
+
+int numIslands(vector<vector<char>> &grid)
+{
+    int n = grid.size();
+    int m = grid[0].size();
+
+    for (int i = 0; i < n * m; i++)
+        par.push_back(i);
+
+    int oncesCount = 0;
+    vector<vector<int>> dir{{1, 0}, {0, 1}};
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (grid[i][j] == '1')
+            {
+                oncesCount++;
+                int p1 = findPar(i * m + j);
+                for (int d = 0; d < 2; d++)
+                {
+                    int x = i + dir[d][0];
+                    int y = j + dir[d][1];
+
+                    if (x >= 0 && y >= 0 && x < n && y < m && grid[x][y] == '1')
+                    {
+                        int p2 = findPar(x * m + y);
+                        if (p1 != p2)
+                        {
+                            par[p2] = p1;
+                            oncesCount--;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return oncesCount;
+}
+
+int maxAreaOfIsland(vector<vector<int>> &grid)
+{
+
+    int n = grid.size();
+    int m = grid[0].size();
+
+    for (int i = 0; i < n * m; i++)
+        par.push_back(i);
+
+    vector<int> componentSize(n * m, 1);
+    int maxArea = 0;
+
+    vector<vector<int>> dir{{1, 0}, {0, 1}};
+
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (grid[i][j] == 1)
+            {
+                int p1 = findPar(i * m + j);
+                for (int d = 0; d < 2; d++)
+                {
+                    int x = i + dir[d][0];
+                    int y = j + dir[d][1];
+
+                    if (x >= 0 && y >= 0 && x < n && y < m && grid[x][y] == 1)
+                    {
+                        int p2 = findPar(x * m + y);
+                        if (p1 != p2)
+                        {
+                            par[p2] = p1;
+                            componentSize[p1] += componentSize[p2];
+                        }
+                    }
+                    maxArea = max(maxArea, componentSize[p1]);
+                }
+            }
+            else
+                componentSize[i * m + j] = 0;
+        }
+    }
+
+    return maxArea;
+}

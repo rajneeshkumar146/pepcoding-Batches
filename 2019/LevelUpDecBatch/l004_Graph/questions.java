@@ -1,4 +1,6 @@
 import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class questions {
 
@@ -111,6 +113,42 @@ public class questions {
         }
 
         return count;
+    }
+
+    public int minCostToSupplyWater(int N, ArrayList<int[]> Edges) {
+        par = new int[N + 1];
+        for (int i = 0; i <= N; i++) {
+            par[i] = i;
+        }
+
+        int cost = 0;
+        for (int[] edge : Edges) {
+            int u = edge[0], v = edge[1], w = edge[2];
+            int p1 = findPar(u);
+            int p2 = findPar(v);
+
+            if (p1 != p2) {
+                par[p1] = p2;
+                cost += w;
+            }
+        }
+        return cost;
+    }
+
+    public int minCostToSupplyWater(int n, int[] wells, int[][] pipes) {
+        ArrayList<int[]> PIPES = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            PIPES.add(new int[] { 0, i + 1, wells[i] });
+        }
+
+        for (int[] p : pipes)
+            PIPES.add(p);
+
+        Collections.sort(PIPES, (a, b) -> {
+            return a[2] - b[2];
+        });
+
+        return minCostToSupplyWater(n, PIPES);
     }
 
 }

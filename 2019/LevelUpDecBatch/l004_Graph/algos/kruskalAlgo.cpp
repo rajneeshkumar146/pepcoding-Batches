@@ -103,7 +103,7 @@ void solve()
         return a[2] < b[2]; // this - other of java replaced as this < other.
     });
 
-    unionFind(N,edges);
+    unionFind(N, edges);
 }
 
 int main()
