@@ -115,7 +115,7 @@ public class prims {
         int[] dis = new int[N];
         int[] par = new int[N];
 
-        Arrays.fill(dis, (int) 1e9);
+        Arrays.fill(dis, (int) 1e9);   // vector<int> dis(N,1e9);
         Arrays.fill(par, -1);
 
         for (int i = 0; i < N; i++) {
