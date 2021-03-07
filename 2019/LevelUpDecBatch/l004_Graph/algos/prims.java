@@ -106,6 +106,8 @@ public class prims {
                 }
             }
         }
+
+        display(N, MST);
     }
 
     public static void prims(int N, ArrayList<Edge>[] graph) {
@@ -115,6 +117,15 @@ public class prims {
 
         Arrays.fill(dis, (int) 1e9);
         Arrays.fill(par, -1);
+
+        for (int i = 0; i < N; i++) {
+            if (!vis[i])
+                primsAlgo_02(i, N, vis, dis, par, graph);
+        }
+    }
+
+    public static void main(String[] args) {
+
     }
 
 }
