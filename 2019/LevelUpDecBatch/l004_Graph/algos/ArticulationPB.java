@@ -50,6 +50,9 @@ public class ArticulationPB {
                     isAP[src] = true;
                 }
 
+                if (dis[src] < low[nbr])
+                    System.out.println("AP Edge: " + src + " -> " + nbr);
+
                 low[src] = Math.min(low[src], low[nbr]);
 
             } else if (nbr != par) {
@@ -62,7 +65,7 @@ public class ArticulationPB {
         low = new int[N];
         dis = new int[N];
         vis = new boolean[N];
-       
+
         AP = new int[N];
         isAP = new boolean[N];
 
