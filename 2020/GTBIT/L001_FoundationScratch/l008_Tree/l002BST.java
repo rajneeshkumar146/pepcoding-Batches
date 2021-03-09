@@ -74,4 +74,58 @@ public class l002BST {
         return false;
     }
 
+    public static Node addData(Node node, int data) {
+        if (node == null)
+            return new Node(data);
+
+        if (node.data < data)
+            node.right = addData(node.right, data);
+        else
+            node.left = addData(node.left, data);
+
+        return node;
+    }
+
+    public static Node addData_Itr(Node node, int data) {
+        if (node == null)
+            return new Node(data);
+
+        Node curr = node;
+        Node dNode = new Node(data);
+        while (true) {
+            if (curr.data == data)
+                break;
+            else if (curr.data < data) {
+                if (curr.right != null)
+                    curr = curr.right;
+                else {
+                    curr.right = dNode;
+                    break;
+                }
+            } else {
+                if (curr.left != null)
+                    curr = curr.left;
+                else {
+                    curr.left = dNode;
+                    break;
+                }
+            }
+        }
+
+        return node;
+    }
+
+    public static Node LCA(Node node, int p, int q) {
+        Node curr = node;
+        while (curr != null) {
+            if (curr.data < p && curr.data < q)
+                curr = curr.right;
+            else if (curr.data > p && curr.data > q)
+                curr = curr.left;
+            else
+                return (find(curr, p) && find(curr, q)) ? curr : null;
+        }
+        return null;
+    }
+
 }
