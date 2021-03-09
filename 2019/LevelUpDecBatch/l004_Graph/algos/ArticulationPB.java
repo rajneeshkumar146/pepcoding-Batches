@@ -61,8 +61,9 @@ public class ArticulationPB {
     public static void ArticulationPointsAndBridges(int N, ArrayList<Integer>[] graph) {
         low = new int[N];
         dis = new int[N];
-        AP = new int[N];
         vis = new boolean[N];
+       
+        AP = new int[N];
         isAP = new boolean[N];
 
         int components = 0;
