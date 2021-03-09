@@ -22,31 +22,56 @@ public class l002BST {
         return node;
     }
 
-    public static Node constructTree(int[] arr){
+    public static Node constructTree(int[] arr) {
         return constructTree(arr, 0, arr.length - 1);
     }
 
-    public static int size(Node node){
+    public static int size(Node node) {
+        return node == null ? 0 : size(node.left) + size(node.right) + 1;
 
     }
 
-    public static int height(Node node){
-
+    public static int height(Node node) {
+        return node == null ? -1 : Math.max(height(node.left), height(node.right));
     }
 
-    public static int maximum(Node node){
+    public static int maximum(Node node) {
+        Node curr = node;
+        while (curr.right != null) {
+            curr = curr.right;
+        }
 
+        return curr.data;
     }
 
-    public static int minimum(Node node){
-
+    public static int maximumRec(Node node) {
+        if (node.right == null)
+            return node.data;
+        return maximumRec(node.right);
     }
 
-    public static boolean find(Node node,int data){
+    public static int minimum(Node node) {
+        Node curr = node;
+        while (curr.left != null) {
+            curr = curr.left;
+        }
 
+        return curr.data;
     }
 
+    public static boolean find(Node node, int data) {
+        Node curr = node;
 
+        while (curr != null) {
+            if (curr.data == data)
+                return true;
+            else if (curr.data < data)
+                curr = curr.right;
+            else
+                curr = curr.left;
+        }
 
+        return false;
+    }
 
 }
