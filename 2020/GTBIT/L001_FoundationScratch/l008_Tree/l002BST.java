@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class l002BST {
     public static class Node {
         int data = 0;
@@ -126,6 +128,56 @@ public class l002BST {
                 return (find(curr, p) && find(curr, q)) ? curr : null;
         }
         return null;
+    }
+
+    public static Node removeNode(Node node, int data) {
+        if (node == null)
+            return null;
+
+        if (node.data < data)
+            node.right = removeNode(node.right, data);
+        else if (node.data > data)
+            node.left = removeNode(node.left, data);
+        else {
+            if (node.left == null || node.right == null)
+                return node.left != null ? node.left : node.right;
+
+            int minData = minimum(node.right);
+            node.data = minData;
+            node.right = removeNode(node.right, minData);
+        }
+
+        return node;
+    }
+
+    public static void inOrder(Node node, ArrayList<Integer> list) {
+        if (node == null)
+            return;
+
+        inOrder(node.left, list);
+        list.add(node.data);
+        inOrder(node.right, list);
+
+    }
+
+    public static void targetSum(Node node, int tar) {
+        ArrayList<Integer> list = new ArrayList<>();
+        inOrder(node, list);
+
+        int i = 0, j = list.size() - 1;
+        while (i < j) {
+            int sum = list.get(i) + list.get(j);
+            if (sum < tar)
+                i++;
+            else if (sum > tar)
+                j--;
+            else {
+                System.out.println(list.get(i) + " " + list.get(j));
+                i++;
+                j--;
+            }
+        }
+
     }
 
 }
