@@ -202,6 +202,71 @@ public class questions {
 
     }
 
-    
+    public int findCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
+        int[] dis = new int[n];
+        Arrays.fill(dis, (int) 1e9);
+        dis[src] = 0;
+
+        for (int EdgeCount = 1; EdgeCount <= K + 1; EdgeCount++) {
+            int[] ndis = new int[n];
+            for (int i = 0; i < n; i++)
+                ndis[i] = dis[i];
+
+            for (int[] e : flights) {
+                int u = e[0], v = e[1], w = e[2];
+                if (dis[u] != (int) 1e9 && dis[u] + w < ndis[v])
+                    ndis[v] = dis[u] + w;
+            }
+
+            dis = ndis;
+        }
+
+        return dis[dst] != (int) 1e9 ? dis[dst] : -1;
+    }
+
+    // 924
+    public int minMalwareSpread(int[][] graph, int[] initial) {
+        int n = graph.length;
+        size = new int[n];
+        par = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            par[i] = i;
+            size[i] = 1;
+        }
+
+        Arrays.sort(initial);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i != j && graph[i][j] == 1) {
+                    int p1 = findPar(i);
+                    int p2 = findPar(j);
+
+                    if (p1 != p2) {
+                        par[p1] = p2;
+                        size[p2] += size[p1];
+                    }
+                }
+            }
+        }
+
+        int[] InfectedNodesInCity = new int[n];
+        for (int i : initial) {
+            int leader = findPar(i);
+            InfectedNodesInCity[leader]++;
+        }
+
+        int ans = initial[0];
+        int maxPopulatedCity = 0;
+        for (int i : initial) {
+            int NoOfNodesInfected = InfectedNodesInCity[findPar(i)];
+            if (NoOfNodesInfected == 1 && size[findPar(i)] > maxPopulatedCity) {
+                maxPopulatedCity = size[findPar(i)];
+                ans = i;
+            }
+        }
+
+        return ans;
+    }
 
 }
