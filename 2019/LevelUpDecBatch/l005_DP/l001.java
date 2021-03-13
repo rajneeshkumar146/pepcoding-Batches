@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.LinkedList;
 
 public class l001 {
 
@@ -166,9 +167,72 @@ public class l001 {
         print2D(dp);
     }
 
+    public static int boardPath_memo(int sp, int ep, int[] dp) {
+        if (sp == ep) {
+            return dp[sp] = 1;
+        }
+
+        if (dp[sp] != 0)
+            return dp[sp];
+
+        int count = 0;
+        for (int dice = 1; dice <= 6 && sp + dice <= ep; dice++) {
+            count += boardPath_memo(sp + dice, ep, dp);
+        }
+
+        return dp[sp] = count;
+    }
+
+    public static int boardPath_DP(int SP, int ep, int[] dp) {
+        for (int sp = ep; sp >= SP; sp--) {
+            if (sp == ep) {
+                dp[sp] = 1;
+                continue;
+            }
+
+            int count = 0;
+            for (int dice = 1; dice <= 6 && sp + dice <= ep; dice++) {
+                count += dp[sp + dice];// boardPath_memo(sp + dice, ep, dp);
+            }
+
+            dp[sp] = count;
+        }
+
+        return dp[SP];
+    }
+
+    public static int boardPath_opti(int sp, int ep) {
+        LinkedList<Integer> list = new LinkedList<>();
+
+        for (sp = ep; sp >= 0; sp--) {
+            if (sp >= ep - 1)
+                list.addFirst(1);
+            else {
+                if (list.size() <= 6)
+                    list.addFirst(list.getFirst() * 2);
+                else
+                    list.addFirst(list.getFirst() * 2 - list.removeLast());
+            }
+        }
+
+        return list.getFirst();
+
+    }
+
+    public static void boardPath() {
+        int n = 10;
+        int[] dp = new int[n + 1];
+        // System.out.println(boardPath_memo(0, n, dp));
+        System.out.println(boardPath_DP(0, n, dp));
+        System.out.println(boardPath_opti(0,n));
+
+        print1D(dp);
+    }
+
     public static void main(String[] args) {
         // fibo();
-        mazePath();
+        // mazePath();
+        boardPath();
     }
 
 }
