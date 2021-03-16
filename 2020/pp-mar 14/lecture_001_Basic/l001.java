@@ -54,16 +54,22 @@ public class l001 {
     }
 
     public static void printTable(int num) {
-        int multiply = 0;
         for (int i = 1; i <= 10; i++) {
-            multiply = num * i;
+            int multiply = num * i;
             System.out.println(num + " X " + i + " = " + multiply);
         }
     }
 
+    public static void printAllTables(int n) {
+        for (int i = 1; i <= n; i++) {
+            printTable(i);
+            System.out.println();
+        }
+    }
+
     public static void main(String[] args) {
-        int num = scn.nextInt();
-        printTable(num);
+        int n = scn.nextInt();
+        printAllTables(n);
     }
 
 }
