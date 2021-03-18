@@ -480,13 +480,13 @@ public class l001_twoPointer {
             }
 
             int count = 0;
-            count += dp[idx + 1];// numDecodings(s, idx + 1, dp);
+            count += a;// numDecodings(s, idx + 1, dp);
 
             if (idx < s.length() - 1) {
                 char ch2 = s.charAt(idx + 1);
                 int num = (ch1 - '0') * 10 + (ch2 - '0');
                 if (num <= 26)
-                    count += dp[idx + 2];// numDecodings(s, idx + 2, dp);
+                    count += b;// numDecodings(s, idx + 2, dp);
             }
             dp[idx] = count;
         }
@@ -549,11 +549,11 @@ public class l001_twoPointer {
             if (idx < s.length() - 1) {
                 char ch2 = s.charAt(idx + 1);
                 if (ch2 == '*')
-                    count = (count + 15 * dp[idx + 2]) % mod;
+                    count = (count + 15 * b) % mod;
                 else if (ch2 >= '0' && ch2 <= '6')
-                    count = (count + 2 * dp[idx + 2]) % mod;
+                    count = (count + 2 * b) % mod;
                 else if (ch2 > '6')
-                    count = (count + dp[idx + 2]) % mod;
+                    count = (count + b) % mod;
 
             }
         } else {
@@ -563,12 +563,12 @@ public class l001_twoPointer {
                     char ch2 = s.charAt(idx + 1);
                     int num = (ch1 - '0') * 10 + (ch2 - '0');
                     if (num <= 26)
-                        count = (count + dp[idx + 2]) % mod;
+                        count = (count + b) % mod;
                 } else {
                     if (s.charAt(idx) == '1')
-                        count = (count + 9 * dp[idx + 2]) % mod;
+                        count = (count + 9 * b) % mod;
                     else if (s.charAt(idx) == '2')
-                        count = (count + 6 * dp[idx + 2]) % mod;
+                        count = (count + 6 * b) % mod;
                 }
             }
         }
@@ -592,30 +592,30 @@ public class l001_twoPointer {
             char ch1 = s.charAt(idx);
 
             if (s.charAt(idx) == '*') {
-                count = (count + 9 * dp[idx + 1]) % mod;
+                count = (count + 9 * a) % mod;
                 if (idx < s.length() - 1) {
                     char ch2 = s.charAt(idx + 1);
                     if (ch2 == '*')
-                        count = (count + 15 * dp[idx + 2]) % mod;
+                        count = (count + 15 * b) % mod;
                     else if (ch2 >= '0' && ch2 <= '6')
-                        count = (count + 2 * dp[idx + 2]) % mod;
+                        count = (count + 2 * b) % mod;
                     else if (ch2 > '6')
-                        count = (count + dp[idx + 2]) % mod;
+                        count = (count + b) % mod;
 
                 }
             } else {
-                count = (count + dp[idx + 1]) % mod;
+                count = (count + a) % mod;
                 if (idx < s.length() - 1) {
                     if (s.charAt(idx + 1) != '*') {
                         char ch2 = s.charAt(idx + 1);
                         int num = (ch1 - '0') * 10 + (ch2 - '0');
                         if (num <= 26)
-                            count = (count + dp[idx + 2]) % mod;
+                            count = (count + b) % mod;
                     } else {
                         if (s.charAt(idx) == '1')
-                            count = (count + 9 * dp[idx + 2]) % mod;
+                            count = (count + 9 * b) % mod;
                         else if (s.charAt(idx) == '2')
-                            count = (count + 6 * dp[idx + 2]) % mod;
+                            count = (count + 6 * b) % mod;
                     }
                 }
             }
@@ -626,11 +626,73 @@ public class l001_twoPointer {
         return (int) dp[IDX];
     }
 
+    long numDecodings_opti(String s) {
+        long a = 1, b = 0;
+        for (int idx = s.length() - 1; idx >= 0; idx--) {
+
+            long count = 0;
+            char ch1 = s.charAt(idx);
+            if (ch1 == '0') {
+                count = 0;
+            } else if (ch1 == '*') {
+                count = (count + 9 * a) % mod;
+                if (idx < s.length() - 1) {
+                    char ch2 = s.charAt(idx + 1);
+                    if (ch2 == '*')
+                        count = (count + 15 * b) % mod;
+                    else if (ch2 >= '0' && ch2 <= '6')
+                        count = (count + 2 * b) % mod;
+                    else if (ch2 > '6')
+                        count = (count + b) % mod;
+
+                }
+            } else {
+                count = (count + a) % mod;
+                if (idx < s.length() - 1) {
+                    if (s.charAt(idx + 1) != '*') {
+                        char ch2 = s.charAt(idx + 1);
+                        int num = (ch1 - '0') * 10 + (ch2 - '0');
+                        if (num <= 26)
+                            count = (count + b) % mod;
+                    } else {
+                        if (s.charAt(idx) == '1')
+                            count = (count + 9 * b) % mod;
+                        else if (s.charAt(idx) == '2')
+                            count = (count + 6 * b) % mod;
+                    }
+                }
+            }
+
+            b = a;
+            a = count;
+        }
+
+        return (int) a;
+    }
+
     int numDecodings_II(String s) {
         long[] dp = new long[s.length() + 1];
         Arrays.fill(dp, -1);
         long ans = numDecodings_memo(s, 0, dp);
         return (int) ans;
+    }
+
+    // https://www.geeksforgeeks.org/count-number-of-ways-to-partition-a-set-into-k-subsets/
+    public static int noOfWays(int n, int k, int[][] dp) {
+        if (k == 1) {
+            return dp[n][k] = 1;
+        }
+        if (n == k) {
+            return dp[n][k] = 1;
+        }
+
+        if (dp[n][k] != 0)
+            return dp[n][k];
+
+        int uniqueGroup = noOfWays(n - 1, k - 1, dp);
+        int partOfExisGroup = noOfWays(n - 1, k, dp) * k;
+
+        return dp[n][k] = uniqueGroup + partOfExisGroup;
     }
 
     public static void main(String[] args) {
