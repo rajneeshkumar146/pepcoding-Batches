@@ -494,6 +494,30 @@ public class l001_twoPointer {
         return dp[IDX];
     }
 
+    int numDecodings_Opti(String s) {
+        int a = 1, b = 0;
+        for (int idx = s.length() - 1; idx >= 0; idx--) {
+
+            int count = 0;
+            char ch1 = s.charAt(idx);
+            if (ch1 != '0') {
+
+                count += a;
+
+                if (idx < s.length() - 1) {
+                    char ch2 = s.charAt(idx + 1);
+                    int num = (ch1 - '0') * 10 + (ch2 - '0');
+                    if (num <= 26)
+                        count += b;
+                }
+            }
+            b = a;
+            a = count;
+        }
+
+        return a;
+    }
+
     int numDecodings(String s) {
         int[] dp = new int[s.length() + 1];
         Arrays.fill(dp, -1);
@@ -504,6 +528,111 @@ public class l001_twoPointer {
         return ans;
     }
 
+    // 639
+    long numDecodings_memo(String s, int idx, long[] dp) {
+
+        if (idx == s.length()) {
+            return dp[idx] = 1;
+        }
+
+        if (dp[idx] != -1)
+            return dp[idx];
+        if (s.charAt(idx) == '0') {
+            return 0;
+        }
+
+        long count = 0;
+        char ch1 = s.charAt(idx);
+
+        if (s.charAt(idx) == '*') {
+            count = (count + 9 * numDecodings_memo(s, idx + 1, dp)) % mod;
+            if (idx < s.length() - 1) {
+                char ch2 = s.charAt(idx + 1);
+                if (ch2 == '*')
+                    count = (count + 15 * dp[idx + 2]) % mod;
+                else if (ch2 >= '0' && ch2 <= '6')
+                    count = (count + 2 * dp[idx + 2]) % mod;
+                else if (ch2 > '6')
+                    count = (count + dp[idx + 2]) % mod;
+
+            }
+        } else {
+            count = (count + numDecodings_memo(s, idx + 1, dp)) % mod;
+            if (idx < s.length() - 1) {
+                if (s.charAt(idx + 1) != '*') {
+                    char ch2 = s.charAt(idx + 1);
+                    int num = (ch1 - '0') * 10 + (ch2 - '0');
+                    if (num <= 26)
+                        count = (count + dp[idx + 2]) % mod;
+                } else {
+                    if (s.charAt(idx) == '1')
+                        count = (count + 9 * dp[idx + 2]) % mod;
+                    else if (s.charAt(idx) == '2')
+                        count = (count + 6 * dp[idx + 2]) % mod;
+                }
+            }
+        }
+
+        return dp[idx] = count;
+    }
+
+    long numDecodings_dp(String s, int IDX, long[] dp) {
+        for (int idx = s.length(); idx >= 0; idx--) {
+            if (idx == s.length()) {
+                dp[idx] = 1;
+                continue;
+            }
+
+            if (s.charAt(idx) == '0') {
+                dp[idx] = 0;
+                continue;
+            }
+
+            long count = 0;
+            char ch1 = s.charAt(idx);
+
+            if (s.charAt(idx) == '*') {
+                count = (count + 9 * dp[idx + 1]) % mod;
+                if (idx < s.length() - 1) {
+                    char ch2 = s.charAt(idx + 1);
+                    if (ch2 == '*')
+                        count = (count + 15 * dp[idx + 2]) % mod;
+                    else if (ch2 >= '0' && ch2 <= '6')
+                        count = (count + 2 * dp[idx + 2]) % mod;
+                    else if (ch2 > '6')
+                        count = (count + dp[idx + 2]) % mod;
+
+                }
+            } else {
+                count = (count + dp[idx + 1]) % mod;
+                if (idx < s.length() - 1) {
+                    if (s.charAt(idx + 1) != '*') {
+                        char ch2 = s.charAt(idx + 1);
+                        int num = (ch1 - '0') * 10 + (ch2 - '0');
+                        if (num <= 26)
+                            count = (count + dp[idx + 2]) % mod;
+                    } else {
+                        if (s.charAt(idx) == '1')
+                            count = (count + 9 * dp[idx + 2]) % mod;
+                        else if (s.charAt(idx) == '2')
+                            count = (count + 6 * dp[idx + 2]) % mod;
+                    }
+                }
+            }
+
+            dp[idx] = count;
+        }
+
+        return (int) dp[IDX];
+    }
+
+    int numDecodings_II(String s) {
+        long[] dp = new long[s.length() + 1];
+        Arrays.fill(dp, -1);
+        long ans = numDecodings_memo(s, 0, dp);
+        return (int) ans;
+    }
+
     public static void main(String[] args) {
         // fibo();
         // mazePath();
@@ -512,5 +641,3 @@ public class l001_twoPointer {
         // countFriendsPairings(10);
         goldMine();
     }
-
-}
