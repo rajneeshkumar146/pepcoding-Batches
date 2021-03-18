@@ -1,7 +1,7 @@
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public class l001 {
+public class l001_twoPointer {
 
     public static void print1D(int[] arr) {
         for (int ele : arr) {
@@ -439,6 +439,69 @@ public class l001 {
         System.out.println(goldMine_dp(mat, dp, dir));
         print2D(dp);
         // System.out.println(maxGold);
+    }
+
+    // 91
+    int numDecodings(String s, int idx, int[] dp) {
+        if (idx == s.length()) {
+            return dp[idx] = 1;
+        }
+
+        if (dp[idx] != -1)
+            return dp[idx];
+
+        char ch1 = s.charAt(idx);
+        if (ch1 == '0')
+            return 0;
+
+        int count = 0;
+        count += numDecodings(s, idx + 1, dp);
+
+        if (idx < s.length() - 1) {
+            char ch2 = s.charAt(idx + 1);
+            int num = (ch1 - '0') * 10 + (ch2 - '0');
+            if (num <= 26)
+                count += numDecodings(s, idx + 2, dp);
+        }
+        return dp[idx] = count;
+    }
+
+    int numDecodings_DP(String s, int IDX, int[] dp) {
+        for (int idx = s.length(); idx >= 0; idx--) {
+            if (idx == s.length()) {
+                dp[idx] = 1;
+                continue;
+            }
+
+            char ch1 = s.charAt(idx);
+            if (ch1 == '0') {
+                dp[idx] = 0;
+                continue;
+            }
+
+            int count = 0;
+            count += dp[idx + 1];// numDecodings(s, idx + 1, dp);
+
+            if (idx < s.length() - 1) {
+                char ch2 = s.charAt(idx + 1);
+                int num = (ch1 - '0') * 10 + (ch2 - '0');
+                if (num <= 26)
+                    count += dp[idx + 2];// numDecodings(s, idx + 2, dp);
+            }
+            dp[idx] = count;
+        }
+
+        return dp[IDX];
+    }
+
+    int numDecodings(String s) {
+        int[] dp = new int[s.length() + 1];
+        Arrays.fill(dp, -1);
+        int ans = numDecodings(s, 0, dp);
+
+        for (int ele : dp)
+            System.out.print(ele + " ");
+        return ans;
     }
 
     public static void main(String[] args) {
