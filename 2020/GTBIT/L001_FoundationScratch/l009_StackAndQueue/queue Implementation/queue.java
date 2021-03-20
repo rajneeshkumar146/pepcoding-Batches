@@ -1,23 +1,24 @@
-public class stack {
-    protected int[] arr = null;
-    protected int capacity = 0; // maximum element that array can hold in it.
-    protected int elementCount = 0; // No of elements present in stack.
-    protected int tos = -1;
+public class queue {
 
-    // constructor.=============================================
+    protected` int[] arr = null;
+    protected int capacity = 0;
+    protected int elementCount = 0;
+    protected int front = 0;
+    protected int back = 0;
 
     protected void intializeVariables(int capacity) {
         this.capacity = capacity;
         this.arr = new int[this.capacity];
         this.elementCount = 0;
-        this.tos = -1;
+        this.front = 0;
+        this.back = 0;
     }
 
-    public stack() {
+    public queue() {
         intializeVariables(10); // default capacity.
     }
 
-    public stack(int size) {
+    public queue(int size) {
         intializeVariables(size);
     }
 
@@ -36,7 +37,8 @@ public class stack {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         for (int i = 0; i < this.elementCount; i++) {
-            sb.append(this.arr[i]);
+            int idx = (this.front + i) % this.capacity;
+            sb.append(this.arr[idx]);
             if (i != this.elementCount - 1)
                 sb.append(", ");
         }
@@ -48,20 +50,22 @@ public class stack {
 
     private void OverflowException() throws Exception {
         if (this.capacity == this.elementCount) {
-            throw new Exception("StackIsFull");
+            throw new Exception("QueueIsFull");
         }
     }
 
     private void underFlowException() throws Exception {
         if (this.elementCount == 0) {
-            throw new Exception("StackIsEmpty");
+            throw new Exception("QueueIsEmpty");
         }
     }
 
     // stack functions=========================================
     protected void push_(int data) {
-        this.arr[++this.tos] = data;
+        this.arr[this.back] = data;
+
         this.elementCount++;
+        this.back = (this.back + 1) % this.capacity;
     }
 
     public void push(int data) throws Exception {
@@ -69,15 +73,17 @@ public class stack {
         push_(data);
     }
 
-    public int top() throws Exception {
+    public int front() throws Exception {
         underFlowException();
-        return this.arr[this.tos];
+        return this.arr[this.front];
     }
 
     protected int pop_() {
-        int rv = this.arr[this.tos];
-        this.arr[this.tos--] = 0;
+        int rv = this.arr[this.front];
+        this.arr[this.front] = 0;
+
         this.elementCount--;
+        this.front = (this.front + 1) % this.capacity;
         return rv;
     }
 
