@@ -31,6 +31,10 @@ public class stack {
         return this.elementCount == 0;
     }
 
+    public void display(){
+        
+    }
+
     // Exceptions.=============================================
 
     private void OverflowException() throws Exception {

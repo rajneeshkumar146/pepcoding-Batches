@@ -17,9 +17,9 @@ public class dynamicStack extends stack {
 
     protected void push_(int data) {
         if (super.capacity == super.elementCount) {
-            int[] temp = super.arr;
-            super.intializeVariables(2 * super.capacity);
-            for (int ele : temp)
+            int[] temp = super.arr;  // copy old data
+            super.intializeVariables(2 * super.capacity);  // new space allocate for new upcoming data.
+            for (int ele : temp)  // copy old data in new space.
                 super.push_(ele);
         }
 
