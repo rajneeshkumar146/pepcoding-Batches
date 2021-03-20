@@ -31,8 +31,8 @@ public class stack {
         return this.elementCount == 0;
     }
 
-    public void display(){
-        
+    public void display() {
+
     }
 
     // Exceptions.=============================================

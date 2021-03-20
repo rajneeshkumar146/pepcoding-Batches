@@ -15,19 +15,16 @@ public class dynamicStack extends stack {
             super.push_(ele);
     }
 
-    protected void push_(int data) {
+    @Override
+    public void push(int data) throws Exception{
         if (super.capacity == super.elementCount) {
-            int[] temp = super.arr;  // copy old data
-            super.intializeVariables(2 * super.capacity);  // new space allocate for new upcoming data.
-            for (int ele : temp)  // copy old data in new space.
+            int[] temp = super.arr; // copy old data
+            super.intializeVariables(2 * super.capacity); // new space allocate for new upcoming data.
+            for (int ele : temp) // copy old data in new space.
                 super.push_(ele);
         }
 
-        super.push_(data);
-    }
-
-    public void push(int data) {
-        push_(data);
+        super.push(data);
     }
 
 }
