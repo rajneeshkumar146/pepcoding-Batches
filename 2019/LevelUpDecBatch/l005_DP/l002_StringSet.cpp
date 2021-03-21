@@ -78,4 +78,32 @@ int longestPalindromeSubseq(string &s)
     return longestPalindromeSubseq_DP(s, 0, n - 1, dp);
 }
 
+//1458
+int maxDotProduct_memo(vector<int> &nums1, vector<int> &nums2, int n, int m, vector<vector<int>> &dp)
+{
+    if (n == 0 || m == 0)
+    {
+        return dp[n][m] = -(int)1e7;
+    }
+
+    if (dp[n][m] != -(int)1e8)
+        return dp[n][m];
+
+    int val = nums1[n - 1] * nums2[m - 1];
+    int acceptBothNumber = maxDotProduct_memo(nums1, nums2, n - 1, m - 1, dp) + val;
+    int a = maxDotProduct_memo(nums1, nums2, n - 1, m, dp);
+    int b = maxDotProduct_memo(nums1, nums2, n, m - 1, dp);
+
+    return dp[n][m] = max(max(acceptBothNumber, val), max(a, b));
+}
+
+int maxDotProduct(vector<int> &nums1, vector<int> &nums2)
+{
+    int n = nums1.size();
+    int m = nums2.size();
+
+    vector<vector<int>> dp(n + 1, vector<int>(m + 1, -1e8));
+    return maxDotProduct_memo(nums1, nums2, n, m, dp);
+}
+
 
