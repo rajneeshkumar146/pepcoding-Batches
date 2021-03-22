@@ -69,6 +69,50 @@ public class l002 {
         }
     }
 
+    public static int rotateANumber(int n, int r) {
+        int digit = countDigits(n);
+        r %= digit;
+        if (r < 0)
+            r += digit;
+
+        int mul = 1;
+        int div = 1;
+
+        for (int i = 1; i <= digit; i++) {
+            if (i <= r)
+                div *= 10;
+            else
+                mul *= 10;
+        }
+
+        int a = n % div;
+        int b = n / div;
+
+        return (a * mul + b);
+    }
+
+    public static boolean pythagoreanTriplet_01(int a, int b, int c) {
+        int max = Math.max(Math.max(a, b), c);
+        if (max == a && (b * b + c * c == a * a))
+            return true;
+        else if (max == b && (a * a + c * c == b * b))
+            return true;
+        else if (max == c && (a * a + b * b == c * c))
+            return true;
+        else
+            return false;
+    }
+
+    public static boolean pythagoreanTriplet_02(int a, int b, int c) {
+        return (b * b + c * c == a * a) || (a * a + c * c == b * b) || (a * a + b * b == c * c);
+    }
+
+    public static void benjaminBulbs(int n) {
+        for (int i = 1; i * i <= n; i++) {
+            System.out.println(i * i);
+        }
+    }
+
     public static void solve() {
         int n = scn.nextInt();
         boolean res = isPrime(n);
