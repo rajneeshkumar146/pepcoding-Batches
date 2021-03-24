@@ -98,6 +98,15 @@ public class l004_Arrays {
 
         return -1;
     }
+    // 10,20,30,40,50,60 -> 60,50,40,30,20,10
+    public static void reverseOfArray(int[] arr){
+
+    }
+
+    // 
+    public static void inverseOfArray(int[] arr){
+
+    }
 
     public static void main(String[] args) {
         int n = scn.nextInt();
