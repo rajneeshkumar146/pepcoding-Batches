@@ -21,7 +21,7 @@ public class l004_Arrays {
     public static void display2(int[] arr) {
 
         // forEach loop used for :
-        // 1. only for get,  if you try to set value ypu get a beutifull error.
+        // 1. only for get, if you try to set value ypu get a beutifull error.
         // 2. automatically increment by 1
         // 3. always in forward direction
         // 4. range of loop : [0 , n - 1]
@@ -38,11 +38,30 @@ public class l004_Arrays {
         }
     }
 
+    public static int[] input2(int n) {
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = scn.nextInt(); // set
+        }
+
+        return arr;
+    }
+
+    public static int maximum(int[] arr){
+
+    }
+
+    public static int minimum(int[] arr){
+
+    }
+
+    // if you found return index, otherwise return -1.
+    public static int find(int[] arr,int data){
+
+    }
+
     public static void main(String[] args) {
         int n = scn.nextInt();
-        int[] arr = new int[n];
-        System.out.println(arr);
-        input1(arr);
-        display1(arr);
+        int[] arr = input2(n);
     }
 }
