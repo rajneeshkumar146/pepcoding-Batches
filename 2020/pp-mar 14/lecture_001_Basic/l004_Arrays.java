@@ -98,18 +98,95 @@ public class l004_Arrays {
 
         return -1;
     }
+
+    public static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
     // 10,20,30,40,50,60 -> 60,50,40,30,20,10
-    public static void reverseOfArray(int[] arr){
+    public static void reverseOfArray(int[] arr) {
+        int i = 0, j = arr.length - 1;
+        while (i < j) {
+            swap(arr, i, j);
+            i++;
+            j--;
+        }
+    }
+
+    public static void inverseOfArray(int[] arr) {
+        int n = arr.length;
+        int[] ans = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            int idx = arr[i];
+            ans[idx] = i;
+        }
+    }
+
+    public static int spanOfArray(int[] arr) {
+        int maxEle = -(int) 1e9;
+        int minEle = (int) 1e9;
+
+        for (int ele : arr) {
+            maxEle = Math.max(maxEle, ele);
+            minEle = Math.min(minEle, ele);
+        }
+
+        return maxEle - minEle;
+    }
+
+    public static int[] rotateOfArray(int[] arr, int r) {
+        int n = arr.length;
+        r %= n;
+        if (r < 0)
+            r += n;
+
+        int[] ans = new int[n];
+        for (int i = 0; i < n; i++) {
+            int idx = (i + r) % n;
+            ans[idx] = arr[i];
+        }
+
+        return ans;
+    }
+
+    public static void reverseOfArray(int[] arr, int i, int j) {
+        while (i < j) {
+            swap(arr, i, j);
+            i++;
+            j--;
+        }
+    }
+
+    public static void rotateOfArray2(int[] arr, int r) {
+        int n = arr.length;
+        r %= n;
+        if (r < 0)
+            r += n;
+
+        reverseOfArray(arr, 0, n - 1);
+        reverseOfArray(arr, 0, r - 1);
+        reverseOfArray(arr, r, n - 1);
+    }
+
+    public static void sumOfTwoArray(int[] arr1,int[] arr2){
 
     }
 
-    // 
-    public static void inverseOfArray(int[] arr){
+    // arr1 as number > arr2 as number
+    public static void subtractOfTwoArray(int[] arr1,int[] arr2){
 
     }
 
     public static void main(String[] args) {
         int n = scn.nextInt();
-        int[] arr = input2(n);
+        int[] arr = new int[n];
+        input1(arr);
+        int r = scn.nextInt();
+        // int[] ans = rotateOfArray(arr, r);
+        // display1(ans);
+        rotateOfArray2(arr, r);
     }
 }
