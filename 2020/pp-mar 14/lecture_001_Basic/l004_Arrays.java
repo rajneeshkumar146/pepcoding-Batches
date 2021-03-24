@@ -47,17 +47,56 @@ public class l004_Arrays {
         return arr;
     }
 
-    public static int maximum(int[] arr){
+    public static int maximum(int[] arr) {
+        int maxEle = -(int) 1e9; // Integer.MIN_VALUE;
+        for (int ele : arr) {
+            maxEle = Math.max(maxEle, ele);
+        }
 
+        return maxEle;
     }
 
-    public static int minimum(int[] arr){
+    public static int maximum2(int[] arr) {
+        if (arr.length == 0)
+            return Integer.MIN_VALUE;
 
+        int maxEle = arr[0]; // Integer.MIN_VALUE;
+        for (int ele : arr) {
+            maxEle = Math.max(maxEle, ele);
+        }
+
+        return maxEle;
+    }
+
+    public static int minimum(int[] arr) {
+        int minEle = (int) 1e9;
+        for (int ele : arr) {
+            minEle = Math.min(minEle, ele);
+        }
+
+        return minEle;
     }
 
     // if you found return index, otherwise return -1.
-    public static int find(int[] arr,int data){
+    public static int find(int[] arr, int data) {
+        int foundAtIndex = -1;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == data) {
+                foundAtIndex = i;
+                break;
+            }
+        }
 
+        return foundAtIndex;
+    }
+
+    public static int find2(int[] arr, int data) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == data)
+                return i;
+        }
+
+        return -1;
     }
 
     public static void main(String[] args) {
