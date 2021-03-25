@@ -106,4 +106,27 @@ int maxDotProduct(vector<int> &nums1, vector<int> &nums2)
     return maxDotProduct_memo(nums1, nums2, n, m, dp);
 }
 
+#include <vector>
+int mod = 1e9 + 7;
+long long int countPS_DP(string &s, int i, int j, vector<vector<long long int>> &dp)
+{
+    if (i > j)
+        return 0;
+    if (i == j)
+        return dp[i][j] = 1;
+    if (dp[i][j] != -1)
+        return dp[i][j];
 
+    long long int middleString = countPS_DP(s, i + 1, j - 1, dp);
+    long long int excludingLast = countPS_DP(s, i, j - 1, dp);
+    long long int excludingFirst = countPS_DP(s, i + 1, j, dp);
+
+    long long int ans = excludingFirst + excludingLast;
+    return dp[i][j] = ((s[i] == s[j]) ? ans + 1 : ans - middleString + mod) % mod;
+}
+
+long long int countPS(string s)
+{
+    vector<vector<long long int>> dp(s.length(), vector<long long int>(s.length(), -1));
+    return countPS_DP(s, 0, s.length() - 1, dp);
+}
