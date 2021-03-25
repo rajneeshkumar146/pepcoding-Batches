@@ -44,8 +44,9 @@ public class l003_LIS {
         return len;
     }
 
-    // minimum Number of deletion to be performed to make array sorted (array contain -1e7 <= ele <= 1e7)
-    public static int minDeletion(int[] arr){
+    // minimum Number of deletion to be performed to make array sorted (array
+    // contain -1e7 <= ele <= 1e7)
+    public static int minDeletion(int[] arr) {
         int n = arr.length;
         int[] dp = new int[n];
         int len = 0;
@@ -63,7 +64,30 @@ public class l003_LIS {
         return n - len;
     }
 
-    //https://practice.geeksforgeeks.org/problems/maximum-sum-increasing-subsequence4749/1
+    // https://practice.geeksforgeeks.org/problems/maximum-sum-increasing-subsequence4749/1
+    public int maximumSum_IS(int[] arr) {
+        int n = arr.length;
+        int[] dp = new int[n];
+        int maxIncrSum = 0;
+        for (int i = 0; i < n; i++) {
+            dp[i] = arr[i];
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[j] < arr[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + arr[i]);
+                }
+            }
+
+            maxIncrSum = Math.max(maxIncrSum, dp[i]);
+        }
+
+        return maxIncrSum;
+    }
+
+    // Maximum Sum Increasing Subsequence of Maximum Length.
+    public static int maximumSumLIS(int[] arr) {
+
+        return 0;
+    }
 
     public static void main(String[] args) {
 
