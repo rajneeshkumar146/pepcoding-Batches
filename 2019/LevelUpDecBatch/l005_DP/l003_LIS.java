@@ -1,5 +1,5 @@
 public class l003_LIS {
-
+    // {0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15, 14};
     // LIS left to right.
     public static int LIS_LR(int[] arr, int i, int[] dp) {
         if (dp[i] != 0)
@@ -129,7 +129,7 @@ public class l003_LIS {
     }
 
     // https://practice.geeksforgeeks.org/problems/longest-bitonic-subsequence0824/1
-    public static int LBS(int[] arr) {
+    public static int LBS_uphill(int[] arr) {
         int[] LIS = LIS_LR(arr);
         int[] LDS = LIS_RL(arr);
 
@@ -140,6 +140,56 @@ public class l003_LIS {
 
         return len;
     }
+
+    public static int[] LDS_LR(int[] arr) {
+        int n = arr.length;
+        int[] dp = new int[n];
+        int len = 0;
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[j] > arr[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+
+            len = Math.max(len, dp[i]);
+        }
+
+        return dp;
+    }
+
+    public static int[] LDS_RL(int[] arr) {
+        int n = arr.length;
+        int[] dp = new int[n];
+        int len = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            dp[i] = 1;
+            for (int j = i + 1; j < n; j++) {
+                if (arr[j] > arr[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+
+            len = Math.max(len, dp[i]);
+        }
+
+        return dp;
+    }
+
+    public static int LBS_downhill(int[] arr) {
+        int[] LDS = LDS_LR(arr);
+        int[] LIS = LDS_RL(arr);
+
+        int len = 0;
+        for (int i = 0; i < arr.length; i++) {
+            len = Math.max(len, LDS[i] + LIS[i] - 1);
+        }
+
+        return len;
+    }
+
+    // https://practice.geeksforgeeks.org/problems/maximum-sum-bitonic-subsequence/0
 
     public static void main(String[] args) {
 
