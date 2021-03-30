@@ -196,8 +196,40 @@ public class l004_Arrays {
 
     }
 
-    // arr1 as number > arr2 as number
+    // arr2 as number > arr1 as number
     public static void subtractOfTwoArray(int[] arr1, int[] arr2) {
+
+        int n = arr1.length;
+        int m = arr2.length;
+        int[] ans = new int[m];
+
+        int i = n - 1, j = m - 1, k = m - 1;
+        int borrow = 0;
+        while (k >= 0) {
+            int diff = borrow + arr2[j] - (i >= 0 ? arr1[i] : 0);
+            if (diff < 0) {
+                diff += 10;
+                borrow = -1;
+            } else {
+                borrow = 0;
+            }
+
+            ans[k] = diff;
+
+            i--;
+            j--;
+            k--;
+        }
+
+        boolean nonZeroFound = false;
+        for (int ele : ans) {
+            if (ele != 0) {
+                nonZeroFound = true;
+            }
+
+            if (nonZeroFound)
+                System.out.println(ele);
+        }
 
     }
 
