@@ -1,11 +1,11 @@
 import java.util.*;
 
-public class BTD {
+public class ABTD {
     // decimal to Binary
 
     public static Scanner scn = new Scanner(System.in);
 
-    public static int binaryToDecimal(int n) {
+    public static int anyBaseToDecimal(int n,int b) {
         int pow = 1;
         int ans = 0;
         while (n != 0) {
@@ -13,7 +13,7 @@ public class BTD {
             n /= 10;
 
             ans += rem * pow;
-            pow *= 2;
+            pow *= b;
         }
 
         return ans;
