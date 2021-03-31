@@ -233,6 +233,37 @@ public class l004_Arrays {
 
     }
 
+    public static void printInRange(int[] arr, int si, int ei) {
+        while (si <= ei) {
+            System.out.print(arr[si] + " ");
+            si++;
+        }
+    }
+
+    public static void printAllSubArrays(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                printInRange(arr, i, j);
+            }
+        }
+    }
+
+    public static int binarySearch(int[] arr, int data) {
+        int si = 0, ei = arr.length - 1;
+        while (si <= ei) {
+            int mid = (si + ei) / 2;
+            if (arr[mid] == data)
+                return mid;
+            else if (arr[mid] < data)
+                si = mid + 1;
+            else
+                ei = mid - 1;
+        }
+
+        return -1;
+    }
+
     public static void main(String[] args) {
         int n = scn.nextInt();
         int[] arr = new int[n];
