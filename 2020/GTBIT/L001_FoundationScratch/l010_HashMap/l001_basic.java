@@ -12,16 +12,16 @@ public class l001_basic {
         map.put("India", 10);
         map.put("USA", 19);
 
-        // System.out.println(map);
+        System.out.println(map);
         // for(String keys : map.keySet()){
         // System.out.println(keys + " -> " + map.get(keys));
         // }
 
-        String key = "USA";
-        if (map.containsKey(key))
-            System.out.println(map.get(key));
-        else
-            System.out.println("not Found");
+        // String key = "USA";
+        // if (map.containsKey(key))
+        //     System.out.println(map.get(key));
+        // else
+        //     System.out.println("not Found");
 
     }
 
