@@ -62,7 +62,7 @@ public class l001_basic {
     }
 
     public static void positionOfAllChar(String str) {
-        HashMap<Character, ArrayList<Integer>> map = new HashMap<>();
+        HashMap<Character, ArrayList<Integer>> map = new HashMap<>(); // Character, int[]
         // for (int i = 0; i < str.length(); i++) {
         // char ch = str.charAt(i);
         // if (!map.containsKey(ch))
@@ -73,17 +73,88 @@ public class l001_basic {
 
         for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
-            map.putIfAbsent(ch, new ArrayList<>());
+            map.putIfAbsent(ch, new ArrayList<>()); // new int[k]
             map.get(ch).add(i);
         }
 
-        System.out.println(map);
+        // System.out.println(map);
+        for (Character ch : map.keySet()) {
+            System.out.println(ch + " -> " + map.get(ch));
+        }
+    }
+
+    public static void intersectionOfTwoArrayWithoutDuplicates(int[] arr1, int[] arr2) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int ele : arr1) {
+            map.put(ele, map.getOrDefault(ele, 0) + 1);
+        }
+
+        for (int ele : arr2) {
+            if (map.containsKey(ele)) {
+                System.out.println(ele);
+                map.remove(ele);
+            }
+        }
+    }
+
+    public static void intersectionOfTwoArrayWithDuplicates(int[] arr1, int[] arr2) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int ele : arr1) {
+            map.put(ele, map.getOrDefault(ele, 0) + 1);
+        }
+
+        for (int ele : arr2) {
+            if (map.containsKey(ele)) {
+                System.out.println(ele);
+
+                map.put(ele, map.get(ele) - 1);
+                if (map.get(ele) == 0)
+                    map.remove(ele);
+            }
+        }
+    }
+
+    public static void longestConsecutiveSequence(int[] arr) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int ele : arr) {
+            map.put(ele, map.getOrDefault(ele, 0) + 1);
+        }
+
+        int sp = 0, maxLen = 0;
+
+        for (int ele : arr) {
+            if (!map.containsKey(ele))
+                continue;
+
+            map.remove(ele);
+            int le = ele - 1;
+            int re = ele + 1;
+
+            while (map.containsKey(le)) {
+                map.remove(le);
+                le--;
+            }
+
+            while (map.containsKey(re)) {
+                map.remove(re);
+                re++;
+            }
+
+            int len = re - le - 1;
+            if (len > maxLen) {
+                maxLen = len;
+                sp = le + 1;
+            }
+        }
+
+        for (int i = 0; i < maxLen; i++)
+            System.out.println(sp + i);
 
     }
 
     public static void main(String[] args) {
         // basic_01();
-        highestFreqChar("abcbbbccbbbbbbbb");
+        positionOfAllChar("abcbbbccbbbbbbbb");
     }
 
 }
