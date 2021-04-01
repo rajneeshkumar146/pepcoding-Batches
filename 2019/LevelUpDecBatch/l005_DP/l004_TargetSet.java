@@ -203,15 +203,85 @@ public class l004_TargetSet {
     }
 
     public static void numberOfSolution() {
-        int[] arr = { 2, 3, 5 , 7};
+        int[] arr = { 2, 3, 5, 7 };
         int tar = 10;
         System.out.println(numberOfSolution(arr, tar, tar, 0, new int[arr.length]));
     }
 
+    // https://www.geeksforgeeks.org/subset-sum-problem-dp-25/
+
+    public static int targetSum(int[] arr, int n, int tar, int[][] dp) {
+        if (n == 0 || tar == 0) {
+            return dp[n][tar] = (tar == 0) ? 1 : 0;
+        }
+
+        if (dp[n][tar] != -1)
+            return dp[n][tar];
+
+        boolean res = false;
+        if (tar - arr[n - 1] >= 0)
+            res = res || (targetSum(arr, n - 1, tar - arr[n - 1], dp) == 1);
+
+        res = res || (targetSum(arr, n - 1, tar, dp) == 1);
+
+        return dp[n][tar] = res ? 1 : 0;
+    }
+
+    public static boolean targetSum_DP(int[] arr, int Tar) {
+        int N = arr.length;
+        boolean[][] dp = new boolean[N + 1][Tar + 1];
+
+        for (int n = 0; n <= N; n++) {
+            for (int tar = 0; tar <= Tar; tar++) {
+                if (n == 0 || tar == 0) {
+                    dp[n][tar] = (tar == 0);
+                    continue;
+                }
+
+                if (tar - arr[n - 1] >= 0)
+                    dp[n][tar] = dp[n][tar] || dp[n - 1][tar - arr[n - 1]];
+                dp[n][tar] = dp[n][tar] || dp[n - 1][tar];
+            }
+        }
+
+        return dp[N][Tar];
+    }
+
+    public static int targetSumTotalWays_DP(int[] arr, int Tar) {
+        int N = arr.length;
+        int[][] dp = new int[N + 1][Tar + 1];
+
+        for (int n = 0; n <= N; n++) {
+            for (int tar = 0; tar <= Tar; tar++) {
+                if (n == 0 || tar == 0) {
+                    dp[n][tar] = (tar == 0) ? 1 : 0;
+                    continue;
+                }
+
+                if (tar - arr[n - 1] >= 0)
+                    dp[n][tar] += dp[n - 1][tar - arr[n - 1]];
+                dp[n][tar] += dp[n - 1][tar];
+            }
+        }
+
+        return dp[N][Tar];
+    }
+
+    public static void targetSum(int[] arr, int tar) {
+        int n = arr.length;
+        int[][] dp = new int[n + 1][tar + 1];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+        boolean res = targetSum(arr, n, tar, dp) == 1;
+        System.out.println(res);
+        print2D(dp);
+    }
+
     public static void main(String[] args) {
         // coinChnage();
-        numberOfSolution();
+        // numberOfSolution();
 
+        targetSum(new int[] { 2, 3, 5, 7 }, 10);
     }
 
 }
