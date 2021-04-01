@@ -12,32 +12,61 @@ public class l001_basic {
         map.put("India", 10);
         map.put("USA", 19);
 
-        System.out.println(map);
-        // for(String keys : map.keySet()){
-        // System.out.println(keys + " -> " + map.get(keys));
+        // System.out.println(map);
+        for (String keys : map.keySet()) {
+            System.out.println(keys + " -> " + map.get(keys));
+        }
+
+        String key = "USA";
+        if (map.containsKey(key))
+            System.out.println(map.get(key));
+        else
+            System.out.println("not Found");
+
+    }
+
+    public static void printFrequency(String str) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        // for (int i = 0; i < str.length(); i++) {
+        // char ch = str.charAt(i);
+        // if (map.containsKey(ch))
+        // map.put(ch, map.get(ch) + 1);
+        // else
+        // map.put(ch, 1);
         // }
 
-        // String key = "USA";
-        // if (map.containsKey(key))
-        //     System.out.println(map.get(key));
-        // else
-        //     System.out.println("not Found");
-
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
     }
 
-    public static void printFrequency(String str){
+    public static void highestFreqChar(String str) {
+        HashMap<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
 
+        char ans = ' ';
+        int freq = 0;
+        for (Character ch : map.keySet()) {
+            if (map.get(ch) > freq) {
+                freq = map.get(ch);
+                ans = ch;
+            }
+        }
 
+        System.out.println(ans);
     }
 
-    public static void highestFreqChar(String str){
-
+    public static void positionOfAllChar(String str) {
 
     }
 
     public static void main(String[] args) {
-        basic_01();
-
+        // basic_01();
+        highestFreqChar("abcbbbccbbbbbbbb");
     }
 
 }
