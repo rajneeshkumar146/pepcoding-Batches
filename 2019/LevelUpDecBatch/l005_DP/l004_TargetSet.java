@@ -277,6 +277,92 @@ public class l004_TargetSet {
         print2D(dp);
     }
 
+    // 416
+    public boolean canPartition(int[] arr) {
+        int sum = 0;
+        for (int ele : arr)
+            sum += ele;
+
+        if (sum % 2 != 0)
+            return false;
+
+        int Tar = sum / 2;
+        int N = arr.length;
+        boolean[][] dp = new boolean[N + 1][Tar + 1];
+
+        for (int n = 0; n <= N; n++) {
+            for (int tar = 0; tar <= Tar; tar++) {
+                if (n == 0 || tar == 0) {
+                    dp[n][tar] = (tar == 0);
+                    continue;
+                }
+
+                if (tar - arr[n - 1] >= 0)
+                    dp[n][tar] = dp[n][tar] || dp[n - 1][tar - arr[n - 1]];
+                dp[n][tar] = dp[n][tar] || dp[n - 1][tar];
+            }
+        }
+
+        return dp[N][Tar];
+    }
+
+    public int findTargetSumWays(int[] arr, int n, int tar, int sum) {
+        if (n == 0) {
+            return (tar == 0 ? 1 : 0);
+        }
+
+        int count = 0;
+        if (tar - arr[n - 1] >= 0)
+            count += findTargetSumWays(arr, n - 1, tar - (arr[n - 1]), sum); // as a positive number
+        if (tar + arr[n - 1] <= sum)
+            count += findTargetSumWays(arr, n - 1, tar - (-arr[n - 1]), sum); // as a Negative number
+
+        return count;
+    }
+
+    public int findTargetSumWays(int[] nums, int tar) {
+        int sum = 0;
+        for (int ele : nums)
+            sum += ele;
+
+        if (sum < tar || tar < -sum)
+            return 0;
+        int n = nums.length;
+        return findTargetSumWays(nums, n, tar, sum);
+    }
+
+    // By using 2D_DP
+    public int findTargetSumWays2(int[] arr, int n, int tar, int sum, int[][] dp) {
+        if (n == 0) {
+            return dp[n][sum] = (tar == sum) ? 1 : 0;
+        }
+
+        if (dp[n][sum] != -1)
+            return dp[n][sum];
+
+        int count = 0;
+        count += findTargetSumWays2(arr, n - 1, tar, sum + arr[n - 1], dp); // as a positive number
+        count += findTargetSumWays2(arr, n - 1, tar, sum - arr[n - 1], dp); // as a Negative number
+
+        return dp[n][sum] = count;
+    }
+
+    public int findTargetSumWays(int[] nums, int tar) {
+        int sum = 0;
+        for (int ele : nums)
+            sum += ele;
+
+        if (sum < tar || tar < -sum)
+            return 0;
+        int n = nums.length;
+        int[][] dp = new int[n + 1][2 * sum + 1];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        int ans = findTargetSumWays2(nums, n, sum + tar, sum, dp);
+        return ans;
+    }
+
     public static void main(String[] args) {
         // coinChnage();
         // numberOfSolution();
