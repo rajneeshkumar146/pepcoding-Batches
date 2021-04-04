@@ -228,7 +228,7 @@ public class l005CutType {
         return minCut_memo(str, 0, isPlaindrome, dp);
     }
 
-    //312
+    // 312
     public int maxCoins(int[] nums, int si, int ei, int[][] dp) {
         if (dp[si][ei] != -1)
             return dp[si][ei];
@@ -257,33 +257,93 @@ public class l005CutType {
         return maxCoins(nums, 0, n - 1, dp);
     }
 
-    //1039
-    public int minScoreTriangulation(int[] arr,int si,int ei,int[][] dp) {
-        if(ei - si <= 1){
+    // 1039
+    public int minScoreTriangulation(int[] arr, int si, int ei, int[][] dp) {
+        if (ei - si <= 1) {
             return dp[si][ei] = 0;
         }
-        
-        if(dp[si][ei] != -1) return dp[si][ei];
-        
-        int minAns = (int)1e9;
-        for(int cut = si + 1; cut < ei;cut++){
-            int lans = minScoreTriangulation(arr,si, cut,dp);
-            int rans = minScoreTriangulation(arr, cut,ei,dp);
-            
+
+        if (dp[si][ei] != -1)
+            return dp[si][ei];
+
+        int minAns = (int) 1e9;
+        for (int cut = si + 1; cut < ei; cut++) {
+            int lans = minScoreTriangulation(arr, si, cut, dp);
+            int rans = minScoreTriangulation(arr, cut, ei, dp);
+
             minAns = Math.min(minAns, lans + arr[si] * arr[cut] * arr[ei] + rans);
         }
-        
+
         return dp[si][ei] = minAns;
-             
+
     }
-    
+
     public int minScoreTriangulation(int[] values) {
-                int n = values.length;
+        int n = values.length;
         int[][] dp = new int[n][n];
         for (int[] d : dp)
             Arrays.fill(d, -1);
 
-        return minScoreTriangulation(values, 0, n - 1, dp);   
+        return minScoreTriangulation(values, 0, n - 1, dp);
+    }
+
+    public static class pairBoolean {
+        int trueWays = 0;
+        int falseWays = 0;
+
+        pairBoolean(int trueWays, int falseWays) {
+            this.trueWays = trueWays;
+            this.falseWays = falseWays;
+        }
+    }
+
+    public static pairBoolean Evaluate(pairBoolean left, pairBoolean right, char operator) {
+        int mod = 1003;
+        int TotalWays = ((left.trueWays + left.falseWays) % mod * (right.trueWays + right.falseWays) % mod) % mod;
+
+        pairBoolean ans = new pairBoolean(0, 0);
+        if (operator == '&') {
+            ans.trueWays = (left.trueWays * right.trueWays) % mod;
+            ans.falseWays = (TotalWays - ans.trueWays + mod) % mod;
+        } else if (operator == '|') {
+            ans.falseWays = (left.falseWays * right.falseWays) % mod;
+            ans.trueWays = (TotalWays - ans.falseWays + mod) % mod;
+        } else {
+            ans.trueWays = (left.falseWays * right.trueWays) % mod + (left.trueWays * right.falseWays) % mod;
+            ans.falseWays = (TotalWays - ans.trueWays + mod) % mod;
+        }
+
+        return ans;
+    }
+
+    public static pairBoolean booleanPare(String str, int si, int ei, pairBoolean[][] dp) {
+        if (si == ei) {
+            char ch = str.charAt(si);
+            return new pairBoolean(ch == 'T' ? 1 : 0, ch == 'F' ? 1 : 0);
+        }
+
+        if (dp[si][ei] != null)
+            return dp[si][ei];
+
+        pairBoolean myAns = new pairBoolean(0, 0);
+        for (int cut = si + 1; cut < ei; cut += 2) {
+            char operator = str.charAt(cut);
+            pairBoolean lans = booleanPare(str, si, cut - 1, dp);
+            pairBoolean rans = booleanPare(str, cut + 1, ei, dp);
+
+            pairBoolean recAns = Evaluate(lans, rans, operator);
+            myAns.trueWays = (myAns.trueWays + recAns.trueWays) % 1003;
+            myAns.falseWays = (myAns.falseWays + recAns.falseWays) % 1003;
+        }
+
+        return dp[si][ei] = myAns;
+    }
+
+    static int countWays(int N, String S) {
+        pairBoolean[][] dp = new pairBoolean[N][N];
+        pairBoolean ans = booleanPare(S, 0, N - 1, dp);
+
+        return ans.trueWays;
     }
 
     public static void main(String[] args) {
