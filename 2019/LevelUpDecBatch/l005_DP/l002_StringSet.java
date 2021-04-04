@@ -351,6 +351,7 @@ public class l002_StringSet {
         int[][] dp = new int[n][n];
         int len = 0;
         int si = 0;
+        int count = 0;
         for (int gap = 0; gap < n; gap++) {
             for (int i = 0, j = gap; j < n; i++, j++) {
                 if (gap == 0)
@@ -364,6 +365,9 @@ public class l002_StringSet {
                     len = dp[i][j];
                     si = i;
                 }
+
+                if (dp[i][j] != 0)
+                    count++;
             }
         }
 

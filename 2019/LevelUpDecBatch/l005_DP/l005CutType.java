@@ -138,14 +138,12 @@ public class l005CutType {
 
             if (minValue < res.minValue) {
                 res.minValue = minValue;
-                res.minExpression = "(" + lans.minExpression + " " + str.charAt(cut) + " " + rans.minExpression
-                        + ")";
+                res.minExpression = "(" + lans.minExpression + " " + str.charAt(cut) + " " + rans.minExpression + ")";
             }
 
             if (maxValue > res.maxValue) {
                 res.maxValue = maxValue;
-                res.maxExpression = "(" + lans.maxExpression + " " + str.charAt(cut) + " " + rans.maxExpression
-                        + ")";
+                res.maxExpression = "(" + lans.maxExpression + " " + str.charAt(cut) + " " + rans.maxExpression + ")";
             }
 
         }
@@ -171,6 +169,121 @@ public class l005CutType {
 
         System.out.println(mcm_dp(arr, 0, n - 1, dp));
         print2D(dp);
+    }
+
+    // 132
+
+    public int minCut_memo(String str, int si, boolean[][] isPlaindrome, int[] dp) {
+        if (isPlaindrome[si][str.length() - 1])
+            return dp[si] = 0;
+        if (dp[si] != -1)
+            return dp[si];
+
+        int minAns = (int) 1e9;
+        for (int cut = si; cut < str.length(); cut++) {
+            if (isPlaindrome[si][cut]) {
+                minAns = Math.min(minAns, minCut_memo(str, cut + 1, isPlaindrome, dp) + 1);
+            }
+        }
+
+        return dp[si] = minAns;
+    }
+
+    public int minCut_dp(String str, int SI, boolean[][] isPlaindrome, int[] dp) {
+        for (int si = str.length() - 1; si >= 0; si--) {
+            if (isPlaindrome[si][str.length() - 1]) {
+                dp[si] = 0;
+                continue;
+            }
+
+            int minAns = (int) 1e9;
+            for (int cut = si; cut < str.length(); cut++) {
+                if (isPlaindrome[si][cut]) {
+                    minAns = Math.min(minAns, dp[cut + 1] + 1);
+                }
+            }
+
+            dp[si] = minAns;
+        }
+
+        return dp[SI];
+    }
+
+    public int minCut(String str) {
+        int n = str.length();
+        boolean[][] isPlaindrome = new boolean[n][n];
+        for (int gap = 0; gap < n; gap++) {
+            for (int i = 0, j = gap; j < n; i++, j++) {
+                if (gap == 0)
+                    isPlaindrome[i][j] = true;
+                else if (gap == 1)
+                    isPlaindrome[i][j] = str.charAt(i) == str.charAt(j);
+                else
+                    isPlaindrome[i][j] = str.charAt(i) == str.charAt(j) && isPlaindrome[i + 1][j - 1];
+            }
+        }
+
+        int[] dp = new int[n];
+        Arrays.fill(dp, -1);
+        return minCut_memo(str, 0, isPlaindrome, dp);
+    }
+
+    //312
+    public int maxCoins(int[] nums, int si, int ei, int[][] dp) {
+        if (dp[si][ei] != -1)
+            return dp[si][ei];
+
+        int lval = si - 1 == -1 ? 1 : nums[si - 1];
+        int rval = ei + 1 == nums.length ? 1 : nums[ei + 1];
+
+        int maxAns = 0;
+        for (int cut = si; cut <= ei; cut++) {
+            int lans = (cut == si) ? 0 : maxCoins(nums, si, cut - 1, dp);
+            int rans = (cut == ei) ? 0 : maxCoins(nums, cut + 1, ei, dp);
+
+            maxAns = Math.max(maxAns, lans + lval * nums[cut] * rval + rans);
+        }
+
+        return dp[si][ei] = maxAns;
+
+    }
+
+    public int maxCoins(int[] nums) {
+        int n = nums.length;
+        int[][] dp = new int[n][n];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        return maxCoins(nums, 0, n - 1, dp);
+    }
+
+    //1039
+    public int minScoreTriangulation(int[] arr,int si,int ei,int[][] dp) {
+        if(ei - si <= 1){
+            return dp[si][ei] = 0;
+        }
+        
+        if(dp[si][ei] != -1) return dp[si][ei];
+        
+        int minAns = (int)1e9;
+        for(int cut = si + 1; cut < ei;cut++){
+            int lans = minScoreTriangulation(arr,si, cut,dp);
+            int rans = minScoreTriangulation(arr, cut,ei,dp);
+            
+            minAns = Math.min(minAns, lans + arr[si] * arr[cut] * arr[ei] + rans);
+        }
+        
+        return dp[si][ei] = minAns;
+             
+    }
+    
+    public int minScoreTriangulation(int[] values) {
+                int n = values.length;
+        int[][] dp = new int[n][n];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        return minScoreTriangulation(values, 0, n - 1, dp);   
     }
 
     public static void main(String[] args) {
