@@ -224,6 +224,90 @@ public class l001_Basics {
         return mergeTwoList(list1, list2);
     }
 
+    // Leetcode 215
+
+    public void swap(int[] arr, int a, int b) {
+        int temp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = temp;
+    }
+
+    public void downHeapify(int[] nums, int pi, int li) {
+        int maxIdx = pi;
+        int lci = 2 * pi + 1;
+        int rci = 2 * pi + 2;
+
+        if (lci <= li && nums[lci] > nums[maxIdx])
+            maxIdx = lci;
+        if (rci <= li && nums[rci] > nums[maxIdx])
+            maxIdx = rci;
+
+        if (pi != maxIdx) {
+            swap(nums, pi, maxIdx);
+            downHeapify(nums, maxIdx, li);
+        }
+    }
+
+    public int findKthLargest(int[] nums, int k) {
+        int n = nums.length;
+        for (int i = n - 1; i >= 0; i--)
+            downHeapify(nums, i, n - 1);
+
+        int li = n - 1;
+        while (k > 1) {
+            swap(nums, 0, li--);
+            downHeapify(nums, 0, li);
+            k--;
+        }
+
+        return nums[0];
+    }
+
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length, m = matrix[0].length;
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {
+            return matrix[a / m][a % m] - matrix[b / m][b % m];
+        });
+
+        for (int i = 0; i < n; i++)
+            pq.add(i * m + 0);
+
+        int r = 0;
+        int c = 0;
+
+        while (--k > 0) {
+            int idx = pq.remove();
+            r = idx / m;
+            c = idx % m + 1;
+            if (c < m)
+                pq.add(r * m + c);
+        }
+
+        return matrix[r][c];
+    }
+
+    // 378
+    public int kthSmallest(int[][] matrix, int k) {
+        int n = matrix.length, m = matrix[0].length;
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {
+            return matrix[a / m][a % m] - matrix[b / m][b % m];
+        });
+
+        for (int i = 0; i < n; i++)
+            pq.add(i * m + 0);
+
+        while (--k > 0) {
+            int idx = pq.remove();
+            int r = idx / m;
+            int c = (idx % m) + 1;
+            if (c < m)
+                pq.add(r * m + c);
+        }
+
+        int idx = pq.peek();
+        return matrix[idx / m][idx % m];
+    }
+
     public static void main(String[] args) {
         MinPQ();
         System.out.println();

@@ -24,5 +24,6 @@ public class basic {
         System.out.println(height(arr, 0));
         System.out.println(size(arr,0));
         System.out.println(arr.length);
+        
     }
 }
