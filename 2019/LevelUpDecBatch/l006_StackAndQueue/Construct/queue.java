@@ -15,6 +15,10 @@ public class queue {
         return this.NoOfElements == 0;
     }
 
+    public void display(){
+        
+    }
+
     protected void QueueEmptyException() throws Exception {
         if (this.NoOfElements == 0)
             throw new Exception("QueueISEmpty");
