@@ -299,9 +299,9 @@ public class l001_Basics {
         while (--k > 0) {
             int idx = pq.remove();
             int r = idx / m;
-            int c = (idx % m) + 1;
-            if (c < m)
-                pq.add(r * m + c);
+            int c = (idx % m);
+            if (c + 1 < m)
+                pq.add(r * m + c + 1);
         }
 
         int idx = pq.peek();
