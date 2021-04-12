@@ -1,3 +1,4 @@
+
 public class l001 {
     public static boolean isPlaindrome(String str, int si, int ei) {
         while (si < ei) {
@@ -102,7 +103,54 @@ public class l001 {
         }
 
         return count;
+    }
 
+    // String immutable test
+    public static void stringImmutableTest() {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i <= (int) 1e6; i++) {
+            str.append(i);
+        }
+
+        // System.out.println(str);
+    }
+
+    // String Builder Basic Functions.
+    public static void stringBuilderBasicFunction() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("a"); //
+        sb.append("bcd"); // O(m), where m is length of string which i want to append.
+        System.out.println(sb.toString()); // O(n)
+        sb.setCharAt(2, 'e'); // O(1)
+        System.out.println(sb.toString()); // O(n)
+        sb.deleteCharAt(2); // O(n)
+        System.out.println(sb.toString());
+    }
+
+    // Toggle Case
+    public static String toggleCase(String str) {
+        StringBuilder sb = new StringBuilder();
+        int n = str.length();
+        for (int i = 0; i < n; i++) {
+            char ch = str.charAt(i);
+            if (ch >= 'a' && ch <= 'z')
+                sb.append((char) (ch - 'a' + 'A'));
+            else
+                sb.append((char) (ch - 'A' + 'a'));
+        }
+        return sb.toString();
+    }
+
+    public static String asciiDifference(String str) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(str.charAt(0));
+        int n = str.length();
+        for (int i = 1; i < n; i++) {
+            sb.append(str.charAt(i) - str.charAt(i - 1));
+            sb.append(str.charAt(i));
+        }
+
+        return sb.toString();
     }
 
     public static void main(String[] args) {
@@ -111,7 +159,14 @@ public class l001 {
         // removeDuplicatesInsertCount(str);
 
         // System.out.println(countOfHi("hihijhiihihih"));
-        System.out.println(countHiWithoutHit("ihihit"));
+        // System.out.println(countHiWithoutHit("ihihit"));
+
+        // long start = System.currentTimeMillis();
+        // stringImmutableTest();
+        // long end = System.currentTimeMillis();
+        // System.out.println(end - start);
+
+        // stringBuilderBasicFunction();
     }
 
 }
