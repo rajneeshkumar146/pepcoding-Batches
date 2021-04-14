@@ -82,6 +82,24 @@ public class l002 {
         return recAns;
     }
 
+    public static boolean firstAndLastIdx(int[] arr, int idx, int data, int[] ans) {
+        if (idx == arr.length)
+            return false;
+        if (arr[idx] == data)
+            ans[0] = idx;
+
+        boolean res = firstAndLastIdx(arr, idx + 1, data, ans);
+        if (res)
+            return res;
+
+        if (arr[idx] == data) {
+            ans[1] = idx;
+            return true;
+        }
+
+        return false;
+    }
+
     public static void main(String[] args) {
         int[] arr = { 12, 3, 2, 4, 34, 3, 4, 2, 2, 76 };
         // printReverseArray(arr, 0);
