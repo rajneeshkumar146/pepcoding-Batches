@@ -127,7 +127,7 @@ public class l001 {
 
         System.out.println("Post: " + n);
 
-        return n + 3;
+        return count + 3;
     }
 
     // n = 6
@@ -149,7 +149,7 @@ public class l001 {
         count += recursionTree2(n - 3);
 
         System.out.println("Post: " + n);
-        return n + 3;
+        return count + 3;
     }
 
     public static int fibo(int n) {
