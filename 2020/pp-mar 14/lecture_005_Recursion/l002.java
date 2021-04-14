@@ -90,7 +90,7 @@ public class l002 {
 
         boolean res = firstAndLastIdx(arr, idx + 1, data, ans);
         if (res)
-            return res;
+            return true;
 
         if (arr[idx] == data) {
             ans[1] = idx;
