@@ -1,6 +1,8 @@
 import java.util.Stack;
+import java.util.ArrayDeque;
 
 public class question {
+
     // N : Next, G = greater, S : Smaller, L : Left, R : Right
     public static void NGOR(int[] arr, int[] ans) {
         int n = arr.length;
@@ -98,5 +100,69 @@ public class question {
             return span;
         }
     }
+
+    // 20
+    public boolean isValid(String str) {
+        if (str.length() == 0)
+            return true;
+        int n = str.length();
+        if (str.charAt(0) == ')' || str.charAt(0) == ']' || str.charAt(0) == '}')
+            return false;
+        if (str.charAt(n - 1) == '(' || str.charAt(n - 1) == '[' || str.charAt(n - 1) == '{')
+            return false;
+
+        Stack<Character> st = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            char ch = str.charAt(i);
+            if (ch == '(' || ch == '[' || ch == '{')
+                st.push(ch);
+            else {
+                if (st.size() == 0) // more no of closing brackets
+                    return false;
+                else if (ch == ')' && st.peek() != '(')
+                    return false;
+                else if (ch == ']' && st.peek() != '[')
+                    return false;
+                else if (ch == '}' && st.peek() != '{')
+                    return false;
+                else
+                    st.pop();
+            }
+        }
+
+        return st.size() == 0; // st.size() != 0; // means No of Opening Brackets
+    }
+
+    // 1249
+public String minRemoveToMakeValid(String s)
+{
+    ArrayDeque<Integer> st = new ArrayDeque<>();
+    int n = s.length();
+    for (int i = 0; i < n; i++)
+    {
+        char ch = s.charAt(i);
+        if (ch == '(')
+            st.addFirst(i);
+        else if (ch == ')')
+        {
+            if (st.size() != 0 && s.charAt(st.getFirst()) == '(')
+                st.removeFirst();
+            else
+                st.addFirst(i);
+        }
+    }
+
+    StringBuilder ans = new StringBuilder();
+    for(int i=0;i<n;i++){
+        if(st.size() != 0 &&  st.getLast() == i){
+            st.removeLast();
+            continue;
+        }
+
+        ans.append(s.charAt(i));
+    }
+
+    return ans.toString();
+}
 
 }
