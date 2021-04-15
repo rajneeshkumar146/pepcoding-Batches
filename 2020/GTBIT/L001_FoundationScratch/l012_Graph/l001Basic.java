@@ -10,6 +10,11 @@ public class l001Basic {
             this.v = v;
             this.w = w;
         }
+
+        public String toString() {
+            return "(" + this.v + ", " + this.w + ") ";
+
+        }
     }
 
     public static int N = 7;
@@ -20,7 +25,25 @@ public class l001Basic {
         graph[v].add(new Edge(u, w));
     }
 
-    public static void display(){
+    public static void display() {
+        for (int i = 0; i < N; i++) {
+            System.out.print(i + " -> ");
+            for (Edge e : graph[i]) {
+                System.out.print(e);
+            }
+            System.out.println();
+        }
+    }
+
+    public static int findEdge(int u, int v) {
+
+    }
+
+    public static void removeEdge(int u, int v) {
+
+    }
+
+    public static void removeVtx(int u){
 
     }
 
@@ -35,6 +58,8 @@ public class l001Basic {
         addEdge(4, 5, 10);
         addEdge(4, 6, 10);
         addEdge(5, 6, 10);
+
+        display();
     }
 
 }
