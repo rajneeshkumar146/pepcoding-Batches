@@ -134,35 +134,50 @@ public class question {
     }
 
     // 1249
-public String minRemoveToMakeValid(String s)
-{
-    ArrayDeque<Integer> st = new ArrayDeque<>();
-    int n = s.length();
-    for (int i = 0; i < n; i++)
-    {
-        char ch = s.charAt(i);
-        if (ch == '(')
-            st.addFirst(i);
-        else if (ch == ')')
-        {
-            if (st.size() != 0 && s.charAt(st.getFirst()) == '(')
-                st.removeFirst();
-            else
+    public String minRemoveToMakeValid(String s) {
+        ArrayDeque<Integer> st = new ArrayDeque<>();
+        int n = s.length();
+        for (int i = 0; i < n; i++) {
+            char ch = s.charAt(i);
+            if (ch == '(')
                 st.addFirst(i);
-        }
-    }
-
-    StringBuilder ans = new StringBuilder();
-    for(int i=0;i<n;i++){
-        if(st.size() != 0 &&  st.getLast() == i){
-            st.removeLast();
-            continue;
+            else if (ch == ')') {
+                if (st.size() != 0 && s.charAt(st.getFirst()) == '(')
+                    st.removeFirst();
+                else
+                    st.addFirst(i);
+            }
         }
 
-        ans.append(s.charAt(i));
+        StringBuilder ans = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            if (st.size() != 0 && st.getLast() == i) {
+                st.removeLast();
+                continue;
+            }
+
+            ans.append(s.charAt(i));
+        }
+
+        return ans.toString();
     }
 
-    return ans.toString();
-}
+    // 32
+    public int longestValidParentheses(String s) {
+        int n = s.length();
+        Stack<Integer> st = new Stack<>();
+        st.push(-1);
+        int len = 0;
+        for (int i = 0; i < n; i++) {
+            if (st.peek() != -1 && s.charAt(st.peek()) == '(' && s.charAt(i) == ')') {
+                st.pop();
+                len = Math.max(len, i - st.peek());
+            } else {
+                st.push(i);
+            }
+        }
+
+        return len;
+    }
 
 }
