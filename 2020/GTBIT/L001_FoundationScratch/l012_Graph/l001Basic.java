@@ -36,15 +36,48 @@ public class l001Basic {
     }
 
     public static int findEdge(int u, int v) {
+        for (int i = 0; i < graph[u].size(); i++) {
+            Edge e = graph[u].get(i);
+            if (e.v == v)
+                return i;
+        }
 
+        return -1;
     }
 
     public static void removeEdge(int u, int v) {
+        int idx1 = findEdge(u, v);
+        int idx2 = findEdge(v, u);
 
+        // if (idx1 == -1 || idx2 == -1)
+        // return;
+
+        graph[u].remove(idx1);
+        graph[v].remove(idx2);
     }
 
-    public static void removeVtx(int u){
+    public static void removeVtx(int u) {
 
+        while (graph[u].size() != 0) {
+            int n = graph[u].size();
+            Edge e = graph[u].get(n - 1);
+            removeEdge(u, e.v);
+        }
+    }
+
+    public static boolean hasPath(int src, int dest, boolean[] vis) {
+        if (src == dest) {
+            return true;
+        }
+
+        boolean res = false;
+        vis[src] = true;
+        for (Edge e : graph[src]) {
+            if (!vis[e.v])
+                res = res || hasPath(e.v, dest, vis);
+        }
+
+        return res;
     }
 
     public static void main(String[] args) {
@@ -59,7 +92,9 @@ public class l001Basic {
         addEdge(4, 6, 10);
         addEdge(5, 6, 10);
 
-        display();
+        // display();
+        boolean[] vis = new boolean[N];
+        System.out.println(hasPath(0, 6, vis));
     }
 
 }
