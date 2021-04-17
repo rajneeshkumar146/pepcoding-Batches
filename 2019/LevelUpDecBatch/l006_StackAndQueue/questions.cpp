@@ -195,8 +195,10 @@ string minRemoveToMakeValid(string s)
 
     string ans = "";
     int idx = 0;
-    for(int i=0;i<n;i++){
-        if(idx < st.size() &&  st[idx] == i){
+    for (int i = 0; i < n; i++)
+    {
+        if (idx < st.size() && st[idx] == i)
+        {
             idx++;
             continue;
         }
@@ -205,6 +207,101 @@ string minRemoveToMakeValid(string s)
     }
 
     return ans;
+}
+
+//735
+vector<int> asteroidCollision(vector<int> &arr)
+{
+    stack<int> st;
+
+    int n = arr.size();
+    for (int ele : arr)
+    {
+        if (ele > 0)
+        {
+            st.push(ele);
+            continue;
+        }
+
+        while (st.size() != 0 && st.top() > 0 && st.top() < -ele)
+            st.pop();
+
+        if (st.size() != 0 && st.top() == -ele)
+            st.pop();
+        else if (st.size() == 0 || st.top() < 0)
+            st.push(ele);
+        else
+        {
+        }
+    }
+
+    vector<int> ans(st.size(), 0);
+    int idx = st.size() - 1;
+    while (st.size() != 0)
+    {
+        ans[idx--] = st.top();
+        st.pop();
+    }
+
+    return ans;
+}
+
+//84
+int largestRectangleArea(vector<int> &heights)
+{
+    int n = heights.size();
+    vector<int> nsol;
+    vector<int> nsor;
+    NSOL(heights, nsol);
+    NSOR(heights, nsor);
+
+    int maxArea = 0;
+    for (int i = 0; i < n; i++)
+    {
+        int h = heights[i];
+        int w = nsor[i] - nsol[i] - 1;
+
+        maxArea = max(maxArea, h * w);
+    }
+
+    return maxArea;
+}
+
+//84
+int largestRectangleArea_02(vector<int> &heights)
+{
+    int n = heights.size();
+    stack<int> st;
+    st.push(-1);
+    int maxArea = 0;
+
+    int i = 0;
+    while (i < n)
+    {
+        while (st.top() != -1 && heights[st.top()] >= heights[i])
+        {
+            int idx = st.top();
+            st.pop();
+
+            int h = heights[idx];
+            int w = i - st.top() - 1;
+            maxArea = max(maxArea, h * w);
+        }
+
+        st.push(i++);
+    }
+
+    while (st.top() != -1)
+    {
+        int idx = st.top();
+        st.pop();
+
+        int h = heights[idx];
+        int w = n - st.top() - 1;
+        maxArea = max(maxArea, h * w);
+    }
+
+    return maxArea;
 }
 
 int main()

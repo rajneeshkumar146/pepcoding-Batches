@@ -180,4 +180,152 @@ public class question {
         return len;
     }
 
+    // 84
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        int[] nsol = new int[n];
+        int[] nsor = new int[n];
+        NSOL(heights, nsol);
+        NSOR(heights, nsor);
+
+        int maxArea = 0;
+        for (int i = 0; i < n; i++) {
+            int h = heights[i];
+            int w = nsor[i] - nsol[i] - 1;
+
+            maxArea = Math.max(maxArea, h * w);
+        }
+
+        return maxArea;
+    }
+
+    // 221
+
+    public static void NSOR(int[] arr, int[] ans) {
+        int n = arr.length;
+        Arrays.fill(ans, n); // Java : Arrays.fill(ans,n);
+
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < n; i++) {
+            while (st.size() != 0 && arr[st.peek()] > arr[i]) {
+                ans[st.pop()] = i;
+            }
+            st.push(i);
+        }
+    }
+
+    public static void NSOL(int[] arr, int[] ans) {
+        int n = arr.length;
+        Arrays.fill(ans, -1); // Java : Arrays.fill(ans,-1);
+
+        Stack<Integer> st = new Stack<>();
+        for (int i = n - 1; i >= 0; i--) {
+            while (st.size() != 0 && arr[st.peek()] > arr[i]) {
+                ans[st.pop()] = i;
+            }
+            st.push(i);
+        }
+    }
+
+    // 85
+    public int largestRectangleArea(int[] heights) {
+        int n = heights.length;
+        int[] nsol = new int[n];
+        int[] nsor = new int[n];
+        NSOL(heights, nsol);
+        NSOR(heights, nsor);
+
+        int maxArea = 0;
+        for (int i = 0; i < n; i++) {
+            int h = heights[i];
+            int w = nsor[i] - nsol[i] - 1;
+
+            maxArea = Math.max(maxArea, (h < w) ? h * h : w * w);
+        }
+
+        return maxArea;
+    }
+
+    int largestRectangleArea_02(int[] heights) {
+        int n = heights.length;
+        Stack<Integer> st = new Stack<>();
+        st.push(-1);
+        int maxArea = 0;
+
+        int i = 0;
+        while (i < n) {
+            while (st.peek() != -1 && heights[st.peek()] >= heights[i]) {
+                int idx = st.peek();
+                st.pop();
+
+                int h = heights[idx];
+                int w = i - st.peek() - 1;
+                maxArea = Math.max(maxArea, h * w);
+            }
+
+            st.push(i++);
+        }
+
+        while (st.peek() != -1) {
+            int idx = st.peek();
+            st.pop();
+
+            int h = heights[idx];
+            int w = n - st.peek() - 1;
+            maxArea = Math.max(maxArea, h * w);
+        }
+
+        return maxArea;
+    }
+
+    public int maximalSquare(char[][] matrix) {
+        if (matrix.length == 0 || matrix[0].length == 0)
+            return 0;
+        int n = matrix.length;
+        int m = matrix[0].length;
+        int maxRec = 0;
+        int[] heights = new int[m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                char ch = matrix[i][j];
+                heights[j] = ch == '1' ? heights[j] + 1 : 0;
+            }
+
+            maxRec = Math.max(maxRec, largestRectangleArea(heights));
+        }
+
+        return maxRec;
+    }
+
+    public String removeKdigits(String num, int k) {
+        ArrayList<Character> st = new ArrayList<>();
+
+        for (int i = 0; i < num.length(); i++) {
+            char ch = num.charAt(i);
+            while (st.size() != 0 && st.get(st.size() - 1) > ch && k > 0) {
+                st.remove(st.size() - 1);
+                k--;
+            }
+            st.add(ch);
+        }
+
+        while (k-- > 0) {
+            st.remove(st.size() - 1);
+        }
+
+        StringBuilder ans = new StringBuilder();
+        boolean flag = false;
+        for (Character ch : st) {
+            if (ch == '0' && !flag) {
+                continue;
+            }
+
+            flag = true;
+            ans.append(ch);
+        }
+
+        String res = ans.toString();
+        return res.length() == 0 ? "0" : res;
+    }
+
 }
