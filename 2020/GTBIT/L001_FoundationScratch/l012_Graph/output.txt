@@ -1,1 +1,5 @@
-false
+Smallest Path =01256@28
+Largest Path =032546@66
+Ceil of 30 =36
+Floor of 30 =28
+Kth Largest Path =03456@48
