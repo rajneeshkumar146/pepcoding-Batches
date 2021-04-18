@@ -288,7 +288,7 @@ public class l001Basic {
         return size + 1;
     }
 
-    public static int journeyToMoon(int n, int[][] astronaut) {
+    public static long journeyToMoon(int n, int[][] astronaut) {
         ArrayList<Integer>[] graph = new ArrayList[n];
         for (int i = 0; i < n; i++)
             graph[i] = new ArrayList<>();
@@ -305,9 +305,16 @@ public class l001Basic {
                 sizeArray.add(moonDFS(graph, i, vis));
         }
 
+        long ssf = 0, res = 0;
+        for (int ele : sizeArray) {
+            res += ele * ssf;
+            ssf += ele;
+        }
+
+        return res;
     }
 
-    public static void main(String[] args) {
+.     public static void main(String[] args) {
         for (int i = 0; i < N; i++)
             graph[i] = new ArrayList<>();
         addEdge(0, 1, 10);
