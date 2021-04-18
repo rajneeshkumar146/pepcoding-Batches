@@ -206,6 +206,75 @@ public class l001Basic {
         }
     }
 
+    public static boolean isGraphConnected() {
+        boolean[] vis = new boolean[N];
+        int components = 0;
+        for (int i = 0; i < N; i++) {
+            if (!vis[i]) {
+                components++;
+                dfs(i, vis);
+            }
+        }
+
+        return components == 1;
+    }
+
+    public static void dfs_island(int[][] mat, int[][] dir, int i, int j) {
+        mat[i][j] = 0;
+        for (int d = 0; d < 4; d++) {
+            int r = i + dir[d][0];
+            int c = j + dir[d][1];
+
+            if (r >= 0 && c >= 0 && r < mat.length && c < mat[0].length && mat[r][c] == 1) {
+                dfs_island(mat, dir, r, c);
+            }
+        }
+    }
+
+    public static int numberIsland(int[][] mat) {
+        int n = mat.length;
+        int m = mat[0].length;
+
+        int[][] dir = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (mat[i][j] == 1) {
+                    dfs_island(mat, dir, i, j);
+                    count++;
+                }
+            }
+        }
+
+        return count;
+    }
+
+    public static void hamintonian_dfs(int src, int osrc, boolean[] vis, int NoOfEdges, String psf) {
+        if (NoOfEdges == N - 1) {
+            System.out.print(psf + src);
+            int idx = findEdge(src, osrc);
+            if (idx != -1)
+                System.out.print("*");
+
+            System.out.println();
+            return;
+        }
+
+        vis[src] = true;
+        for (Edge e : graph[src]) {
+            if (!vis[e.v])
+                hamintonian_dfs(e.v, osrc, vis, NoOfEdges + 1, psf + src);
+        }
+
+        vis[src] = false;
+    }
+
+    public static void hamintonianPath() {
+        boolean[] vis = new boolean[N];
+        hamintonian_dfs(0, 0, vis, 0, "");
+    }
+
     public static void main(String[] args) {
         for (int i = 0; i < N; i++)
             graph[i] = new ArrayList<>();
@@ -218,19 +287,23 @@ public class l001Basic {
         addEdge(4, 6, 8);
         addEdge(5, 6, 3);
         addEdge(2, 5, 5);
+        addEdge(0, 6, 16);
 
         // display();
-        boolean[] vis = new boolean[N];
+        // boolean[] vis = new boolean[N];
         // System.out.println(hasPath(0, 6, vis));
         // printPostOrder(0, vis, "", 0);
-        pair p = new pair();
-        allSolution(0, 6, vis, p, "", 0, 30, 4);
-        System.out.println("Smallest Path =" + p.smallestPath + "@" + p.smallestWeight);
-        System.out.println("Largest Path =" + p.largestPath + "@" + p.largestWeight);
-        System.out.println("Ceil of 30 =" + +p.ceil);
-        System.out.println("Floor of 30 =" + +p.floor);
-        System.out.println("Kth Largest Path =" + pq.peek().psf + "@" + pq.peek().wsf);
+        // pair p = new pair();
+        // allSolution(0, 6, vis, p, "", 0, 30, 4);
+        // System.out.println("Smallest Path =" + p.smallestPath + "@" +
+        // p.smallestWeight);
+        // System.out.println("Largest Path =" + p.largestPath + "@" + p.largestWeight);
+        // System.out.println("Ceil of 30 =" + +p.ceil);
+        // System.out.println("Floor of 30 =" + +p.floor);
+        // System.out.println("Kth Largest Path =" + pq.peek().psf + "@" +
+        // pq.peek().wsf);
 
+        hamintonianPath();
     }
 
 }
