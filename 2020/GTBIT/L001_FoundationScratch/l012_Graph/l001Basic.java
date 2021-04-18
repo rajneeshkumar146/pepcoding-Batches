@@ -275,6 +275,38 @@ public class l001Basic {
         hamintonian_dfs(0, 0, vis, 0, "");
     }
 
+    // Moon problem
+
+    public static int moonDFS(ArrayList<Integer>[] graph, int src, boolean[] vis) {
+        vis[src] = true;
+        int size = 0;
+        for (Integer e : graph[src]) {
+            if (!vis[e])
+                size += moonDFS(graph, e, vis);
+        }
+
+        return size + 1;
+    }
+
+    public static int journeyToMoon(int n, int[][] astronaut) {
+        ArrayList<Integer>[] graph = new ArrayList[n];
+        for (int i = 0; i < n; i++)
+            graph[i] = new ArrayList<>();
+
+        for (int[] a : astronaut) {
+            graph[a[0]].add(a[1]);
+            graph[a[1]].add(a[0]);
+        }
+
+        ArrayList<Integer> sizeArray = new ArrayList<>();
+        boolean[] vis = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            if (!vis[i])
+                sizeArray.add(moonDFS(graph, i, vis));
+        }
+
+    }
+
     public static void main(String[] args) {
         for (int i = 0; i < N; i++)
             graph[i] = new ArrayList<>();
