@@ -328,4 +328,33 @@ public class question {
         return res.length() == 0 ? "0" : res;
     }
 
+    // 316
+    public String removeDuplicateLetters(String s) {
+        int n = s.length();
+        StringBuilder st = new StringBuilder();
+        boolean[] vis = new boolean[26];
+        int[] freq = new int[26];
+
+        for (int i = 0; i < n; i++)
+            freq[s.charAt(i) - 'a']++;
+
+        for (int i = 0; i < n; i++) {
+            char ch = s.charAt(i);
+            freq[ch - 'a']--;
+            if (vis[ch - 'a'])
+                continue;
+
+            while (st.length() != 0 && st.charAt(st.length() - 1) > ch && freq[st.charAt(st.length() - 1) - 'a'] > 0) {
+                char rch = st.charAt(st.length() - 1); // st.peek();
+                vis[rch - 'a'] = false;
+                st.deleteCharAt(st.length() - 1); // st.pop();
+            }
+
+            vis[ch - 'a'] = true;
+            st.append(ch);
+        }
+
+        return st.toString();
+    }
+
 }

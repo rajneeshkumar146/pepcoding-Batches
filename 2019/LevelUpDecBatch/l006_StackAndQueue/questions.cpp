@@ -304,6 +304,109 @@ int largestRectangleArea_02(vector<int> &heights)
     return maxArea;
 }
 
+//316
+string removeDuplicateLetters(string s)
+{
+
+    string st = "";
+    vector<bool> vis(26, false);
+    vector<int> freq(26, 0);
+    for (char ch : s)
+        freq[ch - 'a']++;
+
+    for (char ch : s)
+    {
+        freq[ch - 'a']--;
+        if (vis[ch - 'a'])
+            continue;
+
+        while (st.length() != 0 && st.back() > ch && freq[st.back() - 'a'] > 0)
+        {
+            char rch = st.back();
+            st.pop_back();
+            vis[rch - 'a'] = false;
+        }
+
+        vis[ch - 'a'] = true;
+        st.push_back(ch);
+    }
+
+    return st;
+}
+
+int trap(vector<int> &height)
+{
+    int n = height.size();
+    vector<int> lHeight(n, 0);
+    vector<int> rHeight(n, 0);
+
+    int prev = 0;
+    for (int i = 0; i < n; i++)
+    {
+        lHeight[i] = max(height[i], prev);
+        prev = lHeight[i];
+    }
+
+    prev = 0;
+    for (int i = n - 1; i >= 0; i--)
+    {
+        rHeight[i] = max(height[i], prev);
+        prev = rHeight[i];
+    }
+
+    int totalWater = 0;
+    for (int i = 0; i < n; i++)
+    {
+        totalWater += min(lHeight[i], rHeight[i]) - height[i];
+    }
+
+    return totalWater;
+}
+
+int trap_01(vector<int> &height)
+{
+    int n = height.size();
+    stack<int> st;
+
+    int totalWater = 0;
+    for (int i = 0; i < n; i++)
+    {
+        while (st.size() != 0 && height[st.top()] <= height[i])
+        {
+            int idx = st.top();
+            st.pop();
+            if (st.size() == 0)
+                break;
+
+            int w = i - st.top() - 1;
+            int h = height[idx];
+
+            totalWater += w * (min(height[st.top()], height[i]) - h);
+        }
+
+        st.push(i);
+    }
+
+    return totalWater;
+}
+
+int trap_03(vector<int> &height)
+{
+    int n = height.size();
+    int lmax = 0, rmax = 0;
+    int l = 0, r = n - 1, totalWater = 0;
+
+    while (l < r)
+    {
+        lmax = max(lmax, height[l]);
+        rmax = max(rmax, height[r]);
+
+        totalWater += lmax < rmax ? lmax - height[l++] : rmax - height[r--];
+    }
+
+    return totalWater;
+}
+
 int main()
 {
     return 0;
