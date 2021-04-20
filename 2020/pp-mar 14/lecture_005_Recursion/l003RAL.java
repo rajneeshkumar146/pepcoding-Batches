@@ -75,7 +75,173 @@ public class l003RAL {
     }
 
     public static ArrayList<String> decodeWays2(String str) {
+        if (str.length() == 0) {
+            ArrayList<String> ans = new ArrayList<>();
+            ans.add("");
+            return ans;
+        }
 
+        char ch1 = str.charAt(0);
+        String word = nokiaKeys[ch1 - '0'];
+        ArrayList<String> myAns = new ArrayList<>();
+
+        ArrayList<String> recAns1 = decodeWays2(str.substring(1));
+        for (int i = 0; i < word.length(); i++) {
+            for (String s : recAns1) {
+                myAns.add(word.charAt(i) + s);
+            }
+        }
+
+        if (str.length() > 1) {
+            char ch2 = str.charAt(1);
+            int num = (ch1 - '0') * 10 + (ch2 - '0');
+            if (num == 10 || num == 11) {
+                ArrayList<String> recAns2 = decodeWays2(str.substring(2));
+                word = nokiaKeys[num];
+                for (int i = 0; i < word.length(); i++) {
+                    for (String s : recAns2) {
+                        myAns.add(word.charAt(i) + s);
+                    }
+                }
+            }
+        }
+
+        return myAns;
+    }
+
+    public static ArrayList<String> getStairPath(int n) {
+        if (n == 0) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
+
+        ArrayList<String> myAns = new ArrayList<>();
+        for (int i = 1; i <= 3 && n - i >= 0; i++) {
+            ArrayList<String> recAns = getStairPath(n - i);
+            for (String s : recAns) {
+                myAns.add(i + s);
+            }
+        }
+
+        return myAns;
+    }
+
+    public static ArrayList<String> boardPath(int n) {
+        if (n == 0) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
+
+        ArrayList<String> myAns = new ArrayList<>();
+        for (int dice = 1; dice <= 6 && n - dice >= 0; dice++) {
+            ArrayList<String> recAns = boardPath(n - dice);
+            for (String s : recAns) {
+                myAns.add(dice + s);
+            }
+        }
+
+        return myAns;
+    }
+
+    public static ArrayList<String> boardPathOnArray(int n, int[] move) {
+        if (n == 0) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
+
+        ArrayList<String> myAns = new ArrayList<>();
+        for (int i = 0; i < move.length && n - move[i] >= 0; i++) {
+            ArrayList<String> recAns = boardPathOnArray(n - move[i], move);
+            for (String s : recAns) {
+                myAns.add(move[i] + s);
+            }
+        }
+
+        return myAns;
+    }
+
+    public static ArrayList<String> mazePath_HV(int sr, int sc, int er, int ec) {
+        if (sr == er && sc == ec) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
+
+        ArrayList<String> myAns = new ArrayList<>();
+        if (sc + 1 <= ec) {
+            ArrayList<String> horizontal = mazePath_HV(sr, sc + 1, er, ec);
+            for (String s : horizontal)
+                myAns.add("H" + s); // CPP : string(1,'H') + s;
+        }
+
+        if (sr + 1 <= er) {
+            ArrayList<String> vertical = mazePath_HV(sr + 1, sc, er, ec);
+            for (String s : vertical)
+                myAns.add("V" + s);
+        }
+
+        return myAns;
+    }
+
+    public static ArrayList<String> mazePath_HDV(int sr, int sc, int er, int ec) {
+        if (sr == er && sc == ec) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
+
+        ArrayList<String> myAns = new ArrayList<>();
+        if (sc + 1 <= ec) {
+            ArrayList<String> horizontal = mazePath_HDV(sr, sc + 1, er, ec);
+            for (String s : horizontal)
+                myAns.add("H" + s); // CPP : string(1,'H') + s;
+        }
+
+        if (sr + 1 <= er && sc + 1 <= ec) {
+            ArrayList<String> diagonal = mazePath_HDV(sr + 1, sc + 1, er, ec);
+            for (String s : diagonal)
+                myAns.add("D" + s);
+        }
+
+        if (sr + 1 <= er) {
+            ArrayList<String> vertical = mazePath_HDV(sr + 1, sc, er, ec);
+            for (String s : vertical)
+                myAns.add("V" + s);
+        }
+
+        return myAns;
+    }
+
+    public static ArrayList<String> mazePath_MultiHDV(int sr, int sc, int er, int ec) {
+        if (sr == er && sc == ec) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
+
+        ArrayList<String> myAns = new ArrayList<>();
+        for (int jump = 1; sc + jump <= ec; jump++) {
+            ArrayList<String> horizontal = mazePath_MultiHDV(sr, sc + jump, er, ec);
+            for (String s : horizontal)
+                myAns.add("H" + jump + s);
+        }
+
+        for (int jump = 1; sc + jump <= ec && sr + jump <= er; jump++) {
+            ArrayList<String> diagonal = mazePath_MultiHDV(sr + jump, sc + jump, er, ec);
+            for (String s : diagonal)
+                myAns.add("D" + jump + s);
+        }
+
+        for (int jump = 1; sr + jump <= er; jump++) {
+            ArrayList<String> vertical = mazePath_MultiHDV(sr + jump, sc, er, ec);
+            for (String s : vertical)
+                myAns.add("V" + jump + s); // "V" + to_string(jump) + s
+        }
+
+        return myAns;
     }
 
     public static void main(String[] args) {
@@ -84,12 +250,16 @@ public class l003RAL {
         // System.out.println(s);
         // }
 
-        for (String s : decodeWays("1230")) {
-            System.out.println(s);
-        }
+        // for (String s : decodeWays("1230")) {
+        // System.out.println(s);
+        // }
 
         // System.out.println((int) '0');
         // System.out.println((int) '1');
         // System.out.println(('1' + '0' + ""));
+
+        // System.out.println(getStairPath(5));
+
+        System.out.println(mazePath_MultiHDV(0, 0, 3, 3));
     }
 }
