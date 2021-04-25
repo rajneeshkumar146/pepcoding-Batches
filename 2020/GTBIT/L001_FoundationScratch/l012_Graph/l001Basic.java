@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.PriorityQueue;
+import java.util.LinkedList;
 
 public class l001Basic {
 
@@ -314,7 +315,110 @@ public class l001Basic {
         return res;
     }
 
-.     public static void main(String[] args) {
+    public static void BFS(int src, boolean[] vis) {
+        int level = 0, cycleCount = 0;
+
+        LinkedList<Integer> que = new LinkedList<>();
+        que.addLast(src);
+
+        while (que.size() != 0) {
+            int size = que.size();
+            System.out.print(level + " -> ");
+
+            while (size-- > 0) {
+                int rVtx = que.removeFirst();
+                if (vis[rVtx]) {
+                    cycleCount++;
+                    continue;
+                }
+
+                System.out.print(rVtx + " ");
+
+                vis[rVtx] = true;
+                for (Edge e : graph[rVtx]) {
+                    if (!vis[e.v]) {
+                        que.addLast(e.v);
+                    }
+                }
+            }
+
+            System.out.println();
+            level++;
+        }
+    }
+
+    public static void BFS_02(int src, boolean[] vis) {
+        int level = 0, cycleCount = 0;
+
+        LinkedList<Integer> que = new LinkedList<>();
+        que.addLast(src);
+        vis[src] = true;
+        while (que.size() != 0) {
+            int size = que.size();
+            System.out.print(level + " -> ");
+
+            while (size-- > 0) {
+                int rVtx = que.removeFirst();
+
+                System.out.print(rVtx + " ");
+                for (Edge e : graph[rVtx]) {
+                    if (!vis[e.v]) {
+                        que.addLast(e.v);
+                        vis[e.v] = true;
+                    }
+                }
+            }
+
+            System.out.println();
+            level++;
+        }
+    }
+
+    public static boolean isTree() {
+        // No cycle and 1 GCC cunt
+        return true;
+    }
+
+    public static boolean isForest() {
+        // No cycle and more than 1 GCC coun
+        return true;
+    }
+
+    public static boolean isBipartite(int src){
+        LinkedList<Integer> que = new LinkedList<>();
+        int[] vis = new int[N];
+        Arrays.fill(vis,-1);
+
+        que.addLast(src);
+        int color = 0;
+
+        // -1 -> undefine, 0 -> red, 1 -> green.
+        while(que.size() != 0){
+            int size = que.size();
+            while(size-- > 0){
+                int rvtx = que.removeFirst();
+                if(vis[rvtx] != -1){
+                    if(vis[rvtx] != color)  // conflict
+                      return false;
+                    
+                    continue;
+                }
+
+                vis[rvtx] = color;
+                for(Edge e : graph[rvtx]){
+                    if(vis[e.v] == -1){
+                        que.addLast(e.v);
+                    }
+                }
+            }
+
+            color = (color + 1) % 2;
+        }
+
+        return true;
+    }
+
+    public static void main(String[] args) {
         for (int i = 0; i < N; i++)
             graph[i] = new ArrayList<>();
         addEdge(0, 1, 10);
@@ -325,11 +429,11 @@ public class l001Basic {
         addEdge(4, 5, 3);
         addEdge(4, 6, 8);
         addEdge(5, 6, 3);
-        addEdge(2, 5, 5);
-        addEdge(0, 6, 16);
+        // addEdge(2, 5, 5);
+        // addEdge(0, 6, 16);
 
         // display();
-        // boolean[] vis = new boolean[N];
+        boolean[] vis = new boolean[N];
         // System.out.println(hasPath(0, 6, vis));
         // printPostOrder(0, vis, "", 0);
         // pair p = new pair();
@@ -342,7 +446,8 @@ public class l001Basic {
         // System.out.println("Kth Largest Path =" + pq.peek().psf + "@" +
         // pq.peek().wsf);
 
-        hamintonianPath();
+        // hamintonianPath();
+        BFS(0, vis);
     }
 
 }
