@@ -32,6 +32,10 @@ public class heap {
         constructHeap();
     }
 
+    private boolean compareTo(int i ,int j){
+
+    }
+
     int size() {
         return this.arr.size();
     }

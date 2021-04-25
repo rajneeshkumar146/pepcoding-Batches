@@ -23,6 +23,10 @@ private:
         this->isMaxHeap = isMaxHeap;
     }
 
+    bool compareTo(int i, int j)
+    {
+    }
+
 public:
     heap()
     {
