@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 public class heap {
-
     private ArrayList<Integer> arr;
     private boolean isMaxHeap = true;
 
@@ -39,11 +38,13 @@ public class heap {
 
     boolean isEmpty() {
         return this.arr.size() == 0;
-
     }
 
-    void add(int data) {
+    void add(int data) {  // O(logn)
+        this.arr.add(data);
+        int n = this.arr.size();
 
+        upHeapify(n - 1);
     }
 
     int remove() { // O(Logn)
@@ -81,6 +82,15 @@ public class heap {
         if (maxIdx != pi) {
             swap(pi, maxIdx);
             downHeapify(maxIdx);
+        }
+    }
+
+    private void upHeapify(int ci) { // O(logn)
+        int pi = (ci - 1) / 2;
+
+        if (pi >= 0 && this.arr.get(ci) > this.arr.get(pi)) {
+            swap(pi, ci);
+            upHeapify(pi);
         }
     }
 }

@@ -56,6 +56,10 @@ public:
 
     void add(int data)
     {
+        this->arr.push_back(data);
+        int n = this->arr.size();
+
+        upHeapify(n - 1);
     }
 
     int remove()
@@ -92,6 +96,17 @@ private:
         {
             swap(this->arr[pi], this->arr[maxIdx]);
             downHeapify(maxIdx);
+        }
+    }
+
+    void upHeapify(int ci) // O(logn)
+    {
+        int pi = (ci - 1) / 2;
+
+        if (pi >= 0 && this->arr[ci] > this->arr[pi])
+        {
+            swap(this->arr[pi], this->arr[ci]);
+            upHeapify(pi);
         }
     }
 };
