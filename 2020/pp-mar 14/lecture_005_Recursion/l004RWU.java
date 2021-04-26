@@ -110,14 +110,49 @@ public class l004RWU {
         return count;
     }
 
+    public static int mazePath_HVD(int sr, int sc, int er, int ec, String ans) {
+        if (sr == er && sc == ec) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count = 0;
+        if (sc + 1 <= ec)
+            count += mazePath_HVD(sr, sc + 1, er, ec, ans + "H");
+        if (sc + 1 <= ec && sr + 1 <= er)
+            count += mazePath_HVD(sr + 1, sc + 1, er, ec, ans + "D");
+        if (sr + 1 <= er)
+            count += mazePath_HVD(sr + 1, sc, er, ec, ans + "V");
+
+        return count;
+    }
+
+    public static int mazePath_MultiHVD(int sr, int sc, int er, int ec, String ans) {
+        if (sr == er && sc == ec) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count = 0;
+        for (int jump = 1; sc + jump <= ec; jump++)
+            count += mazePath_MultiHVD(sr, sc + jump, er, ec, ans + "H" + jump);
+        for (int jump = 1; sc + jump <= ec && sr + jump <= er; jump++)
+            count += mazePath_MultiHVD(sr + jump, sc + jump, er, ec, ans + "D" + jump);
+        for (int jump = 1; sr + jump <= er; jump++)
+            count += mazePath_MultiHVD(sr + jump, sc, er, ec, ans + "V" + jump);
+
+        return count;
+    }
+
     public static void main(String[] args) {
         // ArrayList<String> ans = new ArrayList<>();
         // System.out.println(subsequence("abc", "", ans));
         // System.out.println(ans);
 
-        int[] arr = { 2, 5, 3, 1 };
-        System.out.println(boardPath(arr, 10, ""));
+        // int[] arr = { 2, 5, 3, 1 };
+        // System.out.println(boardPath(arr, 10, ""));
 
+        System.out.println(mazePath_MultiHVD(0, 0, 2, 2, ""));
     }
 
 }
