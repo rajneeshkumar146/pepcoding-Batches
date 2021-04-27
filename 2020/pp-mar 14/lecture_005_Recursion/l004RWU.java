@@ -192,7 +192,28 @@ public class l004RWU {
         }
 
         // System.out.println(sb);
-        System.out.println(permutationWithoutDuplicate(sb.toString(),""));
+        System.out.println(permutationWithoutDuplicate(sb.toString(), ""));
+    }
+
+    public static int decodeWays(String str, String ans) {
+        if (str.length() == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count = 0;
+        char ch = str.charAt(0);
+        if (ch == '0')
+            return 0;
+
+        count += decodeWays(str.substring(1), ans + (char) ('a' + ch - '1'));
+        if (str.length() > 1) {
+            int num = (ch - '0') * 10 + (str.charAt(1) - '0');
+            if (num <= 26)
+                count += decodeWays(str.substring(2), ans + (char) ('a' + num - 1));
+        }
+
+        return count;
     }
 
     public static void main(String[] args) {
@@ -206,7 +227,8 @@ public class l004RWU {
         // System.out.println(mazePath_MultiHVD(0, 0, 2, 2, ""));
 
         // System.out.println(permutation("aba", ""));
-        permutationWithoutDuplicate("abab");
+        // permutationWithoutDuplicate("abab");
+        System.out.println(decodeWays("112043",""));
 
     }
 
