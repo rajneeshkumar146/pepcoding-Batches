@@ -407,6 +407,55 @@ int trap_03(vector<int> &height)
     return totalWater;
 }
 
+class MinStack
+{
+public:
+    stack<long long> st;
+    long long min = 0;
+
+    MinStack()
+    {
+    }
+
+    void push(int val)
+    {
+        if (st.size() == 0)
+        {
+            st.push(val);
+            min = val;
+        }
+        else
+        {
+            if (val < min)
+            {
+                st.push(val + (val - min));
+                min = val;
+            }
+            else
+                st.push(val);
+        }
+    }
+
+    void pop()
+    {
+        if (st.top() < min)
+            min = min + (min - st.top());
+        st.pop();
+    }
+
+    int top()
+    {
+        if (st.top() < min)
+            return (int)min;
+        return (int)st.top();
+    }
+
+    int getMin()
+    {
+        return (int)min;
+    }
+};
+
 int main()
 {
     return 0;
