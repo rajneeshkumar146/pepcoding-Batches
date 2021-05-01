@@ -80,7 +80,6 @@ vector<int> intersect(vector<int> &nums1, vector<int> &nums2)
     return ans;
 }
 
-
 //347
 vector<int> topKFrequent(vector<int> &nums, int k)
 {
@@ -112,6 +111,98 @@ vector<int> topKFrequent(vector<int> &nums, int k)
         int val = p[1];
 
         ans.push_back(val);
+    }
+
+    return ans;
+}
+
+//973
+class comp
+{
+public:
+    bool operator()(const vector<int> &a, const vector<int> &b) const
+    {
+        int d1 = a[0] * a[0] + a[1] * a[1]; // x1^2 + y1^2
+        int d2 = b[0] * b[0] + b[1] * b[1]; // x2^2 + y2^2
+
+        return d2 > d1;
+    }
+};
+
+vector<vector<int>> kClosest(vector<vector<int>> &points, int k)
+{
+    priority_queue<vector<int>, vector<vector<int>>, comp> pq;
+
+    for (vector<int> &p : points)
+    {
+        pq.push(p);
+        if (pq.size() > k)
+            pq.pop();
+    }
+
+    vector<vector<int>> ans;
+    while (pq.size() != 0)
+    {
+        ans.push_back(pq.top());
+        pq.pop();
+    }
+
+    return ans;
+}
+
+vector<vector<int>> kClosest(vector<vector<int>> &points, int k)
+{
+    //{d,x,y}
+    priority_queue<vector<int>> pq; // maxPQ
+
+    for (vector<int> &p : points)
+    {
+        int x = p[0];
+        int y = p[1];
+        pq.push({x * x + y * y, x, y});
+        if (pq.size() > k)
+            pq.pop();
+    }
+
+    vector<vector<int>> ans;
+    while (pq.size() != 0)
+    {
+        vector<int> p = pq.top();
+        pq.pop();
+        int x = p[1];
+        int y = p[2];
+
+        ans.push_back({x, y});
+    }
+
+    return ans;
+}
+
+int kthSmallest(vector<vector<int>> &matrix, int k)
+{
+
+    int n = matrix.size(), m = matrix[0].size();
+    //{val,x,y};
+    priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
+
+    for (int i = 0; i < n; i++)
+    {
+        pq.push({matrix[i][0], i, 0});
+    }
+
+    int ans = 0;
+    while (k-- > 0)
+    {
+        vector<int> rv = pq.top();
+        pq.pop();
+        int val = rv[0];
+        int x = rv[1];
+        int y = rv[2];
+
+        ans = val;
+        y++;
+        if (y < m)
+            pq.push({matrix[x][y], x, y});
     }
 
     return ans;
