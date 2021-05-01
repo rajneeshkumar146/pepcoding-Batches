@@ -1,5 +1,7 @@
 import java.util.PriorityQueue;
-
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.HashMap;
 public class questions {
     // 215
     public int findKthLargest(int[] nums, int k) {
@@ -81,6 +83,81 @@ public class questions {
 
             return this.pq.peek();
         }
+    }
+
+    public int[] intersection(int[] nums1, int[] nums2) {
+        HashSet<Integer> set = new HashSet<>();
+        for (int ele : nums1)
+            set.add(ele);
+
+        ArrayList<Integer> ans = new ArrayList<>();
+        for (int ele : nums2) {
+            if (set.contains(ele)) {
+                ans.add(ele);
+                set.remove(ele);
+            }
+        }
+
+        int[] res = new int[ans.size()];
+        int i = 0;
+        for (int ele : ans)
+            res[i++] = ele;
+
+        return res;
+    }
+
+    public int longestConsecutive(int[] nums) {
+        HashSet<Integer> set = new HashSet<>();
+        for (int ele : nums)
+            set.add(ele);
+
+        int len = 0;
+        for (int ele : nums) {
+            if (!set.contains(ele))
+                continue;
+
+            int ple = ele - 1, pre = ele + 1;
+            set.remove(ele);
+
+            while (set.contains(ple))
+                set.remove(ple--);
+            while (set.contains(pre))
+                set.remove(pre++);
+
+            len = Math.max(len, pre - ple - 1);
+        }
+
+        return len;
+    }
+
+    // 347
+    public int[] topKFrequent(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int ele : nums)
+            map.put(ele, map.getOrDefault(ele, 0) + 1);
+
+        // {val,freq}
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {
+            return a[1] - b[1];
+        });
+
+        for (Integer key : map.keySet()) {
+            pq.add(new int[] { key, map.get(key) });
+            if (pq.size() > k)
+                pq.remove();
+        }
+
+        int[] ans = new int[pq.size()];
+        int i = 0;
+        while (pq.size() != 0) {
+            int[] p = pq.remove();
+            int val = p[0];
+            int freq = p[1];
+
+            ans[i++] = val;
+        }
+
+        return ans;
     }
 
 }
