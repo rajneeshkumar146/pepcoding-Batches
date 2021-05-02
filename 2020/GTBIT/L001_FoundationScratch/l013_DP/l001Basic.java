@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+
 public class l001Basic {
     public static void print(int[] arr) {
         for (int ele : arr)
@@ -160,7 +162,173 @@ public class l001Basic {
 
     }
 
+    public static int boardPath_memo(int n, int[] dp) {
+        if (n == 0) {
+            return dp[n] = 1;
+        }
+
+        if (dp[n] != 0)
+            return dp[n];
+
+        int count = 0;
+        for (int dice = 1; dice <= 6 && n - dice >= 0; dice++) {
+            count += boardPath_memo(n - dice, dp);
+        }
+
+        return dp[n] = count;
+    }
+
+    public static int boardPath_dp(int N, int[] dp) {
+        for (int n = 0; n <= N; n++) {
+            if (n == 0) {
+                dp[n] = 1;
+                continue;
+            }
+
+            int count = 0;
+            for (int dice = 1; dice <= 6 && n - dice >= 0; dice++) {
+                count += dp[n - dice];// boardPath_memo(n - dice, dp);
+            }
+
+            dp[n] = count;
+        }
+        return dp[N];
+    }
+
+    public static int boardPath_Opti(int n) {
+        LinkedList<Integer> ll = new LinkedList<>();
+
+        ll.addLast(1);
+        ll.addLast(1);
+        for (int i = 2; i <= n; i++) {
+            if (ll.size() <= 6)
+                ll.addLast(ll.getLast() * 2);
+            else
+                ll.addLast(ll.getLast() * 2 - ll.removeFirst());
+        }
+
+        return ll.getLast();
+    }
+
+    public static void boardPath() {
+        int n = 20;
+        int[] dp = new int[n + 1];
+        // System.out.println(boardPath_memo(n, dp));
+        System.out.println(boardPath_dp(n, dp));
+        System.out.println(boardPath_Opti(n));
+
+        print(dp);
+    }
+
+    public static int mazePath_HDV(int sr, int sc, int er, int ec, int[][] dir, int[][] dp) {
+        if (sr == er && sc == ec) {
+            return dp[sr][sc] = 1;
+        }
+
+        if (dp[sr][sc] != 0)
+            return dp[sr][sc];
+
+        int count = 0;
+        for (int d = 0; d < dir.length; d++) {
+            int r = sr + dir[d][0];
+            int c = sc + dir[d][1];
+            if (r >= 0 && c >= 0 && r <= er && c <= ec) {
+                count += mazePath_HDV(r, c, er, ec, dir, dp);
+            }
+        }
+
+        return dp[sr][sc] = count;
+    }
+
+    public static int mazePath_HDV_DP(int SR, int SC, int er, int ec, int[][] dir, int[][] dp) {
+
+        for (int sr = er; sr >= 0; sr--) {
+            for (int sc = ec; sc >= 0; sc--) {
+                if (sr == er && sc == ec) {
+                    dp[sr][sc] = 1;
+                    continue;
+                }
+
+                int count = 0;
+                for (int d = 0; d < dir.length; d++) {
+                    int r = sr + dir[d][0];
+                    int c = sc + dir[d][1];
+                    if (r >= 0 && c >= 0 && r <= er && c <= ec) {
+                        count += dp[r][c];// mazePath_HDV(r, c, er, ec, dir, dp);
+                    }
+                }
+
+                dp[sr][sc] = count;
+            }
+        }
+
+        return dp[SR][SC];
+    }
+
+    public static int mazePathJump_HDV(int sr, int sc, int er, int ec, int[][] dir, int[][] dp) {
+        if (sr == er && sc == ec) {
+            return dp[sr][sc] = 1;
+        }
+
+        if (dp[sr][sc] != 0)
+            return dp[sr][sc];
+
+        int count = 0;
+        for (int d = 0; d < dir.length; d++) {
+            for (int rad = 1; rad <= Math.max(er, ec); rad++) {
+                int r = sr + rad * dir[d][0];
+                int c = sc + rad * dir[d][1];
+                if (r >= 0 && c >= 0 && r <= er && c <= ec) {
+                    count += mazePathJump_HDV(r, c, er, ec, dir, dp);
+                } else
+                    break;
+            }
+        }
+
+        return dp[sr][sc] = count;
+    }
+
+    public static int mazePathJump_HDV_DP(int SR, int SC, int er, int ec, int[][] dir, int[][] dp) {
+
+        for (int sr = er; sr >= 0; sr--) {
+            for (int sc = ec; sc >= 0; sc--) {
+                if (sr == er && sc == ec) {
+                    dp[sr][sc] = 1;
+                    continue;
+                }
+
+                int count = 0;
+                for (int d = 0; d < dir.length; d++) {
+                    for (int rad = 1; rad <= Math.max(er, ec); rad++) {
+                        int r = sr + rad * dir[d][0];
+                        int c = sc + rad * dir[d][1];
+                        if (r >= 0 && c >= 0 && r <= er && c <= ec) {
+                            count += dp[r][c];// mazePathJump_HDV(r, c, er, ec, dir, dp);
+                        } else
+                            break;
+                    }
+                }
+
+                dp[sr][sc] = count;
+            }
+        }
+
+        return dp[SR][SC];
+    }
+
+    public static void mazePath() {
+        int n = 4, m = 5;
+        int[][] dp = new int[n][m];
+        int[][] dir = { { 1, 0 }, { 0, 1 }, { 1, 1 } };
+
+        // System.out.println(mazePath_HDV(0, 0, n - 1, m - 1, dir, dp));
+        // System.out.println(mazePath_HDV_DP(0, 0, n - 1, m - 1, dir, dp));
+        System.out.println(mazePathJump_HDV(0, 0, n - 1, m - 1, dir, dp));
+        print2D(dp);
+
+    }
+
     public static void main(String[] args) {
-        fibo();
+        mazePath();
     }
 }
