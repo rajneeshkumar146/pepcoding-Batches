@@ -207,3 +207,108 @@ int kthSmallest(vector<vector<int>> &matrix, int k)
 
     return ans;
 }
+
+//380
+class RandomizedSet
+{
+public:
+    unordered_map<int, int> map;
+    vector<int> list;
+
+    RandomizedSet()
+    {
+    }
+
+    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+    bool insert(int val)
+    {
+        if (map.find(val) != map.end())
+            return false;
+
+        list.push_back(val);
+        map[val] = list.size() - 1;
+
+        return true;
+    }
+
+    /** Removes a value from the set. Returns true if the set contained the specified element. */
+    bool remove(int val)
+    {
+        if (map.find(val) == map.end())
+            return false;
+
+        int idx = map[val];
+        int lidx = list.size() - 1;
+
+        list[idx] = list[lidx];
+        map[list[lidx]] = idx;
+
+        list.pop_back();
+        map.erase(val);
+
+        return true;
+    }
+
+    /** Get a random element from the set. */
+    int getRandom()
+    {
+        int idx = rand() % list.size();
+        return list[idx];
+    }
+};
+
+class FreqStack
+{
+private:
+    class pair
+    {
+    public:
+        int val = 0;
+        int freq = 0;
+        int idx = 0;
+
+        pair(int val, int freq, int idx)
+        {
+            this->val = val;
+            this->freq = freq;
+            this->idx = idx;
+        }
+    };
+
+    class comp
+    {
+    public:
+        bool operator()(const pair &a, const pair &b) const
+        {
+            if (a.freq == b.freq)
+                return b.idx > a.idx;
+            return b.freq > a.freq;
+        }
+    };
+
+    unordered_map<int, int> freqMap;
+    priority_queue<pair, vector<pair>, comp> pq;
+    int idx = 0;
+
+public:
+    FreqStack()
+    {
+    }
+
+    void push(int val)
+    { // Log(n)
+        freqMap[val]++;
+        pq.push(pair(val, freqMap[val], idx++));
+    }
+
+    int pop()
+    { // Log(n)
+        pair p = pq.top();
+        pq.pop();
+        freqMap[p.val]--;
+        if (freqMap[p.val] == 0)
+            freqMap.erase(p.val);
+
+        return p.val;
+    }
+};
