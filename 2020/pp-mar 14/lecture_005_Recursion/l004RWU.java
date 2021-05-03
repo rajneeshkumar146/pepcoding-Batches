@@ -117,12 +117,12 @@ public class l004RWU {
         }
 
         int count = 0;
-        if (sc + 1 <= ec)
-            count += mazePath_HVD(sr, sc + 1, er, ec, ans + "H");
+        if (sc + 1 <= ec && sr + 0 <= er)
+            count += mazePath_HVD(sr + 0, sc + 1, er, ec, ans + "H");
         if (sc + 1 <= ec && sr + 1 <= er)
             count += mazePath_HVD(sr + 1, sc + 1, er, ec, ans + "D");
         if (sr + 1 <= er)
-            count += mazePath_HVD(sr + 1, sc, er, ec, ans + "V");
+            count += mazePath_HVD(sr + 1, sc + 0, er, ec, ans + "V");
 
         return count;
     }
