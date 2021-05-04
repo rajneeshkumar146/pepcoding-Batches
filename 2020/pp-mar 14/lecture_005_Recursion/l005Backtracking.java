@@ -161,7 +161,7 @@ public class l005Backtracking {
     // Knight Tour
     public static boolean knightTour(int sr, int sc, int[][] board, int move, int[] dirX, int[] dirY) {
         board[sr][sc] = move; // block
-        
+
         if (move == 63) {
             return true;
         }
@@ -172,9 +172,9 @@ public class l005Backtracking {
             int c = sc + dirY[d];
 
             if (r >= 0 && c >= 0 && r < board.length && c < board[0].length && board[r][c] == -1) {
-                res = knightTour(r, c, board, move + 1, dirX, dirY);
-                if (res)
-                    return res;
+                res = res || knightTour(r, c, board, move + 1, dirX, dirY);
+                // if (res)
+                //     return res;
 
             }
         }
