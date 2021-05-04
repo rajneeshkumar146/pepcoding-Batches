@@ -50,6 +50,8 @@ public class l005Backtracking {
 
     }
 
+
+
     // 0 -> empty cell, 1 -> blocked cell
     public static int floodFill_Jump(int sr, int sc, int[][] board, String ans, int[][] dir, String[] dirS, int Radius) {
         int n = board.length, m = board[0].length;
@@ -79,6 +81,30 @@ public class l005Backtracking {
         return count;
     }
 
+    public static boolean floodFill_2(int sr, int sc, int[][] board, String ans, int[][] dir, String[] dirS) {
+        int n = board.length, m = board[0].length;
+        if (sr == n - 1 && sc == m - 1) {
+            System.out.println(ans);
+            return true;
+        }
+
+        board[sr][sc] = 1;
+
+        boolean res = false;
+        for (int d = 0; d < dir.length; d++) {
+            int r = sr +  dir[d][0];
+            int c = sc +  dir[d][1];
+
+            if (r >= 0 && c >= 0 && r < board.length && c < board[0].length) {
+                if (board[r][c] == 0)
+                    res = res || floodFill_2(r, c, board, ans + dirS[d], dir, dirS);
+            }
+        }
+
+        board[sr][sc] = 0;
+        return res;
+    }
+
     public static void main(String[] args) {
         int[][] dir4 = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
         String[] dir4S = { "t", "r", "d", "l" };
@@ -89,7 +115,7 @@ public class l005Backtracking {
         String[] dir8S = { "u", "r", "d", "l", "n", "w", "s", "e" };
 
         int n = 3, m = 3;
-        System.out.println(floodFill_Jump(0, 0, board, "", dir4, dir4S, Math.max(n, m)));
+        System.out.println(floodFill_2(0, 0, board, "", dir4, dir4S));
     }
 
 }
