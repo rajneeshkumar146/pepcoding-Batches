@@ -173,8 +173,8 @@ public class l005Backtracking {
 
             if (r >= 0 && c >= 0 && r < board.length && c < board[0].length && board[r][c] == -1) {
                 res = res || knightTour(r, c, board, move + 1, dirX, dirY);
-                // if (res)
-                //     return res;
+                if (res)
+                    return res;
 
             }
         }
