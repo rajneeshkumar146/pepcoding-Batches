@@ -422,7 +422,7 @@ public class l001Basic {
         int n = arr.length, m = arr[0].length;
         int[][] dir = { { 0, 1 }, { 1, 1 }, { -1, 1 } };
 
-        int[][] dp = new int[n][m];  
+        int[][] dp = new int[n][m];
         for (int c = arr[0].length - 1; c >= 0; c--) {
             for (int r = arr.length - 1; r >= 0; r--) {
                 if (c == arr[0].length - 1) {
@@ -455,6 +455,42 @@ public class l001Basic {
     public static void goldMine() {
         int[][] arr = { { 10, 33, 13, 15 }, { 22, 21, 04, 1 }, { 5, 0, 2, 3 }, { 0, 6, 14, 2 } };
         System.out.println(goldMine_dp(arr));
+    }
+
+    // min Cost path.======================================
+    public static int minCostPath(int[][] arr, int r, int c, int[][] dp, int[][] dir) {
+        int n = arr.length, m = arr[0].length;
+        if (r == n - 1 && c == m - 1) {
+            return dp[r][c] = arr[r][c];
+        }
+
+        if (dp[r][c] != (int) 1e9)
+            return dp[r][c];
+        int minCost = (int) 1e9;
+        for (int d = 0; d < dir.length; d++) {
+            int x = r + dir[d][0];
+            int y = c + dir[d][1];
+
+            if (x >= 0 && y >= 0 && x < n && y < m)
+                minCost = Math.min(minCost, minCostPath(arr, x, y, dp, dir) + arr[r][c]);
+        }
+
+        return dp[r][c] = minCost;
+    }
+
+    public static void minCost() {
+        int[][] arr;
+
+        int n = arr.length, m = arr[0].length;
+        int[][] dir = { { 0, 1 }, { 1, 0 }, { 1, 1 } };
+
+        int[][] dp = new int[n][m];
+
+        for (int[] d : dp)
+            Arrays.fill(d, (int) 1e9);
+
+        System.out.println(minCostPath(arr, 0, 0, dp, dir));
+        print2D(dp);
     }
 
     public static void main(String[] args) {
