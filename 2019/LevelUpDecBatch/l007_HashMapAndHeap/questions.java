@@ -428,44 +428,70 @@ public class questions {
 
 }
 
-public int swimInWater(int[][] grid) {
-    int n = grid.length, m = n;
+    public int swimInWater(int[][] grid) {
+        int n = grid.length, m = n;
 
-    PriorityQueue<Integer> pq = new PriorityQueue<>((a,b)->{
-        int i1 = a / m, j1 = a % m;
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {
+            int i1 = a / m, j1 = a % m;
             int i2 = b / m, j2 = b % m;
 
             return grid[i1][j1] - grid[i2][j2];
-    });
+        });
 
         int[][] dir = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
-    boolean[][] vis = new boolean[n][m];
+        boolean[][] vis = new boolean[n][m];
 
-    pq.add(0);
-    vis[0][0] = true; 
+        pq.add(0);
+        vis[0][0] = true;
 
-    int minHeight = 0, time = 0;
+        int minHeight = 0, time = 0;
 
-    while(pq.size() != 0){
-        int idx = pq.remove();
-        int i = idx / m, j = idx % m;
-        int height = grid[i][j];
+        while (pq.size() != 0) {
+            int idx = pq.remove();
+            int i = idx / m, j = idx % m;
+            int height = grid[i][j];
 
-        time += Math.max(0,height - minHeight);
-        if(i == n - 1 && j == m - 1) break;
-        
-        minHeight = Math.max(minHeight, height);
+            time += Math.max(0, height - minHeight);
+            if (i == n - 1 && j == m - 1)
+                break;
 
-        for(int d = 0; d < dir.length;d++){
-            int r = i + dir[d][0];
-            int c = j + dir[d][1];
+            minHeight = Math.max(minHeight, height);
 
-            if (r >= 0 && c >= 0 && r < n && c < m && !vis[r][c]) {
-                vis[r][c] = true;
-                pq.add(r * m + c);
+            for (int d = 0; d < dir.length; d++) {
+                int r = i + dir[d][0];
+                int c = j + dir[d][1];
+
+                if (r >= 0 && c >= 0 && r < n && c < m && !vis[r][c]) {
+                    vis[r][c] = true;
+                    pq.add(r * m + c);
+                }
             }
         }
+
+        return time;
     }
-    
-    return time;
-}
+
+// public static void test(String str){
+
+// int[] freq = new int[26];
+// for(int i =0;i<n;i++) freq[str.charAt(i) - 'a']++;
+// PriorityQueue<Character> pq = new PriorityQueue<>((a,b)->{
+// if(freq[a - 'a'] == freq[b - 'a']){
+// return a - b;
+// }
+
+// return freq[a - 'a'] - freq[b - 'a'];
+// });
+
+// class comp{
+// public:
+// bool operator()(const auto& a,const auto& b) const{
+// if(a.second == b.second)
+// return a.first > b.first;
+
+// return a.second > b.second;
+// }
+// };
+
+// priority_queue<pair<char,int>,vector<pair<char,int>>,comp> pq;
+// }
