@@ -312,3 +312,52 @@ public:
         return p.val;
     }
 };
+
+// Trapping Rain Water II
+int trapRainWater(vector<vector<int>> &heightMap)
+{
+    int n = heightMap.size(), m = heightMap[0].size();
+    //{height, i,j}
+    priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
+
+    vector<vector<bool>> vis(n, vector<bool>(m, false));
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            if (i == 0 || j == 0 || i == n - 1 || j == m - 1)
+            {
+                vis[i][j] = true;
+                pq.push({heightMap[i][j], i, j});
+            }
+        }
+    }
+
+    int[][] dir = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    int minBoun = 0, water = 0;
+
+    while (pq.size() != 0)
+    {
+        vector<int> rp = pq.top(), pq.pop();
+        int height = rp[0];
+        int i = rp[1], j = rp[2];
+
+        minBoun = Math.max(minBoun, height);
+        water += minBoun - height;
+
+        for (int d = 0; d < 4; d++)
+        {
+            int r = i + dir[d][0];
+            int c = j + dir[d][1];
+
+            if (r >= 0 && c >= 0 && r < n && c < m && !vis[r][c])
+            {
+                vis[r][c] = true;
+                pq.push({heightMap[r][c], r, c});
+            }
+        }
+    }
+    return water;
+}
+
+
