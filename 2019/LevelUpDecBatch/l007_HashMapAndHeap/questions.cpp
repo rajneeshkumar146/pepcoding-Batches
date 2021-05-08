@@ -360,4 +360,35 @@ int trapRainWater(vector<vector<int>> &heightMap)
     return water;
 }
 
+class comp
+{
+public:
+    bool operator()(const ListNode *a, const ListNode *b) const
+    {
+        return a->val > b->val;
+    }
+};
 
+ListNode *mergeKLists(vector<ListNode *> lists)
+{
+    priority_queue<ListNode *, vector<ListNode *>, comp> pq;
+
+    for (int i = 0; i < lists.size(); i++)
+        if (lists[i] != nullptr)
+            pq.push(lists[i]);
+
+    ListNode *dummy = new ListNode(-1);
+    ListNode *prev = dummy;
+
+    while (pq.size() != 0)
+    {
+        ListNode *rn = pq.top();
+        pq.pop();
+        prev->next = rn;
+        prev = prev->next;
+
+        if (rn->next != nullptr)
+            pq.push(rn->next);
+    }
+    return dummy->next;
+}

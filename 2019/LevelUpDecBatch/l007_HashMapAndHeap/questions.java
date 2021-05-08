@@ -471,6 +471,106 @@ public class questions {
         return time;
     }
 
+    class MedianFinder {
+
+        private PriorityQueue<Integer> maxPQ = new PriorityQueue<>((a, b) -> {
+            return b - a;
+        });
+
+        private PriorityQueue<Integer> minPQ = new PriorityQueue<>();
+
+        /** initialize your data structure here. */
+        public MedianFinder() {
+
+        }
+
+        public void addNum(int num) {
+            if (maxPQ.size() == 0 || num <= maxPQ.peek())
+                maxPQ.add(num);
+            else
+                minPQ.add(num);
+
+            if (maxPQ.size() - minPQ.size() == 2)
+                minPQ.add(maxPQ.remove());
+            if (maxPQ.size() - minPQ.size() == -1)
+                maxPQ.add(minPQ.remove());
+        }
+
+        public double findMedian() {
+            if (maxPQ.size() == minPQ.size())
+                return ((maxPQ.peek() + minPQ.peek()) / 2.0);
+            else
+                return maxPQ.peek() * 1.0;
+        }
+    }
+
+    // 23
+    public ListNode mergeKLists(ListNode[] lists) {
+        PriorityQueue<ListNode> pq = new PriorityQueue<>((a, b) -> {
+            return a.val - b.val;
+        });
+
+        for (int i = 0; i < lists.length; i++)
+            if (lists[i] != null)
+                pq.add(lists[i]);
+
+        ListNode dummy = new ListNode(-1);
+        ListNode prev = dummy;
+
+        while (pq.size() != 0) {
+            ListNode rn = pq.remove();
+            prev.next = rn;
+            prev = prev.next;
+
+            if (rn.next != null)
+                pq.add(rn.next);
+        }
+        return dummy.next;
+    }
+
+    // 632
+public int[] smallestRange(List<List<Integer>> nums) {     
+    int n = nums.size();
+    
+    // {r,c}
+    PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->{
+        int r1 = a[0], c1 = a[1];
+        int r2 = b[0], c2 = b[1];
+        
+        return nums.get(r1).get(c1) - nums.get(r2).get(c2);
+    });
+    
+    int maxValue = -(int)1e9;
+    for(int i=0;i<n;i++){
+        pq.add(new int[]{i,0});
+        maxValue = Math.max(maxValue,nums.get(i).get(0));
+    }
+    
+    int range = (int)1e9;
+    int sp = -1, ep = -1;
+    
+    while(pq.size() == n){
+        int[] re = pq.remove(); // re : remove Element
+        int r = re[0], c = re[1], val = nums.get(r).get(c);
+        
+        if(maxValue - val < range){
+            range = maxValue - val;
+            sp = val;
+            ep = maxValue;
+        }
+        
+        
+        c++;
+        if(c < nums.get(r).size()){
+            pq.add(new int[]{r,c});
+            maxValue = Math.max(maxValue,nums.get(r).get(c));
+        }            
+    }
+    
+    
+    return new int[]{sp,ep};
+}
+
 // public static void test(String str){
 
 // int[] freq = new int[26];
