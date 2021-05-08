@@ -16,6 +16,7 @@ public class l002StringSet {
         System.out.println();
     }
 
+    //516
     // LPSS : longestPalindromicSubsequence
     public static int LPSS(String str, int i, int j, int[][] dp) {
         if (i >= j) {
@@ -102,6 +103,7 @@ public class l002StringSet {
         }
     }
 
+    //005, 695
     public static int LPS(String str) {
         int n = str.length();
         int[][] dp = new int[n][n];
