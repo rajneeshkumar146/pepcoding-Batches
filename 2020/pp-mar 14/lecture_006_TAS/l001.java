@@ -110,12 +110,84 @@ public class l001 {
                 }
             }
 
-            if (isSwapDone)
+            if (!isSwapDone)
                 break;
         }
     }
 
-    public static void main(String[] args) {
+    public static void selectionSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n; i++) {
+            int minIdx = i;
+            for (int j = i + 1; j < n; j++) {
+                if (arr[j] < arr[i])
+                    minIdx = j;
+            }
+            swap(arr, i, minIdx);
+        }
+    }
 
+    public static void insertionSort(int[] arr) {
+        int n = arr.length;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j > 0; j--) {
+                if (arr[j - 1] > arr[j])
+                    swap(arr, j - 1, j);
+                else
+                    break;
+            }
+        }
+    }
+
+    public static int PartitionAnArray(int[] arr, int data) {
+        int n = arr.length, p = -1, itr = 0;
+        while (itr < n) {
+            if (arr[itr] <= data)
+                swap(arr, itr, ++p);
+            itr++;
+        }
+
+        return p;
+    }
+
+    public static int PartitionAnArray2(int[] arr, int data) {
+        int n = arr.length, p = n - 1, itr = 0;
+        while (itr <= p) {
+            if (arr[itr] <= data)
+                itr++;
+            else
+                swap(arr, p--, itr);
+        }
+
+        return p;
+    }
+
+    public static void PartitionOverPivot(int[] arr, int pivotIdx) {
+        int n = arr.length;
+        swap(arr, pivotIdx, n - 1);
+
+        int itr = 0, p = -1, li = n - 1;
+        while (itr < li) {
+            if (arr[itr] <= arr[li])
+                swap(arr, itr, ++p);
+
+            itr++;
+        }
+
+        swap(arr, ++p, li);
+    }
+
+    public static void display(int[] arr) {
+        for (int ele : arr)
+            System.out.print(ele + " ");
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        int[] arr = { 1, 1, 1, 1, 11, 3, 4, 68, 123 };
+        int data = 7;
+        System.out.println(PartitionAnArray2(arr, data));
+        display(arr);
     }
 }
