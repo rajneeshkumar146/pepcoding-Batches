@@ -242,7 +242,6 @@ public class questions {
             carry = sum / 10;
             ans.addFirst(sum % 10);
             return carry;
-
         } else {
             int carry = addTwoLists(node1.next, node2.next, s1 - 1, s2 - 1, ans);
             int sum = carry + node1.data + node2.data;

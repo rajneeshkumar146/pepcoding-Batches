@@ -142,7 +142,7 @@ public class l001_basic {
 
             int len = re - le - 1;
             if (len > maxLen) {
-                maxLen = len;
+                maxLen = len; 
                 sp = le + 1;
             }
         }
