@@ -1,3 +1,8 @@
+import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
 public class questions {
     public static void swap(int[] arr, int i, int j) {
         int temp = arr[i];
@@ -203,4 +208,138 @@ public class questions {
         return len == (int) 1e9 ? "" : s.substring(gsi, gsi + len);
     }
 
+    // https://www.geeksforgeeks.org/smallest-window-contains-characters-string/
+    public static String smallestWindowOfItSelf(String str) {
+        if (str.length() <= 1)
+            return str;
+        int[] freq = new int[128];
+        int count = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (freq[str.charAt(i)] == 0) {
+                freq[str.charAt(i)] = 1;
+                count++;
+            }
+        }
+
+        int actualLen = count;
+        int si = 0, ei = 0, gsi = 0, len = (int) 1e9;
+
+        while (ei < n) {
+            if (freq[str.charAt(ei++)]-- > 0)
+                count--;
+
+            while (count == 0) {
+                if (ei - si < len) {
+                    len = ei - si;
+                    gsi = si;
+                }
+
+                if (freq[s.charAt(si++)]++ == 0)
+                    count++;
+            }
+
+            if (len == actualLen)
+                break;
+        }
+
+        return str.substring(gsi, gsi + len);
+    }
+
+    // 340
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        if (s.length() <= k)
+            return s.length();
+
+        int n = s.length(), si = 0, ei = 0, len = 0, count = 0;
+        int[] freq = new int[128];
+
+        while (ei < n) {
+            if (freq[s.charAt(ei++)]++ == 0)
+                count++;
+
+            while (count > k) {
+                if (freq[s.charAt(si++)]-- == 1)
+                    count--;
+            }
+
+            len = Math.max(len, ei - si);
+        }
+
+        return len;
+    }
+
+    // 1456
+
+    public static boolean isVowel(Character ch) {
+        return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
+    }
+
+    public int maxVowels(String s, int k) {
+
+        // HashSet<Character> set = new HashSet<>();
+        // set.add('a');
+        // set.add('e');
+        // set.add('i');
+        // set.add('o');
+        // set.add('u');
+
+        int n = s.length(), si = 0, ei = 0, vowelCount = 0, maxVowelCount = 0;
+        while (ei < n) {
+            if (isVowel(s.charAt(ei++)))
+                vowelCount++;
+
+            if (ei - si == k) {
+                maxVowelCount = Math.max(maxVowelCount, vowelCount);
+                if (isVowel(s.charAt(si++)))
+                    vowelCount--;
+            }
+        }
+
+        return maxVowelCount;
+    }
+
+    // Count all subarrays with atMost k Different Integers.
+    public int atMostKDistinct(int[] arr, int k) {
+        HashMap<Integer, Integer> freq = new HashMap<>();
+        int n = arr.length, si = 0, ei = 0, ans = 0;
+
+        while (ei < n) {
+            freq.put(arr[ei], freq.getOrDefault(arr[ei], 0) + 1);
+            ei++;
+            while (freq.size() > k) {
+
+                freq.put(arr[si], freq.get(arr[si]) - 1);
+                if (freq.get(arr[si]) == 0) {
+                    freq.remove(arr[si]);
+                }
+                si++;
+            }
+
+            ans += ei - si;
+        }
+
+        return ans;
+    }
+
+    public int atMostKDistinct_02(int[] arr, int k) {
+        int[] freq = new int[20000 + 1];
+        int n = arr.length, si = 0, ei = 0, count = 0, ans = 0;
+
+        while (ei < n) {
+            if (freq[arr[ei++]]++ == 0)
+                count++;
+
+            while (count > k) {
+                if (freq[arr[si++]]-- == 1)
+                    count--;
+            }
+            ans += ei - si;
+        }
+
+        return ans;
+    }
+
+    public int subarraysWithKDistinct(int[] arr, int k) {
+        return atMostKDistinct(arr, k) - atMostKDistinct(arr, k - 1);
+    }
 }

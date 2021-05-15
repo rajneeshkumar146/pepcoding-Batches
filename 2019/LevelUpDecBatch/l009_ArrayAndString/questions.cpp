@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 using namespace std;
 
@@ -79,4 +80,29 @@ int max_sum(vector<int> &arr, int n)
     }
 
     return maxAns;
+}
+
+int atMostKDistinct(vector<int> &arr, int k)
+{
+    unordered_map<int, int> freq;
+    int n = arr.size(), si = 0, ei = 0, ans = 0;
+
+    while (ei < n)
+    {
+        freq[arr[ei++]]++;
+        while (freq.size() > k)
+        {
+            if (freq[arr[si++]]-- == 1)
+                freq.erase(arr[si - 1]);
+        }
+
+        ans += ei - si;
+    }
+
+    return ans;
+}
+
+int subarraysWithKDistinct(vector<int> &arr, int k)
+{
+    return atMostKDistinct(arr, k) - atMostKDistinct(arr, k - 1);
 }
