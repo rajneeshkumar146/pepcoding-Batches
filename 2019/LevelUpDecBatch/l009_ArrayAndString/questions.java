@@ -485,4 +485,39 @@ public class questions {
         return len;
     }
 
+    // 974
+    public int subarraysDivByK(int[] arr, int k) {
+        int[] rem = new int[k];
+        int n = arr.length, ei = 0, sum = 0, ans = 0;
+        rem[0] = 1;
+        while (ei < n) {
+            sum += arr[ei++];
+            int r = (sum % k + k) % k;
+
+            ans += rem[r];
+            rem[r]++;
+        }
+
+        return ans;
+    }
+
+    public int longestSubarraysDivByK(int[] arr, int k) {
+        int[] rem = new int[k];
+        int n = arr.length, ei = 0, sum = 0, len = 0;
+        Arrays.fill(rem, -2);
+        rem[0] = -1;
+        while (ei < n) {
+            sum += arr[ei];
+            int r = (sum % k + k) % k;
+
+            if (rem[r] == -2)
+                rem[r] = ei;
+            else
+                len = Math.max(len, ei - rem[r]);
+            ei++;
+        }
+
+        return len;
+    }
+
 }
