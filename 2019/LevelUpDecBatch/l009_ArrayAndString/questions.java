@@ -269,7 +269,6 @@ public class questions {
     }
 
     // 1456
-
     public static boolean isVowel(Character ch) {
         return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u';
     }
@@ -342,4 +341,148 @@ public class questions {
     public int subarraysWithKDistinct(int[] arr, int k) {
         return atMostKDistinct(arr, k) - atMostKDistinct(arr, k - 1);
     }
+
+    // 1248
+    public int atMostOdd(int[] arr, int k) {
+        int n = arr.length, si = 0, ei = 0, count = 0, ans = 0;
+        while (ei < n) {
+            if ((arr[ei++] & 1) != 0)
+                count++;
+
+            while (count > k) {
+                if ((arr[si++] & 1) != 0)
+                    count--;
+            }
+
+            ans += ei - si;
+        }
+
+        return ans;
+    }
+
+    public int numberOfSubarrays(int[] nums, int k) {
+        return atMostOdd(nums, k) - atMostOdd(nums, k - 1);
+    }
+
+    // 904
+    public int totalFruit(int[] arr) {
+        int n = arr.length, si = 0, ei = 0, len = 0, count = 0;
+        int[] freq = new int[40000 + 1];
+
+        while (ei < n) {
+            if (freq[arr[ei++]]++ == 0)
+                count++;
+
+            while (count > 2)
+                if (freq[arr[si++]]-- == 1)
+                    count--;
+
+            len = Math.max(len, ei - si);
+        }
+
+        return len;
+    }
+
+    // 930
+    public int atMostSum(int[] arr, int tar) {
+        int n = arr.length, si = 0, ei = 0, sum = 0, count = 0;
+        while (ei < n) {
+            sum += arr[ei++];
+
+            while (sum > tar)
+                sum -= arr[si++];
+
+            count += ei - si;
+        }
+
+        return count;
+    }
+
+    public int numSubarraysWithSum(int[] arr, int tar) {
+        return atMostSum(arr, tar) - (tar != 0 ? atMostSum(arr, tar - 1) : 0);
+    }
+
+    // 485
+    public int findMaxConsecutiveOnes(int[] nums) {
+        int n = nums.length, si = 0, ei = 0, len = 0, count = 0;
+        while (ei < n) {
+            if (nums[ei++] == 0)
+                count++;
+
+            while (count == 1) {
+                if (nums[si++] == 0)
+                    count--;
+            }
+
+            len = Math.max(len, ei - si);
+        }
+        return len;
+    }
+
+    public int findMaxConsecutiveOnes_01(int[] nums) {
+        int n = nums.length, si = 0, ei = 0, len = 0;
+        while (ei < n) {
+            if (nums[ei] == 0) {
+                ei++;
+                si = ei;
+            } else {
+                ei++;
+            }
+
+            len = Math.max(len, ei - si);
+        }
+        return len;
+    }
+
+    // 487
+    public int findMaxConsecutiveOnes(int[] arr) {
+        int n = arr.length, si = 0, ei = 0, count = 0, len = 0;
+
+        while (ei < n) {
+            if (arr[ei++] == 0)
+                count++;
+
+            while (count == 2)
+                if (arr[si++] == 0)
+                    count--;
+
+            len = Math.max(len, ei - si);
+        }
+
+        return len;
+    }
+
+    public int findMaxConsecutiveOnes_01(int[] arr) {
+        int n = arr.length, si = 0, ei = 0, firstZeroIndex = -1, len = 0;
+
+        while (ei < n) {
+            if (arr[ei++] == 0) {
+                si = firstZeroIndex + 1;
+                firstZeroIndex = ei - 1;
+            }
+
+            len = Math.max(len, ei - si);
+        }
+
+        return len;
+    }
+
+    // 1004
+    public int longestOnes(int[] arr, int k) {
+        int n = arr.length, si = 0, ei = 0, count = 0, len = 0;
+
+        while (ei < n) {
+            if (arr[ei++] == 0)
+                count++;
+
+            while (count > k)
+                if (arr[si++] == 0)
+                    count--;
+
+            len = Math.max(len, ei - si);
+        }
+
+        return len;
+    }
+
 }
