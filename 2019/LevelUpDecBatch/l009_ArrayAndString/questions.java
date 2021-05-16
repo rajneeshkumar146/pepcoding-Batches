@@ -520,4 +520,76 @@ public class questions {
         return len;
     }
 
+    public int subarraysDivByK_map(int[] arr, int k) {
+        HashMap<Integer, Integer> rem = new HashMap<>();
+        int n = arr.length, ei = 0, sum = 0, ans = 0;
+        rem.put(0, 1);
+        while (ei < n) {
+            sum += arr[ei++];
+            int r = (sum % k + k) % k;
+
+            ans += rem.getOrDefault(r, 0);
+            rem.put(r, rem.getOrDefault(r, 0) + 1);
+        }
+
+        return ans;
+    }
+
+    public int longestSubarraysDivByK_map(int[] arr, int k) {
+        HashMap<Integer, Integer> rem = new HashMap<>();
+        int n = arr.length, ei = 0, sum = 0, len = 0;
+        rem.put(0, -1);
+        while (ei < n) {
+            sum += arr[ei];
+            int r = (sum % k + k) % k;
+
+            rem.putIfAbsent(r, ei);
+            len = Math.max(len, ei - rem.get(r));
+            ei++;
+        }
+
+        return len;
+    }
+
+    // https://practice.geeksforgeeks.org/problems/count-subarrays-with-equal-number-of-1s-and-0s-1587115620/1
+    static int countSubarrWithEqualZeroAndOne(int arr[], int n) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        int ei = 0, count = 0, sum = 0;
+
+        while (ei < n) {
+            int val = arr[ei++];
+            sum += val;
+            if (val == 0)
+                sum += -1;
+
+            count += map.getOrDefault(sum, 0);
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+
+        return count;
+    }
+
+    // 525
+    public int findMaxLength(int[] arr) {
+
+        // rem, firstIndex
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, -1);
+        int n = arr.length, ei = 0, sum = 0, len = 0;
+
+        while (ei < n) {
+            int val = arr[ei];
+            sum += val;
+            if (val == 0)
+                sum += -1;
+
+            map.putIfAbsent(sum, ei); // if(map.find(sum) == map.end()) map[sum] = ei;
+            len = Math.max(len, ei - map.get(sum));
+            ei++;
+        }
+
+        return len;
+    }
+
 }
