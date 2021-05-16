@@ -249,4 +249,76 @@ public class questions {
 
         return res;
     }
+
+    // 46
+
+    // tel = total no of elements.
+    public int permute(int[] arr, int tel, List<Integer> smallAns, List<List<Integer>> res) {
+        if (tel == 0) {
+            List<Integer> base = new ArrayList<>(smallAns);
+            res.add(base);
+            return 1;
+        }
+
+        int count = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] > -11) { // -11, as per constraints.
+                int val = arr[i];
+                arr[i] = -11;
+                smallAns.add(val);
+
+                count += permute(arr, tel - 1, smallAns, res);
+
+                smallAns.remove(smallAns.size() - 1);
+                arr[i] = val;
+            }
+        }
+        return count;
+    }
+
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> smallAns = new ArrayList<>();
+
+        permute(nums, nums.length, smallAns, res);
+
+        return res;
+    }
+
+    // 47
+    public int permuteUnique(int[] arr, int tel, List<Integer> smallAns, List<List<Integer>> res) {
+        if (tel == 0) {
+            List<Integer> base = new ArrayList<>(smallAns);
+            res.add(base);
+            return 1;
+        }
+
+        int count = 0;
+        int prev = -12;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] > -11 && prev != arr[i]) { // -11, as per constraints.
+                int val = arr[i];
+                arr[i] = -11;
+                smallAns.add(val);
+
+                count += permuteUnique(arr, tel - 1, smallAns, res);
+
+                smallAns.remove(smallAns.size() - 1);
+                arr[i] = val;
+
+                prev = arr[i];
+            }
+        }
+        return count;
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> smallAns = new ArrayList<>();
+
+        Arrays.sort(nums);
+        permuteUnique(nums, nums.length, smallAns, res);
+
+        return res;
+    }
 }
