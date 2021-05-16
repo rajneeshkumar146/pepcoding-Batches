@@ -191,6 +191,49 @@ public class l002RecursionTrees {
         return count;
     }
 
+    // 2D_Queen_Set=================================================================================
+
+    // tboxes = total Bpxes, tqn = total queen, qpsf = queen placed so far, bn =
+    // box_no,
+    public static int queenCombination2D(boolean[][] boxes, int tqn, int bn, String ans) {
+        if (tqn == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        int n = boxes.length, m = boxes[0].length, count = 0;
+        for (int i = bn; i < n * m; i++) {
+            int r = i / m;
+            int c = i % m;
+
+            boxes[r][c] = true;
+            count += queenCombination2D(boxes, tqn - 1, i + 1, ans + "(" + r + ", " + c + ") ");
+            boxes[r][c] = false;
+        }
+
+        return count;
+    }
+
+    public static int queenPermutation2D(boolean[][] boxes, int tqn, int bn, String ans) {
+        if (tqn == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        int n = boxes.length, m = boxes[0].length, count = 0;
+        for (int i = bn; i < n * m; i++) {
+            int r = i / m;
+            int c = i % m;
+            if (!boxes[r][c]) {
+                boxes[r][c] = true;
+                count += queenPermutation2D(boxes, tqn - 1, 0, ans + "(" + r + ", " + c + ") ");
+                boxes[r][c] = false;
+            }
+        }
+
+        return count;
+    }
+
     public static void coinChange() {
         int[] arr = { 2, 3, 5, 7 };
         int tar = 10;
@@ -207,9 +250,13 @@ public class l002RecursionTrees {
     }
 
     public static void queenSet() {
-        boolean[] boxes = new boolean[6];
-        // System.out.println(queenCombination(6, 4, 0, 0, ""));
-        System.out.println(queenPermutation(boxes, 4, 0, 0, ""));
+        // boolean[] boxes = new boolean[6];
+        // System.out.println(queenCombination(16, 4, 0, 0, ""));
+        // System.out.println(queenPermutation(boxes, 4, 0, 0, ""));
+
+        boolean[][] boxes = new boolean[4][4];
+        // System.out.println(queenCombination2D(boxes, 4, 0, ""));
+        System.out.println(queenPermutation2D(boxes, 4, 0, ""));
     }
 
     public static void main(String[] args) {
