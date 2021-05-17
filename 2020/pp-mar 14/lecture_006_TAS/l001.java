@@ -129,7 +129,6 @@ public class l001 {
 
     public static void insertionSort(int[] arr) {
         int n = arr.length;
-
         for (int i = 0; i < n; i++) {
             for (int j = i; j > 0; j--) {
                 if (arr[j - 1] > arr[j])
