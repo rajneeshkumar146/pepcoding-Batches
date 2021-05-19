@@ -1,4 +1,4 @@
-public class questions {
+public class twoSum {
 
     public static void swap(int[] arr, int i, int j) {
         int temp = arr[i];
@@ -30,7 +30,7 @@ public class questions {
 
     public static void targetSumPair(int[] arr, int target) {
         int n = arr.length;
-        quickSort(arr, 0, n - 1);
+        quickSort(arr, 0, n - 1);  // Arrays.sort(arr);
 
         int si = 0, ei = n - 1;
         while (si < ei) {
