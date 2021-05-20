@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <queue>
+#include <list>
 
 using namespace std;
 
@@ -106,3 +108,46 @@ int subarraysWithKDistinct(vector<int> &arr, int k)
 {
     return atMostKDistinct(arr, k) - atMostKDistinct(arr, k - 1);
 }
+
+vector<int> maxSlidingWindow(vector<int> &nums, int k)
+{
+    // {val, index}
+    priority_queue<vector<int>> pq;
+
+    int n = nums.size(), idx = 0;
+    vector<int> ans;
+    for (int i = 0; i < nums.size(); i++)
+    {
+        while (pq.size() != 0 && pq.top()[1] <= i - k)
+            pq.pop();
+
+        pq.push({nums[i], i});
+
+        if (i >= k - 1)
+            ans.push_back(pq.top()[0]);
+    }
+    return ans;
+}
+
+vector<int> maxSlidingWindow(vector<int> &nums, int k)
+{
+    list<int> deque;
+    int n = nums.size(), idx = 0;
+    vector<int> ans;
+    for (int i = 0; i < n; i++)
+    {
+        while (deque.size() != 0 && deque.front() <= i - k)
+            deque.pop_front();
+
+        while (deque.size() != 0 && nums[deque.back()] <= nums[i])
+            deque.pop_back();
+
+        deque.push_back(i);
+
+        if (i >= k - 1)
+            ans.push_back(nums[deque.front()]);
+    }
+    return ans;
+}
+
+

@@ -1,7 +1,9 @@
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.PriorityQueue;
 
 public class questions {
     public static void swap(int[] arr, int i, int j) {
@@ -592,4 +594,164 @@ public class questions {
         return len;
     }
 
+    // 239
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> {
+            return nums[b] - nums[a]; // other - this, reverse of default behaviour.
+        });
+
+        int n = nums.length, idx = 0;
+        int[] ans = new int[n - k + 1];
+        for (int i = 0; i < nums.length; i++) {
+            while (pq.size() != 0 && pq.peek() <= i - k)
+                pq.remove();
+
+            pq.add(i);
+
+            if (i >= k - 1)
+                ans[idx++] = nums[pq.peek()];
+        }
+        return ans;
+    }
+
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        LinkedList<Integer> deque = new LinkedList<>();
+        int n = nums.length, idx = 0;
+        int[] ans = new int[n - k + 1];
+        for (int i = 0; i < nums.length; i++) {
+            while (deque.size() != 0 && deque.getFirst() <= i - k)
+                deque.removeFirst();
+
+            while (deque.size() != 0 && nums[deque.getLast()] <= nums[i])
+                deque.removeLast();
+
+            deque.addLast(i);
+
+            if (i >= k - 1)
+                ans[idx++] = nums[deque.getFirst()];
+        }
+        return ans;
+    }
+
+    // KadanesAlgo
+    // [-1,-7,-8,-9] -> max sum Subarray if 0(no subarray exist);
+    public static int kadanesAlgo(int[] arr) {
+        int gSum = 0, cSum = 0;
+        for (int ele : arr) {
+            cSum += ele;
+            if (cSum > gSum)
+                gSum = cSum;
+            if (cSum <= 0)
+                cSum = 0;
+        }
+
+        return gSum;
+    }
+
+    public static int kadanesAlgo_SubArray(int[] arr) {
+        int gSum = 0, cSum = 0, gsi = 0, gei = 0, csi = 0;
+        for (int i = 0; i < arr.length; i++) {
+            int ele = arr[i];
+            cSum += ele;
+            if (cSum > gSum) {
+                gSum = cSum;
+
+                gsi = csi;
+                gei = i;
+            }
+            if (cSum <= 0) {
+                cSum = 0;
+                csi = i + 1;
+            }
+        }
+
+        return gSum;
+    }
+
+    // [-1,-7,-8,-9] -> max sum Subarray if -1 (0,0);
+    public static int kadanesAlgoGeneric(int[] arr) {
+        int gSum = -(int) 1e9, cSum = 0;
+        for (int ele : arr) {
+            cSum = Math.max(ele, cSum + ele);
+            gSum = Math.max(gSum, cSum);
+        }
+
+        return gSum;
+    }
+
+    public static int kadanesAlgoGenericSubarray(int[] arr) {
+        int gSum = -(int) 1e9, cSum = 0, gsi = 0, gei = 0, csi = 0;
+        for (int i = 0; i < arr.length; i++) {
+            int ele = arr[i];
+            if (ele > cSum + ele) {
+                cSum = ele;
+                csi = i;
+            }
+
+            if (cSum > gSum) {
+                gSum = cSum;
+                gsi = csi;
+                gei = i;
+            }
+        }
+
+        return gSum;
+    }
+
+    int mod = (int) 1e9 + 7;
+
+    public int kadanesAlgo(int[] arr, int k) {
+        int n = arr.length;
+        long gsum = 0, csum = 0;
+
+        for (int i = 0; i < k * n; i++) {
+            int ele = arr[i % n];
+            csum += ele;
+
+            if (csum > gsum)
+                gsum = csum;
+            if (csum <= 0)
+                csum = 0;
+        }
+
+        return (int) gsum % mod;
+    }
+
+    public int kConcatenationMaxSum(int[] arr, int k) {
+        long prevSum = 0, sum = 0;
+        for (int i = 1; i <= 3; i++) {
+            prevSum = sum;
+            sum = kadanesAlgo(arr, i);
+            if (i == k)
+                return (int) sum;
+        }
+
+        return (int) ((prevSum + (k - 2) * (sum - prevSum)) % mod);
+    }
+
+    public int kConcatenationMaxSum(int[] arr, int k) {
+        int kadansSum = kadanesAlgo(arr, 1);
+
+        if (k == 1)
+            return kadansSum;
+
+        long prefixSum = 0, suffixSum = 0, maxPrefixSum = 0, maxSuffixSum = 0, arraySum = 0;
+        int n = arr.length;
+        for (int i = 0, j = n - 1; i < n; i++, j--) {
+            prefixSum += arr[i];
+            suffixSum += arr[j];
+            arraySum += arr[i];
+
+            maxPrefixSum = Math.max(maxPrefixSum, prefixSum);
+            maxSuffixSum = Math.max(maxSuffixSum, suffixSum);
+        }
+
+        // if (arraySum > 0)
+        // return (int) ((maxPrefixSum + maxSuffixSum + (k - 2) * arraySum) % mod);
+        // else
+        // return (int) (Math.max(maxPrefixSum + maxSuffixSum, kadansSum) % mod);
+
+        arraySum = arraySum < 0 ? 0 : arraySum % mod;
+        return (int) Math.max(kadansSum, maxPrefixSum + maxSuffixSum + ((k - 2) * arraySum) % mod) % mod;
+    }
 }
