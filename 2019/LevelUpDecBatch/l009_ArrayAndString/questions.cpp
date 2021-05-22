@@ -150,4 +150,57 @@ vector<int> maxSlidingWindow(vector<int> &nums, int k)
     return ans;
 }
 
+//781
+int numRabbits(vector<int> &arr)
+{
+    vector<int> map(999 - 0 + 1, 0); // range -> [0,999]
+    int ans = 0;
+    for (int ele : arr)
+    {
+        if (map[ele] == 0)
+            ans += (ele + 1);
+        map[ele]++;
 
+        if (map[ele] == ele + 1)
+            map[ele] = 0;
+    }
+
+    return ans;
+}
+
+// 1074
+int countSubarraysGivenTarget(vector<int> &arr, int tar)
+{
+    unordered_map<int, int> map;
+    map[0] = 1;
+    int count = 0, sum = 0;
+    for (int ele : arr)
+    {
+        sum += ele;
+        count += map.find(sum - tar) != map.end() ? map[sum - tar] : 0;
+        map[sum]++;
+    }
+
+    return count;
+}
+
+int numSubmatrixSumTarget(vector<vector<int>> &arr, int tar)
+{
+    int n = arr.size(), m = arr[0].size();
+    int count = 0;
+
+    for (int fixedRow = 0; fixedRow < n; fixedRow++)
+    {
+
+        vector<int> prefixColArray(m, 0);
+        for (int row = fixedRow; row < n; row++)
+        {
+            for (int col = 0; col < m; col++)
+                prefixColArray[col] += arr[row][col];
+
+            count += countSubarraysGivenTarget(prefixColArray, tar);
+        }
+    }
+
+    return count;
+}

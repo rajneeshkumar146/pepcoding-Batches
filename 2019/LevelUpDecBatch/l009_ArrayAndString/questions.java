@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
+import javax.swing.ComponentInputMap;
+
 public class questions {
     public static void swap(int[] arr, int i, int j) {
         int temp = arr[i];
@@ -679,11 +681,12 @@ public class questions {
         return gSum;
     }
 
-    public static int kadanesAlgoGenericSubarray(int[] arr) {
+    public static int[] kadanesAlgoGenericSubarray(int[] arr) {
         int gSum = -(int) 1e9, cSum = 0, gsi = 0, gei = 0, csi = 0;
         for (int i = 0; i < arr.length; i++) {
             int ele = arr[i];
-            if (ele > cSum + ele) {
+            cSum += ele;
+            if (ele >= cSum) {
                 cSum = ele;
                 csi = i;
             }
@@ -695,7 +698,7 @@ public class questions {
             }
         }
 
-        return gSum;
+        return new int[] { gSum, gsi, gei };
     }
 
     int mod = (int) 1e9 + 7;
@@ -754,4 +757,168 @@ public class questions {
         arraySum = arraySum < 0 ? 0 : arraySum % mod;
         return (int) Math.max(kadansSum, maxPrefixSum + maxSuffixSum + ((k - 2) * arraySum) % mod) % mod;
     }
+
+    // https://practice.geeksforgeeks.org/problems/maximum-sum-rectangle2948/1
+
+    public static int kadanesAlgoForNegative(int[] arr) {
+        int gSum = -(int) 1e9, cSum = 0;
+        for (int ele : arr) {
+            cSum = Math.max(ele, cSum + ele);
+            gSum = Math.max(gSum, cSum);
+        }
+
+        return gSum;
+    }
+
+    int maximumSumRectangle(int R, int C, int arr[][]) {
+        int n = R, m = C, maxSum = -(int) 1e9;
+        int[] colPrefixSum = new int[m];
+
+        for (int fixRow = 0; fixRow < n; fixRow++) {
+
+            Arrays.fill(colPrefixSum, 0);
+
+            for (int row = fixRow; row < n; row++) {
+                for (int col = 0; col < m; col++)
+                    colPrefixSum[col] += arr[row][col];
+
+                int sum = kadanesAlgoForNegative(colPrefixSum);
+                maxSum = Math.max(maxSum, sum);
+
+            }
+        }
+
+        return maxSum;
+    }
+
+    // if we want to print matrix
+    int maximumSumRectangle_02(int R, int C, int arr[][]) {
+        int n = R, m = C, maxSum = -(int) 1e9;
+        int[] colPrefixSum = new int[m];
+
+        int r1 = 0, c1 = 0, r2 = 0, c2 = 0;
+
+        for (int fixRow = 0; fixRow < n; fixRow++) {
+
+            Arrays.fill(colPrefixSum, 0);
+
+            for (int row = fixRow; row < n; row++) {
+                for (int col = 0; col < m; col++)
+                    colPrefixSum[col] += arr[row][col];
+
+                int[] res = kadanesAlgoGenericSubarray(colPrefixSum);
+                if (res[0] >= maxSum) {
+                    maxSum = res[0];
+                    r1 = fixRow;
+                    c1 = res[1];
+                    r2 = row;
+                    c2 = res[2];
+                }
+            }
+        }
+
+        for (int i = r1; i <= r2; i++) {
+            for (int j = c1; j <= c2; j++) {
+                System.out.print(arr[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+        return maxSum;
+    }
+
+    // 781
+    public int numRabbits(int[] arr) {
+        int[] map = new int[999 - 0 + 1];
+
+        int ans = 0;
+        for (int ele : arr) {
+            if (map[ele] == 0)
+                ans += (ele + 1);
+            map[ele]++;
+
+            if (map[ele] == ele + 1)
+                map[ele] = 0;
+        }
+
+        return ans;
+    }
+
+    // 1074
+
+    public int countSubarraysGivenTarget(int[] arr, int tar) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        int count = 0, sum = 0;
+        for (int ele : arr) {
+            sum += ele;
+            count += map.getOrDefault(sum - tar, 0);
+            map.put(sum, map.getOrDefault(sum, 0) + 1);
+        }
+
+        return count;
+    }
+
+    public int numSubmatrixSumTarget(int[][] arr, int tar) {
+        int n = arr.length, m = arr[0].length;
+        int count = 0;
+
+        for (int fixedRow = 0; fixedRow < n; fixedRow++) {
+
+            int[] prefixColArray = new int[m];
+            for (int row = fixedRow; row < n; row++) {
+                for (int col = 0; col < m; col++)
+                    prefixColArray[col] += arr[row][col];
+
+                count += countSubarraysGivenTarget(prefixColArray, tar);
+            }
+        }
+
+        return count;
+    }
+
+    // 363
+
+    public int kadanesAlgoWithSumUnderK(int[] arr, int k) {
+        int gsum = -(int) 1e9, csum = 0;
+        for (int ele : arr) {
+            csum += ele;
+            csum = Math.max(csum, ele);
+            gsum = Math.max(gsum, csum);
+
+            if (gsum >= k)
+                return gsum;
+        }
+
+        return gsum;
+    }
+
+    public int maxSumSubmatrix(int[][] arr, int k) {
+        int n = arr.length, m = arr[0].length;
+        int maxRes = 0;
+
+        for (int fixedRow = 0; fixedRow < n; fixedRow++) {
+
+            int[] prefixColArray = new int[m];
+            for (int row = fixedRow; row < n; row++) {
+                for (int col = 0; col < m; col++)
+                    prefixColArray[col] += arr[row][col];
+
+                int sum = kadanesAlgoWithSumUnderK(prefixColArray, k);
+
+                if (sum == k)
+                    return sum;
+                else if (sum < k) {
+                    maxRes = Math.max(maxRes, sum);
+                    continue;
+                }
+
+                // ????
+            }
+        }
+
+        return maxRes;
+
+    }
+
 }
