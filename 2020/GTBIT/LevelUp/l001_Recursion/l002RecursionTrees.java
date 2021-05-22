@@ -324,12 +324,15 @@ public class l002RecursionTrees {
     static boolean[] diag;
     static boolean[] adiag;
 
+    static int calls = 0;
+
     public static int nqueen_Combination03(int n, int m, int tnq, int idx, String ans) {
         if (tnq == 0) {
             System.out.println(ans);
             return 1;
         }
 
+        calls++;
         int count = 0;
         for (int i = idx; i < n * m; i++) {
             int r = i / m;
@@ -364,6 +367,55 @@ public class l002RecursionTrees {
         return count;
     }
 
+    public static int Nqueen04(int floor, int tnq, int m, String ans) {
+        if (tnq == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        calls++;
+        int count = 0;
+        for (int room = 0; room < m; room++) {
+            int r = floor, c = room;
+            if (!rows[r] && !cols[c] && !diag[r + c] && !adiag[r - c + m - 1]) {
+                rows[r] = cols[c] = diag[r + c] = adiag[r - c + m - 1] = true;
+
+                count += Nqueen04(floor + 1, tnq - 1, m, ans + "(" + r + ", " + c + ") ");
+
+                rows[r] = cols[c] = diag[r + c] = adiag[r - c + m - 1] = false;
+            }
+        }
+
+        return count;
+    }
+
+    public static int Nqueen04_perm(int floor, int tnq, int m, String ans) {
+        if (tnq == 0 || floor >= m) {
+            if (tnq == 0) {
+                System.out.println(ans);
+                return 1;
+            }
+            return 0;
+        }
+
+        calls++;
+        int count = 0;
+        for (int room = 0; room < m; room++) {
+            int r = floor, c = room;
+            if (!rows[r] && !cols[c] && !diag[r + c] && !adiag[r - c + m - 1]) {
+                rows[r] = cols[c] = diag[r + c] = adiag[r - c + m - 1] = true;
+
+                count += Nqueen04(0, tnq - 1, m, ans + "(" + r + ", " + c + ") ");
+
+                rows[r] = cols[c] = diag[r + c] = adiag[r - c + m - 1] = false;
+            }
+        }
+
+        count += Nqueen04(floor + 1, tnq, m, ans);
+
+        return count;
+    }
+
     public static void Nqueen() {
         int n = 4, m = 4, q = 4;
         boolean[][] boxes = new boolean[n][m];
@@ -376,7 +428,9 @@ public class l002RecursionTrees {
         diag = new boolean[n + m - 1];
         adiag = new boolean[n + m - 1];
 
-        System.out.println(nqueen_Combination03(n, m, q, 0, ""));
+        // System.out.println(nqueen_Combination03(n, m, q, 0, ""));
+        System.out.println(Nqueen04(0, q, m, ""));
+        System.out.println(calls);
     }
 
     public static void coinChange() {
@@ -399,9 +453,9 @@ public class l002RecursionTrees {
         // System.out.println(queenCombination(16, 4, 0, 0, ""));
         // System.out.println(queenPermutation(boxes, 4, 0, 0, ""));
 
-        boolean[][] boxes = new boolean[4][4];
+        // boolean[][] boxes = new boolean[4][4];
         // System.out.println(queenCombination2D(boxes, 4, 0, ""));
-        System.out.println(queenPermutation2D(boxes, 4, 0, ""));
+        // System.out.println(queenPermutation2D(boxes, 4, 0, ""));
     }
 
     public static void main(String[] args) {
