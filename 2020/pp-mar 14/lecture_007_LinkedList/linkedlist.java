@@ -97,8 +97,19 @@ public class linkedlist {
         return getLastNode().data;
     }
 
-    public int getAt(int idx){
-        
+    private Node getNodeAt(int idx) {
+        Node curr = this.head;
+        while (idx-- > 0) {
+            curr = curr.next;
+        }
 
+        return curr;
+    }
+
+    public int getAt(int idx) {
+        if (idx < 0 || idx >= this.size)
+            return -1;
+
+        return getNodeAt(idx).data;
     }
 }
