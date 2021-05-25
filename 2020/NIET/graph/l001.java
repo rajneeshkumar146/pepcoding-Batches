@@ -55,12 +55,45 @@ public class l001 {
         }
     }
 
-    public static boolean hasPath(ArrayList<Edge>[] graph, int src, int dest) {
+    public static boolean hasPath(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis) {
+        if (src == dest)
+            return true;
 
+        vis[src] = true;
+        boolean res = false;
+        for (Edge e : graph[src]) {
+            if (!vis[e.v])
+                res = res || hasPath(graph, e.v, dest, vis);
+        }
+        return res;
     }
 
-    public static int printAllPath(ArrayList<Edge>[] graph, int src, int dest,???) {
+    public static int printAllPath(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis, String ans) {
+        if (src == dest) {
+            System.out.println(ans + dest);
+            return 1;
+        }
 
+        int count = 0;
+        vis[src] = true;
+        for (Edge e : graph[src]) {
+            if (!vis[e.v]) {
+                count += printAllPath(graph, e.v, dest, vis, ans + src);
+            }
+        }
+        vis[src] = false;
+
+        return count;
+    }
+
+    public static void printpreOrder(ArrayList<Edge>[] graph, int src, int wsf, boolean[] vis, String ans) {
+        System.out.println(src + " -> " + ans + "@" + wsf);
+        vis[src] = true;
+        for (Edge e : graph[src]) {
+            if (!vis[e.v])
+                printpreOrder(graph, e.v, wsf + e.w, vis, ans + src);
+        }
+        vis[src] = false;
     }
 
     public static void graphConstruct() {
@@ -79,6 +112,9 @@ public class l001 {
         addEdge(graph, 5, 6, 2);
 
         display(graph);
+
+        boolean[] vis = new boolean[N];
+        System.out.println(printAllPath(graph, 0, 6, vis, ""));
 
     }
 
