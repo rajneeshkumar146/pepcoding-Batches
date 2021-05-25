@@ -87,7 +87,7 @@ public class l001 {
     }
 
     public static void printpreOrder(ArrayList<Edge>[] graph, int src, int wsf, boolean[] vis, String ans) {
-        System.out.println(src + " -> " + ans + "@" + wsf);
+        System.out.println(src + " -> " + ans + src + "@" + wsf);
         vis[src] = true;
         for (Edge e : graph[src]) {
             if (!vis[e.v])
