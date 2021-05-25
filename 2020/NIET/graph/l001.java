@@ -114,8 +114,8 @@ public class l001 {
         display(graph);
 
         boolean[] vis = new boolean[N];
-        System.out.println(printAllPath(graph, 0, 6, vis, ""));
-
+        // System.out.println(printAllPath(graph, 0, 6, vis, ""));
+        printpreOrder(graph, 0, 0, vis, "");
     }
 
     public static void main(String[] args) {
