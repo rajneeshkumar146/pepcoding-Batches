@@ -12,6 +12,23 @@ public class linkedlist {
     private Node tail = null;
     private int size = 0;
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        Node curr = this.head;
+        while (curr != null) {
+            sb.append(curr.data);
+            if (curr.next != null)
+                sb.append(", ");
+                
+            curr = curr.next;
+        }
+        sb.append("]");
+
+        return sb.toString();
+    }
+
     public int size() {
         return this.size;
     }
@@ -50,6 +67,29 @@ public class linkedlist {
         addLastNode(node);
     }
 
+    private void addNodeAt(Node node, int idx) {
+        if (idx == 0)
+            addFirstNode(node);
+        else if (idx == this.size)
+            addLastNode(node);
+        else {
+            Node prevNode = getNodeAt(idx - 1);
+            Node forwNode = prevNode.next;
+
+            prevNode.next = node;
+            node.next = forwNode;
+            this.size++;
+        }
+    }
+
+    public void addAt(int idx, int data) {
+        if (idx < 0 || idx > this.size)
+            return;
+
+        Node node = new Node(data);
+        addNodeAt(node, idx);
+    }
+
     // =======================================================
 
     private Node removeFirstNode() {
@@ -71,6 +111,52 @@ public class linkedlist {
 
         Node node = removeFirstNode();
         return node.data;
+    }
+
+    private Node removeLastNode() {
+        Node node = this.tail;
+        if (this.size == 1)
+            this.head = this.tail = null;
+        else {
+            Node secondLast = getNodeAt(this.size - 2);
+            secondLast.next = null;
+            this.tail = secondLast;
+        }
+        this.size--;
+        return node;
+    }
+
+    public int removeLast() {
+        if (this.size == 0)
+            return -1;
+
+        return removeLastNode().data;
+    }
+
+    private Node removeNodeAt(int idx) {
+        if (idx == 0)
+            return removeFirstNode();
+        else if (idx == this.size - 1)
+            return removeLastNode();
+        else {
+            Node prevNode = getNodeAt(idx - 1);
+            Node node = prevNode.next;
+            Node forwNode = node.next;
+
+            node.next = null;
+            prevNode.next = forwNode;
+            this.size--;
+
+            return node;
+        }
+
+    }
+
+    public int removeAt(int idx) {
+        if (idx < 0 || idx >= this.size)
+            return -1;
+
+        return removeNodeAt(idx).data;
     }
 
     // =======================================================
