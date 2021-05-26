@@ -20,5 +20,9 @@ public class client {
         System.out.println(ll.getAt(3));
         System.out.println(ll);
 
+
+        ll.oddEven();
+        System.out.println(ll);  // first_ODD,Even
+
     }
 }

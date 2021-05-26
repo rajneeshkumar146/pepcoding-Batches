@@ -53,4 +53,51 @@ public class questions {
         return head;
     }
 
+    // 83
+    public ListNode deleteDuplicates(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode dummy = new ListNode(-101);
+        ListNode dp = dummy;
+
+        ListNode curr = head;
+        int size = 0;
+        while (curr != null) {
+            while (curr != null && curr.val == dp.val) {
+                ListNode forw = curr.next;
+                curr.next = null;
+                curr = forw;
+            }
+
+            dp.next = curr;
+            if (curr != null) {
+                curr = curr.next;
+                dp = dp.next;
+                size++;
+            }
+        }
+
+        return dummy.next;
+    }
+
+    // 206
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode forw = curr.next; // backup
+
+            curr.next = prev; // link
+
+            prev = curr; // move
+            curr = forw;
+        }
+
+        return prev;
+    }
+
 }

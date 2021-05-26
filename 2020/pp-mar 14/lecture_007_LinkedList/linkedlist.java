@@ -21,7 +21,7 @@ public class linkedlist {
             sb.append(curr.data);
             if (curr.next != null)
                 sb.append(", ");
-                
+
             curr = curr.next;
         }
         sb.append("]");
@@ -197,5 +197,57 @@ public class linkedlist {
             return -1;
 
         return getNodeAt(idx).data;
+    }
+
+    // Questions
+    public void oddEven() {
+        if (this.size == 0 || this.size == 1)
+            return;
+        Node even = new Node(-1); // Dummy Node
+        Node ep = even;
+
+        Node odd = new Node(-1); // Dummy Node
+        Node op = odd;
+
+        Node curr = this.head;
+        while (curr != null) {
+            if (curr.data % 2 == 0) {
+                ep.next = curr;
+                ep = ep.next;
+            } else {
+                op.next = curr;
+                op = op.next;
+            }
+
+            curr = curr.next;
+        }
+
+        op.next = even.next;
+        ep.next = null;
+
+        this.head = odd.next;
+        if (even.next != null)
+            this.tail = ep;
+        else
+            this.tail = op;
+    }
+
+    public void reversePI() {
+        if (this.head == null || this.head.next == null)
+            return;
+
+        Node prev = null;
+        Node curr = this.head;
+        while (curr != null) {
+            Node forw = curr.next; // backup
+
+            curr.next = prev; // link
+
+            prev = curr; // move
+            curr = forw;
+        }
+
+        this.tail = this.head;
+        this.head = prev;
     }
 }
