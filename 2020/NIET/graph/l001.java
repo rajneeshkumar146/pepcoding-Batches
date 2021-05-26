@@ -185,7 +185,30 @@ public class l001 {
             String psf, int wsf) {
 
         if (src == dest) {
-            // work
+            if (wsf < spathwt) {
+                spathwt = wsf;
+                spath = psf;
+            }
+
+            if (lpathwt < wsf) {
+                lpathwt = wsf;
+                lpath = psf;
+            }
+
+            if (wsf < criteria && wsf > fpathwt) {
+                fpathwt = wsf;
+                fpath = psf;
+            }
+
+            if (wsf > criteria && wsf < cpathwt) {
+                cpathwt = wsf;
+                cpath = psf;
+            }
+
+            pq.add(new Pair(wsf, psf));
+            if (pq.size() > k)
+                pq.remove();
+
             return;
         }
 
@@ -195,6 +218,31 @@ public class l001 {
                 multisolver(graph, e.v, dest, vis, criteria, k, psf + e.v, wsf + e.w);
         }
         vis[src] = false;
+    }
+
+    // Get Connected Components
+
+    public static void dfs(ArrayList<Edge>[] graph, int src, boolean[] vis) {
+        vis[src] = true;
+        for (Edge e : graph[src]) {
+            if (!vis[e.v])
+                dfs(graph, e.v, vis);
+        }
+    }
+
+    public static int GCC(ArrayList<Edge>[] graph) {
+        int N = graph.length;
+        boolean[] vis = new boolean[N];
+
+        int components = 0;
+        for (int i = 0; i < N; i++) {
+            if (!vis[i]) {
+                components++;
+                dfs(graph, i, vis);
+            }
+        }
+
+        return components;
     }
 
     public static void graphConstruct() {
