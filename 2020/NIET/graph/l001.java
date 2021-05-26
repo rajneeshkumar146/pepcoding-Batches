@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 
 public class l001 {
 
@@ -96,6 +97,106 @@ public class l001 {
         vis[src] = false;
     }
 
+    public static class pair {
+        String psf = "";
+        int wsf = 0;
+
+        pair(String psf, int wsf) {
+            this.wsf = wsf;
+            this.psf = psf;
+        }
+
+        pair() {
+
+        }
+    }
+
+    public static pair heavyWeightPath(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis) {
+        if (src == dest) {
+            return new pair(src + "", 0);
+        }
+
+        vis[src] = true;
+        pair myAns = new pair("", -(int) 1e9);
+        for (Edge e : graph[src]) {
+            if (!vis[e.v]) {
+                pair recAns = heavyWeightPath(graph, e.v, dest, vis);
+                if (recAns.wsf != -(int) 1e9 && recAns.wsf + e.w > myAns.wsf) {
+                    myAns.wsf = recAns.wsf + e.w;
+                    myAns.psf = src + recAns.psf;
+                }
+            }
+        }
+        vis[src] = false;
+
+        return myAns;
+    }
+
+    public static pair lightWeightPath(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis) {
+        if (src == dest) {
+            return new pair(src + "", 0);
+        }
+
+        vis[src] = true;
+        pair myAns = new pair("", (int) 1e9);
+        for (Edge e : graph[src]) {
+            if (!vis[e.v]) {
+                pair recAns = lightWeightPath(graph, e.v, dest, vis);
+                if (recAns.wsf != -(int) 1e9 && recAns.wsf + e.w < myAns.wsf) {
+                    myAns.wsf = recAns.wsf + e.w;
+                    myAns.psf = src + recAns.psf;
+                }
+            }
+        }
+        vis[src] = false;
+
+        return myAns;
+    }
+
+    static class Pair implements Comparable<Pair> {
+        int wsf;
+        String psf;
+
+        Pair(int wsf, String psf) {
+            this.wsf = wsf;
+            this.psf = psf;
+        }
+
+        public int compareTo(Pair o) {
+            return this.wsf - o.wsf;
+        }
+    }
+
+    static String spath;
+    static Integer spathwt = Integer.MAX_VALUE;
+
+    static String lpath;
+    static Integer lpathwt = Integer.MIN_VALUE;
+
+    static String cpath;
+    static Integer cpathwt = Integer.MAX_VALUE;
+
+    static String fpath;
+    static Integer fpathwt = Integer.MIN_VALUE;
+
+    static PriorityQueue<Pair> pq = new PriorityQueue<>();
+
+    public static void multisolver(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis, int criteria, int k,
+            String psf, int wsf) {
+
+        if (src == dest) {
+            // work
+            return;
+        }
+
+        vis[src] = true;
+        for (Edge e : graph[src]) {
+            if (!vis[e.v])
+                multisolver(graph, e.v, dest, vis, criteria, k, psf + e.v, wsf + e.w);
+        }
+        vis[src] = false;
+    }
+
     public static void graphConstruct() {
         int N = 7;
         ArrayList<Edge>[] graph = new ArrayList[N];
@@ -115,7 +216,12 @@ public class l001 {
 
         boolean[] vis = new boolean[N];
         // System.out.println(printAllPath(graph, 0, 6, vis, ""));
-        printpreOrder(graph, 0, 0, vis, "");
+        // printpreOrder(graph, 0, 0, vis, "");
+
+        // pair ans = heavyWeightPath(graph, 0, 6, vis);
+        pair ans = lightWeightPath(graph, 0, 6, vis);
+        if (ans.wsf != -(int) 1e9)
+            System.out.println(ans.psf + "@" + ans.wsf);
     }
 
     public static void main(String[] args) {
