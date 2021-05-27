@@ -12,10 +12,11 @@ public class l004CrossWord {
     static String[] words = { "agra", "norway", "england", "gwalior" };
 
     public static boolean isSafeToPlaceH(String word, int r, int c) {
+        
         for (int i = 0; i < word.length(); i++) {
-            if (c + i == box[0].length)
+            if (c + i >= box[0].length)
                 return false;
-            if (box[r][c + i] == '+' || box[r][c + i] != word.charAt(i))
+            if (box[r][c + i] != '-' && box[r][c + i] != word.charAt(i))
                 return false;
         }
         return true;
@@ -44,7 +45,7 @@ public class l004CrossWord {
         for (int i = 0; i < word.length(); i++) {
             if (r + i == box.length)
                 return false;
-            if (box[r + i][c] == '+' || box[r + i][c] != word.charAt(i))
+            if (box[r + i][c] != '-' && box[r + i][c] != word.charAt(i))
                 return false;
         }
         return true;
