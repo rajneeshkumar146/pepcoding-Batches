@@ -311,7 +311,7 @@ public class l004CrossWord {
 
             largestNumber(sb, k - 1);
 
-            swap(sb, i, idx);
+            // swap(sb, i, idx);
         }
 
         if (!flag)
