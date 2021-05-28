@@ -320,8 +320,8 @@ public class l004CrossWord {
     }
 
     public static void largestNumber() {
-        String str = "978";
-        int k = 1;
+        String str = "56294137";
+        int k = 4;
         largestNumber(new StringBuilder(str), k);
         System.out.println(maxNum);
     }
