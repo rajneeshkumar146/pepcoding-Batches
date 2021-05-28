@@ -153,72 +153,72 @@ public class l001 {
         return myAns;
     }
 
-    static class Pair implements Comparable<Pair> {
-        int wsf;
-        String psf;
+    // static class Pair implements Comparable<Pair> {
+    //     int wsf;
+    //     String psf;
 
-        Pair(int wsf, String psf) {
-            this.wsf = wsf;
-            this.psf = psf;
-        }
+    //     Pair(int wsf, String psf) {
+    //         this.wsf = wsf;
+    //         this.psf = psf;
+    //     }
 
-        public int compareTo(Pair o) {
-            return this.wsf - o.wsf;
-        }
-    }
+    //     public int compareTo(Pair o) {
+    //         return this.wsf - o.wsf;
+    //     }
+    // }
 
-    static String spath;
-    static Integer spathwt = Integer.MAX_VALUE;
+    // static String spath;
+    // static Integer spathwt = Integer.MAX_VALUE;
 
-    static String lpath;
-    static Integer lpathwt = Integer.MIN_VALUE;
+    // static String lpath;
+    // static Integer lpathwt = Integer.MIN_VALUE;
 
-    static String cpath;
-    static Integer cpathwt = Integer.MAX_VALUE;
+    // static String cpath;
+    // static Integer cpathwt = Integer.MAX_VALUE;
 
-    static String fpath;
-    static Integer fpathwt = Integer.MIN_VALUE;
+    // static String fpath;
+    // static Integer fpathwt = Integer.MIN_VALUE;
 
-    static PriorityQueue<Pair> pq = new PriorityQueue<>();
+    // static PriorityQueue<Pair> pq = new PriorityQueue<>();
 
-    public static void multisolver(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis, int criteria, int k,
-            String psf, int wsf) {
+    // public static void multisolver(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis, int criteria, int k,
+    //         String psf, int wsf) {
 
-        if (src == dest) {
-            if (wsf < spathwt) {
-                spathwt = wsf;
-                spath = psf;
-            }
+    //     if (src == dest) {
+    //         if (wsf < spathwt) {
+    //             spathwt = wsf;
+    //             spath = psf;
+    //         }
 
-            if (lpathwt < wsf) {
-                lpathwt = wsf;
-                lpath = psf;
-            }
+    //         if (lpathwt < wsf) {
+    //             lpathwt = wsf;
+    //             lpath = psf;
+    //         }
 
-            if (wsf < criteria && wsf > fpathwt) {
-                fpathwt = wsf;
-                fpath = psf;
-            }
+    //         if (wsf < criteria && wsf > fpathwt) {
+    //             fpathwt = wsf;
+    //             fpath = psf;
+    //         }
 
-            if (wsf > criteria && wsf < cpathwt) {
-                cpathwt = wsf;
-                cpath = psf;
-            }
+    //         if (wsf > criteria && wsf < cpathwt) {
+    //             cpathwt = wsf;
+    //             cpath = psf;
+    //         }
 
-            pq.add(new Pair(wsf, psf));
-            if (pq.size() > k)
-                pq.remove();
+    //         pq.add(new Pair(wsf, psf));
+    //         if (pq.size() > k)
+    //             pq.remove();
 
-            return;
-        }
+    //         return;
+    //     }
 
-        vis[src] = true;
-        for (Edge e : graph[src]) {
-            if (!vis[e.v])
-                multisolver(graph, e.v, dest, vis, criteria, k, psf + e.v, wsf + e.w);
-        }
-        vis[src] = false;
-    }
+    //     vis[src] = true;
+    //     for (Edge e : graph[src]) {
+    //         if (!vis[e.v])
+    //             multisolver(graph, e.v, dest, vis, criteria, k, psf + e.v, wsf + e.w);
+    //     }
+    //     vis[src] = false;
+    // }
 
     // Get Connected Components
 
@@ -245,6 +245,33 @@ public class l001 {
         return components;
     }
 
+    public static int dfs_hamintonianPath(ArrayList<Edge>[] graph, boolean[] vis, int src, int osrc, int count,
+            String psf) {
+        if (count == graph.length - 1) {
+            int idx = findVtx(graph, src, osrc);
+            if (idx != -1)
+                System.out.println(psf + "*");
+            else
+                System.out.println(psf + ".");
+            return 1;
+        }
+        int totalPaths = 0;
+        vis[src] = true;
+        for (Edge e : graph[src]) {
+            if (!vis[e.v]) {
+                totalPaths += dfs_hamintonianPath(graph, vis, e.v, osrc, count + 1, psf + e.v);
+            }
+        }`
+        vis[src] = false;
+        return totalPaths;
+    }
+
+    // Hamintonian Path
+    public static void hamintonianPath(int src, ArrayList<Edge>[] graph, int N) {
+        boolean[] vis = new boolean[N];
+        dfs_hamintonianPath(graph, vis, src, src, 0, src + "");
+    }
+
     public static void graphConstruct() {
         int N = 7;
         ArrayList<Edge>[] graph = new ArrayList[N];
@@ -259,6 +286,7 @@ public class l001 {
         addEdge(graph, 4, 5, 3);
         addEdge(graph, 4, 6, 8);
         addEdge(graph, 5, 6, 2);
+        addEdge(graph, 0, 6, 2);
 
         display(graph);
 
@@ -267,9 +295,10 @@ public class l001 {
         // printpreOrder(graph, 0, 0, vis, "");
 
         // pair ans = heavyWeightPath(graph, 0, 6, vis);
-        pair ans = lightWeightPath(graph, 0, 6, vis);
-        if (ans.wsf != -(int) 1e9)
-            System.out.println(ans.psf + "@" + ans.wsf);
+        // pair ans = lightWeightPath(graph, 0, 6, vis);
+        // if (ans.wsf != -(int) 1e9)
+        // System.out.println(ans.psf + "@" + ans.wsf);
+        hamintonianPath(0, graph, N);
     }
 
     public static void main(String[] args) {
