@@ -147,8 +147,8 @@ public class questions {
         while (p2 != null && p2.next != null) {
             ListNode f = p2.next;
 
-            p1 = f;
-            p2 = f.next;
+            p1.next = f;
+            p2.next = f.next;
 
             p1 = p1.next;
             p2 = p2.next;
