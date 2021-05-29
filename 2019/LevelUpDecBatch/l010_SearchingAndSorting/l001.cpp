@@ -241,6 +241,68 @@ long long inversionCount(long long ar[], long N)
     return inversionCount(arr, 0, (int)N - 1, sortedArray);
 }
 
+//33
+int search(vector<int> &nums, int target)
+{
+    int n = nums.size(), si = 0, ei = n - 1;
+
+    while (si <= ei)
+    {
+        int mid = (si + ei) / 2;
+        if (nums[mid] == target)
+            return mid;
+        else if (nums[si] <= nums[mid])
+        {
+            if (nums[si] <= target && target < nums[mid])
+                ei = mid - 1;
+            else
+                si = mid + 1;
+        }
+        else
+        {
+            if (nums[mid] < target && target <= nums[ei])
+                si = mid + 1;
+            else
+                ei = mid - 1;
+        }
+    }
+
+    return -1;
+}
+
+//81
+bool search(vector<int> &arr, int tar)
+{
+    int n = arr.size(), si = 0, ei = n - 1;
+
+    while (si <= ei)
+    {
+
+        int mid = (si + ei) / 2;
+
+        if (arr[mid] == tar || arr[ei] == tar)
+            return true;
+        else if (arr[si] < arr[mid])
+        {
+            if (arr[si] <= tar && tar < arr[mid])
+                ei = mid - 1;
+            else
+                si = mid + 1;
+        }
+        else if (arr[mid] < arr[ei])
+        {
+            if (arr[mid] < tar && tar <= arr[ei])
+                si = mid + 1;
+            else
+                ei = mid - 1;
+        }
+        else
+            ei--;
+    }
+
+    return false;
+}
+
 int main()
 {
     return 0;
