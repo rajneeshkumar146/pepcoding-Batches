@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.HashMap;
 
 public class l001 {
 
@@ -249,6 +250,54 @@ public class l001 {
         List<List<Integer>> ans = kSum(arr, target, 4, 0, n - 1);
 
         return ans;
+    }
+
+    // 454
+    public int twoSumCount(int[] nums1, int[] nums2, int target) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int ele : nums1)
+            map.put(ele, map.getOrDefault(ele, 0) + 1);
+
+        int count = 0;
+        for (int ele : nums2)
+            if (map.containsKey(target - ele))
+                count += map.get(target - ele);
+
+        return count;
+    }
+
+    int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int e1 : nums1)
+            for (int e2 : nums2)
+                map.put(e1 + e2, map.getOrDefault(e1 + e2, 0) + 1);
+
+        int count = 0, target = 0;
+        for (int e1 : nums3)
+            for (int e2 : nums4)
+                if (map.containsKey(target - e1 - e2))
+                    count += map.get(target - e1 - e2);
+
+        return count;
+    }
+
+    int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        int n = nums1.length, idx = 0;
+        int[] A = new int[n * n];
+        int[] B = new int[n * n];
+
+        for (int e1 : nums1)
+            for (int e2 : nums2)
+                A[idx++] = e1 + e2;
+
+        idx = 0;
+        for (int e1 : nums3)
+            for (int e2 : nums4)
+                B[idx++] = e1 + e2;
+
+        return twoSumCount(A, B, 0);
     }
 
     public static void main(String[] args) {

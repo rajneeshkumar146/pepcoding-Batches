@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 using namespace std;
 
 int binarySearch(vector<int> &arr, int data)
@@ -447,6 +448,37 @@ vector<vector<int>> kSum(vector<int> &arr, int target, int k, int si, int ei)
     }
 
     return ans;
+}
+
+//454
+int twoSumCount(vector<int> &nums1, vector<int> &nums2, int target)
+{
+    unordered_map<int, int> map;
+    for (int ele : nums1)
+        map[ele]++;
+
+    int count = 0;
+    for (int ele : nums2)
+        if (map.find(target - ele) != map.end())
+            count += map[target - ele];
+
+    return count;
+}
+
+int fourSumCount(vector<int> &nums1, vector<int> &nums2, vector<int> &nums3, vector<int> &nums4)
+{
+    unordered_map<int, int> map;
+    for (int e1 : nums1)
+        for (int e2 : nums2)
+            map[e1 + e2]++;
+
+    int count = 0, target = 0;
+    for (int e1 : nums3)
+        for (int e2 : nums4)
+            if (map.find(target - (e1 + e2)) != map.end())
+                count += map[target - (e1 + e2)];
+
+    return count;
 }
 
 int main()
