@@ -340,4 +340,66 @@ public class questions {
         return head;
     }
 
+    public static ListNode segregateOnLastIndex(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode small = new ListNode(-1);
+        ListNode large = new ListNode(-1);
+        ListNode sp = small, lp = large, curr = head;
+
+        ListNode pivotNode = head;
+        while (pivotNode.next != null)
+            pivotNode = pivotNode.next;
+
+        while (curr != null) {
+            if (curr.val <= pivotNode.val) {
+                sp.next = curr;
+                sp = sp.next;
+            } else {
+                lp.next = curr;
+                lp = lp.next;
+            }
+            curr = curr.next;
+        }
+
+        sp.next = large.next;
+        lp.next = null;
+
+        return sp;
+    }
+
+    public static ListNode segregate(ListNode head, int pivotIdx) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode small = new ListNode(-1);
+        ListNode large = new ListNode(-1);
+        ListNode sp = small, lp = large, curr = head;
+
+        ListNode pivotNode = head;
+        while (pivotIdx-- > 0)
+            pivotNode = pivotNode.next;
+
+        while (curr != null) {
+            if (curr != pivotNode && curr.val <= pivotNode.val) {
+                sp.next = curr;
+                sp = sp.next;
+            } else if (curr != pivotNode) {
+                lp.next = curr;
+                lp = lp.next;
+            }
+            curr = curr.next;
+        }
+
+        sp.next = pivotNode;
+        pivotNode.next = large.next;
+        lp.next = null;
+
+        head = small.next;
+        return head;
+    }
+
+    
+
 }
