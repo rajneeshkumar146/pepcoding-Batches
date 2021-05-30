@@ -253,4 +253,91 @@ public class questions {
         return head;
     }
 
+    public static ListNode segregateEvenOdd(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode even = new ListNode(-1);
+        ListNode odd = new ListNode(-1);
+        ListNode ep = even, op = odd, curr = head;
+
+        while (curr != null) {
+            if (curr.val % 2 != 0) {
+                op.next = curr;
+                op = op.next;
+            } else {
+                ep.next = curr;
+                ep = ep.next;
+            }
+            curr = curr.next;
+        }
+
+        ep.next = odd.next;
+        op.next = null;
+        head = even.next;
+
+        // even.next = odd.next = null;
+        return head;
+    }
+
+    public static ListNode segregate01(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode one = new ListNode(-1);
+        ListNode zero = new ListNode(-1);
+        ListNode op = one, zp = zero, curr = head;
+
+        while (curr != null) {
+            if (curr.val != 0) {
+                op.next = curr;
+                op = op.next;
+            } else {
+                zp.next = curr;
+                zp = zp.next;
+            }
+            curr = curr.next;
+        }
+
+        zp.next = one.next;
+        op.next = null;
+
+        head = zero.next;
+
+        zero.next = one.next = null;
+        return head;
+    }
+
+    public static ListNode segregate012(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode one = new ListNode(-1);
+        ListNode zero = new ListNode(-1);
+        ListNode two = new ListNode(-1);
+        ListNode op = one, zp = zero, tp = two, curr = head;
+
+        while (curr != null) {
+            if (curr.val == 1) {
+                op.next = curr;
+                op = op.next;
+            } else if (curr.val == 0) {
+                zp.next = curr;
+                zp = zp.next;
+            } else {
+                tp.next = curr;
+                tp = tp.next;
+            }
+            curr = curr.next;
+        }
+
+        op.next = two.next;
+        zp.next = one.next;
+        tp.next = null;
+
+        head = zero.next;
+        zero.next = one.next = two.next = null;
+        return head;
+    }
+
 }
