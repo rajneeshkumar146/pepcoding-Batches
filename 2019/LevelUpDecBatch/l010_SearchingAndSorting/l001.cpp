@@ -303,6 +303,152 @@ bool search(vector<int> &arr, int tar)
     return false;
 }
 
+//153
+int findMin(vector<int> &arr)
+{
+    int n = arr.size(), si = 0, ei = n - 1;
+    if (arr[si] <= arr[ei])
+        return arr[si];
+
+    while (si < ei)
+    {
+        int mid = (si + ei) / 2;
+        if (arr[mid] < arr[ei])
+            ei = mid;
+        else
+            si = mid + 1; // (arr[si] <= arr[mid])
+    }
+
+    return arr[si];
+}
+
+int findMin(vector<int> &arr)
+{
+    int n = arr.size(), si = 0, ei = n - 1;
+    if (arr[si] < arr[ei])
+        return arr[si];
+
+    while (si < ei)
+    {
+        int mid = (si + ei) / 2;
+        if (arr[mid] < arr[ei])
+            ei = mid;
+        else if (arr[mid] > arr[ei])
+            si = mid + 1;
+        else
+            ei--;
+    }
+
+    return arr[si];
+}
+
+// 167
+vector<int> twoSum(vector<int> &arr, int target)
+{
+
+    int n = arr.size(), si = 0, ei = n - 1;
+
+    while (si < ei)
+    {
+        int sum = arr[si] + arr[ei];
+        if (sum == target)
+            return {si + 1, ei + 1};
+        else if (sum < target)
+            si++;
+        else
+            ei--;
+    }
+
+    return {};
+}
+
+vector<vector<int>> twoSum(vector<int> &arr, int target, int si, int ei)
+{
+    vector<vector<int>> ans;
+    while (si < ei)
+    {
+        int sum = arr[si] + arr[ei];
+        if (sum == target)
+        {
+            ans.push_back({arr[si], arr[ei]});
+
+            si++;
+            ei--;
+            while (si < ei && arr[si] == arr[si - 1])
+                si++;
+            while (si < ei && arr[ei] == arr[ei + 1])
+                ei--;
+        }
+        else if (sum < target)
+            si++;
+        else
+            ei--;
+    }
+
+    return ans;
+}
+
+void prepareAns(vector<vector<int>> &ans, vector<vector<int>> &smallAns, int fixEle)
+{
+
+    for (vector<int> &arr : smallAns)
+    {
+        vector<int> ar;
+        ar.push_back(fixEle);
+        for (int ele : arr)
+            ar.push_back(ele);
+        ans.push_back(ar);
+    }
+}
+
+vector<vector<int>> threeSum(vector<int> &arr, int target, int si, int ei)
+{
+    vector<vector<int>> ans;
+    for (int i = si; i < ei;)
+    {
+        vector<vector<int>> smallAns = twoSum(arr, target - arr[i], i + 1, ei);
+        prepareAns(ans, smallAns, arr[i]);
+        i++;
+        while (i < ei && arr[i] == arr[i - 1])
+            i++;
+    }
+
+    return ans;
+}
+
+vector<vector<int>> fourSum(vector<int> &arr, int target, int si, int ei)
+{
+    vector<vector<int>> ans;
+    for (int i = si; i < ei;)
+    {
+        vector<vector<int>> smallAns = threeSum(arr, target - arr[i], i + 1, ei);
+        prepareAns(ans, smallAns, arr[i]);
+        i++;
+        while (i < ei && arr[i] == arr[i - 1])
+            i++;
+    }
+
+    return ans;
+}
+
+vector<vector<int>> kSum(vector<int> &arr, int target, int k, int si, int ei)
+{
+    if (k == 2)
+        return twoSum(arr, target, si, ei);
+
+    vector<vector<int>> ans;
+    for (int i = si; i < ei;)
+    {
+        vector<vector<int>> smallAns = kSum(arr, target - arr[i], k - 1, i + 1, ei);
+        prepareAns(ans, smallAns, arr[i]);
+        i++;
+        while (i < ei && arr[i] == arr[i - 1])
+            i++;
+    }
+
+    return ans;
+}
+
 int main()
 {
     return 0;
