@@ -193,8 +193,9 @@ public class questions {
 
         return head;
     }
-    
-    // T : O(NlogkK), S : O(logK)   -> N = k times of (avg length Of Linkedlist), where k is length of lists.
+
+    // T : O(NlogkK), S : O(logK) -> N = k times of (avg length Of Linkedlist),
+    // where k is length of lists.
     public static ListNode mergeKList(ListNode[] lists, int si, int ei) {
         if (si == ei)
             return lists[si];
@@ -209,6 +210,47 @@ public class questions {
         if (lists.length == 0)
             return null;
         return mergeKList(lists, 0, lists.length - 1);
+    }
+
+    public static ListNode mergeSort(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode mid = midNode(head);
+        ListNode nHead = mid.next;
+        mid.next = null;
+
+        return mergeTwoLists(mergeSort(head), mergeSort(nHead));
+    }
+
+    public static ListNode removeNthFromEnd(ListNode head, int n) {
+        if (head == null || n <= 0)
+            return head;
+
+        ListNode slow = head, fast = head;
+        while (n-- > 0) {
+            fast = fast.next;
+            if (fast == null && n > 0)
+                return head;
+        }
+
+        if (fast == null) {
+            ListNode rnode = slow;
+            head = rnode.next;
+            rnode.next = null;
+            return head;
+        }
+
+        while (fast.next != null) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+
+        ListNode rnode = slow.next;
+        slow.next = rnode.next;
+        rnode.next = null;
+
+        return head;
     }
 
 }
