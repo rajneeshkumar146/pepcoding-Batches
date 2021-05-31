@@ -250,4 +250,107 @@ public class linkedlist {
         this.tail = this.head;
         this.head = prev;
     }
+
+    private Node reversePRHelper(Node node) {
+        if (node.next == null)
+            return node;
+
+        Node reverseNode = reversePRHelper(node.next);
+        reverseNode.next = node;
+
+        return node;
+    }
+
+    public void reversePR() {
+
+        Node reverseNode = reversePRHelper(head);
+        reverseNode.next = null;
+        head = tail;
+        tail = reverseNode;
+    }
+
+    private void reversePRHelper(Node node) {
+        if (node.next == null)
+            return;
+
+        reversePRHelper(node.next);
+        Node forw = node.next;
+        forw.next = node;
+    }
+
+    public void reversePR() {
+
+        reversePRHelper(head);
+        head.next = null;
+        Node temp = head;
+        head = tail;
+        tail = temp;
+    }
+
+    private void displayReverseHelper(Node node) {
+        if (node == null)
+            return;
+
+        displayReverseHelper(node.next);
+        System.out.print(node.data + " ");
+    }
+
+    public void displayReverse() {
+        displayReverseHelper(head);
+        System.out.println();
+    }
+
+    public Node midNode(Node node) {
+        if (node == null || node.next == null)
+            return node;
+        Node slow = node, fast = node;
+
+        while (fast.next != null && fast.next.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        return slow;
+    }
+
+    public Node reverse(Node node) {
+        if (node == null || node.next == null)
+            return node;
+
+        Node curr = node, prev = null;
+        while (curr != null) {
+            Node forw = curr.next;
+
+            curr.next = prev;
+
+            prev = curr;
+            curr = forw;
+        }
+
+        return prev;
+    }
+
+    public void fold() {
+        Node mid = midNode(head);
+        Node nhead = mid.next;
+        mid.next = null;
+
+        nhead = reverse(nhead);
+
+        Node c1 = head, c2 = nhead;
+        while (c2 != null) {
+            Node f1 = c1.next, f2 = c2.next;
+
+            c1.next = c2;
+            c2.next = f1;
+
+            c1 = f1;
+            c2 = f2;
+        }
+
+        if (size() % 2 != 0)
+            tail = mid;
+        else
+            tail = mid.next;
+    }
 }

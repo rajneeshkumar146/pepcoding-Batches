@@ -82,7 +82,7 @@ public class questions {
     }
 
     // 206
-    public ListNode reverseList(ListNode head) {
+    public static ListNode reverseList(ListNode head) {
         if (head == null || head.next == null)
             return head;
 
@@ -98,6 +98,37 @@ public class questions {
         }
 
         return prev;
+    }
+
+    public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+
+        l1 = reverseList(l1);
+        l2 = reverseList(l2);
+
+        ListNode dummy = new ListNode(-1);
+
+        ListNode c1 = l1, c2 = l2, prev = dummy;
+        int carry = 0;
+        while (c1 != null || c2 != null || carry != 0) {
+            int sum = carry + (c1 != null ? c1.val : 0) + (c2 != null ? c2.val : 0);
+
+            carry = sum / 10;
+            sum %= 10;
+
+            prev.next = new ListNode(sum);
+
+            prev = prev.next;
+            if(c1 != null) c1 = c1.next;
+            if(c2 != null) c2 = c2.next;
+        }
+
+        ListNode head = dummy.next;
+        head = reverseList(head);
+        
+        l1 = reverseList(l1);
+        l2 = reverseList(l2);
+
+        return head;
     }
 
 }
