@@ -56,4 +56,48 @@ public class questions {
 
         return maxSize;
     }
+
+    //785
+    public boolean isBipartite(int[][] graph, int src, int[] vis) {
+        LinkedList<Integer> que = new LinkedList<>();
+
+        que.addLast(src);
+        int color = 0;
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+
+                int rvtx = que.removeFirst();
+                if (vis[rvtx] != -1) {
+                    if (vis[rvtx] != color)
+                        return false;
+                    continue;
+                }
+
+                vis[rvtx] = color;
+                for (int e : graph[rvtx])
+                    if (vis[e] == -1)
+                        que.addLast(e);
+
+            }
+
+            color = (color + 1) % 2;
+        }
+
+        return true;
+    }
+
+    public boolean isBipartite(int[][] graph) {
+        int[] vis = new int[graph.length];
+        Arrays.fill(vis, -1);
+
+        for (int i = 0; i < vis.length; i++) {
+            if (vis[i] == -1) {
+                if (!isBipartite(graph, i, vis))
+                    return false;
+            }
+        }
+
+        return true;
+    }
 }

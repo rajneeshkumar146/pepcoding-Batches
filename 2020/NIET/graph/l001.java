@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.PriorityQueue;
+import java.util.LinkedList;
+import java.util.Arrays;
 
 public class l001 {
 
@@ -154,17 +156,17 @@ public class l001 {
     }
 
     // static class Pair implements Comparable<Pair> {
-    //     int wsf;
-    //     String psf;
+    // int wsf;
+    // String psf;
 
-    //     Pair(int wsf, String psf) {
-    //         this.wsf = wsf;
-    //         this.psf = psf;
-    //     }
+    // Pair(int wsf, String psf) {
+    // this.wsf = wsf;
+    // this.psf = psf;
+    // }
 
-    //     public int compareTo(Pair o) {
-    //         return this.wsf - o.wsf;
-    //     }
+    // public int compareTo(Pair o) {
+    // return this.wsf - o.wsf;
+    // }
     // }
 
     // static String spath;
@@ -181,43 +183,44 @@ public class l001 {
 
     // static PriorityQueue<Pair> pq = new PriorityQueue<>();
 
-    // public static void multisolver(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis, int criteria, int k,
-    //         String psf, int wsf) {
+    // public static void multisolver(ArrayList<Edge>[] graph, int src, int dest,
+    // boolean[] vis, int criteria, int k,
+    // String psf, int wsf) {
 
-    //     if (src == dest) {
-    //         if (wsf < spathwt) {
-    //             spathwt = wsf;
-    //             spath = psf;
-    //         }
+    // if (src == dest) {
+    // if (wsf < spathwt) {
+    // spathwt = wsf;
+    // spath = psf;
+    // }
 
-    //         if (lpathwt < wsf) {
-    //             lpathwt = wsf;
-    //             lpath = psf;
-    //         }
+    // if (lpathwt < wsf) {
+    // lpathwt = wsf;
+    // lpath = psf;
+    // }
 
-    //         if (wsf < criteria && wsf > fpathwt) {
-    //             fpathwt = wsf;
-    //             fpath = psf;
-    //         }
+    // if (wsf < criteria && wsf > fpathwt) {
+    // fpathwt = wsf;
+    // fpath = psf;
+    // }
 
-    //         if (wsf > criteria && wsf < cpathwt) {
-    //             cpathwt = wsf;
-    //             cpath = psf;
-    //         }
+    // if (wsf > criteria && wsf < cpathwt) {
+    // cpathwt = wsf;
+    // cpath = psf;
+    // }
 
-    //         pq.add(new Pair(wsf, psf));
-    //         if (pq.size() > k)
-    //             pq.remove();
+    // pq.add(new Pair(wsf, psf));
+    // if (pq.size() > k)
+    // pq.remove();
 
-    //         return;
-    //     }
+    // return;
+    // }
 
-    //     vis[src] = true;
-    //     for (Edge e : graph[src]) {
-    //         if (!vis[e.v])
-    //             multisolver(graph, e.v, dest, vis, criteria, k, psf + e.v, wsf + e.w);
-    //     }
-    //     vis[src] = false;
+    // vis[src] = true;
+    // for (Edge e : graph[src]) {
+    // if (!vis[e.v])
+    // multisolver(graph, e.v, dest, vis, criteria, k, psf + e.v, wsf + e.w);
+    // }
+    // vis[src] = false;
     // }
 
     // Get Connected Components
@@ -261,7 +264,7 @@ public class l001 {
             if (!vis[e.v]) {
                 totalPaths += dfs_hamintonianPath(graph, vis, e.v, osrc, count + 1, psf + e.v);
             }
-        }`
+        }
         vis[src] = false;
         return totalPaths;
     }
@@ -270,6 +273,112 @@ public class l001 {
     public static void hamintonianPath(int src, ArrayList<Edge>[] graph, int N) {
         boolean[] vis = new boolean[N];
         dfs_hamintonianPath(graph, vis, src, src, 0, src + "");
+    }
+
+    // BFS.===========================================================
+
+    public static void BFS(ArrayList<Edge>[] graph, int src, boolean[] vis) {
+        LinkedList<Integer> que = new LinkedList<>(); // que -> addLast, removeFirst
+        que.addLast(src);
+
+        int level = 0;
+        boolean isCycle = false;
+        while (que.size() != 0) {
+            int size = que.size();
+            System.out.print(level + " No Of Edges Required for: ");
+            while (size-- > 0) {
+
+                Integer rvtx = que.removeFirst();
+                if (vis[rvtx]) {
+                    isCycle = true;
+                    continue;
+                }
+
+                System.out.print(rvtx + " ");
+
+                vis[rvtx] = true;
+                for (Edge e : graph[rvtx]) {
+                    if (!vis[e.v])
+                        que.addLast(e.v);
+                }
+            }
+            level++;
+            System.out.println();
+        }
+
+    }
+
+    public static void BFS_forNoCycle(ArrayList<Edge>[] graph, int src, boolean[] vis) {
+        LinkedList<Integer> que = new LinkedList<>(); // que -> addLast, removeFirst
+        que.addLast(src);
+        vis[src] = true;
+
+        int level = 0;
+        while (que.size() != 0) {
+            int size = que.size();
+            System.out.print(level + " No Of Edges Required for: ");
+            while (size-- > 0) {
+
+                Integer rvtx = que.removeFirst();
+                System.out.print(rvtx + " ");
+
+                for (Edge e : graph[rvtx]) {
+                    if (!vis[e.v]) {
+                        vis[e.v] = true;
+                        que.addLast(e.v);
+                    }
+                }
+            }
+            level++;
+            System.out.println();
+        }
+
+    }
+
+    public static boolean isBipartite(ArrayList<Edge>[] graph, int src, int[] vis) {
+        LinkedList<Integer> que = new LinkedList<>(); // que -> addLast, removeFirst
+
+        que.addLast(src);
+        int color = 0; // 0 -> red, 1 -> green
+
+        boolean isBipartite = true;
+
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size != 0) {
+                int rvtx = que.removeFirst();
+
+                if (vis[rvtx] != -1) {
+                    if (vis[rvtx] != color)
+                        isBipartite = false;
+                    continue;
+                }
+
+                vis[rvtx] = color;
+                for (Edge e : graph[rvtx]) {
+                    if (vis[e.v] == -1)
+                        que.addLast(e.v);
+                }
+            }
+
+            color = (color + 1) % 2;
+        }
+
+        return isBipartite;
+    }
+
+    public static boolean isBipartit(ArrayList<Edge>[] graph) {
+        int[] vis = new int[graph.length];
+        Arrays.fill(vis, -1);
+
+        for (int i = 0; i < graph.length; i++) {
+            if (vis[i] == -1) {
+                if (!isBipartite(graph, i, vis))
+                    return false;
+            }
+        }
+
+        return true;
     }
 
     public static void graphConstruct() {
@@ -286,7 +395,7 @@ public class l001 {
         addEdge(graph, 4, 5, 3);
         addEdge(graph, 4, 6, 8);
         addEdge(graph, 5, 6, 2);
-        addEdge(graph, 0, 6, 2);
+        // addEdge(graph, 0, 6, 2);
 
         display(graph);
 
@@ -298,7 +407,8 @@ public class l001 {
         // pair ans = lightWeightPath(graph, 0, 6, vis);
         // if (ans.wsf != -(int) 1e9)
         // System.out.println(ans.psf + "@" + ans.wsf);
-        hamintonianPath(0, graph, N);
+        // hamintonianPath(0, graph, N);
+        BFS(graph, 0, vis);
     }
 
     public static void main(String[] args) {
