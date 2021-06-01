@@ -349,7 +349,7 @@ public class l001 {
                 int rvtx = que.removeFirst();
 
                 if (vis[rvtx] != -1) {
-                    
+
                     if (vis[rvtx] != color)
                         isBipartite = false;
                     continue;
@@ -382,6 +382,135 @@ public class l001 {
         return true;
     }
 
+    public static class diji_pair implements Comparable<diji_pair> {
+        int vtx, par, wt, wsf;
+        String psf;
+
+        diji_pair(int vtx, int par, int wt, int wsf, String psf) {
+            this.vtx = vtx;
+            this.par = par;
+            this.wt = wt;
+            this.wsf = wsf;
+            this.psf = psf;
+        }
+
+        @Override
+        public int compareTo(diji_pair o) {
+            return this.wsf - o.wsf;
+        }
+    }
+
+    public static void dijikstrAlgo_01(ArrayList<Edge>[] graph, int src) {
+        int N = 7;
+        ArrayList<Edge>[] myGraph = new ArrayList[N];
+        for (int i = 0; i < N; i++)
+            myGraph[i] = new ArrayList<>();
+
+        boolean[] vis = new boolean[N];
+        PriorityQueue<diji_pair> pq = new PriorityQueue<>();
+
+        pq.add(new diji_pair(src, -1, 0, 0, src + ""));
+
+        int[] dis = new int[N];
+
+        while (pq.size() != 0) {
+            diji_pair rp = pq.remove();
+
+            if (vis[rp.vtx])
+                continue;
+
+            if (rp.par != -1)
+                addEdge(myGraph, rp.vtx, rp.par, rp.wt);
+
+            System.out.println(rp.vtx + " via " + rp.psf + " @ " + rp.wsf);
+
+            dis[rp.vtx] = rp.wsf;
+            vis[rp.vtx] = true;
+            for (Edge e : graph[rp.vtx]) {
+                if (!vis[e.v])
+                    pq.add(new diji_pair(e.v, rp.vtx, e.w, rp.wsf + e.w, rp.psf + e.v));
+            }
+        }
+
+        display(myGraph);
+        for (int ele : dis)
+            System.out.print(ele + " ");
+    }
+
+    public static int[] dijikstrAlgo_forQuestionSolving(ArrayList<Edge>[] graph, int src) {
+        int N = graph.length;
+        boolean[] vis = new boolean[N];
+        PriorityQueue<diji_pair> pq = new PriorityQueue<>();
+
+        pq.add(new diji_pair(src, -1, 0, 0, src + ""));
+        int[] dis = new int[N];
+
+        while (pq.size() != 0) {
+            diji_pair rp = pq.remove();
+
+            if (vis[rp.vtx])
+                continue;
+
+            dis[rp.vtx] = rp.wsf;
+            vis[rp.vtx] = true;
+            for (Edge e : graph[rp.vtx]) {
+                if (!vis[e.v])
+                    pq.add(new diji_pair(e.v, rp.vtx, e.w, rp.wsf + e.w, rp.psf + e.v));
+            }
+        }
+
+        return dis;
+    }
+
+    public static class diji_pair2 implements Comparable<diji_pair2> {
+        int vtx, wsf;
+
+        diji_pair2(int vtx, int wsf) {
+            this.vtx = vtx;
+            this.wsf = wsf;
+
+        }
+
+        @Override
+        public int compareTo(diji_pair2 o) {
+            return this.wsf - o.wsf;
+        }
+    }
+
+    public static int[] dijikstrAlgo_bestMethod(ArrayList<Edge>[] graph, int src) {
+        int N = graph.length;
+        PriorityQueue<diji_pair2> pq = new PriorityQueue<>();
+        
+        int[] dis = new int[N];
+        int[] par = new int[N];
+        boolean[] vis = new boolean[N];
+        
+        Arrays.fill(dis, (int) 1e9);
+        Arrays.fill(par, -1);
+
+        pq.add(new diji_pair2(src, 0));
+        dis[src] = 0;
+
+        while (pq.size() != 0) {
+            diji_pair2 rp = pq.remove();
+
+            if (vis[rp.vtx])
+                continue;
+
+            vis[rp.vtx] = true;
+            for (Edge e : graph[rp.vtx]) {
+                if (!vis[e.v] && e.w + rp.wsf < dis[e.v]) {
+                    dis[e.v] = e.w + rp.wsf;
+                    par[e.v] = rp.vtx;
+
+                    pq.add(new diji_pair2(e.v, rp.wsf + e.w));
+                }
+            }
+        }
+
+        return dis;
+    }
+
     public static void graphConstruct() {
         int N = 7;
         ArrayList<Edge>[] graph = new ArrayList[N];
@@ -389,18 +518,18 @@ public class l001 {
             graph[i] = new ArrayList<>();
 
         addEdge(graph, 0, 1, 10);
-        addEdge(graph, 0, 3, 10);
+        addEdge(graph, 0, 3, 40);
         addEdge(graph, 1, 2, 10);
-        addEdge(graph, 2, 3, 40);
+        addEdge(graph, 2, 3, 10);
         addEdge(graph, 3, 4, 2);
         addEdge(graph, 4, 5, 3);
+        addEdge(graph, 5, 6, 3);
         addEdge(graph, 4, 6, 8);
-        addEdge(graph, 5, 6, 2);
-        // addEdge(graph, 0, 6, 2);
+        addEdge(graph, 2, 5, 5);
 
         display(graph);
 
-        boolean[] vis = new boolean[N];
+        // boolean[] vis = new boolean[N];
         // System.out.println(printAllPath(graph, 0, 6, vis, ""));
         // printpreOrder(graph, 0, 0, vis, "");
 
@@ -409,7 +538,10 @@ public class l001 {
         // if (ans.wsf != -(int) 1e9)
         // System.out.println(ans.psf + "@" + ans.wsf);
         // hamintonianPath(0, graph, N);
-        BFS(graph, 0, vis);
+        // BFS(graph, 0, vis);
+
+        System.out.println();
+        dijikstrAlgo_01(graph, 0);
     }
 
     public static void main(String[] args) {
