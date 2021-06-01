@@ -57,7 +57,7 @@ public class questions {
         return maxSize;
     }
 
-    //785
+    // 785
     public boolean isBipartite(int[][] graph, int src, int[] vis) {
         LinkedList<Integer> que = new LinkedList<>();
 
@@ -99,5 +99,51 @@ public class questions {
         }
 
         return true;
+    }
+
+    // 994
+    public int orangesRotting(int[][] grid) {
+        LinkedList<Integer> que = new LinkedList<>();
+        int n = grid.length, m = grid[0].length;
+
+        int freshOranges = 0;
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                if (grid[i][j] == 1)
+                    freshOranges++;
+                else if (grid[i][j] == 2)
+                    que.addLast(i * m + j);
+
+        if (freshOranges == 0)
+            return 0;
+        int[][] dir = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+
+        int time = 0;
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                int idx = que.removeFirst();
+                int r = idx / m;
+                int c = idx % m;
+
+                for (int d = 0; d < 4; d++) {
+                    int x = r + dir[d][0];
+                    int y = c + dir[d][1];
+
+                    if (x >= 0 && y >= 0 && x < n && y < m && grid[x][y] == 1) {
+                        grid[x][y] = 2;
+                        freshOranges--;
+                        if (freshOranges == 0)
+                            return time + 1;
+                        que.addLast(x * m + y);
+                    }
+                }
+
+            }
+
+            time++;
+        }
+
+        return -1;
     }
 }

@@ -349,6 +349,7 @@ public class l001 {
                 int rvtx = que.removeFirst();
 
                 if (vis[rvtx] != -1) {
+                    
                     if (vis[rvtx] != color)
                         isBipartite = false;
                     continue;
