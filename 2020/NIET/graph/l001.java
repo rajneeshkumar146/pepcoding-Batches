@@ -480,11 +480,11 @@ public class l001 {
     public static int[] dijikstrAlgo_bestMethod(ArrayList<Edge>[] graph, int src) {
         int N = graph.length;
         PriorityQueue<diji_pair2> pq = new PriorityQueue<>();
-        
+
         int[] dis = new int[N];
         int[] par = new int[N];
         boolean[] vis = new boolean[N];
-        
+
         Arrays.fill(dis, (int) 1e9);
         Arrays.fill(par, -1);
 
@@ -509,6 +509,62 @@ public class l001 {
         }
 
         return dis;
+    }
+
+    private static class primsPair {
+        int vtx, wt;
+
+        primsPair(int vtx, int wt) {
+            this.vtx = vtx;
+            this.wt = wt;
+        }
+    }
+
+    private static void prims(ArrayList<Edge>[] graph, int src, ArrayList<Edge>[] primsGraph, boolean[] vis) {
+        int N = graph.length;
+        PriorityQueue<primsPair> pq = new PriorityQueue<>((a, b) -> {
+            return a.wt - b.wt;
+        });
+
+        int[] dis = new int[N];
+        int[] par = new int[N];
+        Arrays.fill(dis, (int) 1e9);
+        Arrays.fill(par, -1);
+
+        pq.add(new primsPair(src, 0));
+        dis[src] = 0;
+
+        while (pq.size() != 0) {
+            primsPair p = pq.remove();
+            if (vis[p.vtx])
+                continue;
+
+            vis[p.vtx] = true;
+            for (Edge e : graph[p.vtx]) {
+                if (!vis[e.v] && e.w < dis[e.v]) {
+                    dis[e.v] = e.w;
+                    par[e.v] = p.vtx;
+
+                    pq.add(new primsPair(e.v, e.w));
+                }
+            }
+        }
+    }
+
+    public static void prims(ArrayList<Edge>[] graph) {
+        int N = 7;
+        ArrayList<Edge>[] primsg = new ArrayList[N];
+        for (int i = 0; i < N; i++)
+            primsg[i] = new ArrayList<>();
+
+        boolean[] vis = new boolean[N];
+        for (int i = 0; i < N; i++) {
+            if (!vis[i]) {
+                prims(graph, i, primsg, vis);
+            }
+        }
+
+        display(primsg);
     }
 
     public static void graphConstruct() {
