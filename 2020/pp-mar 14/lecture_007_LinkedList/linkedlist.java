@@ -3,7 +3,7 @@ public class linkedlist {
         int data = 0;
         Node next = null;
 
-        Node(int data) {
+        public Node(int data) {
             this.data = data;
         }
     }
@@ -414,8 +414,7 @@ public class linkedlist {
         return isPalindrome;
     }
 
-    Node ptr = head;
-
+    Node ptr;
     public boolean IsPalindrome(Node node) {
         if (node == null) {
             return true;
@@ -428,7 +427,6 @@ public class linkedlist {
 
         ptr = ptr.next;
         return true;
-
     }
 
     public boolean IsPalindrome2() {
