@@ -347,9 +347,9 @@ public class l001 {
 
         int n = arr.length;
         if (x <= arr[0])
-            return ans.subList(0, k);
+            return ans.subList(0, k);   // {arr.begin(), arr.begin() + k}
         else if (x >= arr[n - 1])
-            return ans.subList(n - k, n);
+            return ans.subList(n - k, n); // {arr.end() - k, arr.end()}
         else {
             int lr = 0, rr = n - k;
             while (lr < rr) {
