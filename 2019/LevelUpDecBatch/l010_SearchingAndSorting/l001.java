@@ -360,7 +360,7 @@ public class l001 {
                     rr = mid;
             }
 
-            return ans.subList(lr, rr + 1);
+            return ans.subList(lr, lr + k + 1);
         }
     }
 
