@@ -300,6 +300,70 @@ public class l001 {
         return twoSumCount(A, B, 0);
     }
 
+    // 658
+    public int insertPosition(int[] arr, int data) {
+        int n = arr.length, si = 0, ei = n - 1;
+        while (si <= ei) {
+            int mid = (si + ei) / 2;
+            if (arr[mid] <= data)
+                si = mid + 1;
+            else
+                ei = mid - 1;
+        }
+
+        return si;
+    }
+
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+        ArrayList<Integer> ans = new ArrayList<>();
+        for (int ele : arr)
+            ans.add(ele);
+
+        int n = arr.length;
+        if (x <= arr[0])
+            return ans.subList(0, k);
+        else if (x >= arr[n - 1])
+            return ans.subList(n - k, n);
+        else {
+            int idx = insertPosition(arr, x);
+            int lr = Math.max(0, idx - k);
+            int rr = Math.min(n - 1, idx + k);
+
+            while ((rr - lr + 1) > k) {
+                if (x - arr[lr] > arr[rr] - x)
+                    lr++;
+                else
+                    rr--;
+            }
+            return ans.subList(lr, rr + 1);
+        }
+    }
+
+    // O(log(n) + k)
+    public List<Integer> findClosestElements_02(int[] arr, int k, int x) {
+        ArrayList<Integer> ans = new ArrayList<>();
+        for (int ele : arr)
+            ans.add(ele);
+
+        int n = arr.length;
+        if (x <= arr[0])
+            return ans.subList(0, k);
+        else if (x >= arr[n - 1])
+            return ans.subList(n - k, n);
+        else {
+            int lr = 0, rr = n - k;
+            while (lr < rr) {
+                int mid = (lr + rr) / 2;
+                if (x - arr[mid] > arr[mid + k] - x)
+                    lr = mid + 1;
+                else
+                   rr = mid;
+            }
+
+            return ans.subList(lr, rr + 1);
+        }
+    }
+
     public static void main(String[] args) {
 
     }
