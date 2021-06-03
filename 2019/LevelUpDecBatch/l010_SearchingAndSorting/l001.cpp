@@ -514,6 +514,41 @@ vector<int> findClosestElements(vector<int> arr, int k, int x)
     return {arr.begin() + lr, arr.begin() + rr + 1};
 }
 
+int insertPosition(vector<int> &list, int data)
+{
+    int n = list.size(), si = 0, ei = n - 1;
+    while (si <= ei)
+    {
+        int mid = (si + ei) / 2;
+        if (list[mid] <= data)
+            si = mid + 1;
+        else
+            ei = mid - 1;
+    }
+    int insertPos = si;
+    int lastIndex = si - 1;
+    return lastIndex >= 0 && list[lastIndex] == data ? lastIndex : insertPos;
+}
+
+int lengthOfLIS(vector<int> &nums)
+{
+    int n = nums.size();
+    if (n <= 1)
+        return n;
+
+    vector<int> list;
+    for (int ele : nums)
+    {
+        int loc = insertPosition(list, ele);
+        if (loc == list.size())
+            list.push_back(ele);
+        else
+            list[loc] = ele;
+    }
+
+    return list.size();
+}
+
 int main()
 {
     return 0;
