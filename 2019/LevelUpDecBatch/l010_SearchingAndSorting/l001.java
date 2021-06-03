@@ -357,11 +357,42 @@ public class l001 {
                 if (x - arr[mid] > arr[mid + k] - x)
                     lr = mid + 1;
                 else
-                   rr = mid;
+                    rr = mid;
             }
 
             return ans.subList(lr, rr + 1);
         }
+    }
+
+    public int insertPosition(ArrayList<Integer> list, int data) {
+        int n = list.size(), si = 0, ei = n - 1;
+        while (si <= ei) {
+            int mid = (si + ei) / 2;
+            if (list.get(mid) <= data)
+                si = mid + 1;
+            else
+                ei = mid - 1;
+        }
+        int insertPos = si;
+        int lastIndex = si - 1;
+        return lastIndex >= 0 && list.get(lastIndex) == data ? lastIndex : insertPos;
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        if (n <= 1)
+            return n;
+
+        ArrayList<Integer> list = new ArrayList<>();
+        for (int ele : nums) {
+            int loc = insertPosition(list, ele);
+            if (loc == list.size())
+                list.add(ele);
+            else
+                list.set(loc, ele);
+        }
+
+        return list.size();
     }
 
     public static void main(String[] args) {
