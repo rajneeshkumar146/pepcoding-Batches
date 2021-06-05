@@ -518,9 +518,35 @@ public class l001 {
 
         while ((ei - si) > 1e-5) {
             double cakeArea = (si + ei) / 2.0;
-            if(!isPossibleToServeCake(radius, cakeArea, guest)) ei = cakeArea - 1e-5;
-            else si = cakeArea;
+            if (!isPossibleToServeCake(radius, cakeArea, guest))
+                ei = cakeArea - 1e-5;
+            else
+                si = cakeArea;
 
+        }
+
+        return si;
+    }
+
+    public boolean itIsCorrectPenatly(int[] arr, double distance, int k) {
+        int noOfGasStation = 0, n = arr.length;
+        for (int i = 1; i < n; i++) {
+            noOfGasStation += (arr[i] - arr[i - 1]) / distance;
+            if (noOfGasStation > k)
+                return false;
+        }
+
+        return true;
+    }
+
+    public double minmaxGasDist(int[] stations, int k) {
+        double si = 0.0, ei = 1e9;
+        while ((ei - si) > 1e-6) {
+            double distance = (ei + si) / 2.0;
+            if (!itIsCorrectPenatly(stations, distance, k))
+                si = distance + 1e-6;
+            else
+                ei = distance;
         }
 
         return si;
