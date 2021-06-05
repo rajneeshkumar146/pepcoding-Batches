@@ -347,7 +347,7 @@ public class l001 {
 
         int n = arr.length;
         if (x <= arr[0])
-            return ans.subList(0, k);   // {arr.begin(), arr.begin() + k}
+            return ans.subList(0, k); // {arr.begin(), arr.begin() + k}
         else if (x >= arr[n - 1])
             return ans.subList(n - k, n); // {arr.end() - k, arr.end()}
         else {
@@ -393,6 +393,38 @@ public class l001 {
         }
 
         return list.size();
+    }
+
+    // 875
+    // O(n)
+    public boolean isPossibleToEat(int[] arr, int eatingSpeed, int hour) {
+        int hr = 0;
+        for (int i = arr.length - 1; i >= 0; i--) {
+            hr += Math.ceil(arr[i] / (eatingSpeed * 1.0));
+            if (hr > hour)
+                return false;
+        }
+
+        return true;
+    }
+
+    public int minEatingSpeed(int[] piles, int h) {
+        // Arrays.sort(piles);
+        int n = piles.length, si = 1, ei = (int) 1e9;
+
+        while (si < ei) {
+            int eatingSpeed = (si + ei) / 2;
+            if (!isPossibleToEat(piles, eatingSpeed, h))
+                si = eatingSpeed + 1;
+            else
+                ei = eatingSpeed;
+        }
+
+        return si;
+    }
+
+    public boolean isPossibleToServeCake(int[] radiusArray,double cakeArea,int guest){
+
     }
 
     public static void main(String[] args) {
