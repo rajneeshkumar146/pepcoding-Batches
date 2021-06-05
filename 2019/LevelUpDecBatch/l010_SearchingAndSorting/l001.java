@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.tree.TreePath;
+
 import java.util.HashMap;
 
 public class l001 {
@@ -395,6 +398,8 @@ public class l001 {
         return list.size();
     }
 
+    // ===================================================
+
     // 875
     // O(n)
     public boolean isPossibleToEat(int[] arr, int eatingSpeed, int hour) {
@@ -423,8 +428,102 @@ public class l001 {
         return si;
     }
 
-    public boolean isPossibleToServeCake(int[] radiusArray,double cakeArea,int guest){
+    // 1011
+    public boolean isPossibleToShip(int[] weight, int capacity, int days) {
+        int d = 1;
+        int totalWeightPerDay = 0;
+        for (int w : weight) {
+            totalWeightPerDay += w;
+            if (totalWeightPerDay > capacity) {
+                d++;
+                totalWeightPerDay = w;
+            }
 
+            if (d > days)
+                return false;
+        }
+
+        return true;
+    }
+
+    public int shipWithinDays(int[] weights, int days) {
+        int maxEle = 0, sum = 0;
+        for (int w : weights) {
+            maxEle = Math.max(maxEle, w);
+            sum += w;
+        }
+
+        int si = maxEle, ei = sum;
+        while (si < ei) {
+            int capacity = (si + ei) / 2;
+            if (!isPossibleToShip(weights, capacity, days))
+                si = capacity + 1;
+            else
+                ei = capacity;
+        }
+
+        return si;
+    }
+
+    public boolean isPossibleToShip2(int[] weight, int capacity, int days) {
+        int d = 1;
+        int totalWeightPerDay = 0;
+        for (int w : weight) {
+            if (w > capacity)
+                return false;
+            totalWeightPerDay += w;
+            if (totalWeightPerDay > capacity) {
+                d++;
+                totalWeightPerDay = w;
+            }
+
+            if (d > days)
+                return false;
+        }
+
+        return true;
+    }
+
+    public int shipWithinDays2(int[] weights, int days) {
+        int si = 1, ei = (int) 1e7;
+        while (si < ei) {
+            int capacity = (si + ei) / 2;
+            if (!isPossibleToShip(weights, capacity, days))
+                si = capacity + 1;
+            else
+                ei = capacity;
+        }
+
+        return si;
+    }
+
+    public boolean isPossibleToServeCake(int[] radiusArray, double cakeArea, int guest) {
+        int g = 0;
+        for (int i = radiusArray.length - 1; i >= 0; i--) {
+            double area = Math.PI * radiusArray[i] * radiusArray[i];
+            g += Math.floor(area / cakeArea);
+            if (g >= guest)
+                return true;
+
+        }
+        return false;
+    }
+
+    public double maximumAreaCake(int[] radius, int guest) {
+        Arrays.sort(radius);
+        int n = radius.length;
+        double si = (Math.PI * radius[0] * radius[0]) / guest, ei = Math.PI * radius[n - 1] * radius[n - 1]; // si =
+                                                                                                             // 0.0,ei =
+                                                                                                             // 1e6;
+
+        while ((ei - si) > 1e-5) {
+            double cakeArea = (si + ei) / 2.0;
+            if(!isPossibleToServeCake(radius, cakeArea, guest)) ei = cakeArea - 1e-5;
+            else si = cakeArea;
+
+        }
+
+        return si;
     }
 
     public static void main(String[] args) {
