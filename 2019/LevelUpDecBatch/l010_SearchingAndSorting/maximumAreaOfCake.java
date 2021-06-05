@@ -23,7 +23,7 @@ public class maximumAreaOfCake {
         while ((ei - si) > 1e-5) {
             double cakeArea = (si + ei) / 2.0;
             if (!isPossibleToServeCake(radius, cakeArea, guest))
-                ei = cakeArea - 1e-5;
+                ei = cakeArea;
             else
                 si = cakeArea;
 
