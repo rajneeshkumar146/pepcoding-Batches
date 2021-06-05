@@ -448,4 +448,167 @@ public class questions {
         return head;
     }
 
+    public static ListNode subtractTwoNumbers(ListNode l1, ListNode l2) {
+        l1 = reverse(l1);
+        l2 = reverse(l2);
+
+        ListNode dummy = new ListNode(-1);
+        ListNode c1 = l1, c2 = l2, prev = dummy;
+        int borrow = 0;
+        while (c1 != null || c2 != null) {
+            int diff = borrow + (c1 != null ? c1.val : 0) - (c2 != null ? c2.val : 0);
+            if (diff < 0) {
+                diff += 10;
+                borrow = -1;
+            } else
+                borrow = 0;
+
+            prev.next = new ListNode(diff);
+            prev = prev.next;
+
+            if (c1 != null)
+                c1 = c1.next;
+            if (c2 != null)
+                c2 = c2.next;
+        }
+
+        ListNode head = dummy.next;
+        head = reverse(head);
+
+        while (head != null && head.val == 0) // 1000000000 - 99999999 = 1, 999 - 999 = 0
+            head = head.next;
+
+        l1 = reverse(l1);
+        l2 = reverse(l2);
+
+        return head;
+    }
+
+    public static boolean isCyclePresentInLL(ListNode head) {
+        if (head == null || head.next == null)
+            return false;
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while (fast.next != null && fast.next.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+
+            if (fast == slow)
+                return true;
+
+        }
+
+        return false;
+    }
+
+    public static ListNode CycleNode(ListNode head) {
+        if (head == null || head.next == null)
+            return null;
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while (fast.next != null && fast.next.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+
+            if (fast == slow)
+                break;
+        }
+
+        if (fast != slow)
+            return null;
+
+        slow = head;
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+
+        return slow;
+    }
+
+    public static ListNode CycleNode2(ListNode head) {
+        if (head == null || head.next == null)
+            return null;
+
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while (fast.next != null && fast.next.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+
+            if (fast == slow)
+                break;
+        }
+
+        if (fast != slow)
+            return null;
+
+        ListNode meetingNode = fast;
+        int a = 1, b = 0, c = 0, bc = 0, nDash = 0, n = 0; // bc is (b + c)
+
+        int count = 0;
+        slow = head;
+        boolean isLoopRun = false;
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+
+            if (nDash == 0 && fast == meetingNode)
+                bc = count;
+            if (fast == meetingNode)
+                nDash++;
+
+            a++;
+            count++;
+            isLoopRun = true;
+        }
+
+        if (!isLoopRun) {
+            fast = fast.next;
+            bc = 1;
+            while (fast != slow) {
+                fast = fast.next;
+                bc++;
+            }
+
+            a = 0;
+            b = bc;
+            c = 0;
+            n = 1;
+            nDash = 0;
+        } else {
+            n = nDash + 1;
+            c = a - bc * nDash;
+            b = bc - c;
+        }
+
+        System.out.println("Length Of Tail is:" + a);
+        System.out.println("Length Of b is:" + b);
+        System.out.println("Length Of c is:" + c);
+        System.out.println("No Of rotation by fast pointer before meeting poiny:" + n);
+        System.out.println("No Of rotation by fast pointer after meeting poiny:" + nDash);
+
+        return slow;
+    }
+
+    public static ListNode IntersectionNodeInTwoLL(ListNode headA, ListNode headB) {
+        if (headA == null || headB == null)
+            return null;
+
+        ListNode tail = headA;
+        while (tail.next != null)
+            tail = tail.next;
+
+        tail.next = headB;
+        ListNode ans = CycleNode(headA);
+        tail.next = null;
+
+        return ans;
+    }
+
 }
