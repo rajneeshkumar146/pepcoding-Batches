@@ -671,4 +671,135 @@ public class questions {
         pt.next = curr;
         return ph;
     }
+
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if (head.next == null || m == n)
+            return head;
+        int i = 1;
+        ListNode curr = head, prev = null;
+        while (curr != null) {
+            while (i >= m && i <= n) {
+                ListNode forw = curr.next;
+                curr.next = null;
+                addFirstNode(curr);
+                curr = forw;
+                i++;
+            }
+
+            if (i > n) {
+                if (prev == null) {
+                    tt.next = curr;
+                    return th;
+                } else {
+                    prev.next = th;
+                    tt.next = curr;
+                    return head;
+                }
+            }
+
+            prev = curr;
+            curr = curr.next;
+            i++;
+        }
+
+        return null;
+    }
+
+    public static ListNode removeDuplicates(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode curr = head.next, prev = head;
+
+        while (curr != null) {
+            while (curr != null && curr.val == prev.val) {
+                ListNode forw = curr.next;
+                curr.next = null;
+                curr = forw;
+            }
+
+            prev.next = curr;
+            prev = prev.next;
+            if (curr != null)
+                curr = curr.next;
+        }
+
+        return head;
+    }
+
+    public static ListNode removeDuplicates(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+        ListNode dummy = new ListNode(-1);
+        ListNode curr = head.next, prev = dummy;
+        prev.next = head;
+
+        while (curr != null) {
+            boolean isLoopRun = false;
+            while (curr != null && curr.val == prev.next.val) {
+                ListNode forw = curr.next;
+                curr.next = null;
+                curr = forw;
+                isLoopRun = true;
+            }
+
+            if (isLoopRun) {
+                prev.next = curr;
+            } else {
+                prev = prev.next;
+                prev.next = curr;
+            }
+
+            if (curr != null)
+                curr = curr.next;
+        }
+
+        return dummy.next;
+    }
+
+    // Copy List with Random Pointer
+    public void copyNodes(Node head) {
+        Node curr = head;
+        while (curr != null) {
+            Node forw = curr.next;
+            Node newNode = new Node(curr.val);
+
+            curr.next = newNode;
+            newNode.next = forw;
+
+            curr = forw;
+        }
+    }
+
+    public void copyRandom(Node head) {
+        Node curr = head;
+        while (curr != null) {
+            if (curr.random != null)
+                curr.next.random = curr.random.next;
+
+            curr = curr.next.next;
+        }
+    }
+
+    public Node extractList(Node head) {
+        Node dummy = new Node(-1);
+        Node curr = head, prev = dummy;
+
+        while (curr != null) {
+            prev.next = curr.next;
+            prev = prev.next;
+
+            curr.next = curr.next.next;
+            curr = curr.next;
+        }
+
+        return dummy.next;
+    }
+
+    public Node copyRandomList(Node head) {
+        copyNodes(head);
+        copyRandom(head);
+        return extractList(head);
+
+    }
+
 }
