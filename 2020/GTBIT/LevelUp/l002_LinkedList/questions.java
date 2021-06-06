@@ -491,7 +491,7 @@ public class questions {
         ListNode slow = head;
         ListNode fast = head;
 
-        while (fast.next != null && fast.next.next != null) {
+        while (fast != null && fast.next != null) {
             fast = fast.next.next;
             slow = slow.next;
 
@@ -510,7 +510,7 @@ public class questions {
         ListNode slow = head;
         ListNode fast = head;
 
-        while (fast.next != null && fast.next.next != null) {
+        while (fast != null && fast.next != null) {
             fast = fast.next.next;
             slow = slow.next;
 
@@ -537,7 +537,7 @@ public class questions {
         ListNode slow = head;
         ListNode fast = head;
 
-        while (fast.next != null && fast.next.next != null) {
+        while (fast != null && fast.next != null) {
             fast = fast.next.next;
             slow = slow.next;
 
@@ -549,43 +549,30 @@ public class questions {
             return null;
 
         ListNode meetingNode = fast;
-        int a = 1, b = 0, c = 0, bc = 0, nDash = 0, n = 0; // bc is (b + c)
+        int a = 0, b = 0, c = 0, bc = 0, nDash = 0, n = 0; // bc is (b + c)F
 
-        int count = 0;
         slow = head;
-        boolean isLoopRun = false;
         while (slow != fast) {
             slow = slow.next;
             fast = fast.next;
 
-            if (nDash == 0 && fast == meetingNode)
-                bc = count;
             if (fast == meetingNode)
                 nDash++;
-
             a++;
-            count++;
-            isLoopRun = true;
         }
 
-        if (!isLoopRun) {
+        fast = meetingNode;
+        fast = fast.next;
+
+        bc = 1;
+        while (fast != meetingNode) {
             fast = fast.next;
-            bc = 1;
-            while (fast != slow) {
-                fast = fast.next;
-                bc++;
-            }
-
-            a = 0;
-            b = bc;
-            c = 0;
-            n = 1;
-            nDash = 0;
-        } else {
-            n = nDash + 1;
-            c = a - bc * nDash;
-            b = bc - c;
+            bc++;
         }
+
+        n = nDash + 1;
+        c = a - bc * nDash;
+        b = bc - c;
 
         System.out.println("Length Of Tail is:" + a);
         System.out.println("Length Of b is:" + b);
@@ -611,4 +598,77 @@ public class questions {
         return ans;
     }
 
+    public static int length(ListNode head) {
+        ListNode curr = head;
+        int len = 0;
+        while (curr != null) {
+            len++;
+            curr = curr.next;
+        }
+
+        return len;
+    }
+
+    public static ListNode IntersectionNodeInTwoLL(ListNode headA, ListNode headB) {
+        int lenA = length(headA);
+        int lenB = length(headB);
+
+        ListNode biggerList = lenA > lenB ? headA : headB;
+        ListNode smallerList = lenB < lenA ? headB : headA;
+
+        int diff = Math.abs(lenA - lenB);
+        while (diff-- > 0)
+            biggerList = biggerList.next;
+
+        while (biggerList != smallerList) {
+            biggerList = biggerList.next;
+            smallerList = smallerList.next;
+        }
+
+        return biggerList;
+    }
+
+    // K Reverse
+    ListNode th = null, tt = null;
+
+    public void addFirstNode(ListNode node) {
+        if (th == null)
+            th = tt = node;
+        else {
+            node.next = th;
+            th = node;
+        }
+    }
+
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head.next == null || k == 1)
+            return head;
+        int len = length(head);
+
+        ListNode curr = head, ph = null, pt = null;
+
+        while (curr != null && len >= k) {
+            int itr = k;
+            while (itr-- > 0) {
+                ListNode forw = curr.next;
+                curr.next = null;
+                addFirstNode(curr);
+                curr = forw;
+            }
+
+            if (ph == null) {
+                ph = th;
+                pt = tt;
+            } else {
+                pt.next = th;
+                pt = tt;
+            }
+
+            th = tt = null;
+            len -= k;
+        }
+
+        pt.next = curr;
+        return ph;
+    }
 }
