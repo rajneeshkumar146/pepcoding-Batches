@@ -1,6 +1,6 @@
 public class queue {
     private int[] arr;
-    private int maxSize;
+    protected int maxSize;
     private int size;
     private int front;
     private int back;

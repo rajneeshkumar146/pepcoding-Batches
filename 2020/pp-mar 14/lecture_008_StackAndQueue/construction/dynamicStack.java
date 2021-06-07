@@ -10,10 +10,6 @@ public class dynamicStack extends stack {
 
     @Override
     public void push(int data) throws Exception{
-        System.out.println("hi");
+        System.out.println(super.maxSize);
     }
-
-
-
-
 }
