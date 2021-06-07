@@ -46,6 +46,10 @@ public class stack {
         return this.size;
     }
 
+    public int maxSize() {
+        return this.maxSize;
+    }
+
     // O(1)
     public boolean isEmpty() {
         return this.size == 0;

@@ -1,6 +1,6 @@
 public class queue {
     private int[] arr;
-    protected int maxSize;
+    private int maxSize;
     private int size;
     private int front;
     private int back;
@@ -50,6 +50,10 @@ public class queue {
     // O(1)
     public int size() {
         return this.size;
+    }
+
+    public int maxSize() {
+        return this.maxSize;
     }
 
     // O(1)
