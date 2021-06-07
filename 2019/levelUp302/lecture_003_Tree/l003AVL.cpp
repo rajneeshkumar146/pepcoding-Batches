@@ -75,9 +75,9 @@ Node *rr(Node *A) // O(1)65
 Node *getRotation(Node *node) //O(1)
 {
     UpdateHeightAndBalance(node);
-    if (node->bal == 2) //ll,lr
+    if (node->bal >= 2) //ll,lr
     {
-        if (node->left->bal == 1) // ll
+        if (node->left->bal >= 1) // ll
             return ll(node);
         else //lr
         {
@@ -85,10 +85,10 @@ Node *getRotation(Node *node) //O(1)
             return ll(node);
         }
     }
-    else if (node->bal == -2) // rr,rls
+    else if (node->bal <= -2) // rr,rls
     {
 
-        if (node->right->bal == -1) //rr
+        if (node->right->bal <= -1) //rr
             return rr(node);
         else //rl
         {
