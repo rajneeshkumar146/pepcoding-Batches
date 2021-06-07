@@ -5,7 +5,7 @@ public class queue {
     private int front;
     private int back;
 
-    private void initilize(int len) {
+    protected void initilize(int len) {
         this.arr = new int[len];
         this.maxSize = len;
         this.size = 0;

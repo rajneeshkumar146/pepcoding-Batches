@@ -54,7 +54,19 @@ public class client {
         }
     }
 
+    public static void dynamicStackTest() throws Exception {
+        dynamicStack st = new dynamicStack(10);
+
+        for (int i = 1; i <= 10; i++)
+            st.push(i * 10);
+
+        System.out.println(st);
+        // while (st.size() != 5) {
+        // System.out.println(st.pop());
+        // }
+    }
+
     public static void main(String[] args) throws Exception {
-        stackBehaviourUsingLL();
+        dynamicStackTest();
     }
 }
