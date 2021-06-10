@@ -190,9 +190,6 @@ vector<string> subSeq(string str, int idx)
     return myAns;
 }
 
-vector<string> getKPC(string str)
-{
-}
 
 int main()
 {

@@ -154,11 +154,36 @@ public class l001Basic {
         ArrayList<String> myAns = new ArrayList<>(recAns);
         for (String s : recAns)
             myAns.add(str.charAt(idx) + s);
-        
+
         return myAns;
     }
 
-    public static ArrayList<String> getKPC(String str) {
+    public static int subseq(String str, int idx, String ans, ArrayList<String> res) {
+        if (idx == str.length()) {
+            res.add(ans);
+            return 1;
+        }
+
+        int count = 0;
+        count += subseq(str, idx + 1, ans + str.charAt(idx), res);
+        count += subseq(str, idx + 1, ans, res);
+
+        return count;
+    }
+
+    public static ArrayList<String> mazePath_HVD(int sr, int sc, int er, int ec) {
+
+    }
+
+    public static int mazePath_HVD(int sr,int sc,int er,int ec,ArrayList<String> ans,???){
+
+    }
+
+    public static ArrayList<String> mazePath_HVD_multi(int sr, int sc, int er, int ec) {
+
+    }
+
+    public static int mazePath_HVD_multi(int sr,int sc,int er,int ec,ArrayList<String> ans,???){
 
     }
 
