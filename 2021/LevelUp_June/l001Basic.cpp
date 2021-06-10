@@ -190,8 +190,117 @@ vector<string> subSeq(string str, int idx)
     return myAns;
 }
 
+// top to bottom
+vector<string> mazePath_HVD(int sr, int sc, int er, int ec)
+{
+    if (sr == er && sc == ec)
+    {
+        vector<string> base;
+        base.push_back("");
+        return base;
+    }
+
+    vector<string> myAns;
+    if (sr + 1 <= er)
+    {
+        vector<string> Vertical = mazePath_HVD(sr + 1, sc, er, ec);
+        for (string s : Vertical)
+        {
+            myAns.push_back("V" + s);
+        }
+    }
+
+    if (sc + 1 <= ec && sr + 1 <= er)
+    {
+        vector<string> Diagonal = mazePath_HVD(sr + 1, sc + 1, er, ec);
+        for (string s : Diagonal)
+        {
+            myAns.push_back("D" + s);
+        }
+    }
+    if (sc + 1 <= ec)
+    {
+        vector<string> Horizontal = mazePath_HVD(sr, sc + 1, er, ec);
+        for (string s : Horizontal)
+        {
+            myAns.push_back("H" + s);
+        }
+    }
+
+    return myAns;
+}
+
+// bottom to top
+int mazePath_HVD(int sr, int sc, int er, int ec, vector<string> ans, string psf)
+{
+    if (sr == er && sc == ec)
+    {
+        ans.push_back(psf);
+        return 1;
+    }
+
+    int count = 0;
+    if (sr + 1 <= er)
+        count += mazePath_HVD(sr + 1, sc, er, ec, ans, psf + "V");
+    if (sr + 1 <= er && sc + 1 <= ec)
+        count += mazePath_HVD(sr + 1, sc + 1, er, ec, ans, psf + "D");
+    if (sc + 1 <= ec)
+        count += mazePath_HVD(sr, sc + 1, er, ec, ans, psf + "H");
+
+    return count;
+}
+
+vector<string> mazePath_HVD_multi(int sr, int sc, int er, int ec)
+{
+    if (sr == er && sc == ec)
+    {
+        vector<string> base;
+        base.push_back("");
+        return base;
+    }
+
+    vector<string> myAns;
+    for (int jump = 1; sr + jump <= er; jump++)
+    {
+        vector<string> Vertical = mazePath_HVD_multi(sr + jump, sc, er, ec);
+        for (string s : Vertical)
+        {
+            myAns.push_back(string(1, 'v') + to_string(jump) + s);
+        }
+    }
+
+    for (int jump = 1; sr + jump <= er && sc + jump <= ec; jump++)
+    {
+        vector<string> Diagonal = mazePath_HVD_multi(sr + jump, sc + jump, er, ec);
+        for (string s : Diagonal)
+        {
+            myAns.push_back(string(1, 'D') + to_string(jump) + s);
+        }
+    }
+
+    for (int jump = 1; sc + jump <= ec; jump++)
+    {
+        vector<string> Horizontal = mazePath_HVD_multi(sr, sc + jump, er, ec);
+        for (string s : Horizontal)
+        {
+            myAns.push_back(string(1, 'H') + to_string(jump) + s);
+        }
+    }
+
+    return myAns;
+}
+
+void mazePath()
+{
+    int sr = 0, sc = 0, er = 2, ec = 2;
+    vector<string> ans = mazePath_HVD(sr, sc, er, ec);
+
+    for (string s : ans)
+        cout << s << " ";
+}
 
 int main()
 {
+    mazePath();
     return 0;
 }

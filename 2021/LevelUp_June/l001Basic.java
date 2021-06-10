@@ -171,23 +171,217 @@ public class l001Basic {
         return count;
     }
 
+    // top to bottom
     public static ArrayList<String> mazePath_HVD(int sr, int sc, int er, int ec) {
+        if (sr == er && sc == ec) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
 
+        ArrayList<String> myAns = new ArrayList<>();
+        if (sr + 1 <= er) {
+            ArrayList<String> Vertical = mazePath_HVD(sr + 1, sc, er, ec);
+            for (String s : Vertical) {
+                myAns.add("V" + s);
+            }
+        }
+
+        if (sc + 1 <= ec && sr + 1 <= er) {
+            ArrayList<String> Diagonal = mazePath_HVD(sr + 1, sc + 1, er, ec);
+            for (String s : Diagonal) {
+                myAns.add("D" + s);
+            }
+
+        }
+
+        if (sc + 1 <= ec) {
+            ArrayList<String> Horizontal = mazePath_HVD(sr, sc + 1, er, ec);
+            for (String s : Horizontal) {
+                myAns.add("H" + s);
+            }
+        }
+
+        return myAns;
     }
 
-    public static int mazePath_HVD(int sr,int sc,int er,int ec,ArrayList<String> ans,???){
+    // bottom to top
+    public static int mazePath_HVD(int sr, int sc, int er, int ec, ArrayList<String> ans, String psf) {
+        if (sr == er && sc == ec) {
+            ans.add(psf);
+            return 1;
+        }
 
+        int count = 0;
+        if (sr + 1 <= er)
+            count += mazePath_HVD(sr + 1, sc, er, ec, ans, psf + "V");
+        if (sr + 1 <= er && sc + 1 <= ec)
+            count += mazePath_HVD(sr + 1, sc + 1, er, ec, ans, psf + "D");
+        if (sc + 1 <= ec)
+            count += mazePath_HVD(sr, sc + 1, er, ec, ans, psf + "H");
+
+        return count;
     }
 
     public static ArrayList<String> mazePath_HVD_multi(int sr, int sc, int er, int ec) {
+        if (sr == er && sc == ec) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
 
+        ArrayList<String> myAns = new ArrayList<>();
+        for (int jump = 1; sr + jump <= er; jump++) {
+            ArrayList<String> Vertical = mazePath_HVD_multi(sr + jump, sc, er, ec);
+            for (String s : Vertical) {
+                myAns.add("V" + jump + s);
+            }
+        }
+
+        for (int jump = 1; sr + jump <= er && sc + jump <= ec; jump++) {
+            ArrayList<String> Diagonal = mazePath_HVD_multi(sr + jump, sc + jump, er, ec);
+            for (String s : Diagonal) {
+                myAns.add("D" + jump + s);
+            }
+        }
+
+        for (int jump = 1; sc + jump <= ec; jump++) {
+            ArrayList<String> Horizontal = mazePath_HVD_multi(sr, sc + jump, er, ec);
+            for (String s : Horizontal) {
+                myAns.add("H" + jump + s);
+            }
+        }
+
+        return myAns;
     }
 
-    public static int mazePath_HVD_multi(int sr,int sc,int er,int ec,ArrayList<String> ans,???){
+    public static int mazePath_HVD_multi(int sr, int sc, int er, int ec, ArrayList<String> ans, String psf) {
+        if (sr == er && sc == ec) {
+            ans.add(psf);
+            return 1;
+        }
 
+        int count = 0;
+        for (int jump = 1; sr + jump <= er; jump++)
+            count += mazePath_HVD_multi(sr + 1, sc + 0, er, ec, ans, psf + "V" + jump);
+        for (int jump = 1; sr + jump <= er && sc + jump <= ec; jump++)
+            count += mazePath_HVD_multi(sr + 1, sc + 1, er, ec, ans, psf + "D" + jump);
+        for (int jump = 1; sc + jump <= ec; jump++)
+            count += mazePath_HVD_multi(sr + 0, sc + 1, er, ec, ans, psf + "H" + jump);
+
+        return count;
+    }
+
+    public static int mazePath_HVD_2(int sr, int sc, int er, int ec, int[][] dir, String[] dirS, ArrayList<String> ans,
+            String psf) {
+        if (sr == er && sc == ec) {
+            ans.add(psf);
+            return 1;
+        }
+
+        int count = 0;
+        for (int d = 0; d < dir.length; d++) {
+            int x = sr + dir[d][0];
+            int y = sc + dir[d][1];
+
+            if (x >= 0 && y >= 0 && x <= er && y <= ec)
+                count += mazePath_HVD_2(x, y, er, ec, dir, dirS, ans, psf + dirS[d]);
+        }
+
+        return count;
+    }
+
+    public static int floodFill(int sr, int sc, boolean[][] vis, int[][] dir, String[] dirS, ArrayList<String> ans,
+            String psf) {
+        int n = vis.length, m = vis[0].length;
+
+        if (sr == n - 1 && sc == m - 1) {
+            ans.add(psf);
+            return 1;
+        }
+
+        int count = 0;
+        vis[sr][sc] = true;
+
+        for (int d = 0; d < dir.length; d++) {
+            int r = sr + dir[d][0];
+            int c = sc + dir[d][1];
+
+            if (r >= 0 && c >= 0 && r < n && c < m && !vis[r][c])
+                count += floodFill(r, c, vis, dir, dirS, ans, psf + dirS[d]);
+
+        }
+
+        vis[sr][sc] = false;
+        return count;
+    }
+
+    public static int floodFill_multi(int sr, int sc, boolean[][] vis, int[][] dir, String[] dirS,
+            ArrayList<String> ans, String psf) {
+        int n = vis.length, m = vis[0].length;
+
+        if (sr == n - 1 && sc == m - 1) {
+            ans.add(psf);
+            return 1;
+        }
+
+        int count = 0;
+        vis[sr][sc] = true;
+
+        for (int d = 0; d < dir.length; d++)
+            for (int rad = 1; rad <= Math.max(n, m); rad++) {
+                int r = sr + rad * dir[d][0];
+                int c = sc + rad * dir[d][1];
+
+                if (r >= 0 && c >= 0 && r < n && c < m) {
+                    if (!vis[r][c])
+                        count += floodFill_multi(r, c, vis, dir, dirS, ans, psf + dirS[d] + rad);
+                } else
+                    break;
+            }
+
+        vis[sr][sc] = false;
+        return count;
+    }
+
+    // https://practice.geeksforgeeks.org/problems/rat-in-a-maze-problem/1
+    // https://practice.geeksforgeeks.org/problems/special-matrix4201/1
+    // https://www.geeksforgeeks.org/rat-in-a-maze-with-multiple-steps-jump-allowed/?ref=rp
+    // https://practice.geeksforgeeks.org/problems/rat-in-a-maze-problem/1
+
+    // =========================================================================
+
+    public static void mazePath() {
+        int sr = 0, sc = 0, er = 2, ec = 2;
+        ArrayList<String> ans = new ArrayList<>();
+
+        int[][] dir = { { 1, 0 }, { 0, 1 }, { 1, 1 }, { -1, 1 }, };
+        String[] dirS = { "V", "H", "D", "E" };
+
+        // System.out.println(mazePath_HVD_multi(sr, sc, er, ec));
+        // System.out.println(mazePath_HVD_2(sr, sc, er, ec, dir, dirS, ans, ""));
+
+        System.out.println(ans);
+    }
+
+    public static void floodFill() {
+        int sr = 0, sc = 0, n = 3, m = 3;
+        boolean[][] vis = new boolean[n][m];
+        // int[][] dir = { { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1
+        // }, { 0, -1 }, { -1, -1 } };
+        // String[] dirS = { "U", "E", "L", "S", "D", "N", "R", "W" };
+
+        int[][] dir = { { 1, 0 }, { 0, 1 }, { 1, 1 } };
+        String[] dirS = { "V", "H", "D" };
+
+        ArrayList<String> ans = new ArrayList<>();
+
+        System.out.println(floodFill_multi(sr, sc, vis, dir, dirS, ans, ""));
+
+        System.out.println(ans);
     }
 
     public static void main(String[] args) {
-
+        floodFill();
     }
 }
