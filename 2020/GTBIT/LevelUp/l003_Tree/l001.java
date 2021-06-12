@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class l001 {
 
@@ -73,8 +74,86 @@ public class l001 {
         return res;
     }
 
-    public static ArrayList<ArrayList<Integer>> nodeToAllLeafPath(TreeNode root) {
+    public static void rootToAllLeafPath(TreeNode root, ArrayList<Integer> smallAns,
+            ArrayList<ArrayList<Integer>> ans) {
+        if (root == null)
+            return;
+        if (root.left == null && root.right == null) {
+            ArrayList<Integer> base = new ArrayList<>(smallAns);
+            base.add(root.val);
+            ans.add(base);
+            return;
+        }
 
+        smallAns.add(root.val);
+
+        rootToAllLeafPath(root.left, smallAns, ans);
+        rootToAllLeafPath(root.right, smallAns, ans);
+
+        smallAns.remove(smallAns.size() - 1);
+    }
+
+    public static ArrayList<ArrayList<Integer>> rootToAllLeafPath(TreeNode root) {
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        ArrayList<Integer> smallAns = new ArrayList<Integer>();
+
+        rootToAllLeafPath(root, smallAns, ans);
+        return ans;
+    }
+
+    public static void singleChildNodes(TreeNode node, ArrayList<Integer> ans) {
+        if (node == null || (node.left == null && node.right == null))
+            return;
+
+        if (node.left == null || node.right == null) {
+            ans.add(node.val);
+        }
+
+        singleChildNodes(node.left, ans);
+        singleChildNodes(node.right, ans);
+    }
+
+    public static int countSingleChildNodes(TreeNode node) {
+        if (node == null || (node.left == null && node.right == null))
+            return 0;
+
+        int left = countSingleChildNodes(node.left);
+        int right = countSingleChildNodes(node.right);
+
+        int ans = left + right;
+        if (node.left == null || node.right == null)
+            ans++;
+
+        return ans;
+    }
+
+    public void kDown(TreeNode root, TreeNode blockNode, int K, List<Integer> ans) {
+        if (root == null || root == blockNode || K < 0)
+            return;
+
+        if (K == 0) {
+            ans.add(root.val);
+            return;
+        }
+
+        kDown(root.left, blockNode, K - 1, ans);
+        kDown(root.right, blockNode, K - 1, ans);
+    }
+
+    public List<Integer> distanceK(TreeNode root, TreeNode target, int K) {
+        ArrayList<TreeNode> path = new ArrayList<>();
+        NodeToRootPath(root, target.val, path);
+
+        List<Integer> ans = new ArrayList<>();
+        TreeNode blockNode = null;
+        for (int i = 0; i < path.size(); i++) {
+            if (K - i < 0)
+                break;
+            kDown(path.get(i), blockNode, K - i, ans);
+            blockNode = path.get(i);
+        }
+
+        return ans;
     }
 
 }
