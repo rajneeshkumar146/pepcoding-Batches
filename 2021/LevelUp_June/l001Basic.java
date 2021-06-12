@@ -347,7 +347,116 @@ public class l001Basic {
     // https://practice.geeksforgeeks.org/problems/rat-in-a-maze-problem/1
     // https://practice.geeksforgeeks.org/problems/special-matrix4201/1
     // https://www.geeksforgeeks.org/rat-in-a-maze-with-multiple-steps-jump-allowed/?ref=rp
-    // https://practice.geeksforgeeks.org/problems/rat-in-a-maze-problem/1
+
+    public static int floodFill(int sr, int sc, int[][] vis, String psf, ArrayList<String> res, int[][] dir,
+            String[] dirS) {
+        int n = vis.length, m = vis[0].length;
+        if (sr == n - 1 && sc == m - 1) {
+            res.add(psf);
+            return 1;
+        }
+
+        vis[sr][sc] = 0; // block
+        int count = 0;
+        for (int d = 0; d < dir.length; d++) {
+            int r = sr + dir[d][0];
+            int c = sc + dir[d][1];
+
+            if (r >= 0 && c >= 0 && r < n && c < m && vis[r][c] == 1) {
+                count += floodFill(r, c, vis, psf + dirS[d], res, dir, dirS);
+            }
+        }
+
+        vis[sr][sc] = 1; // unblock
+        return count;
+    }
+
+    public static ArrayList<String> findPath(int[][] m, int n) {
+        int[][] dir = { { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, 0 } };
+        String[] dirS = { "D", "L", "R", "U" };
+
+        ArrayList<String> res = new ArrayList<String>();
+        if (m[0][0] == 0 || m[n - 1][n - 1] == 0)
+            return res;
+
+        int count = floodFill(0, 0, m, "", res, dir, dirS);
+        return res;
+    }
+
+    public static class pair {
+        String psf = "";
+        int len = 0;
+
+        pair(String psf, int len) {
+            this.len = len;
+            this.psf = psf;
+        }
+    }
+
+    public static pair longestPath(int sr, int sc, boolean[][] vis, int[][] dir, String[] dirS) {
+        int n = vis.length, m = vis[0].length;
+        if (sr == n - 1 && sc == m - 1) {
+            return new pair("", 0);
+        }
+
+        vis[sr][sc] = true; // blocked
+        pair myAns = new pair("", -1);
+        for (int d = 0; d < dir.length; d++) {
+            int r = sr + dir[d][0];
+            int c = sc + dir[d][1];
+
+            if (r >= 0 && c >= 0 && r < n && c < m) {
+                if (!vis[r][c]) {
+                    pair recAns = longestPath(r, c, vis, dir, dirS);
+                    if (recAns.len != -1 && recAns.len + 1 > myAns.len) {
+                        myAns.len = recAns.len + 1;
+                        myAns.psf = dirS[d] + recAns.psf;
+                    }
+                }
+            }
+        }
+
+        vis[sr][sc] = false; // unblocked
+        return myAns;
+    }
+
+    public static pair shortestPath(int sr, int sc, boolean[][] vis, int[][] dir, String[] dirS) {
+        int n = vis.length, m = vis[0].length;
+        if (sr == n - 1 && sc == m - 1) {
+            return new pair("", 0);
+        }
+
+        vis[sr][sc] = true; // blocked
+        pair myAns = new pair("", (int)1e9);
+        for (int d = 0; d < dir.length; d++) {
+            int r = sr + dir[d][0];
+            int c = sc + dir[d][1];
+
+            if (r >= 0 && c >= 0 && r < n && c < m) {
+                if (!vis[r][c]) {
+                    pair recAns = shortestPath(r, c, vis, dir, dirS);
+                    if (recAns.len != (int)1e9 && recAns.len + 1 < myAns.len) {
+                        myAns.len = recAns.len + 1;
+                        myAns.psf = dirS[d] + recAns.psf;
+                    }
+                }
+            }
+        }
+
+        vis[sr][sc] = false; // unblocked
+        return myAns;
+    }
+
+    public static void longestShortestPath() {
+        int[][] dir = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+        String[] dirS = { "D", "R", "U", "L" };
+
+        boolean[][] vis = new boolean[3][3];
+        // vis[1][1] = vis[1][2] = vis[2][1] = true;
+
+        pair ans = longestPath(0, 0, vis, dir, dirS);
+        System.out.println(ans.psf + " @ " + ans.len);
+    }
 
     // =========================================================================
 
@@ -382,6 +491,6 @@ public class l001Basic {
     }
 
     public static void main(String[] args) {
-        floodFill();
+        longestShortestPath();
     }
 }

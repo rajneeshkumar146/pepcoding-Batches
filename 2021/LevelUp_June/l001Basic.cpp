@@ -175,7 +175,7 @@ vector<int> allIndex(vector<int> &arr, int idx, int data, int count)
 
 vector<string> subSeq(string str, int idx)
 {
-    if (idx == str.length())
+    if (idx == str.size()())
     {
         vector<string> base;
         base.push_back("");
@@ -287,6 +287,193 @@ vector<string> mazePath_HVD_multi(int sr, int sc, int er, int ec)
         }
     }
 
+    return myAns;
+}
+
+//==================================================================
+
+int floodFill(int sr, int sc, vector<vector<int>> &vis, string psf, vector<string> &res, vector<vector<int>> &dir,
+              vector<string> &dirS)
+{
+    int n = vis.size(), m = vis[0].size();
+    if (sr == n - 1 && sc == m - 1)
+    {
+        res.push_back(psf);
+        return 1;
+    }
+
+    vis[sr][sc] = 0; // block
+    int count = 0;
+    for (int d = 0; d < dir.size(); d++)
+    {
+        int r = sr + dir[d][0];
+        int c = sc + dir[d][1];
+
+        if (r >= 0 && c >= 0 && r < n && c < m && vis[r][c] == 1)
+        {
+            count += floodFill(r, c, vis, psf + dirS[d], res, dir, dirS);
+        }
+    }
+
+    vis[sr][sc] = 1; // unblock
+    return count;
+}
+
+vector<string> findPath(vector<vector<int>> &m, int n)
+{
+    vector<vector<int>> dir = {{1, 0}, {0, -1}, {0, 1}, {-1, 0}};
+    vector<string> dirS = {"D", "L", "R", "U"};
+
+    vector<string> res;
+    if (m[0][0] == 0 || m[n - 1][n - 1] == 0)
+        return res;
+
+    int count = floodFill(0, 0, m, "", res, dir, dirS);
+    return res;
+}
+
+// https://practice.geeksforgeeks.org/problems/special-matrix4201/1#
+int floodFill(int sr, int sc, vector<vector<int>> &vis, vector<vector<int>> &dir)
+{
+    int n = vis.size(), m = vis[0].size();
+    if (sr == n - 1 && sc == m - 1)
+    {
+        return 1;
+    }
+
+    vis[sr][sc] = 1; // block
+    int count = 0;
+    for (int d = 0; d < dir.size(); d++)
+    {
+        int r = sr + dir[d][0];
+        int c = sc + dir[d][1];
+
+        if (r >= 0 && c >= 0 && r < n && c < m && vis[r][c] == 0)
+        {
+            count += floodFill(r, c, vis, dir);
+        }
+    }
+
+    vis[sr][sc] = 0; // unblock
+    return count;
+}
+
+int FindWays(int n, int m, vector<vector<int>> blocked_cells)
+{
+
+    vector<vector<int>> vis(n + 1, vector<int>(m + 1, 0));
+    for (vector<int> &bc : blocked_cells)
+    {
+        vis[bc[0]][bc[1]] = 1; // 1 means blocked
+    }
+
+    if (vis[1][1] == 1 || vis[n][m] == 1)
+        return 0;
+
+    vector<vector<int>> dir = {{1, 0}, {0, 1}};
+
+    return floodFill(1, 1, vis, dir);
+}
+
+// https://www.geeksforgeeks.org/rat-in-a-maze-with-multiple-steps-jump-allowed/?ref=rp
+
+void display1D(vector<int> &arr)
+{
+    for (int ele : arr)
+        cout << ele << " ";
+
+    cout << endl;
+}
+
+void display2D(vector<vector<int>> &arr)
+{
+    for (vector<int> &a : arr)
+        display1D(a);
+
+    cout << endl;
+}
+int floodFill(int sr, int sc, vector<vector<int>> &jumpMat, vector<vector<int>> &dir, vector<vector<int>> &ans)
+{
+    int n = jumpMat.size(), m = jumpMat[0].size();
+    if (sr == n - 1 && sc == m - 1)
+    {
+        ans[sr][sc] = 1;
+        display2D(ans);
+        ans[sr][sc] = 0;
+        return 1;
+    }
+
+    int jump = jumpMat[sr][sc];
+    jumpMat[sr][sc] = 0; // block
+    ans[sr][sc] = 1;     // psf
+
+    int count = 0;
+    for (int d = 0; d < dir.size(); d++)
+    {
+        for (int rad = 1; rad <= jump; rad++)
+        {
+            int r = sr + rad * dir[d][0];
+            int c = sc + rad * dir[d][1];
+
+            if (r >= 0 && c >= 0 && r < n && c < m)
+            {
+                if (jumpMat[r][c] != 0)
+                    count += floodFill(r, c, jumpMat, dir, ans);
+            }
+            else
+                break;
+        }
+    }
+
+    jumpMat[sr][sc] = jump; // unblock
+    ans[sr][sc] = 0;        // psf
+    return count;
+}
+
+class pair_
+{
+public:
+    string psf = "";
+    int len = 0;
+
+    pair_(string psf, int len)
+    {
+        this->len = len;
+        this->psf = psf;
+    }
+};
+
+pair_ longestPath(int sr, int sc, vector<vector<bool>> &vis, vector<vector<int>> &dir, vector<string> &dirS)
+{
+    int n = vis.size(), m = vis[0].size();
+    if (sr == n - 1 && sc == m - 1)
+    {
+        pair_ base("", 0);
+        return base;
+    }
+
+    vis[sr][sc] = true; // blocked
+    pair_ myAns("", -1);
+    for (int d = 0; d < dir.size(); d++)
+    {
+        int r = sr + dir[d][0];
+        int c = sc + dir[d][1];
+
+        if (r >= 0 && c >= 0 && r < n && c < m)
+        {
+            if (!vis[r][c])
+            {
+                pair_ recAns = longestPath(r, c, vis, dir, dirS);
+                if (recAns.len != -1 && recAns.len + 1 > myAns.len)
+                {
+                    myAns.len = recAns.len + 1;
+                    myAns.psf = dirS[d] + recAns.psf;
+                }
+            }
+        }
+    }
+
+    vis[sr][sc] = false; // unblocked
     return myAns;
 }
 
