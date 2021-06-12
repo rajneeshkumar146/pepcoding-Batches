@@ -156,4 +156,67 @@ public class l001 {
         return ans;
     }
 
+    public int distanceK_01(TreeNode root, TreeNode target, int k, ArrayList<Integer> ans) {
+        if (root == null)
+            return -1;
+        if (root == target) {
+            kDown(root, null, k, ans);
+            return 1;
+        }
+
+        int ld = distanceK_01(root.left, target, k, ans);
+        if (ld != -1) {
+            kDown(root, root.left, k - ld, ans);
+            return ld + 1;
+        }
+
+        int rd = distanceK_01(root.right, target, k, ans);
+        if (rd != -1) {
+            kDown(root, root.right, k - rd, ans);
+            return rd + 1;
+        }
+
+        return -1;
+    }
+
+    public static void kdown(TreeNode root, int time, TreeNode blockNode, ArrayList<ArrayList<Integer>> ans) {
+        if (root == null || root == blockNode)
+            return;
+
+        if (time == ans.size())
+            ans.add(new ArrayList<>());
+        ans.get(time).add(root.val);
+
+        kdown(root.left, time + 1, blockNode, ans);
+        kdown(root.right, time + 1, blockNode, ans);
+    }
+
+    public static int burningTree(TreeNode root, int target, ArrayList<ArrayList<Integer>> ans) {
+        if (root == null)
+            return -1;
+        if (root.val == target) {
+            kdown(root, 0, null, ans);
+            return 1;
+        }
+
+        int ld = burningTree(root.left, target, ans);
+        if (ld != -1) {
+            kdown(root, ld, root.left, ans);
+            return ld + 1;
+        }
+
+        int rd = burningTree(root.right, target, ans);
+        if (rd != -1) {
+            kdown(root, rd, root.right, ans);
+            return rd + 1;
+        }
+
+        return -1;
+    }
+
+    public static void burningTree(TreeNode root, int target) {
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        burningTree(root, target, ans);
+    }
+
 }
