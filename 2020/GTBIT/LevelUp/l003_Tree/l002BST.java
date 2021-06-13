@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class l02BST {
+public class l002BST {
     public static class TreeNode {
         int val = 0;
         TreeNode left = null;
@@ -23,12 +23,16 @@ public class l02BST {
         TreeNode curr = root;
         while (curr.right != null) // rightMost
             curr = curr.right;
+
+        return curr.val;
     }
 
     public static int Minimum(TreeNode root) {
         TreeNode curr = root;
         while (curr.left != null) // leftMost
             curr = curr.left;
+
+        return curr.val;
     }
 
     public static boolean find(TreeNode root, int data) {
@@ -45,12 +49,39 @@ public class l02BST {
         return false;
     }
 
-    public static ArrayList<TreeNode> rootToNodePath(TreeNode node, int data) {
+    public static ArrayList<TreeNode> rootToNodePath(TreeNode root, int data) {
+        ArrayList<TreeNode> ans = new ArrayList<>();
+        TreeNode curr = root;
+        boolean flag = false;
+        while (curr != null) {
+            ans.add(curr);
+            if (curr.val == data) {
+                flag = true;
+                break;
+            } else if (curr.val < data)
+                curr = curr.right;
+            else
+                curr = curr.left;
+        }
 
+        if (!flag)
+            ans.clear();
+
+        return ans;
     }
 
     public TreeNode lowestCommonAncestor(TreeNode node, int p, int q) {
+        TreeNode curr = node;
+        while (curr != null) {
+            if (curr.val < p && curr.val < q)
+                curr = curr.right;
+            else if (curr.val > p && curr.val > q)
+                curr = curr.left;
+            else
+                return curr;
+        }
 
+        return null;
     }
 
 }
