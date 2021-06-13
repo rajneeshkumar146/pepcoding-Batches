@@ -42,9 +42,56 @@ public class l003RecursionTree {
         return count;
     }
 
-    public static int permutationSingleCoins() {
-        return 0;
+    public static int permutationSingleCoins(int[] arr, int tar, String ans) {
+        if (tar == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count = 0;
+        for (int i = 0; i < arr.length; i++) {
+            int val = arr[i];
+            if (arr[i] > 0 && tar - arr[i] >= 0) {
+                arr[i] = -val;
+                count += permutationSingleCoins(arr, tar - val, ans + val);
+                arr[i] = val;
+            }
+        }
+
+        return count;
     }
+
+    // ===================================================================================
+
+    public static int combinationSingleCoins_sub(int[] arr, int tar, int idx, String ans) {
+        if (tar == 0 || idx == arr.length) {
+            if (tar == 0) {
+                System.out.println(ans);
+                return 1;
+            }
+            return 0;
+        }
+
+        int count = 0;
+
+        if (tar - arr[idx] >= 0)
+            count += combinationSingleCoins_sub(arr, tar - arr[idx], idx + 1, ans + arr[idx]);
+        count += combinationSingleCoins_sub(arr, tar, idx + 1, ans);
+
+        return count;
+    }
+
+    public static int combinationInfiCoins_sub(int[] arr, int tar, int idx, String ans) {
+
+    }
+
+    public static int PermutationInfiCoins_sub(int[] arr, int tar, int idx, String ans) {
+    }
+
+    public static int PermutationSubseqCoins_sub(int[] arr, int tar, int idx, String ans) {
+    }
+
+    // ===================================================================================
 
     public static void combinationPermutation() {
         int[] arr = { 2, 3, 5, 7 };
@@ -53,11 +100,20 @@ public class l003RecursionTree {
 
         // System.out.println(permutationInfiCoins(arr, tar, ans));
         // System.out.println(combinationInfiCoins(arr, tar, 0, ans));
-        System.out.println(combinationSingleCoins(arr, tar, 0, ans));
+        // System.out.println(combinationSingleCoins(arr, tar, 0, ans));
+        System.out.println(permutationSingleCoins(arr, tar, ans));
+    }
+
+    public static void combinationPermutation_Sub() {
+        int[] arr = { 2, 3, 5, 7 };
+        int tar = 10;
+        String ans = "";
+
+        System.out.println(combinationSingleCoins_sub(arr, tar, 0, ans));
     }
 
     public static void main(String[] args) {
-        combinationPermutation();
+        combinationPermutation_Sub();
     }
 
 }
