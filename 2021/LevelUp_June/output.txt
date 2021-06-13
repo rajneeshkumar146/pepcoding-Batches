@@ -1,7 +1,3 @@
-aabb
-abab
-abba
-baab
-baba
-bbaa
-6
+235
+37
+2
