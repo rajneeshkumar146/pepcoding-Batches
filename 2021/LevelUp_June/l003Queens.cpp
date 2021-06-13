@@ -91,13 +91,13 @@ int queenPermutation2D(vector<vector<bool>> &board, int tnq, int bno, string ans
 void queenCombination()
 {
     int tnb = 5, tnq = 3;
-    // vector<bool> boxes(tnb, false);
+    vector<bool> boxes(tnb, false);
     // cout << queenCombination(tnb, tnq, 0, 0, "") << endl;
-    // cout << queenPermutation(boxes, tnq, 0, 0, "") << endl;
+    cout << queenPermutation(boxes, tnq, 0, 0, "") << endl;
 
     vector<vector<bool>> board(4, vector<bool>(4, false));
     // cout << queenCombination2D(board, 4, 0, "") << endl;
-     cout << queenPermutation2D(board, 4, 0, "") << endl;
+    //  cout << queenPermutation2D(board, 4, 0, "") << endl;
 }
 
 int main()
