@@ -90,7 +90,7 @@ int queenPermutation2D(vector<vector<bool>> &board, int tnq, int bno, string ans
 
 void queenCombination()
 {
-    int tnb = 5, tnq = 3;
+    int tnb = 4, tnq = 3;
     vector<bool> boxes(tnb, false);
     // cout << queenCombination(tnb, tnq, 0, 0, "") << endl;
     cout << queenPermutation(boxes, tnq, 0, 0, "") << endl;
