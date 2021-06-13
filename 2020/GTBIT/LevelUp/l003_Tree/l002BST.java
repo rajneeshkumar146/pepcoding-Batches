@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class l002BST {
     public static class TreeNode {
@@ -82,6 +83,33 @@ public class l002BST {
         }
 
         return null;
+    }
+
+    class BSTIterator {
+
+        private LinkedList<TreeNode> st = new LinkedList<>(); // addFirst, removeFirst
+
+        public BSTIterator(TreeNode root) {
+            addAllLeft(root);
+        }
+
+        private void addAllLeft(TreeNode node) {
+            while (node != null) {
+                this.st.addFirst(node);
+                node = node.left;
+            }
+        }
+
+        public int next() {
+            TreeNode rnode = this.st.removeFirst();
+            addAllLeft(rnode.right);
+
+            return rnode.val;
+        }
+
+        public boolean hasNext() {
+            return this.st.size() != 0;
+        }
     }
 
 }
