@@ -209,13 +209,55 @@ public class BinaryTree {
         return ans != null ? ans : new ArrayList<>();
     }
 
-    public static void printKLevelsDown(Node node, int k, ArrayList<Integer> ans) {
+    public static void KLevelsDown(Node node, int k, Node block, ArrayList<Integer> ans) {
+        if (node == null || k < 0 || node == block)
+            return;
 
+        if (k == 0) {
+            ans.add(node.data);
+            return;
+        }
+
+        KLevelsDown(node.left, k - 1, block, ans);
+        KLevelsDown(node.right, k - 1, block, ans);
     }
 
-    public static ArrayList<Integer> kaway(Node node, int k) {
-        ArrayList<Integer> ans = new ArrayList<>();
+    public static ArrayList<Integer> kaway(Node node, int data, int k) {
+        ArrayList<Node> list = new ArrayList<>();
+        nodeToRootPath(node, data, list);
 
+        ArrayList<Integer> ans = new ArrayList<>();
+        Node block = null;
+        for (int i = 0; i < list.size(); i++) {
+            KLevelsDown(list.get(i), k - i, block, ans);
+            block = list.get(i);
+        }
+
+        return ans;
+    }
+
+    public static int kaway2(Node node, int data, int k, ArrayList<Integer> ans) {
+        if (node == null)
+            return -1;
+
+        if (node.data == data) {
+            KLevelsDown(node, k, null, ans);
+            return 1;
+        }
+
+        int ld = kaway2(node.left, data, k, ans);
+        if (ld != -1) {
+            KLevelsDown(node, k - ld, node.left, ans);
+            return ld + 1;
+        }
+
+        int rd = kaway2(node.right, data, k, ans);
+        if (rd != -1) {
+            KLevelsDown(node, k - rd, node.right, ans);
+            return rd + 1;
+        }
+
+        return -1;
     }
 
 }
