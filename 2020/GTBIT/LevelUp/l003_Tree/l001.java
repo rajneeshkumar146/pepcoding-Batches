@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 public class l001 {
 
@@ -274,8 +275,264 @@ public class l001 {
 
     // LCA===================================================================
 
-    public TreeNode lowestCommonAncestor(TreeNode root, int p, int q) {
+    TreeNode LCA = null;
 
+    public boolean lowestCommonAncestor_(TreeNode node, TreeNode p, TreeNode q) {
+        if (node == null)
+            return false;
+
+        boolean self = false;
+        if (node == p || node == q)
+            self = true;
+
+        boolean left = lowestCommonAncestor_(node.left, p, q);
+        boolean right = lowestCommonAncestor_(node.right, p, q);
+
+        if ((left && right) || (left && self) || (right && self))
+            LCA = node;
+
+        return left || right || self;
+    }
+
+    public TreeNode lowestCommonAncestor(TreeNode node, TreeNode p, TreeNode q) {
+        lowestCommonAncestor_(node, p, q);
+        return LCA;
+    }
+
+    public static void levelOrder(TreeNode root) {
+        LinkedList<TreeNode> que = new LinkedList<>();
+        que.addLast(root);
+
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        int level = 0;
+        while (que.size() != 0) {
+            int size = que.size();
+            ArrayList<Integer> smallAns = new ArrayList<>();
+            System.out.println(level);
+            while (size-- > 0) {
+                TreeNode rnode = que.removeFirst();
+                smallAns.add(rnode.val);
+
+                if (rnode.left != null)
+                    que.addLast(rnode.left);
+                if (rnode.right != null)
+                    que.addLast(rnode.right);
+            }
+            ans.add(smallAns);
+            level++;
+        }
+
+        int count = 0;
+        for (var list : ans) {
+            System.out.println(count++ + " -> " + list);
+        }
+    }
+
+    public static List<Integer> leftView(TreeNode root) {
+        LinkedList<TreeNode> que = new LinkedList<>();
+        que.addLast(root);
+
+        List<Integer> ans = new ArrayList<>();
+        while (que.size() != 0) {
+
+            int size = que.size();
+            ans.add(que.getFirst().val);
+            while (size-- > 0) {
+                TreeNode rnode = que.removeFirst();
+
+                if (rnode.left != null)
+                    que.addLast(rnode.left);
+                if (rnode.right != null)
+                    que.addLast(rnode.right);
+            }
+        }
+
+        return ans;
+    }
+
+    public static List<Integer> rightView(TreeNode root) {
+        LinkedList<TreeNode> que = new LinkedList<>();
+        que.addLast(root);
+
+        List<Integer> ans = new ArrayList<>();
+        while (que.size() != 0) {
+
+            int size = que.size();
+            ans.add(que.getFirst().val);
+            while (size-- > 0) {
+                TreeNode rnode = que.removeFirst();
+
+                if (rnode.right != null)
+                    que.addLast(rnode.right);
+                if (rnode.left != null)
+                    que.addLast(rnode.left);
+            }
+        }
+
+        return ans;
+    }
+
+    public static void widthOfShadow(TreeNode node, int vl, int[] minMax) {
+        if (node == null)
+            return;
+        minMax[0] = Math.min(minMax[0], vl);
+        minMax[1] = Math.max(minMax[1], vl);
+        widthOfShadow(node.left, vl - 1, minMax);
+        widthOfShadow(node.right, vl + 1, minMax);
+    }
+
+    public static class vPair {
+        TreeNode node = null;
+        int vl = 0;
+
+        vPair(TreeNode node, int vl) {
+            this.vl = vl;
+            this.node = node;
+        }
+    }
+
+    public static ArrayList<ArrayList<Integer>> verticalOrder(TreeNode root) {
+        LinkedList<vPair> que = new LinkedList<>();
+        int[] minMax = new int[2];
+        widthOfShadow(root, 0, minMax);
+        int len = minMax[1] - minMax[0] + 1;
+
+        que.addLast(new vPair(root, Math.abs(minMax[0])));
+
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        for (int i = 0; i < len; i++)
+            ans.add(new ArrayList<>());
+
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                vPair rp = que.removeFirst();
+                int vl = rp.vl;
+                TreeNode node = rp.node;
+
+                ans.get(vl).add(node.val);
+
+                if (node.left != null)
+                    que.addLast(new vPair(node.left, vl - 1));
+                if (node.right != null)
+                    que.addLast(new vPair(node.right, vl + 1));
+            }
+        }
+
+        return ans;
+    }
+
+    public static ArrayList<Integer> bottomView(TreeNode root) {
+        LinkedList<vPair> que = new LinkedList<>();
+        int[] minMax = new int[2];
+        widthOfShadow(root, 0, minMax);
+        int len = minMax[1] - minMax[0] + 1;
+
+        que.addLast(new vPair(root, Math.abs(minMax[0])));
+
+        ArrayList<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < len; i++)
+            ans.add(null);
+
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                vPair rp = que.removeFirst();
+                int vl = rp.vl;
+                TreeNode node = rp.node;
+
+                ans.set(vl, node.val);
+
+                if (node.left != null)
+                    que.addLast(new vPair(node.left, vl - 1));
+                if (node.right != null)
+                    que.addLast(new vPair(node.right, vl + 1));
+            }
+        }
+
+        return ans;
+    }
+
+    public static ArrayList<Integer> topView(TreeNode root) {
+        LinkedList<vPair> que = new LinkedList<>();
+        int[] minMax = new int[2];
+        widthOfShadow(root, 0, minMax);
+        int len = minMax[1] - minMax[0] + 1;
+
+        que.addLast(new vPair(root, Math.abs(minMax[0])));
+
+        ArrayList<Integer> ans = new ArrayList<>();
+        for (int i = 0; i < len; i++)
+            ans.add(null);
+
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                vPair rp = que.removeFirst();
+                int vl = rp.vl;
+                TreeNode node = rp.node;
+
+                if (ans.get(vl) == null)
+                    ans.set(vl, node.val);
+
+                if (node.left != null)
+                    que.addLast(new vPair(node.left, vl - 1));
+                if (node.right != null)
+                    que.addLast(new vPair(node.right, vl + 1));
+            }
+        }
+
+        return ans;
+    }
+
+    public static ArrayList<ArrayList<Integer>> diagonalOrder(TreeNode root) {
+        LinkedList<TreeNode> que = new LinkedList<>();
+
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        que.addLast(root);
+
+        while (que.size() != 0) {
+            int size = que.size();
+            ArrayList<Integer> smallAns = new ArrayList<>();
+            while (size-- > 0) { // diagonal
+                TreeNode node = que.removeFirst();
+                while (node != null) { // clusters of diagonal
+                    smallAns.add(node.val);
+                    if (node.left != null)
+                        que.addLast(node.left);
+                    node = node.right;
+                }
+            }
+
+            ans.add(smallAns);
+        }
+
+        return ans;
+    }
+
+    public static ArrayList<ArrayList<Integer>> antiDiagonalOrder(TreeNode root) {
+        LinkedList<TreeNode> que = new LinkedList<>();
+
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        que.addLast(root);
+
+        while (que.size() != 0) {
+            int size = que.size();
+            ArrayList<Integer> smallAns = new ArrayList<>();
+            while (size-- > 0) { // diagonal
+                TreeNode node = que.removeFirst();
+                while (node != null) { // clusters of diagonal
+                    smallAns.add(node.val);
+                    if (node.right != null)
+                        que.addLast(node.right);
+                    node = node.left;
+                }
+            }
+
+            ans.add(smallAns);
+        }
+
+        return ans;
     }
 
 }
