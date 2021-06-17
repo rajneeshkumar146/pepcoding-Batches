@@ -194,6 +194,7 @@ vector<bool> col;
 vector<bool> diag;
 vector<bool> aDiag;
 
+int calls = 0;
 int nqueen_02_combi(int n, int m, int tnq, int idx, string ans)
 {
     if (tnq == 0)
@@ -203,6 +204,7 @@ int nqueen_02_combi(int n, int m, int tnq, int idx, string ans)
     }
 
     int count = 0;
+    // calls++;
     for (int i = idx; i < n * m; i++)
     {
         int r = i / m;
@@ -211,6 +213,57 @@ int nqueen_02_combi(int n, int m, int tnq, int idx, string ans)
         {
             row[r] = col[c] = diag[r + c] = aDiag[r - c + m - 1] = true;
             count += nqueen_02_combi(n, m, tnq - 1, i + 1, ans + "(" + to_string(r) + "," + to_string(c) + ") ");
+            row[r] = col[c] = diag[r + c] = aDiag[r - c + m - 1] = false;
+        }
+    }
+
+    return count;
+}
+
+int nqueen_03_combi(int n, int m, int tnq, int floor, string ans)
+{
+    if (tnq == 0)
+    {
+        cout << ans << endl;
+        return 1;
+    }
+
+    int count = 0;
+    // calls++;
+    for (int room = 0; room < m; room++)
+    {
+        int r = floor, c = room;
+        if (!row[r] && !col[c] && !diag[r + c] && !aDiag[r - c + m - 1])
+        {
+            row[r] = col[c] = diag[r + c] = aDiag[r - c + m - 1] = true;
+            count += nqueen_03_combi(n, m, tnq - 1, floor + 1, ans + "(" + to_string(r) + "," + to_string(c) + ") ");
+            row[r] = col[c] = diag[r + c] = aDiag[r - c + m - 1] = false;
+        }
+    }
+
+    return count;
+}
+
+int nqueen_03_permu(int n, int m, int tnq, int r, string ans)
+{
+    if (tnq == 0 || r == n)
+    {
+        if (tnq == 0)
+            cout << ans << endl;
+        return tnq == 0 ? 1 : 0;
+    }
+
+    int count = 0;
+    // calls++;
+   
+    count += nqueen_03_permu(n, m, tnq, r + 1, ans);
+   
+    for (int c = 0; c < m; c++)
+    {
+        if (!row[r] && !col[c] && !diag[r + c] && !aDiag[r - c + m - 1])
+        {
+            row[r] = col[c] = diag[r + c] = aDiag[r - c + m - 1] = true;
+            count += nqueen_03_permu(n, m, tnq - 1, 0, ans + "(" + to_string(r) + "," + to_string(c) + ") ");
             row[r] = col[c] = diag[r + c] = aDiag[r - c + m - 1] = false;
         }
     }
@@ -233,8 +286,11 @@ void nQueen()
     diag.resize(n + m - 1, false);
     aDiag.resize(n + m - 1, false);
 
-    cout << nqueen_02_combi(n, m, tnq, 0, "") << endl;
+    cout << nqueen_03_combi(n, m, tnq, 0, "") << endl;
+    cout << calls << endl;
 }
+
+// 51 and 52
 
 void queenCombination()
 {
