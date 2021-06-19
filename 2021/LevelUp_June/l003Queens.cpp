@@ -255,9 +255,9 @@ int nqueen_03_permu(int n, int m, int tnq, int r, string ans)
 
     int count = 0;
     // calls++;
-   
+
     count += nqueen_03_permu(n, m, tnq, r + 1, ans);
-   
+
     for (int c = 0; c < m; c++)
     {
         if (!row[r] && !col[c] && !diag[r + c] && !aDiag[r - c + m - 1])
@@ -265,6 +265,38 @@ int nqueen_03_permu(int n, int m, int tnq, int r, string ans)
             row[r] = col[c] = diag[r + c] = aDiag[r - c + m - 1] = true;
             count += nqueen_03_permu(n, m, tnq - 1, 0, ans + "(" + to_string(r) + "," + to_string(c) + ") ");
             row[r] = col[c] = diag[r + c] = aDiag[r - c + m - 1] = false;
+        }
+    }
+
+    return count;
+}
+
+int cols = 0;
+int diags = 0;
+int aDiags = 0;
+
+int nqueen_04_combi(int n, int floor)
+{
+    if (floor == n)
+    {
+        return 1;
+    }
+
+    int count = 0, m = n;
+    for (int room = 0; room < n; room++)
+    {
+        int r = floor, c = room;
+        if ((cols & (1 << c)) == 0 && (diags & (1 << (r + c))) == 0 && (aDiags & (1 << (r - c + m - 1))) == 0)
+        {
+            cols ^= (1 << c);
+            diags ^= (1 << (r + c));
+            aDiags ^= (1 << (r - c + m - 1));
+
+            count += nqueen_04_combi(n, floor + 1);
+
+            cols ^= (1 << c);
+            diags ^= (1 << (r + c));
+            aDiags ^= (1 << (r - c + m - 1));
         }
     }
 
