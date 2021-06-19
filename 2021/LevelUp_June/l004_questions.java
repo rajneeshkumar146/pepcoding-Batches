@@ -80,4 +80,33 @@ public class l004_questions {
         int ans = coinChange_(coins, amount);
         return ans != (int) 1e9 ? ans : -1;
     }
+
+    //
+
+    public void getFactors(int n, int sp, List<List<Integer>> ans, List<Integer> smallAns) {
+
+        if (n <= 1) {
+            if (smallAns.size() > 1) {
+                List<Integer> base = new ArrayList<>(smallAns);
+                ans.add(base);
+            }
+            return;
+        }
+
+        for (int i = sp; i <= n; i++) {
+            if (n % i == 0) {
+                smallAns.add(i);
+                getFactors(n / i, i, ans, smallAns);
+                smallAns.remove(smallAns.size() - 1);
+            }
+        }
+
+    }
+
+    public List<List<Integer>> getFactors(int n) {
+        List<List<Integer>> ans = new ArrayList<>();
+        List<Integer> smallAns = new ArrayList<>();
+        getFactors(n, 2, ans, smallAns);
+        return ans;
+    }
 }
