@@ -109,4 +109,6 @@ public class l004_questions {
         getFactors(n, 2, ans, smallAns);
         return ans;
     }
+
+    
 }
