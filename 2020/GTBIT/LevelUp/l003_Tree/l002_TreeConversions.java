@@ -39,10 +39,27 @@ public class l002_TreeConversions {
         bToDLL_(root.right);
     }
 
+    // actual prev.left is your real previous
+    void bToDLL_(Node root, Node prev) {
+        if (root == null)
+            return;
+
+        bToDLL_(root.left);
+
+        prev.left.right = root;
+        root.left = prev.left;
+
+        prev.left = root;
+
+        bToDLL_(root.right);
+    }
+
     Node bToDLL(Node root) {
         Node dummy = new Node(-1);
         prev = dummy;
         bToDLL_(root);
+        //bToDLL_(root, new Node(-1));
+        
 
         Node head = dummy.right;
         head.left = dummy.right = null;
@@ -180,6 +197,6 @@ public class l002_TreeConversions {
         return SortedDLLToBST(head);
     }
 
-    
+
 
 }
