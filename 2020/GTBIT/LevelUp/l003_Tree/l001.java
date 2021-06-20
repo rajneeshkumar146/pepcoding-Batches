@@ -743,4 +743,37 @@ public class l001 {
 
         return ans;
     }
+
+    public static class allSoluPair {
+        TreeNode pred = null;
+        TreeNode succ = null;
+
+        int ceil = (int) 1e9;
+        int floor = -(int) 1e9;
+
+        TreeNode prev = null;
+    }
+
+    public static void allSolution(TreeNode node, int data, allSoluPair pair) {
+        if (node == null)
+            return;
+
+        if (node.val < data)
+            pair.floor = Math.max(pair.floor, node.val);
+
+        if (node.val > data)
+            pair.ceil = Math.min(pair.ceil, node.val);
+
+        allSolution(node.left, data, pair);
+
+        if (node.val == data)
+            pair.pred = pair.prev;
+
+        if (pair.prev != null && pair.prev.val == data)
+            pair.succ = node;
+
+        pair.prev = node;
+
+        allSolution(node.right, data, pair);
+    }
 }

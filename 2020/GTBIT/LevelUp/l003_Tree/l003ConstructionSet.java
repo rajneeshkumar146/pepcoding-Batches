@@ -101,4 +101,36 @@ public class l003ConstructionSet {
 
         return root;
     }
+
+    public static TreeNode preOrIn(int[] pre, int psi, int pei, int[] in, int isi, int iei) {
+        if (isi > iei)
+            return null;
+        int idx = isi;
+        while (in[idx] != pre[psi])
+            idx++;
+
+        int tel = idx - isi;
+        TreeNode root = new TreeNode(pre[psi]);
+
+        root.left = preOrIn(pre, psi + 1, psi + tel, in, isi, idx - 1);
+        root.right = preOrIn(pre, psi + tel + 1, pei, in, idx + 1, iei);
+
+        return root;
+    }
+
+    public static TreeNode postOrIn(int[] post, int psi, int pei, int[] in, int isi, int iei) {
+        if (isi > iei)
+            return null;
+        int idx = isi;
+        while (in[idx] != post[pei])
+            idx++;
+
+        int tel = idx - isi;
+        TreeNode root = new TreeNode(post[pei]);
+
+        root.left = postOrIn(post, psi, psi + tel - 1, in, isi, idx - 1);
+        root.right = postOrIn(post, psi + tel, pei - 1, in, idx + 1, iei);
+
+        return root;
+    }
 }
