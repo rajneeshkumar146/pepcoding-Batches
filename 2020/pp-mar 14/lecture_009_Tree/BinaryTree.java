@@ -464,7 +464,8 @@ public class BinaryTree {
     }
 
     public static lBSTPair largestBST(Node node) {
-        if(node == null) return new lBSTPair();
+        if (node == null)
+            return new lBSTPair();
 
         lBSTPair left = largestBST(node.left);
         lBSTPair right = largestBST(node.right);
@@ -477,7 +478,7 @@ public class BinaryTree {
 
             myAns.MaxSize = left.MaxSize + right.MaxSize + 1;
             myAns.MaxBSTNode = node;
-        }else{
+        } else {
             myAns.isBST = false;
             myAns.MaxSize = Math.max(left.MaxSize, right.MaxSize);
             myAns.MaxBSTNode = left.MaxSize > right.MaxSize ? left.MaxBSTNode : right.MaxBSTNode;
@@ -485,5 +486,7 @@ public class BinaryTree {
 
         return myAns;
     }
+
+
 
 }
