@@ -153,4 +153,78 @@ public class l003_GenericTree {
         return LCA;
     }
 
+    public static boolean areSimilar(Node n1, Node n2) {
+        if (n1.childs.size() != n2.childs.size())
+            return false;
+
+        boolean res = true;
+        for (int i = 0; i < n1.childs.size(); i++) {
+            Node c1 = n1.childs.get(i);
+            Node c2 = n2.childs.get(i);
+
+            res = res && areSimilar(c1, c2);
+        }
+
+        return res;
+    }
+
+    public static boolean areMirror(Node n1, Node n2) {
+        if (n1.childs.size() != n2.childs.size())
+            return false;
+
+        boolean res = true;
+        int size = n1.childs.size();
+        for (int i = 0; i < size; i++) {
+            Node c1 = n1.childs.get(i);
+            Node c2 = n2.childs.get(size - i - 1);
+
+            res = res && areMirror(c1, c2);
+        }
+
+        return res;
+    }
+
+    public static boolean IsSymmetric(Node node) {
+        return areMirror(node, node);
+    }
+
+    static int ceil;
+    static int floor;
+
+    public static void ceilAndFloor_(Node node, int data) {
+        if (node.data < data)
+            floor = Math.max(floor, node.data);
+        if (node.data > data)
+            ceil = Math.min(ceil, node.data);
+
+        for (Node child : node.childs) {
+            ceilAndFloor_(child, data);
+        }
+    }
+
+    public static void ceilAndFloor(Node node, int data) {
+        ceil = (int) 1e9;
+        floor = -(int) 1e9;
+        ceilAndFloor_(node, data);
+    }
+
+    public static int floor(Node node, int ub) {
+        int maxRes = -(int) 1e9;
+        for (Node child : node.childs) {
+            int recRes = floor(child, ub);
+            maxRes = Math.max(maxRes, recRes);
+        }
+
+        return node.data < ub ? Math.max(node.data, maxRes) : maxRes;
+    }
+
+    public static int kthLargest(Node node, int k) {
+        int ub = (int) 1e9;
+        for (int i = 0; i < k; i++) {
+            ub = floor(node, ub);
+        }
+
+        return ub;
+    }
+
 }
