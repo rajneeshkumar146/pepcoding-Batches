@@ -26,7 +26,7 @@ public class l004_avl {
         node.bal = lh - rh;
     }
 
-    //O(1)
+    // O(1)
     public static TreeNode rightRotation(TreeNode A) {
         TreeNode B = A.left;
         TreeNode BKaRight = B.right;
@@ -40,7 +40,7 @@ public class l004_avl {
         return B;
     }
 
-    //O(1)
+    // O(1)
     public static TreeNode leftRotation(TreeNode A) {
         TreeNode B = A.right;
         TreeNode BKaLeft = B.left;
@@ -54,7 +54,7 @@ public class l004_avl {
         return B;
     }
 
-    //O(1)
+    // O(1)
     public static TreeNode getRotation(TreeNode root) {
         updateHeightBalance(root);
 
@@ -80,7 +80,7 @@ public class l004_avl {
 
     // ========================================================================
 
-    //O(Logn)
+    // O(Logn)
     public static int getMaximum(TreeNode root) {
         while (root.right != null)
             root = root.right;
@@ -88,7 +88,7 @@ public class l004_avl {
         return root.val;
     }
 
-    //O(Logn)
+    // O(Logn)
     public static TreeNode add(TreeNode root, int val) {
         if (root == null)
             return new TreeNode(val);
@@ -101,7 +101,7 @@ public class l004_avl {
         return root;
     }
 
-    //O(Logn)
+    // O(Logn)
     public static TreeNode remove(TreeNode root, int data) {
         if (root == null)
             return null;
@@ -124,7 +124,7 @@ public class l004_avl {
         return root;
     }
 
-    //O(n)
+    // O(n)
     public static void display(TreeNode node) {
         if (node == null) {
             return;
@@ -148,7 +148,8 @@ public class l004_avl {
         }
 
         display(root);
-
     }
+
+    // 1382
 
 }
