@@ -198,6 +198,7 @@ public class l006_backtracking {
 
     public static boolean isPossibleToPlace_H(char[][] board, String word, int r, int c) {
 
+
         int n = board.length, m = board[0].length;
         for (int i = 0; i < word.length(); i++) {
             if (c + i >= m)
@@ -234,7 +235,7 @@ public class l006_backtracking {
     public static boolean isPossibleToPlace_V(char[][] board, String word, int r, int c) {
         int n = board.length, m = board[0].length;
         for (int i = 0; i < word.length(); i++) {
-            if (c + i >= m)
+            if (r + i >= m)
                 return false;
 
             if (board[r + i][c] != '-' && word.charAt(i) != board[r + i][c])
