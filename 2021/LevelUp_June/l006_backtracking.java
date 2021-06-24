@@ -197,13 +197,17 @@ public class l006_backtracking {
             { '+', '+', '+', '+', '+', '+', '+', '+', '+', '+' } };
 
     public static boolean isPossibleToPlace_H(char[][] board, String word, int r, int c) {
+        int l = word.length(), m = board[0].length;
+        if (c + l > m)
+            return false;
+        if (c == 0 && c + l < m && board[r][c + l] != '+')
+            return false;
+        if (c != 0 && c + l == m && board[r][c - 1] != '+')
+            return false;
+        if (c != 0 && c + l < m && board[r][c + l] != '+' && board[r][c - 1] != '+')
+            return false;
 
-
-        int n = board.length, m = board[0].length;
         for (int i = 0; i < word.length(); i++) {
-            if (c + i >= m)
-                return false;
-
             if (board[r][c + i] != '-' && word.charAt(i) != board[r][c + i])
                 return false;
         }
@@ -233,11 +237,17 @@ public class l006_backtracking {
     }
 
     public static boolean isPossibleToPlace_V(char[][] board, String word, int r, int c) {
-        int n = board.length, m = board[0].length;
-        for (int i = 0; i < word.length(); i++) {
-            if (r + i >= m)
-                return false;
+        int l = word.length(), n = board.length;
+        if (r + l > n)
+            return false;
+        if (r == 0 && r + l < n && board[r + l][c] != '+')
+            return false;
+        if (r != 0 && r + l == n && board[r - 1][c] != '+')
+            return false;
+        if (r != 0 && r + l < n && board[r + l][c] != '+' && board[r - 1][c] != '+')
+            return false;
 
+        for (int i = 0; i < word.length(); i++) {
             if (board[r + i][c] != '-' && word.charAt(i) != board[r + i][c])
                 return false;
         }
@@ -296,6 +306,37 @@ public class l006_backtracking {
         }
 
         return count;
+    }
+
+    public static int goldMine(int[][] arr, int r, int c, int[][] dir) {
+        int n = arr.length, m = arr[0].length;
+        if (c == m - 1)
+            return arr[r][c];
+
+        int myMaxAns = 0;
+        for (int d = 0; d < dir.length; d++) {
+            int x = r + dir[d][0];
+            int y = c + dir[d][1];
+
+            if (x >= 0 && y >= 0 && x < n && y < m) {
+                int recMaxAns = goldMine(arr, x, y, dir);
+                if (recMaxAns + arr[r][c] > myMaxAns)
+                    myMaxAns = recMaxAns + arr[r][c];
+            }
+        }
+
+        return myMaxAns;
+    }
+
+    public static int goldMine(int[][] arr) {
+        int[][] dir = { { -1, 1 }, { 0, 1 }, { 1, 1 } };
+        int maxAns = 0;
+        int n = arr.length, m = arr[0].length;
+        for (int i = 0; i < n; i++) {
+            maxAns = Math.max(maxAns, goldMine(arr, i, 0, dir));
+        }
+
+        return maxAns;
     }
 
 }
