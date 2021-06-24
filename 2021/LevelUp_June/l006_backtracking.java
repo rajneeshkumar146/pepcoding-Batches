@@ -198,26 +198,72 @@ public class l006_backtracking {
 
     public static boolean isPossibleToPlace_H(char[][] board, String word, int r, int c) {
 
+        int n = board.length, m = board[0].length;
+        for (int i = 0; i < word.length(); i++) {
+            if (c + i >= m)
+                return false;
+
+            if (board[r][c + i] != '-' && word.charAt(i) != board[r][c + i])
+                return false;
+        }
+
+        return true;
     }
 
-    public static void place_H(char[][] board, String word, int r, int c) {
+    public static int place_H(char[][] board, String word, int r, int c) {
+        int loc = 0;
+        for (int i = 0; i < word.length(); i++) {
+            if (board[r][c + i] == '-') {
+                loc ^= (1 << i);
+                board[r][c + i] = word.charAt(i);
+            }
+        }
 
+        return loc;
     }
 
-    public static void unPlace_H(char[][] board, String word, int r, int c) {
-
+    public static void unPlace_H(char[][] board, String word, int r, int c, int loc) {
+        for (int i = 0; i < word.length(); i++) {
+            int mask = (1 << i);
+            if ((loc & mask) != 0) {
+                board[r][c + i] = '-';
+            }
+        }
     }
 
     public static boolean isPossibleToPlace_V(char[][] board, String word, int r, int c) {
+        int n = board.length, m = board[0].length;
+        for (int i = 0; i < word.length(); i++) {
+            if (c + i >= m)
+                return false;
+
+            if (board[r + i][c] != '-' && word.charAt(i) != board[r + i][c])
+                return false;
+        }
+
+        return true;
+    }
+
+    public static int place_V(char[][] board, String word, int r, int c) {
+        int loc = 0;
+        for (int i = 0; i < word.length(); i++) {
+            if (board[r + i][c] == '-') {
+                loc ^= (1 << i);
+                board[r + i][c] = word.charAt(i);
+            }
+        }
+
+        return loc;
 
     }
 
-    public static void place_V(char[][] board, String word, int r, int c) {
-
-    }
-
-    public static void unPlace_V(char[][] board, String word, int r, int c) {
-
+    public static void unPlace_V(char[][] board, String word, int r, int c, int loc) {
+        for (int i = 0; i < word.length(); i++) {
+            int mask = (1 << i);
+            if ((loc & mask) != 0) {
+                board[r + i][c] = '-';
+            }
+        }
     }
 
     public static int crossWord(char[][] board, String[] words, int idx) {
@@ -225,8 +271,28 @@ public class l006_backtracking {
             return 1;
         }
 
-        String str = words[idx];
+        String word = words[idx];
         int count = 0;
+        int n = board.length, m = board[0].length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (board[i][j] == '-' || board[i][j] == word.charAt(0)) {
+
+                    if (isPossibleToPlace_H(board, word, i, j)) {
+                        int loc = place_H(board, word, i, j);
+                        count += crossWord(board, words, idx + 1);
+                        unPlace_H(board, word, i, j, loc);
+                    }
+
+                    if (isPossibleToPlace_V(board, word, i, j)) {
+                        int loc = place_V(board, word, i, j);
+                        count += crossWord(board, words, idx + 1);
+                        unPlace_V(board, word, i, j, loc);
+                    }
+
+                }
+            }
+        }
 
         return count;
     }
