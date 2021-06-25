@@ -204,7 +204,7 @@ public class l006_backtracking {
             return false;
         if (c != 0 && c + l == m && board[r][c - 1] != '+')
             return false;
-        if (c != 0 && c + l < m && board[r][c + l] != '+' && board[r][c - 1] != '+')
+        if (c != 0 && c + l < m && (board[r][c + l] != '+' || board[r][c - 1] != '+'))
             return false;
 
         for (int i = 0; i < word.length(); i++) {
@@ -244,7 +244,7 @@ public class l006_backtracking {
             return false;
         if (r != 0 && r + l == n && board[r - 1][c] != '+')
             return false;
-        if (r != 0 && r + l < n && board[r + l][c] != '+' && board[r - 1][c] != '+')
+        if (r != 0 && r + l < n && (board[r + l][c] != '+' || board[r - 1][c] != '+'))
             return false;
 
         for (int i = 0; i < word.length(); i++) {
