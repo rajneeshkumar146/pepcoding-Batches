@@ -440,9 +440,18 @@ public class l006_backtracking {
             int n2 = StringToInteger(str2);
             int n3 = StringToInteger(str3);
 
+            // if (n1 + n2 == n3) {
+            // System.out.println("" + n1 + "\n+" + n2 + "\n------\n" + n3);
+            // System.out.println();
+            // return 1;
+            // }
+
             if (n1 + n2 == n3) {
-                System.out.println("" + n1 + "\n+" + n2 + "\n------\n" + n3);
-                System.out.println();
+                for (int i = 0; i < 26; i++) {
+                    if (map[i] != -1) {
+                        System.out.print((char) (i + 'a') + "-" + map[i] + " ");
+                    }
+                }
                 return 1;
             }
 
