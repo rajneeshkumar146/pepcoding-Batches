@@ -203,4 +203,44 @@ public class l001 {
         }
     }
 
+    public static void burningTreeNode(TreeNode root, int time, TreeNode blockNode, ArrayList<ArrayList<Integer>> ans) {
+        if (root == null || root == blockNode)
+            return;
+        if (time == ans.size())    // if(time == ans.size()) ans.push_back({});
+            ans.add(new ArrayList<>());
+        ans.get(time).add(root.val);
+
+        burningTreeNode(root.left, time + 1, blockNode, ans);
+        burningTreeNode(root.right, time + 1, blockNode, ans);
+
+    }
+
+    public static int burningTree(TreeNode root, int fireNode, ArrayList<ArrayList<Integer>> ans) {
+        if (root == null)
+            return -1;
+        if (root.val == fireNode) {
+            burningTreeNode(root, 0, null, ans);
+            return 1;
+        }
+
+        int lt = burningTree(root.left, fireNode, ans);
+        if (lt != -1) {
+            burningTreeNode(root, lt, root.left, ans);
+            return lt + 1;
+        }
+
+        int rt = burningTree(root.right, fireNode, ans);
+        if (rt != -1) {
+            burningTreeNode(root, lt, root.right, ans);
+            return rt + 1;
+        }
+
+        return -1;
+    }
+
+    public static void burningTree(TreeNode root) {
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+
+    }
+
 }
