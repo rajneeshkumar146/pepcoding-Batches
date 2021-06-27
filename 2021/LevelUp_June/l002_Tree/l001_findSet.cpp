@@ -55,7 +55,7 @@ bool nodeToRootPath_(TreeNode *root, int data, vector<TreeNode *> &ans)
 
     if (root->val == data)
     {
-        ans->push_back(root);
+        ans.push_back(root);
         return true;
     }
 
@@ -212,6 +212,55 @@ void burningTreeWithWater(TreeNode *root, int data)
             cout << ele << " ";
         cout << endl;
     }
+}
+
+TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
+{
+    vector<TreeNode *> list1, list2;
+    nodeToRootPath_(root, p->val, list1);
+    nodeToRootPath_(root, q->val, list2);
+
+    int i = list1.size() - 1, j = list2.size() - 1;
+    TreeNode *LCA = nullptr;
+
+    while (i >= 0 && j >= 0)
+    {
+        if (list1[i] != list2[j])
+            break;
+
+        LCA = list1[i];
+        i--;
+        j--;
+    }
+
+    return LCA;
+}
+
+TreeNode *LCANode = nullptr;
+bool LCA(TreeNode *root, TreeNode *p, TreeNode *q)
+{
+    if (root == nullptr)
+        return false;
+    bool selfPresent = (root == p || root == q);
+
+    bool leftPresent = LCA(root->left, p, q);
+    if (LCANode != nullptr)
+        return true;
+
+    bool rightPresent = LCA(root->right, p, q);
+    if (LCANode != nullptr)
+        return true;
+
+    if ((leftPresent && rightPresent) || (leftPresent && selfPresent) || (rightPresent && selfPresent))
+        LCANode = root;
+
+    return leftPresent || rightPresent || selfPresent;
+}
+
+TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
+{
+    LCA(root, p, q);
+    return LCANode;
 }
 
 int main()
