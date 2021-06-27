@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unordered_set>
 #include <vector>
 using namespace std;
 
@@ -141,8 +142,77 @@ vector<vector<int>> rootToAllLeafPath(TreeNode *root)
     return ans;
 }
 
+void burningTreeNodeWithWater(TreeNode *root, int time, TreeNode *blockNode, unordered_set<int> &waterSet,
+                              vector<vector<int>> &ans)
+{
+    if (root == nullptr || root == blockNode || waterSet.find(root->val) != waterSet.end())
+        return;
+    if (time == ans.size()) // if(time == ans.size()) ans.push_back({});
+        ans.push_back({});
+    ans[time].push_back(root->val);
 
+    burningTreeNodeWithWater(root->left, time + 1, blockNode, waterSet, ans);
+    burningTreeNodeWithWater(root->right, time + 1, blockNode, waterSet, ans);
+}
 
+int burningTreeWithWater(TreeNode *root, int fireNode, unordered_set<int> &waterSet,
+                         vector<vector<int>> ans)
+{
+    if (root == nullptr)
+        return -1;
+    if (root->val == fireNode)
+    {
+        if (waterSet.find(root->val) == waterSet.end())
+        { // foor cpp : map.find(root->val) != map.end();
+            burningTreeNodeWithWater(root, 0, nullptr, waterSet, ans);
+            return 1;
+        }
+        return -2; // fire node is present but it have water.
+    }
+
+    int lt = burningTreeWithWater(root->left, fireNode, waterSet, ans);
+    if (lt > 0)
+    {
+        if (waterSet.find(root->val) == waterSet.end())
+        {
+            burningTreeNodeWithWater(root, lt, root->left, waterSet, ans);
+            return lt + 1;
+        }
+        return -2; // fire node is present but it have water.
+    }
+
+    if (lt == -2)
+        return -2;
+
+    int rt = burningTreeWithWater(root->right, fireNode, waterSet, ans);
+    if (rt > 0)
+    {
+        if (waterSet.find(root->val) == waterSet.end())
+        {
+            burningTreeNodeWithWater(root, rt, root->right, waterSet, ans);
+            return rt + 1;
+        }
+        return -2; // fire node is present but it have water.
+    }
+    if (rt == -2)
+        return -2;
+
+    return -1;
+}
+
+void burningTreeWithWater(TreeNode *root, int data)
+{
+    unordered_set<int> waterSet;
+    vector<vector<int>> ans;
+
+    burningTreeWithWater(root, data, waterSet, ans);
+    for (vector<int> &ar : ans)
+    {
+        for (int ele : ar)
+            cout << ele << " ";
+        cout << endl;
+    }
+}
 
 int main()
 {

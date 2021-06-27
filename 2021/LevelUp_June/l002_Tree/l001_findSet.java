@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
 
-public class l001 {
+public class l001_findSet {
 
     public static class TreeNode {
         int val = 0;
@@ -206,7 +207,7 @@ public class l001 {
     public static void burningTreeNode(TreeNode root, int time, TreeNode blockNode, ArrayList<ArrayList<Integer>> ans) {
         if (root == null || root == blockNode)
             return;
-        if (time == ans.size())    // if(time == ans.size()) ans.push_back({});
+        if (time == ans.size()) // if(time == ans.size()) ans.push_back({});
             ans.add(new ArrayList<>());
         ans.get(time).add(root.val);
 
@@ -238,9 +239,70 @@ public class l001 {
         return -1;
     }
 
-    public static void burningTree(TreeNode root) {
+    public static void burningTree(TreeNode root, int data) {
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        burningTree(root, data, ans);
+    }
+
+    // Node with water and fire.
+
+    public static void burningTreeNodeWithWater(TreeNode root, int time, TreeNode blockNode, HashSet<Integer> waterSet,
+            ArrayList<ArrayList<Integer>> ans) {
+        if (root == null || root == blockNode || waterSet.contains(root.val))
+            return;
+        if (time == ans.size()) // if(time == ans.size()) ans.push_back({});
+            ans.add(new ArrayList<>());
+        ans.get(time).add(root.val);
+
+        burningTreeNodeWithWater(root.left, time + 1, blockNode, waterSet, ans);
+        burningTreeNodeWithWater(root.right, time + 1, blockNode, waterSet, ans);
+
+    }
+
+    public static int burningTreeWithWater(TreeNode root, int fireNode, HashSet<Integer> waterSet,
+            ArrayList<ArrayList<Integer>> ans) {
+        if (root == null)
+            return -1;
+        if (root.val == fireNode) {
+            if (!waterSet.contains(root.val)) { // foor cpp : map.find(root->val) != map.end();
+                burningTreeNodeWithWater(root, 0, null, waterSet, ans);
+                return 1;
+            }
+            return -2; // fire node is present but it have water.
+        }
+
+        int lt = burningTreeWithWater(root.left, fireNode, waterSet, ans);
+        if (lt > 0) {
+            if (!waterSet.contains(root.val)) {
+                burningTreeNodeWithWater(root, lt, root.left, waterSet, ans);
+                return lt + 1;
+            }
+            return -2; // fire node is present but it have water.
+        }
+
+        if (lt == -2)
+            return -2;
+
+        int rt = burningTreeWithWater(root.right, fireNode, waterSet, ans);
+        if (rt > 0) {
+            if (!waterSet.contains(root.val)) {
+                burningTreeNodeWithWater(root, rt, root.right, waterSet, ans);
+                return rt + 1;
+            }
+            return -2; // fire node is present but it have water.
+        }
+        if (rt == -2)
+            return -2;
+
+        return -1;
+    }
+
+    public static void burningTreeWithWater(TreeNode root, int data) {
+        HashSet<Integer> waterSet = new HashSet<>(); // unordered_set<int> map;
         ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
 
+        burningTreeWithWater(root, data, waterSet, ans);
+        System.out.println(ans);
     }
 
 }
