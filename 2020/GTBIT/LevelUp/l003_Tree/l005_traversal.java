@@ -177,4 +177,88 @@ public class l005_traversal {
         return -1;
     }
 
+    public static TreeNode BSTToDLL(TreeNode root, int k) {
+        TreeNode dummy = new TreeNode(-1);
+        TreeNode curr = root, prev = dummy;
+        while (curr != null) {
+            TreeNode left = curr.left;
+            if (left == null) {
+
+                prev.right = curr;
+                curr.left = prev;
+                prev = curr;
+
+                curr = curr.right;
+            } else {
+                TreeNode rightMostNode = getRightMostNode(left, curr);
+                if (rightMostNode.right == null) {
+                    rightMostNode.right = curr;
+                    curr = curr.left;
+                } else {
+                    rightMostNode.right = null;
+                    prev.right = curr;
+                    curr.left = prev;
+                    prev = curr;
+
+                    curr = curr.right;
+                }
+            }
+        }
+
+        TreeNode head = dummy.right;
+        dummy.right = head.left = null;
+
+        head.left = prev;
+        prev.right = head;
+
+        return head;
+    }
+
+    class BSTIterator {
+
+        TreeNode curr = null;
+
+        public BSTIterator(TreeNode root) {
+            curr = root;
+        }
+
+        private TreeNode getRightMostNode(TreeNode node, TreeNode curr) {
+            while (node.right != null && node.right != curr) {
+                node = node.right;
+            }
+
+            return node;
+        }
+
+        public int next() {
+            int rv = -1;
+            while (this.curr != null) {
+                TreeNode left = this.curr.left;
+                if (left == null) {
+                    rv = this.curr.val;
+                    this.curr = this.curr.right;
+                    break;
+                } else {
+                    TreeNode rightMost = getRightMostNode(left, this.curr);
+                    if (rightMost.right == null) {
+                        rightMost.right = this.curr;
+                        this.curr = this.curr.left;
+                    } else {
+                        rightMost.right = null;
+                        rv = this.curr.val;
+                        this.curr = this.curr.right;
+                        break;
+                    }
+                }
+
+            }
+            return rv;
+
+        }
+
+        public boolean hasNext() {
+            return this.curr != null;
+        }
+    }
+
 }
