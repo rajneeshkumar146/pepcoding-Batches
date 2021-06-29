@@ -69,6 +69,19 @@ public class l001 {
         return res;
     }
 
+    public static int printAllPath(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis,String psf) {
+
+
+    }
+
+    public static void preOrder(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis,int wsf,String psf){
+
+    }
+
+    public static void postOrder(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis,int wsf,String psf){
+
+    }
+
     public static void construction() {
         int N = 7;
         ArrayList<Edge>[] graph = new ArrayList[N];
