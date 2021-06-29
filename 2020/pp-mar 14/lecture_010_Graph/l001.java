@@ -69,16 +69,16 @@ public class l001 {
         return res;
     }
 
-    public static int printAllPath(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis,String psf) {
-
-
-    }
-
-    public static void preOrder(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis,int wsf,String psf){
+    public static int printAllPath(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis, String psf) {
+        return 0;
 
     }
 
-    public static void postOrder(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis,int wsf,String psf){
+    public static void preOrder(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis, int wsf, String psf) {
+
+    }
+
+    public static void postOrder(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis, int wsf, String psf) {
 
     }
 
@@ -96,6 +96,8 @@ public class l001 {
         addEdge(graph, 4, 5, 2);
         addEdge(graph, 4, 6, 8);
         addEdge(graph, 5, 6, 3);
+
+        display(graph, N);
     }
 
     public static void main(String[] args) {
