@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class l001 {
     public static class Edge {
@@ -146,6 +147,183 @@ public class l001 {
         pathPair ans = heaviestPath(graph, src, dest, vis);
 
         System.out.println("Heaviest Path: " + ans.psf + " of weight: " + ans.wsf);
+    }
+
+    public static class ceilFloorPair {
+        int ceil = (int) 1e9;
+        int floor = -(int) 1e9;
+
+    }
+
+    public static void ceilAndFloor(ArrayList<Edge>[] graph, int src, int data, boolean[] vis, int wsf,
+            ceilFloorPair pair) {
+        if (wsf > data)
+            pair.ceil = Math.min(pair.ceil, wsf);
+        if (wsf < data)
+            pair.floor = Math.max(pair.floor, wsf);
+
+        vis[src] = true;
+        for (Edge e : graph[src]) {
+            if (!vis[e.nbr]) {
+                ceilAndFloor(graph, e.nbr, data, vis, wsf + e.wt, pair);
+            }
+        }
+        vis[src] = false;
+    }
+
+    public static void ceilAndFloor(ArrayList<Edge>[] graph, int src, int data) {
+        ceilFloorPair pair = new ceilFloorPair();
+        boolean[] vis = new boolean[graph.length];
+        ceilAndFloor(graph, src, data, vis, 0, pair);
+    }
+
+    // O(E)
+    public static void dfs_GCC(ArrayList<Edge>[] graph, int src, boolean[] vis) {
+        vis[src] = true;
+        for (Edge e : graph[src]) {
+            if (!vis[e.nbr])
+                dfs_GCC(graph, e.nbr, vis);
+        }
+    }
+
+    // O(E + V);
+    public static void GCC(ArrayList<Edge>[] graph) {
+        int N = graph.length, componentCount = 0;
+        boolean[] vis = new boolean[N];
+
+        for (int i = 0; i < N; i++) {
+            if (!vis[i]) {
+                dfs_GCC(graph, i, vis);
+                componentCount++;
+            }
+        }
+        System.out.println(componentCount);
+    }
+
+    public void dfs(char[][] grid, int[][] dir, int sr, int sc) {
+        grid[sr][sc] = '0';
+        for (int d = 0; d < 4; d++) {
+            int r = sr + dir[d][0];
+            int c = sc + dir[d][1];
+
+            if (r >= 0 && c >= 0 && r < grid.length && c < grid[0].length && grid[r][c] == '1')
+                dfs(grid, dir, r, c);
+        }
+
+    }
+
+    public int numIslands(char[][] grid) {
+        int n = grid.length, m = grid[0].length, componentCount = 0;
+
+        int[][] dir = { { 1, 0 }, { -1, 0 }, { 0, -1 }, { 0, 1 } };
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == '1') {
+                    dfs(grid, dir, i, j);
+                    componentCount++;
+                }
+            }
+        }
+        return componentCount;
+    }
+
+    public int dfs(int[][] grid, int[][] dir, int sr, int sc) {
+
+        grid[sr][sc] = 0;
+        int size = 0;
+        for (int d = 0; d < 4; d++) {
+            int r = sr + dir[d][0];
+            int c = sc + dir[d][1];
+
+            if (r >= 0 && c >= 0 && r < grid.length && c < grid[0].length && grid[r][c] == 1)
+                size += dfs(grid, dir, r, c);
+        }
+
+        return size + 1;
+
+    }
+
+    public int maxAreaOfIsland(int[][] grid) {
+        int n = grid.length, m = grid[0].length, maxSize = 0;
+
+        int[][] dir = { { 1, 0 }, { -1, 0 }, { 0, -1 }, { 0, 1 } };
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1) {
+                    int s = dfs(grid, dir, i, j);
+                    maxSize = Math.max(maxSize, s);
+                }
+            }
+        }
+        return maxSize;
+    }
+
+    public static void hamintonianPathCycle(ArrayList<Edge>[] graph, int osrc, int src, int EdgeCount, boolean[] vis,
+            String ans) {
+        if (EdgeCount == graph.length - 1) {
+            int idx = findEdge(graph, src, osrc);
+            if (idx != -1) {
+                System.out.println(ans + src + "*");
+            } else {
+                System.out.println(ans + src + ".");
+            }
+            return;
+        }
+
+        vis[src] = true;
+        for (Edge e : graph[src]) {
+            if (!vis[e.nbr]) {
+                hamintonianPathCycle(graph, osrc, e.nbr, EdgeCount + 1, vis, ans + src);
+            }
+
+        }
+
+        vis[src] = false;
+
+    }
+
+    public static void hamintonianPathCycle(ArrayList<Edge>[] graph, int src) {
+        int N = graph.length;
+        boolean[] vis = new boolean[N];
+        hamintonianPathCycle(graph, src, src, 0, vis, "");
+    }
+
+    public static void BFS(ArrayList<Edge>[] graph, int src, int dest) {
+        LinkedList<Integer> que = new LinkedList<>();
+        int N = graph.length;
+        boolean[] vis = new boolean[N];
+
+        que.addLast(src);
+        int level = 0;
+
+        boolean isCyclePresent = false;
+        int shortestPath = -1;
+
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                int rvtx = que.removeFirst();
+
+                // for cycle
+                if (vis[rvtx]) {
+                    isCyclePresent = true;
+                    continue;
+                }
+
+                if (rvtx == dest) {
+                    shortestPath = level;
+                }
+
+                vis[rvtx] = true;
+                for (Edge e : graph[rvtx]) {
+                    if (!vis[e.nbr]) {
+                        que.addLast(e.nbr);
+                    }
+                }
+            }
+        }
     }
 
     public static void construction() {
