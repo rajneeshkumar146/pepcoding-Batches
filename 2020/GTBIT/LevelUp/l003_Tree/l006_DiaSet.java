@@ -153,4 +153,115 @@ public class l006_DiaSet {
         return ans != -(int) 1e9 ? ans : Math.max(ans, ans2);
     }
 
+    public class NTNPair {
+        int maxPossibleAns = -(int) 1e9;
+        int NTNMaxSum = 0;
+    }
+
+    public int getMax(int... arr) {
+        int maxEle = arr[0];
+        for (int ele : arr) {
+            maxEle = Math.max(maxEle, ele);
+        }
+        return maxEle;
+    }
+
+    public NTNPair maxPathSum_(TreeNode root) {
+        NTNPair myAns = new NTNPair();
+        if (root == null)
+            return myAns;
+
+        NTNPair left = maxPathSum_(root.left);
+        NTNPair right = maxPathSum_(root.right);
+
+        int oneSidedMax = Math.max(left.NTNMaxSum, right.NTNMaxSum) + root.val;
+        myAns.maxPossibleAns = getMax(left.maxPossibleAns, right.maxPossibleAns, root.val, oneSidedMax,
+                left.NTNMaxSum + root.val + right.NTNMaxSum);
+
+        myAns.NTNMaxSum = Math.max(oneSidedMax, root.val);
+
+        return myAns;
+    }
+
+    public int maxPathSum(TreeNode root) {
+        return maxPathSum_(root).maxPossibleAns;
+    }
+
+    // -1 : camera required, 0 : already covered, 1 : i'm a camera
+    public int minCameraCover_(TreeNode root, int[] countOfCamera) {
+        if (root == null)
+            return 0;
+
+        int lr = minCameraCover_(root.left, countOfCamera);
+        int rr = minCameraCover_(root.right, countOfCamera);
+
+        if (lr == -1 || rr == -1) {
+            countOfCamera[0]++;
+            return 1;
+        }
+
+        if (lr == 1 || rr == 1) {
+            return 0;
+        }
+
+        return -1;
+    }
+
+    public int minCameraCover(TreeNode root) {
+        int[] countOfCamera = new int[1];
+        int ans = minCameraCover_(root, countOfCamera);
+        if (ans == -1)
+            countOfCamera[0]++;
+
+        return countOfCamera[0];
+    }
+
+    // {with robbery, without robbery}
+    public int[] houseRobIII(TreeNode root) {
+        if (root == null) {
+            return new int[2];
+        }
+
+        int[] lr = houseRobIII(root.left);
+        int[] rr = houseRobIII(root.right);
+
+        int[] myAns = new int[2];
+        myAns[0] = lr[1] + rr[1] + root.val;
+        myAns[1] = Math.max(lr[0], lr[1]) + Math.max(rr[0], rr[1]);
+
+        return myAns;
+    }
+
+    public int rob(TreeNode root) {
+        int[] ans = houseRobIII(root);
+
+        return Math.max(ans[0], ans[1]);
+    }
+
+    // {forward, backward, maxZigZag Length}
+    public int[] longestZigZag_(TreeNode root) {
+        if (root == null) {
+            return new int[] { -1, -1, -1 };
+        }
+
+        int[] lans = longestZigZag_(root.left);
+        int[] rans = longestZigZag_(root.right);
+
+        int[] myAns = new int[3];
+
+        myAns[0] = lans[1] + 1;
+        myAns[1] = rans[0] + 1;
+        myAns[2] = Math.max(Math.max(lans[2], rans[2]), Math.max(myAns[0], myAns[1]));
+        return myAns;
+
+    }
+
+    public int longestZigZag(TreeNode root) {
+
+        int[] ans = longestZigZag_(root);
+
+        return ans[2];
+
+    }
+
 }
