@@ -160,12 +160,119 @@ public class l003ConstructionSet {
         return constructFromPrePost(pre, 0, n - 1, post, 0, n - 1);
     }
 
-    // HM :
-    // https://practice.geeksforgeeks.org/problems/construct-tree-from-inorder-and-levelorder/1
+    // HM_:https://practice.geeksforgeeks.org/problems/construct-tree-from-inorder-and-levelorder/1
 
     // https://www.geeksforgeeks.org/check-if-given-preorder-inorder-and-postorder-traversals-are-of-same-tree/
 
-    public static String serialize(TreeNode root) {
+    public static void serialize_PreOrder(TreeNode root, StringBuilder sb) {
+        if (root == null) {
+            sb.append("# ");
+            return;
+        }
 
+        sb.append(root.val + " ");
+        serialize_PreOrder(root.left, sb);
+        serialize_PreOrder(root.right, sb);
     }
+
+    public static String serialize_PreOrder(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        serialize_PreOrder(root, sb);
+        return sb.toString();
+    }
+
+    public static TreeNode deserialize_preorder(String[] arr, int[] idx) {
+        if (idx[0] > arr.length || arr[idx[0]].equals("#")) {
+            idx[0]++;
+            return null;
+        }
+
+        int i = idx[0]++;
+        int val = Integer.parseInt(arr[i]);
+        TreeNode root = new TreeNode(val);
+        root.left = deserialize_preorder(arr, idx);
+        root.right = deserialize_preorder(arr, idx);
+
+        return root;
+    }
+
+    public static TreeNode deserialize_preorder(String str) {
+        String[] arr = str.split(" ");
+        int[] idx = new int[1];
+
+        return deserialize_preorder(arr, idx);
+    }
+
+    public static String serialize_levelOrder(TreeNode root) {
+        if (root == null)
+            return "";
+        LinkedList<TreeNode> que = new LinkedList<>();
+        que.addLast(root);
+        StringBuilder sb = new StringBuilder();
+
+        while (que.size() != 0) {
+            TreeNode rnode = que.removeFirst();
+            if (rnode == null) {
+                sb.append("# ");
+                continue;
+            } else
+                sb.append(rnode.val + " ");
+
+            que.addLast(rnode.left);
+            que.addLast(rnode.right);
+        }
+
+        return sb.toString();
+    }
+
+    public static TreeNode deserialize_Levelorder(String str) {
+        if (str.length() == 0)
+            return null;
+
+        LinkedList<TreeNode> que = new LinkedList<>();
+        String[] arr = str.split(" ");
+        TreeNode root = new TreeNode(Integer.parseInt(arr[0]));
+
+        que.addLast(root);
+
+        int i = 1, n = arr.length;
+        while (i < n) {
+            TreeNode rnode = que.removeFirst();
+            if (i < n && !arr[i].equals("#")) {
+                TreeNode lci = new TreeNode(Integer.parseInt(arr[i]));
+                rnode.left = lci;
+                que.addLast(lci);
+            }
+            i++;
+
+            if (i < n && !arr[i].equals("#")) {
+                TreeNode rci = new TreeNode(Integer.parseInt(arr[i]));
+                rnode.right = rci;
+                que.addLast(rci);
+            }
+            i++;
+        }
+
+        return root;
+    }
+
+    public Node inorderSuccessor(Node node) {
+
+        Node succ = null;
+        Node right = node.right;
+        if (right != null) {
+            while (right.left != null) {
+                right = right.left;
+            }
+
+            return right;
+        }
+
+        while (node.parent != null && node.parent.left != node) {
+            node = node.parent;
+        }
+
+        return node.parent;
+    }
+
 }
