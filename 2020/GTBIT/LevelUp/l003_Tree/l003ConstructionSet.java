@@ -160,7 +160,12 @@ public class l003ConstructionSet {
         return constructFromPrePost(pre, 0, n - 1, post, 0, n - 1);
     }
 
-    // HM : https://practice.geeksforgeeks.org/problems/construct-tree-from-inorder-and-levelorder/1
+    // HM :
+    // https://practice.geeksforgeeks.org/problems/construct-tree-from-inorder-and-levelorder/1
 
     // https://www.geeksforgeeks.org/check-if-given-preorder-inorder-and-postorder-traversals-are-of-same-tree/
+
+    public static String serialize(TreeNode root) {
+
+    }
 }
