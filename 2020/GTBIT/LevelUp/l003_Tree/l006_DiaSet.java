@@ -257,11 +257,8 @@ public class l006_DiaSet {
     }
 
     public int longestZigZag(TreeNode root) {
-
         int[] ans = longestZigZag_(root);
-
         return ans[2];
-
     }
 
 }

@@ -133,4 +133,34 @@ public class l003ConstructionSet {
 
         return root;
     }
+
+    public TreeNode constructFromPrePost(int[] pre, int psi, int pei, int[] post, int ppsi, int ppei) {
+        if (psi > pei)
+            return null;
+
+        TreeNode root = new TreeNode(pre[psi]);
+        if (psi == pei)
+            return root;
+
+        int idx = ppsi;
+        while (post[idx] != pre[psi + 1])
+            idx++;
+
+        int tnel = idx - ppsi + 1;
+
+        root.left = constructFromPrePost(pre, psi + 1, psi + tnel, post, ppsi, idx);
+        root.right = constructFromPrePost(pre, psi + tnel + 1, pei, post, idx + 1, ppei - 1);
+
+        return root;
+    }
+
+    public TreeNode constructFromPrePost(int[] pre, int[] post) {
+
+        int n = pre.length;
+        return constructFromPrePost(pre, 0, n - 1, post, 0, n - 1);
+    }
+
+    // HM : https://practice.geeksforgeeks.org/problems/construct-tree-from-inorder-and-levelorder/1
+
+    // https://www.geeksforgeeks.org/check-if-given-preorder-inorder-and-postorder-traversals-are-of-same-tree/
 }
