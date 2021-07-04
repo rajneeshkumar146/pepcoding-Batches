@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <stringstream>
 
 using namespace std;
 
@@ -16,24 +17,6 @@ public:
         this->val = val;
     }
 };
-
-TreeNode *constructFromInOrder(vector<int> &inOrder, int si, int ei)
-{
-    if (si > ei)
-        return nullptr;
-    int mid = (si + ei) / 2;
-    TreeNode *root = new TreeNode(inOrder[mid]);
-
-    root->left = constructFromInOrder(inOrder, si, mid - 1);
-    root->right = constructFromInOrder(inOrder, mid + 1, ei);
-
-    return root;
-}
-
-TreeNode *constructFromInOrder(vector<int> &inOrder)
-{
-    return constructFromInOrder(inOrder, 0, inOrder.size() - 1);
-}
 
 TreeNode *getMidNode(TreeNode *head)
 {
@@ -68,3 +51,260 @@ TreeNode *dllToBST(TreeNode *head)
 
     return root;
 }
+
+TreeNode *mergeTwoSortedDLL(TreeNode *l1, TreeNode *l2)
+{
+    if (l1 == nullptr || l2 == nullptr)
+        return l1 != nullptr ? l1 : l2;
+
+    TreeNode *dummy = new TreeNode(-1);
+    TreeNode *prev = dummy, *c1 = l1, *c2 = l2;
+
+    while (c1 != nullptr && c2 != nullptr)
+    {
+        if (c1->val <= c2->val)
+        {
+            prev->right = c1;
+            c1->left = prev;
+
+            c1 = c1->right;
+        }
+        else
+        {
+            prev->right = c2;
+            c2->left = prev;
+
+            c2 = c2->right;
+        }
+
+        prev = prev->right;
+    }
+
+    if (c1 != nullptr)
+    {
+        prev->right = c1;
+        c1->left = prev;
+    }
+    else
+    {
+        prev->right = c2;
+        c2->left = prev;
+    }
+
+    TreeNode *head = dummy->right;
+    dummy->right = head->left = nullptr;
+
+    return head;
+}
+
+TreeNode *mergeSort(TreeNode *head)
+{
+    if (head == nullptr || head->right == nullptr)
+        return head;
+
+    TreeNode *midNode = getMidNode(head);
+    TreeNode *forwHead = midNode->right;
+    forwHead->left = midNode->right = nullptr;
+
+    return mergeTwoSortedDLL(mergeSort(head), mergeSort(forwHead));
+}
+
+TreeNode *getRightMostNode(TreeNode *node, TreeNode *curr)
+{
+    while (node->right != nullptr && node->right != curr)
+    {
+        node = node->right;
+    }
+
+    return node;
+}
+
+TreeNode *dll(TreeNode *root)
+{
+    TreeNode *dummy = new TreeNode(-1);
+    TreeNode *curr = root, *prev = dummy;
+    while (curr != nullptr)
+    {
+        TreeNode *left = curr->left;
+        if (left == nullptr)
+        {
+            prev->right = curr;
+            curr->left = prev;
+            prev = prev->right;
+
+            curr = curr->right;
+        }
+        else
+        {
+            TreeNode *rightMostNode = getRightMostNode(left, curr);
+            if (rightMostNode->right == nullptr)
+            {
+                rightMostNode->right = curr;
+                curr = curr->left;
+            }
+            else
+            {
+
+                rightMostNode->right = nullptr;
+
+                prev->right = curr;
+                curr->left = prev;
+                prev = prev->right;
+
+                curr = curr->right;
+            }
+        }
+    }
+
+    TreeNode *head = dummy->right;
+    dummy->right = head->left = nullptr;
+
+    return head;
+}
+
+void display(TreeNode *node)
+{
+    if (node == nullptr)
+        return;
+
+    string str = "";
+    str += ((node->left != nullptr ? to_string(node->left->val) : "."));
+    str += (" -> " + to_string(node->val) + " <- ");
+    str += ((node->right != nullptr ? to_string(node->right->val) : "."));
+
+    cout << str << endl;
+
+    display(node->left);
+    display(node->right);
+}
+
+TreeNode *BTToBST(TreeNode *root)
+{
+    if (root == nullptr)
+        return nullptr;
+
+    TreeNode *head = dll(root); // Binary Tree to Doubly Lihnked List
+    head = mergeSort(head);     // doubly Linked List to Sorted Doubly Linked List
+    root = dllToBST(head);
+
+    return root;
+}
+
+TreeNode *constructFromInOrder(vector<int> &inOrder, int si, int ei)
+{
+    if (si > ei)
+        return nullptr;
+    int mid = (si + ei) / 2;
+    TreeNode *root = new TreeNode(inOrder[mid]);
+
+    root->left = constructFromInOrder(inOrder, si, mid - 1);
+    root->right = constructFromInOrder(inOrder, mid + 1, ei);
+
+    return root;
+}
+
+TreeNode *constructFromInOrder(vector<int> &inOrder)
+{
+    return constructFromInOrder(inOrder, 0, inOrder.size() - 1);
+}
+
+// idx: {0 :: actual idx}
+TreeNode *bstFromPreorder(vector<int> &preorder, int lr, int rr, vector<int> &idx)
+{
+    int i = idx[0];
+    if (i >= preorder.size() || preorder[i] < lr || preorder[i] > rr)
+        return nullptr;
+
+    TreeNode *root = new TreeNode(preorder[i]);
+    idx[0]++;
+
+    root->left = bstFromPreorder(preorder, lr, root->val, idx);
+    root->right = bstFromPreorder(preorder, root->val, rr, idx);
+
+    return root;
+}
+
+TreeNode *bstFromPreorder(vector<int> &preorder)
+{
+    vector<int> idx(1, 0);
+    return bstFromPreorder(preorder, -1e9, 1e9, idx);
+}
+
+// idx: {0 :: actual idx}
+TreeNode *bstFromPostorder(vector<int> &postorder, int lr, int rr, vector<int> &idx)
+{
+    int i = idx[0];
+    if (i <= -1 || postorder[i] < lr || postorder[i] > rr)
+        return nullptr;
+
+    TreeNode *root = new TreeNode(postorder[i]);
+    idx[0]--;
+
+    root->right = bstFromPostorder(postorder, root->val, rr, idx);
+    root->left = bstFromPostorder(postorder, lr, root->val, idx);
+
+    return root;
+}
+
+TreeNode *bstFromPreorder(vector<int> &postorder)
+{
+    vector<int> idx(1, postorder.size() - 1);
+    return bstFromPreorder(postorder, -1e9, 1e9, idx);
+}
+
+class Codec
+{
+public:
+    void serialize(TreeNode *root, string &sb)
+    {
+        if (root == nullptr)
+            return;
+
+        sb += to_string(root->val) + " ";
+        serialize(root->left, sb);
+        serialize(root->right, sb);
+    }
+
+    string serialize(TreeNode *root)
+    {
+        string sb = "";
+        serialize(root, sb);
+        return sb;
+    }
+
+    TreeNode *bstFromPreorder(vector<int> &preorder, int lr, int rr, vector<int> &idx)
+    {
+        int i = idx[0];
+        if (i >= preorder.size() || preorder[i] < lr || preorder[i] > rr)
+            return nullptr;
+
+        TreeNode *root = new TreeNode(preorder[i]);
+        idx[0]++;
+
+        root->left = bstFromPreorder(preorder, lr, root->val, idx);
+        root->right = bstFromPreorder(preorder, root->val, rr, idx);
+
+        return root;
+    }
+
+    TreeNode *deserialize(string data)
+    {
+        if (data.length() == 0)
+            return nullptr;
+        stringstream ss(data);
+        string word;
+
+        vector<int> preorder;
+        while (ss >> word)
+        {
+            int val = stoi(word);
+            preorder.push_back(val);
+        }
+
+        vector<int> idx(1, 0);
+        return bstFromPreorder(preorder, -(int)1e9, (int)1e9, idx);
+    }
+};
+
+
+//for you :: https://www.lintcode.com/problem/1307/

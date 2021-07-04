@@ -17,6 +17,16 @@ public:
     }
 };
 
+TreeNode *getRightMostNode(TreeNode *node, TreeNode *curr)
+{
+    while (node->right != nullptr && node->right != curr)
+    {
+        node = node->right;
+    }
+
+    return node;
+}
+
 bool isValidBST(TreeNode *root)
 {
     TreeNode *curr = root;
