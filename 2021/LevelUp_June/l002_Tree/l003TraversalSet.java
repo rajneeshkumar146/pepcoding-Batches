@@ -232,6 +232,42 @@ public class l003TraversalSet {
     }
 
     // Kth largest ele
-    // covert sorted circular doubly linkedlist
+    public TreeNode cdll(TreeNode root) {
+        TreeNode dummy = new TreeNode(-1);
+        TreeNode curr = root, prev = dummy;
+        while (curr != null) {
+            TreeNode left = curr.left;
+            if (left == null) {
+                prev.right = curr;
+                curr.left = prev;
+                prev = prev.right;
 
+                curr = curr.right;
+            } else {
+                TreeNode rightMostNode = getRightMostNode(left, curr);
+                if (rightMostNode.right == null) {
+                    rightMostNode.right = curr;
+                    curr = curr.left;
+                } else {
+
+                    rightMostNode.right = null;
+
+                    prev.right = curr;
+                    curr.left = prev;
+                    prev = prev.right;
+
+                    curr = curr.right;
+                }
+            }
+        }
+
+        TreeNode head = dummy.right;
+        dummy.right = head.left = null;
+
+        // for circular doubly linkedlist
+        head.left = prev;
+        prev.right = head;
+
+        return head;
+    }
 }
