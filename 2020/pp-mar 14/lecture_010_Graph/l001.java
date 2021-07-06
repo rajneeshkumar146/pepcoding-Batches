@@ -462,6 +462,8 @@ public class l001 {
             }
 
             color = (color + 1) % 2;
+            if (!isBipartite)
+                break;
         }
 
         if (cycle) {
