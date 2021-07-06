@@ -326,6 +326,77 @@ public class l001 {
         }
     }
 
+    public static boolean cycleDetection(ArrayList<Edge>[] graph, int src, boolean[] vis) {
+
+        LinkedList<Integer> que = new LinkedList<>();
+        que.addLast(src);
+
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                Integer rvtx = que.removeFirst();
+                if (vis[rvtx])
+                    return true;
+
+                vis[rvtx] = true;
+                for (Edge e : graph[rvtx]) {
+                    if (!vis[e.nbr])
+                        que.addLast(e.nbr);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static void cycleDetection(ArrayList<Edge>[] graph) {
+        int vtces = graph.length;
+        boolean[] vis = new boolean[vtces];
+        boolean res = false;
+        for (int i = 0; i < vtces; i++) {
+            if (!vis[i])
+                res = res || cycleDetection(graph, i, vis);
+        }
+
+        System.out.println(res);
+    }
+
+    public static class BFS_Pair {
+        int vtx = 0;
+        String psf = "";
+        int wsf = 0;
+
+        public BFS_Pair(int vtx, String psf, int wsf) {
+            this.vtx = vtx;
+            this.psf = psf;
+            this.wsf = wsf;
+        }
+    }
+
+    public static void printBFSPath(ArrayList<Edge>[] graph, int src) {
+        int vtces = graph.length;
+        boolean[] vis = new boolean[vtces];
+        LinkedList<BFS_Pair> que = new LinkedList<>();
+        que.addLast(new BFS_Pair(src, src + "", 0));
+
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                BFS_Pair rp = que.removeFirst();
+                if (vis[rp.vtx])
+                    continue;
+
+                System.out.println(rp.vtx + " -> " + rp.psf + " @ " + rp.wsf);
+                vis[rp.vtx] = true;
+                for (Edge e : graph[rp.vtx]) {
+                    if (!vis[e.nbr])
+                        que.addLast(new BFS_Pair(e.nbr, rp.psf + e.nbr, rp.wsf + e.wt));
+                }
+            }
+        }
+
+    }
+
     public static void construction() {
         int N = 7;
         ArrayList<Edge>[] graph = new ArrayList[N];
@@ -336,7 +407,7 @@ public class l001 {
         addEdge(graph, 0, 3, 10);
         addEdge(graph, 1, 2, 10);
         addEdge(graph, 2, 3, 40);
-        // addEdge(graph, 3, 4, 2);
+        addEdge(graph, 3, 4, 2);
         addEdge(graph, 4, 5, 2);
         addEdge(graph, 4, 6, 8);
         addEdge(graph, 5, 6, 3);
@@ -345,7 +416,8 @@ public class l001 {
         boolean[] vis = new boolean[N];
         // System.out.println(printAllPath(graph, 0, 6, vis, ""));
         // preOrder(graph, 0, vis, 0, "");
-        heaviestPath(graph, 0, 6);
+        // heaviestPath(graph, 0, 6);
+        printBFSPath(graph, 0);
     }
 
     public static void main(String[] args) {
