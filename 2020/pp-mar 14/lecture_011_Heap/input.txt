@@ -1,0 +1,12 @@
+10
+vivo k9 12 64 4100
+onePlus 8Pro 12 64 4100
+onePlus 8Pro 12 64 4230
+onePlus 8Pro 12 128 4230
+Apple iphone12 12 64 4100
+Apple iphone12Pro 12 128 4120
+Apple iphone12Pro 8 64 4100
+Samsung ultra20 12 1000 5100
+Samsung ultra20 18 1000 5100
+Samsung ultra20 12 1000 5200
+

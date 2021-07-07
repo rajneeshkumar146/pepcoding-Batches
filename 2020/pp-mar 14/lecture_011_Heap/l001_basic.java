@@ -1,6 +1,10 @@
 import java.util.PriorityQueue;
+import java.util.Scanner;
 
 public class l001_basic {
+
+    public static Scanner scn = new Scanner(System.in);
+
     public static void Int_minPQ() {
         PriorityQueue<Integer> pq = new PriorityQueue<>(); // by default min Priority Queue
         for (int i = 10; i >= 1; i--)
@@ -25,6 +29,7 @@ public class l001_basic {
     }
 
     public static void matrixPQ(int[][] arr) {
+        
 
     }
 
@@ -43,21 +48,28 @@ public class l001_basic {
             this.BatteryBackup = BatteryBackup;
         }
 
-        mobilePhone(){
+        mobilePhone() {
 
         }
 
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
-            
+
             sb.append("Company: " + this.Company + "\n");
             sb.append("Model: " + this.Model + "\n");
             sb.append("Ram: " + this.Ram + "GB\n");
             sb.append("Storage: " + this.Storage + "GB\n");
             sb.append("BatteryBackup: " + this.BatteryBackup + "mAH\n");
-            
+
             return sb.toString();
+        }
+    }
+
+    public static void mobilePhoneDetails() {
+        int n = scn.nextInt();
+        PriorityQueue pq = new PriorityQueue<>();
+        for (int i = 0; i < n; i++) {
         }
     }
 
