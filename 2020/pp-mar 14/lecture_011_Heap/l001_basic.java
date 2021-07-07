@@ -43,6 +43,10 @@ public class l001_basic {
             this.BatteryBackup = BatteryBackup;
         }
 
+        mobilePhone(){
+
+        }
+
         @Override
         public String toString() {
             StringBuilder sb = new StringBuilder();
@@ -60,7 +64,7 @@ public class l001_basic {
     public static void main(String[] args) {
         // Int_minPQ();
         // Int_maxPQ();
-        int[] arr = new int[10];
-        System.out.println(arr);
+        mobilePhone ph = new mobilePhone();
+        System.out.println(ph);
     }
 }
