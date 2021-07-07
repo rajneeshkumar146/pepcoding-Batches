@@ -1,6 +1,4 @@
-Company: 
-Model: 
-Ram: 0GB
-Storage: 0GB
-BatteryBackup: 0mAH
-
+8 3 12 11 
+8 5 16 4 
+2 6 11 3 
+9 7 11 13 
