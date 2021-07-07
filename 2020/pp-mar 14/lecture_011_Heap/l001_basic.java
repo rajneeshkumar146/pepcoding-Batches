@@ -59,6 +59,8 @@ public class l001_basic {
 
     public static void main(String[] args) {
         // Int_minPQ();
-        Int_maxPQ();
+        // Int_maxPQ();
+        int[] arr = new int[10];
+        System.out.println(arr);
     }
 }
