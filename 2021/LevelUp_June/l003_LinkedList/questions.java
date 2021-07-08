@@ -149,4 +149,52 @@ public class questions {
         return mergeTwoLists(mergeSort(head), mergeSort(nHead));
     }
 
+    public ListNode mergeKSortedList_01(ListNode[] arr) {
+        ListNode res = null;
+        for (ListNode list : arr) {
+            res = mergeTwoLists(res, list);
+        }
+
+        return res;
+    }
+
+    public ListNode getTail(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode curr = head;
+        while (curr.next != null)
+            curr = curr.next;
+
+        return curr;
+    }
+
+    public ListNode mergeKSortedList_02(ListNode[] arr) {
+        if (arr.length == 0)
+            return null;
+
+        ListNode dummy = new ListNode(-1);
+        ListNode prev = dummy;
+        for (int i = 0; i < arr.length; i++) {
+            ListNode tail = getTail(arr[i]);
+            if (tail != null) {
+                prev.next = arr[i];
+                prev = tail;
+            }
+        }
+
+        return mergeSort(dummy.next);
+    }
+
+    public ListNode mergeKSortedList_03(ListNode[] arr, int si, int ei) {
+        if (si == ei)
+            return arr[si];
+
+        int mid = (si + ei) / 2;
+        return mergeTwoLists(mergeKSortedList_03(arr, si, mid), mergeKSortedList_03(arr, mid + 1, ei));
+    }
+
+
+
+
 }
