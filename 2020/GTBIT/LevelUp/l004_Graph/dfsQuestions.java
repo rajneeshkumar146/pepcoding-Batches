@@ -1,5 +1,6 @@
 import java.util.HashSet;
 
+
 public class dfsQuestions {
 
     public void dfs_NumIsland(char[][] grid, int i, int j, int[][] dir) {
@@ -132,7 +133,7 @@ public class dfsQuestions {
     }
 
     // https://www.hackerrank.com/challenges/journey-to-the-moon/problem
-    
+
     int[][] dir = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
     String[] dirS = { "D", "U", "R", "L" };
 
@@ -192,12 +193,14 @@ public class dfsQuestions {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 if (grid2[i][j] == 1) {
-                    count += countSubIslands(grid1, grid2,i,j) ? 1 : 0;
+                    count += countSubIslands(grid1, grid2, i, j) ? 1 : 0;
                 }
             }
         }
 
         return count;
     }
+
+   
 
 }
