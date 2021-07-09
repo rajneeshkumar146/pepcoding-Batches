@@ -194,7 +194,106 @@ public class questions {
         return mergeTwoLists(mergeKSortedList_03(arr, si, mid), mergeKSortedList_03(arr, mid + 1, ei));
     }
 
+    public static ListNode segregateOnLastIndex(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
 
+        ListNode pivotNode = getTail(head);
 
+        ListNode large = new ListNode(-1), small = new ListNode(-1), sp = small, lp = large, curr = head;
+        while (curr != null) {
+            if (curr.val <= pivotNode.val) {
+                sp.next = curr;
+                sp = sp.next;
+            } else {
+                lp.next = curr;
+                lp = lp.next;
+            }
+            curr = curr.next;
+        }
+
+        sp.next = lp.next = null;
+        sp.next = large.next;
+        return small.next;
+    }
+
+    public static ListNode[] segregate(ListNode head, int pivotIdx) {
+        ListNode pivotNode = head;
+        while (pivotIdx-- > 0)
+            pivotNode = pivotNode.next;
+
+        ListNode large = new ListNode(-1), small = new ListNode(-1), sp = small, lp = large, curr = head;
+        while (curr != null) {
+            if (curr != pivotNode && curr.val <= pivotNode.val) {
+                sp.next = curr;
+                sp = sp.next;
+            } else if (curr != pivotNode) {
+                lp.next = curr;
+                lp = lp.next;
+            }
+            curr = curr.next;
+        }
+
+        sp.next = lp.next = pivotNode.next = null;
+        // sp.next = pivotNode;
+        // pivotNode.next = large.next;
+        // return small.next;
+
+        ListNode leftHead = small.next == pivotNode ? null : small.next;
+        ListNode rightHead = large.next;
+        return new ListNode[] { leftHead, pivotNode, rightHead };
+    }
+
+    public static ListNode[] mergeLists(ListNode[] left, ListNode pivotNode, ListNode[] right) {
+        ListNode[] myRes = new ListNode[2];
+        if (left[0] != null && right[0] != null) {
+            myRes[0] = left[0];
+            myRes[1] = right[1];
+
+            left[1].next = pivotNode;
+            pivotNode.next = right[0];
+        } else if (right[0] != null) {
+            myRes[0] = pivotNode;
+            myRes[1] = right[1];
+
+            pivotNode.next = right[0];
+        } else {
+            myRes[0] = left[0];
+            myRes[1] = pivotNode;
+
+            left[1].next = pivotNode;
+        }
+
+        return myRes;
+    }
+
+    public static int getLength(ListNode head) {
+        int len = 0;
+        while (head != null) {
+            len++;
+            head = head.next;
+        }
+
+        return len;
+    }
+
+    // {head, tail}
+    public static ListNode[] quickSort_(ListNode head) {
+        if (head == null || head.next == null)
+            return new ListNode[] { head, head };
+
+        int len = getLength(head);
+        int pivotIndex = len / 2; // 0, len - 1, len/2,
+        ListNode[] partition = segregate(head, pivotIndex);
+
+        ListNode[] left = quickSort_(partition[0]);
+        ListNode[] right = quickSort_(partition[2]);
+
+        return mergeLists(left, partition[1], right);
+    }
+
+    public static ListNode quickSort(ListNode head) {
+        return quickSort_(head)[0];
+    }
 
 }
