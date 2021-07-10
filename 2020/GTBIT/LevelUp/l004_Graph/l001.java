@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Arrays;
 
 public class l001 {
 
@@ -159,6 +160,64 @@ public class l001 {
             System.out.println();
             level++;
         }
+    }
+
+    public static boolean isBipartite(ArrayList<Edge>[] graph, int src, int[] vis) {
+        LinkedList<Integer> que = new LinkedList<>();
+        int color = 0; // 0 : red, 1 : green
+
+        que.add(src);
+        boolean isCycle = false, isBipartite = true;
+
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                int rvtx = que.removeFirst();
+                if (vis[rvtx] != -1) {
+                    isCycle = true;
+                    if (vis[rvtx] != color) {
+                        isBipartite = false;
+                        break;
+                    }
+
+                    continue;
+                }
+
+                vis[rvtx] = color;
+                for (Edge e : graph[rvtx]) {
+                    if (vis[e.v] == -1) {
+                        que.addLast(e.v);
+                    }
+                }
+            }
+            color = (color + 1) % 2;
+            if(!isBipartite) break;
+        }
+
+        if (isCycle) {
+            if (isBipartite)
+                System.out.println("Graph is Bi-Partite it means it has even length cycle");
+            else
+                System.out.println("Graph is Non Bi-Partite it means it has odd length cycle");
+
+        } else {
+            System.out.println("Graph is Bi-Partite");
+        }
+
+        return isBipartite;
+    }
+
+    public static boolean isBipartite(ArrayList<Edge>[] graph) {
+        int N = graph.length;
+        int[] vis = new int[N];
+        Arrays.fill(vis, -1);
+
+        boolean res = true;
+        for (int i = 0; i < N; i++)
+            if (vis[i] == -1)
+                res = res && isBipartite(graph, i, vis);
+
+        return res;
     }
 
     public static void constructGraph() {
