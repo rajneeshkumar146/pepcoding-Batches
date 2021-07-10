@@ -308,3 +308,35 @@ public:
 
 // for you :: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/trees/construct-bst-from-levelorder-traversal/ojquestion
 //for you :: https://www.lintcode.com/problem/1307/
+
+class BSTPair{
+        public:
+        bool isBal= true;
+        int h = -1;
+    };
+    
+    
+    BSTPair isBalanced_(TreeNode* root) {
+        if(root == nullptr){
+            BSTPair base;
+            return base;
+        }
+        
+        BSTPair lp = isBalanced_(root->left);
+        BSTPair rp = isBalanced_(root->right);
+        
+        BSTPair myPair;
+        myPair.isBal = lp.isBal && rp.isBal;
+        if(myPair.isBal && abs(lp.h - rp.h) < 2){
+            myPair.h = max(lp.h,rp.h) + 1;
+        }else{
+            myPair.isBal = false;
+        }
+        
+        
+        return myPair;
+    }
+    
+    bool isBalanced(TreeNode* root) {
+        return isBalanced_(root).isBal;   
+    }
