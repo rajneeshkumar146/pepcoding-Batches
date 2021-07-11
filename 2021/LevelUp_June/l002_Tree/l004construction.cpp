@@ -309,34 +309,89 @@ public:
 // for you :: https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/trees/construct-bst-from-levelorder-traversal/ojquestion
 //for you :: https://www.lintcode.com/problem/1307/
 
-class BSTPair{
-        public:
-        bool isBal= true;
-        int h = -1;
-    };
-    
-    
-    BSTPair isBalanced_(TreeNode* root) {
-        if(root == nullptr){
-            BSTPair base;
-            return base;
-        }
-        
-        BSTPair lp = isBalanced_(root->left);
-        BSTPair rp = isBalanced_(root->right);
-        
-        BSTPair myPair;
-        myPair.isBal = lp.isBal && rp.isBal;
-        if(myPair.isBal && abs(lp.h - rp.h) < 2){
-            myPair.h = max(lp.h,rp.h) + 1;
-        }else{
-            myPair.isBal = false;
-        }
-        
-        
-        return myPair;
+class BSTPair
+{
+public:
+    bool isBal = true;
+    int h = -1;
+
+    bool isBST = true;
+    int min = (int)1e9;
+    int max = -(int)1e9;
+
+    int size = 0;
+    TreeNode *largestRoot = nullptr;
+};
+
+BSTPair isBalanced_(TreeNode *root)
+{
+    if (root == nullptr)
+    {
+        BSTPair base;
+        return base;
     }
-    
-    bool isBalanced(TreeNode* root) {
-        return isBalanced_(root).isBal;   
+
+    BSTPair lp = isBalanced_(root->left);
+    BSTPair rp = isBalanced_(root->right);
+
+    BSTPair myPair;
+    myPair.isBal = lp.isBal && rp.isBal;
+    if (myPair.isBal && abs(lp.h - rp.h) < 2)
+    {
+        myPair.h = max(lp.h, rp.h) + 1;
     }
+    else
+    {
+        myPair.isBal = false;
+    }
+
+    return myPair;
+}
+
+bool isBalanced(TreeNode *root)
+{
+    return isBalanced_(root).isBal;
+}
+
+BSTPair largestBST_(TreeNode *root)
+{
+    if (root == nullptr)
+    {
+        BSTPair base;
+        return base;
+    }
+
+    BSTPair lp = largestBST_(root->left);
+    BSTPair rp = largestBST_(root->right);
+
+    BSTPair myPair;
+    BSTPair.isBST = false;
+    if (lp.isBST && rp.isBST && lp.max < root->val && root->val < rp.min)
+    {
+        myPair.isBST = true;
+        myPair.min = min(lp.min, root->val);
+        myPair.max = max(rp.max, root->val);
+        myPair.size = lp.size + rp.size + 1;
+        myPair.largestRoot = root;
+    }
+    else
+    {
+        if (lp.size > rp.size)
+        {
+            myPair.size = lp.size;
+            myPair.largestRoot = lp.largestRoot;
+        }
+        else
+        {
+            myPair.size = rp.size;
+            myPair.largestRoot = rp.largestRoot;
+        }
+    }
+
+    return myPair;
+}
+
+TreeNode *largestBST(TreeNode *root)
+{
+    return largestBST_(root).largestRoot;
+}
