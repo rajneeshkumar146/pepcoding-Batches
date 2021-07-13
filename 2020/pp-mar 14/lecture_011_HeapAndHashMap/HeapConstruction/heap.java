@@ -23,6 +23,7 @@ public class heap {
         this(true);
     }
 
+    // O(n)
     public heap(int[] data, boolean isMaxHeap) {
         this(isMaxHeap);
 
@@ -85,19 +86,40 @@ public class heap {
         }
     }
 
+    // O(LogN)
+    private void upheapify(int ci) {
+        int pi = (ci - 1) / 2;
+        if (pi >= 0 && compareTo(ci, pi) > 0) {
+            swap(ci, pi);
+            upheapify(pi);
+        }
+    }
+
+    // O(1)
     public int peek() throws Exception {
         UnderFlowPointerException();
         return this.arr.get(0);
     }
 
-    // Log(n)
+    // O(LogN)
     public int remove() throws Exception {
         UnderFlowPointerException();
 
+        int rEle = this.arr.get(0);
+        swap(0, this.noOfEle - 1);
+        this.arr.remove(this.noOfEle - 1);
+
+        this.noOfEle--;
+        downHeapify(0);
+
+        return rEle;
     }
 
-    public void add() {
-
+    // O(LogN)
+    public void add(int data) {
+        this.arr.add(data);
+        this.noOfEle++;
+        upheapify(this.noOfEle - 1);
     }
 
 }
