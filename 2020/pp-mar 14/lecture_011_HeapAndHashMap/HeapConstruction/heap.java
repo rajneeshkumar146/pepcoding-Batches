@@ -89,7 +89,7 @@ public class heap {
     // O(LogN)
     private void upheapify(int ci) {
         int pi = (ci - 1) / 2;
-        if (pi >= 0 && compareTo(ci, pi) > 0) {
+        if (compareTo(ci, pi) > 0) {
             swap(ci, pi);
             upheapify(pi);
         }
