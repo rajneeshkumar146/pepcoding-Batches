@@ -90,6 +90,7 @@ public class heap {
         return this.arr.get(0);
     }
 
+    // Log(n)
     public int remove() throws Exception {
         UnderFlowPointerException();
 
