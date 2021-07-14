@@ -140,7 +140,7 @@ public class HashMap {
 
         if (res) {
             this.totalNoOfNodes--;
-            return group.removeFirst().value;
+            return group.removeFirst().key;
         }
         return null;
     }
