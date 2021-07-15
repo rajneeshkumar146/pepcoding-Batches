@@ -296,4 +296,87 @@ public class questions {
         return quickSort_(head)[0];
     }
 
+    public static ListNode removeNthFromEnd(ListNode head, int n) {
+        if (head == null)
+            return head;
+
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode prev = dummy, forw = dummy;
+        while (n-- > 0)
+            forw = forw.next;
+
+        while (forw.next != null) {
+            forw = forw.next;
+            prev = prev.next;
+        }
+
+        ListNode dNode = prev.next;
+        prev.next = dNode.next;
+
+        dNode.next = null; // delete dNode
+
+        return dummy.next;
+    }
+
+    public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if (l1 == null || l2 == null)
+            return l1 != null ? l1 : l2;
+
+        l1 = reverse(l1);
+        l2 = reverse(l2);
+
+        ListNode dummy = new ListNode(-1), prev = dummy, c1 = l1, c2 = l2;
+        int carry = 0;
+
+        while (c1 != null || c2 != null || carry != 0) {
+            int sum = carry + (c1 != null ? c1.val : 0) + (c2 != null ? c2.val : 0);
+            carry = sum / 10;
+
+            prev.next = new ListNode(sum % 10);
+            prev = prev.next;
+
+            if (c1 != null)
+                c1 = c1.next;
+            if (c2 != null)
+                c2 = c2.next;
+        }
+
+        return reverse(dummy.next);
+    }
+
+    public static ListNode subtractTwoNumbers(ListNode l1, ListNode l2) {
+        if (l2 == null)
+            return l1;
+        l1 = reverse(l1);
+        l2 = reverse(l2);
+
+        ListNode dummy = new ListNode(-1), prev = dummy, c1 = l1, c2 = l2;
+
+        int borrow = 0;
+        while (c1 != null) {
+            int sub = borrow + c1.val - (c2 != null ? c2.val : 0);
+            if (sub < 0) {
+                borrow = -1;
+                sub += 10;
+            } else
+                borrow = 0;
+
+            prev.next = new ListNode(sub);
+            prev = prev.next;
+
+            c1 = c1.next;
+            if (c2 != null)
+                c2 = c2.next;
+        }
+
+        ListNode head = reverse(dummy.next), curr = head;
+        while (curr != null && curr.val == 0) {
+            ListNode forw = curr.next;
+            curr.next = null;
+            curr = forw;
+        }
+
+        return curr != null ? curr : new ListNode(0);
+    }
 }
