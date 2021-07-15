@@ -55,16 +55,19 @@ public class l002directedGraph {
         ArrayList<Integer> ans = new ArrayList<>();
         int[] indegree = new int[N];
 
+        // O(E)
         for (int i = 0; i < N; i++) {
             for (Edge e : graph[i]) {
                 indegree[e.v]++;
             }
         }
 
+        // O(V)
         for (int i = 0; i < N; i++)
             if (indegree[i] == 0)
                 que.addLast(i);
 
+        // O(E + V)
         while (que.size() != 0) {
             int rvtx = que.removeFirst();
             ans.add(rvtx);
