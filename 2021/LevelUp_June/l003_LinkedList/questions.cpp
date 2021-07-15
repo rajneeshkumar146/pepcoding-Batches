@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 class ListNode
@@ -190,3 +191,66 @@ ListNode *reverseInKGroup(ListNode *head, int k)
 
     return oh;
 }
+
+ListNode *multiplyDigitWithLL(ListNode *list, int digit)
+{
+    ListNode *dummy = new ListNode(-1), *prev = dummy, *c = list;
+    int carry = 0;
+    while (c != NULL || carry != 0)
+    {
+        int prod = carry + (c != NULL ? c->val : 0) * digit;
+        carry = prod / 10;
+        int num = prod % 10;
+
+        prev->next = new ListNode(num);
+        prev = prev->next;
+
+        if (c != NULL)
+            c = c->next;
+    }
+
+    return dummy->next;
+}
+
+void addTwoLL(ListNode *curr, ListNode *prev)
+{
+    int carry = 0;
+    while (curr != NULL || carry != 0)
+    {
+        int sum = carry + (curr != NULL ? curr->val : 0) + (prev->next != NULL ? prev->next->val : 0);
+        carry = sum / 10;
+
+        if (prev->next == NULL)
+            prev->next = new ListNode(0);
+        prev = prev->next;
+        prev->val = sum % 10;
+
+        if (curr != NULL)
+            curr = curr->next;
+    }
+}
+
+ListNode *multiplyTwoLL(ListNode *l1, ListNode *l2)
+{
+    l1 = reverse(l1);
+    l2 = reverse(l2);
+
+    ListNode *dummy = new ListNode(-1), *prev = dummy, *l2_itr = l2;
+
+    while (l2_itr != NULL)
+    {
+        ListNode *smallAnsList = multiplyDigitWithLL(l1, l2_itr->val);
+        addTwoLL(smallAnsList, prev);
+
+        prev = prev->next;
+        l2_itr = l2_itr->next;
+    }
+
+    return reverse(dummy->next);
+}
+
+// multiply k list
+ListNode *multiplyKList(vector<ListNode *> &list)
+{
+}
+
