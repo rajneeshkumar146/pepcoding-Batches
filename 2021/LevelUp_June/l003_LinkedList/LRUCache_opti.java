@@ -1,6 +1,6 @@
 import java.util.HashMap;
 
-public class LRUCache {
+public class LRUCache_opti {
     // data Members
     private class ListNode {
         Integer key, value;
@@ -13,7 +13,7 @@ public class LRUCache {
         }
     }
 
-    private HashMap<Integer, ListNode> map;
+    private ListNode[] map;
     private int capacity;
     private int size;
     private ListNode head = null;
@@ -22,7 +22,7 @@ public class LRUCache {
     private void intialize(int capacity) {
         this.capacity = capacity;
         this.size = 0;
-        this.map = new HashMap<>();
+        this.map = new ListNode[(int) 1e4 + 1];
         this.head = this.tail = null;
     }
 
@@ -92,28 +92,28 @@ public class LRUCache {
     }
 
     public int get(int key) {
-        if (!map.containsKey(key))
+        if (map[key] == null)
             return -1;
 
-        ListNode node = map.get(key);
+        ListNode node = map[key];
         makeRecent(node);
         return node.value;
     }
 
     public void put(int key, int value) {
-        if (map.containsKey(key)) {
-            ListNode node = map.get(key);
+        if (map[key] != null) {
+            ListNode node = map[key];
             node.value = value;
             makeRecent(node);
         } else {
             ListNode node = new ListNode(key, value);
             if (this.size == this.capacity) {
                 ListNode rn = removeFirst();
-                map.remove(rn.key);
+                map[rn.key] = null;
             }
 
             addLast(node);
-            map.put(key, node);
+            map[key] = node;
         }
     }
 }
