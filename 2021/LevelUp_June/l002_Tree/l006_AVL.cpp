@@ -57,6 +57,7 @@ TreeNode *leftRotation(TreeNode *A)
     return B;
 }
 
+//O(1)
 TreeNode *getRotation(TreeNode *root)
 {
     updateBalAndHeight(root);
