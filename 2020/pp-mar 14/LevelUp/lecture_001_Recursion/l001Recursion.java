@@ -161,15 +161,77 @@ public class l001Recursion {
         return arr[idx] == data ? idx : -1;
     }
 
-    public static int[] allIndex(int[] arr, int data, int idx) {
+    public static int[] allIndex(int[] arr, int data, int idx, int count) {
+        if (idx >= arr.length)
+            return new int[count];
+
+        if (arr[idx] == data)
+            count++;
+
+        int[] ans = allIndex(arr, data, idx + 1, count);
+
+        if (arr[idx] == data)
+            ans[count - 1] = idx;
+
+        return ans;
+    }
+
+    public static ArrayList<String> subsequence(String str, int idx) {
+        if (idx == str.length()) {
+            ArrayList<String> base = new ArrayList<>();
+            base.add("");
+            return base;
+        }
+
+        ArrayList<String> smallAns = subsequence(str, idx + 1);
+        ArrayList<String> myAns = new ArrayList<>(smallAns);
+        for (String s : smallAns)
+            myAns.add(str.charAt(idx) + s);
+
+        return myAns;
+    }
+
+    public static int subsequence(String str, int idx, String asf, ArrayList<String> ans) {
+        if (idx == str.length()) {
+            ans.add(asf);
+            return 1;
+        }
+        int count = 0;
+        count += subsequence(str, idx + 1, asf, ans);
+        count += subsequence(str, idx + 1, asf + str.charAt(idx), ans);
+
+        return count;
+    }
+
+    public static String[] nokiaKeys = { ".;", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tu", "vwx", "yz" };
+
+    public static int nokiaKeyPad(String str, String ans) {
+        if (str.length() == 0) {
+            System.out.println(ans);
+            return 1;
+        }
 
     }
 
-    public static ArrayList<String> subsequnce(String str,int idx) {
+    public static int stairPath(int n, String psf,ArrayList<String> ans) {
 
     }
 
-    public static int subsequnce(String str,int idx,String asf,ArrayList<String> ans) {
+    public static int boardPath(int n, String psf,ArrayList<String> ans) {
+
+    }
+
+    public static int boardPath(int[] arr, int n, String ans) {
+
+    }
+
+    public static int mazePath_HVD(int sr, int sc, int er, int ec,  String psf,ArrayList<String> ans) {
+     
+
+    }
+
+    public static int mazePath_HVD_multi(int sr, int sc, int er, int ec,  String psf,ArrayList<String> ans) {
+     
 
     }
 
