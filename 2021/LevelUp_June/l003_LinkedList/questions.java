@@ -380,4 +380,107 @@ public class questions {
         return curr != null ? curr : new ListNode(0);
     }
 
+    public static ListNode isCyclePresentInLL(ListNode head) {
+        if (head == null && head.next == null)
+            return null;
+
+        ListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+
+            if (slow == fast)
+                break;
+        }
+
+        return fast;
+    }
+
+    public static ListNode CycleNode(ListNode head) {
+
+        ListNode meetingPoint = isCyclePresentInLL(head);
+        if (meetingPoint == null || meetingPoint.next == null)
+            return null;
+
+        ListNode slow = head, fast = meetingPoint;
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+
+        return slow;
+    }
+
+    public static void allVariablesOfCycle(ListNode head) {
+        ListNode meetingPoint = isCyclePresentInLL(head);
+        if (meetingPoint == null || meetingPoint.next == null)
+            return;
+
+        ListNode slow = head, fast = meetingPoint;
+        int A = 0, mDash = 0;
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+
+            if (fast == meetingPoint)
+                mDash++;
+            A++;
+        }
+
+        slow = meetingPoint;
+        slow = slow.next;
+        int cycleLen = 1;
+        while (slow != meetingPoint) {
+            slow = slow.next;
+            cycleLen++;
+        }
+
+        int C = A - mDash * cycleLen;
+        int B = cycleLen - C;
+        int m = (A != 0 && C == 0) ? 0 : mDash + 1; // resolved. conclusion : A >= C
+    }
+
+    public static ListNode removeDuplicates(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode prev = head, curr = head.next;
+        while (curr != null) {
+            while (curr != null && prev.val == curr.val) {
+                ListNode forw = curr.next;
+                curr.next = null;
+                curr = forw;
+            }
+
+            prev.next = curr;
+            prev = prev.next;
+            if (curr != null)
+                curr = curr.next;
+        }
+
+        return head;
+    }
+
+    public static ListNode removeDuplicates(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode dummy = new ListNode(-1), prev = dummy, curr = head;
+        prev.next = curr;
+        while (curr != null) {
+            boolean isLoopRun = false;
+            while (curr.next != null && prev.next.val == curr.next.val) {
+                curr = curr.next;
+                isLoopRun = true;
+            }
+
+            prev.next = curr.next;
+            if (!isLoopRun)
+                prev = prev.next;
+            curr = curr.next;
+        }
+
+        return dummy.next;
+    }
+
 }
