@@ -416,7 +416,8 @@ public class questions {
         if (meetingPoint == null || meetingPoint.next == null)
             return;
 
-        ListNode slow = head, fast = meetingPoint;
+        ListNode slow = head, fast = meetingPoint, intersectionPoint = null;
+        ;
         int A = 0, mDash = 0;
         while (slow != fast) {
             slow = slow.next;
@@ -427,6 +428,7 @@ public class questions {
             A++;
         }
 
+        intersectionPoint = slow;
         slow = meetingPoint;
         slow = slow.next;
         int cycleLen = 1;
@@ -435,9 +437,14 @@ public class questions {
             cycleLen++;
         }
 
-        int C = A - mDash * cycleLen;
-        int B = cycleLen - C;
-        int m = (A != 0 && C == 0) ? 0 : mDash + 1; // resolved. conclusion : A >= C
+        int B = 0, C = 0, m = 0;
+        if (A != 0 && mDash == 0 && meetingPoint == intersectionPoint) {
+            B = cycleLen;
+        } else {
+            C = A - mDash * cycleLen;
+            B = cycleLen - C;
+            m = mDash + 1; // resolved. conclusion : A >= C
+        }
     }
 
     public static ListNode removeDuplicates(ListNode head) {
