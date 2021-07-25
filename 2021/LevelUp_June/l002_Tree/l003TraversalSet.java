@@ -309,6 +309,45 @@ public class l003TraversalSet {
             }
 
         }
+    }
 
+    public void recoverTree(TreeNode root) {
+        TreeNode curr = root;
+        TreeNode prev = null, a = null, b = null;
+        while (curr != null) {
+            TreeNode left = curr.left;
+            if (left == null) {
+                if (prev != null && prev.val > curr.val) {
+                    if (a == null)
+                        a = prev;
+                    b = curr;
+                }
+                prev = curr;
+                curr = curr.right;
+            } else {
+                TreeNode rightMostNode = getRightMostNode(left, curr);
+                if (rightMostNode.right == null) { // thread creation block
+                    rightMostNode.right = curr; // thread is created
+                    curr = curr.left;
+                } else { // thread destroy block
+                    rightMostNode.right = null; // thread is cut down
+
+                    if (prev != null && prev.val > curr.val) {
+                        if (a == null)
+                            a = prev;
+                        b = curr;
+                    }
+
+                    prev = curr;
+                    curr = curr.right;
+                }
+            }
+        }
+
+        if (a != null) {
+            int temp = a.val;
+            a.val = b.val;
+            b.val = temp;
+        }
     }
 }

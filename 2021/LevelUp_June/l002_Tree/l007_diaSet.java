@@ -49,7 +49,6 @@ public class l007_diaSet {
         return myRes;
     }
 
-
     // {LeafToLeafMaxPathSum, NodeToLeafMaxPathSum}
     public static int[] maxPathSum_01(TreeNode root) {
         if (root == null) {
@@ -97,6 +96,36 @@ public class l007_diaSet {
     public static int maxPathSum(TreeNode root) {
         maxPathSum_02(root);
         return LeafToLeafMaxPathSum;
+    }
+
+    // Node to Node max path sum
+
+    public static int max(int... arr) {
+        int max = arr[0];
+        for (int ele : arr)
+            max = Math.max(max, ele);
+
+        return max;
+    }
+
+    static int NodeToNodeMaxPathSum = -(int) 1e9;
+
+    public static int maxPathSum_(TreeNode root) {
+        if (root == null)
+            return 0;
+
+        int lrtn = maxPathSum_(root.left); // left root To Node
+        int rrtn = maxPathSum_(root.right); // right root To Node
+
+        int rootToNode = Math.max(lrtn, rrtn) + root.val;
+        NodeToNodeMaxPathSum = max(NodeToNodeMaxPathSum, rootToNode, root.val, lrtn + root.val + rrtn);
+
+        return max(rootToNode,root.val);
+    }
+
+    public static int maxPathSum(TreeNode root) {
+        maxPathSum_(root);
+        return NodeToNodeMaxPathSum;
     }
 
 }
