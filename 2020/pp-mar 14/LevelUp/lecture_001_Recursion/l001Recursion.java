@@ -327,6 +327,71 @@ public class l001Recursion {
         System.out.println(ans);
     }
 
+    // https://practice.geeksforgeeks.org/problems/rat-in-a-maze-problem/1
+
+    public static int ratInMaze(int sr, int sc, int[][] mat, String psf, ArrayList<String> ans, int[][] dir,
+            String[] dirS) {
+
+        int n = mat.length, m = mat[0].length;
+        if (sr == n - 1 && sc == m - 1) {
+            ans.add(psf);
+            return 1;
+        }
+
+        int count = 0;
+        mat[sr][sc] = 0;
+        for (int d = 0; d < dir.length; d++) {
+            int r = sr + dir[d][0];
+            int c = sc + dir[d][1];
+
+            if (r >= 0 && c >= 0 && r < n && c < m && mat[r][c] == 1) {
+                count += ratInMaze(r, c, mat, psf + dirS[d], ans, dir, dirS);
+            }
+        }
+        mat[sr][sc] = 1;
+
+        return count;
+    }
+
+    public static void ratInMaze(int[][] mat) {
+        int[][] dir = { { 1, 0 }, { 0, 1 } };
+        String[] dirS = { "D", "R" };
+        ArrayList<String> ans = new ArrayList<>();
+
+        ratInMaze(0, 0, mat, "", ans, dir, dirS);
+    }
+
+    public static int specialMatrix(int sr, int sc, boolean[][] mat, int[][] dir) {
+
+        int n = mat.length, m = mat[0].length;
+        if (sr == n - 1 && sc == m - 1) {
+            return 1;
+        }
+
+        int count = 0;
+        for (int d = 0; d < dir.length; d++) {
+            int r = sr + dir[d][0];
+            int c = sc + dir[d][1];
+
+            if (r >= 0 && c >= 0 && r < n && c < m && !mat[r][c]) {
+                count += specialMatrix(r, c, mat, dir);
+            }
+        }
+
+        return count;
+    }
+
+    public static void specialMatrix(int n, int m, int[][] blockedCells) {
+        int[][] dir = { { 1, 0 }, { 0, -1 }, { 0, 1 }, { -1, 0 } };
+
+        boolean[][] mat = new boolean[n][m];
+        for (int[] cell : blockedCells) {
+            mat[cell[0] - 1][cell[0] - 1] = true;
+        }
+
+        System.out.println(specialMatrix(0, 0, mat, dir));
+    }
+
     public static void main(String[] args) {
         mazePath();
     }
