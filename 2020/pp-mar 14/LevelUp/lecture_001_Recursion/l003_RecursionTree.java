@@ -267,8 +267,6 @@ public class l003_RecursionTree {
 
     // 2QueenSet.=============================================================================
 
-    // Queen_Set.=========================================================================================
-
     // tnb : total no boxes, bno : box no, tnq : total No queen, qpsf : queen placed
     // so far
     public static int queenCombination2D(boolean[][] box, int bno, int tnq, String asf) {
@@ -297,8 +295,6 @@ public class l003_RecursionTree {
         }
 
         int count = 0;
-        count += queenCombination1D_sub(tnb, bno + 1, tnq, qpsf + 1, asf + "b" + bno + "q" + qpsf + " ");
-        count += queenCombination1D_sub(tnb, bno + 1, tnq, qpsf, asf);
 
         return count;
     }
@@ -334,20 +330,14 @@ public class l003_RecursionTree {
 
         int count = 0;
 
-        if (!vis[bno]) {
-            vis[bno] = true;
-            count += queenPermutation1D_sub(tnb, 1, tnq, qpsf + 1, vis, asf + "b" + bno + "q" + qpsf + " ");
-            vis[bno] = false;
-        }
-        count += queenPermutation1D_sub(tnb, bno + 1, tnq, qpsf, vis, asf);
         return count;
     }
 
     public static void queen2D() {
         int tnq = 4;
         boolean[][] box = new boolean[4][4];
-        // System.out.println(queenCombination2D(box, 0, tnq, ""));
-        System.out.println(queenPermutation2D(box, tnq, ""));
+        System.out.println(queenCombination2D(box, 0, tnq, ""));
+        // System.out.println(queenPermutation2D(box, tnq, ""));
 
         // System.out.println(queenPermutation1D_sub(tnb, 1, tnq, 1, vis, ""));
     }
