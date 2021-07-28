@@ -186,6 +186,32 @@ public class l003_RecursionTree {
         return ans;
     }
 
+    public static int subsets(String str, int idx, StringBuilder asf, ArrayList<String> ans) {
+        int count = 1;
+        ans.add(asf.toString());
+        for (int i = idx; i < str.length(); i++) {
+            asf.append(str.charAt(i));
+            count += subsets(str, i + 1, asf, ans);
+            asf.deleteCharAt(asf.length() - 1);
+        }
+        return count;
+    }
+
+    public static void subsets(String str) {
+        ArrayList<String> ans = new ArrayList<>();
+        StringBuilder sb = new StringBuilder("");
+        subsets(str, 0, sb, ans);
+        System.out.println(ans);
+    }
+
+    // 40
+    // 216
+    // 322
+    // 77
+    // 377
+    // 51
+    // 52
+
     // Queen_Set.=========================================================================================
 
     // tnb : total no boxes, bno : box no, tnq : total No queen, qpsf : queen placed
@@ -343,6 +369,7 @@ public class l003_RecursionTree {
     }
 
     public static void main(String[] args) {
-        queen2D();
+        // queen2D();
+        subsets("123");
     }
 }
