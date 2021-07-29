@@ -190,3 +190,46 @@ vector<int> zigZag(Node *root)
     }
     return ans;
 }
+
+Node *linearize(Node *root)
+{
+    if (root->children.size() == 0)
+        return root;
+
+    Node *gTail = linearize(root->children.back());
+    for (int i = root->children.size() - 2; i >= 0; i--)
+    {
+        Node *child = root->children[i];
+        Node *tail = linearize(child);
+        tail->children.push_back(root->children[i + 1]);
+        root->children.pop_back();
+    }
+
+    return gTail;
+}
+
+bool isMirror(Node *root1, Node *root2)
+{
+    if (root1->children.size() != root2->children.size())
+        return false;
+
+    int size = root1->children.size();
+    for (int i = 0, j = size - 1; j >= 0; i++, j--)
+    {
+        Node *child1 = root1->children[i];
+        Node *child2 = root2->children[j];
+
+        if (!isMirror(child1, child2))
+            return false;
+    }
+
+    return true;
+}
+
+// O(KN)
+int kThLargest(Node *node, int k)
+{
+    return 0;
+}
+
+// 114
