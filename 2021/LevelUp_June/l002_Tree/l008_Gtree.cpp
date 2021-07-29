@@ -172,19 +172,21 @@ vector<int> zigZag(Node *root)
         {
             Node *node = que.front();
             que.pop_front();
+            ans.push_back(node->val);
             if (level % 2 == 0)
             {
                 for (int i = 0; i < node->children.size(); i++)
-                    que.push_back(node->children[i]);
+                    st.push_front(node->children[i]);
             }
             else
             {
                 for (int i = node->children.size() - 1; i >= 0; i--)
-                    que.push_back(node->children[i]);
+                    st.push_front(node->children[i]);
             }
         }
 
         swap(que, st);
         level++;
     }
+    return ans;
 }
