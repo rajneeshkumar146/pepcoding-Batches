@@ -1,14 +1,15 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class l008_GTree {
 
     public class Node {
 
-        int data = 0;
+        int val = 0;
         ArrayList<Node> children;
 
-        Node(int data) {
-            this.data = data;
+        Node(int val) {
+            this.val = val;
             this.children = new ArrayList<>();
         }
     }
@@ -22,16 +23,44 @@ public class l008_GTree {
         return maxheight + 1;
     }
 
-    //428
+    // 428
     class Codec {
-        // Encodes a tree to a single string.
+        public void serialize(Node root, StringBuilder sb) {
+            sb.append(root.val + " ");
+            for (Node child : root.children) {
+                serialize(child, sb);
+            }
+            sb.append("null ");
+        }
+
         public String serialize(Node root) {
+            if (root == null)
+                return "";
+            StringBuilder sb = new StringBuilder();
+            serialize(root, sb);
+            return sb.toString();
 
         }
 
         // Decodes your encoded data to tree.
         public Node deserialize(String data) {
+            if (data.length() == 0)
+                return null;
+            String[] arr = data.split(" ");
+            LinkedList<Node> st = new LinkedList<>();
 
+            for (int i = 0; i < arr.length - 1; i++) {
+                String s = arr[i];
+                if (!s.equals("null")) {
+                    // st.addFirst(new Node(Integer.parseInt(s), new ArrayList<>())); // for leetcode
+                    st.addFirst(new Node(Integer.parseInt(s))); // cpp: stoi(s)
+                } else {
+                    Node node = st.removeFirst();
+                    st.getFirst().children.add(node);
+                }
+            }
+
+            return st.removeFirst();
         }
     }
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
-
+#include <queue>
+#include <list>
 using namespace std;
 
 class Node
@@ -59,14 +60,131 @@ bool findData(Node *node, int data)
     return res;
 }
 
-bool rootToNodePath(Node* node,int data,vector<int>& ans){
+bool rootToNodePath(Node *node, int data, vector<Node *> &ans)
+{
+    if (node->val == data)
+    {
+        ans.push_back(node);
+        return true;
+    }
 
+    bool res = false;
+    for (Node *child : node->children)
+    {
+        res = res || rootToNodePath(child, data, ans);
+    }
+
+    if (res)
+        ans.push_back(node);
+    return res;
 }
 
-int diameter(Node* node){
+//{d,h}
+vector<int> diameter_(Node *node)
+{
+    int h1 = -1, h2 = -1, d = 0;
+    for (Node *child : node->children)
+    {
+        vector<int> ans = diameter_(child);
+        if (ans[1] > h1)
+        {
+            h2 = h1;
+            h1 = ans[1];
+        }
+        else if (ans[1] > h2)
+            h2 = ans[1];
 
+        d = max(ans[0], d);
+    }
+
+    return {max(h1 + h2 + 2, d), max(h1, h2) + 1};
 }
 
+int d = 0;
+int diameter_02(Node *node)
+{
+    int h1 = -1, h2 = -1;
+    for (Node *child : node->children)
+    {
+        int h = diameter_02(child);
+        if (h > h1)
+        {
+            h2 = h1;
+            h1 = h;
+        }
+        else if (h > h2)
+            h2 = h;
+    }
+    d = max(h1 + h2 + 2, d);
 
+    return max(h1, h2) + 1;
+}
 
+int diameter(Node *node)
+{
+    if (node == nullptr)
+        return 0;
+    return diameter_(node)[0];
+}
 
+// BFS
+void bfs(Node *root)
+{
+
+    queue<Node *> que;
+    que.push(root);
+
+    int level = 0;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        cout << "Level : " << level;
+        while (size-- > 0)
+        {
+            Node *node = que.front();
+            que.pop();
+
+            cout << node->val;
+
+            for (Node *child : node->children)
+            {
+                que.push(child);
+            }
+        }
+        cout << endl;
+        level++;
+    }
+}
+
+vector<int> zigZag(Node *root)
+{
+    list<Node *> que; // push_back, pop_front
+    list<Node *> st;  // push_front, pop_front
+
+    que.push_back(root);
+    vector<int> ans;
+
+    int level = 0;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            Node *node = que.front();
+            que.pop_front();
+            if (level % 2 == 0)
+            {
+                for (int i = 0; i < node->children.size(); i++)
+                    que.push_back(node->children[i]);
+            }
+            else
+            {
+                for (int i = node->children.size() - 1; i >= 0; i--)
+                    que.push_back(node->children[i]);
+            }
+        }
+
+        swap(que, st);
+        level++;
+    }
+}
