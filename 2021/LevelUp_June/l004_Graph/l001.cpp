@@ -21,6 +21,101 @@ void addEdge(vector<vector<Edge>> &graph, int u, int v, int w)
     graph[v].push_back(Edge(u, w));
 }
 
+//  O(2E) == O(E)
+void display(vector<vector<Edge>> &graph, int V)
+{
+    for (int i = 0; i < V; i++)
+    {
+        cout << (i + " -> ");
+        for (Edge e : graph[i])
+        {
+            cout << ("(" + e.v + "," + e.w + ") ");
+        }
+        cout << endl;
+    }
+}
+
+int findEdge(vector<vector<Edge>> &graph, int u, int v)
+{
+    for (int i = 0; i < graph[u].size(); i++)
+    {
+        Edge e = graph[u][i];
+        if (e.v == v)
+            return i;
+    }
+
+    return -1;
+}
+
+void removeEdge(vector<vector<Edge>> &graph, int u, int v)
+{
+    int idx1 = findEdge(graph, u, v);
+    graph[u].erase(graph[u].begin() + idx1);
+
+    int idx2 = findEdge(graph, v, u);
+    graph[v].erase(graph[v].begin() + idx2);
+}
+
+void preOrder(vector<vector<Edge>> &graph, int src, vector<bool> &vis, int wsf, string psf)
+{
+    cout << (to_string(src) + " -> " + (psf + to_string(src)) + "@" + to_string(wsf));
+    vis[src] = true;
+    for (Edge e : graph[src])
+    {
+        if (!vis[e.v])
+            preOrder(graph, e.v, vis, wsf + e.w, psf + src);
+    }
+
+    vis[src] = false;
+}
+
+class pair_
+{
+public:
+    int heavyPath = 0;
+    string psf = "";
+
+    pair_()
+    {
+    }
+
+    pair_(int heavyPath, string psf)
+    {
+        this->heavyPath = heavyPath;
+        this->psf = psf;
+    }
+};
+
+pair_ heavyPath(vector<vector<Edge>> &graph, int src, int dest, vector<bool> &vis)
+{
+    if (src == dest)
+    {
+        pair_ base(0, to_string(src) + "");
+        return base;
+    }
+
+    vis[src] = true;
+    pair_ myAns(-1, "");
+    for (Edge e : graph[src])
+    {
+        if (!vis[e.v])
+        {
+            pair_ recAns = heavyPath(graph, e.v, dest, vis);
+            if (recAns.heavyPath != -1 && recAns.heavyPath + e.w > myAns.heavyPath)
+            {
+                myAns.heavyPath = recAns.heavyPath + e.w;
+                myAns.psf = to_string(e.v) + recAns.psf;
+            }
+        }
+    }
+
+    vis[src] = false;
+}
+
+void hamintonainPathAndCycle(vector<vector<Edge>> &graph, int src)
+{
+}
+
 void constructGraph()
 {
     int V = 9;
@@ -39,4 +134,10 @@ void constructGraph()
     addEdge(graph, 4, 5, 2);
     addEdge(graph, 4, 6, 8);
     addEdge(graph, 5, 6, 3);
+}
+
+int main()
+{
+    constructGraph();
+    return 0;
 }
