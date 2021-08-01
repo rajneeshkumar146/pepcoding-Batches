@@ -140,12 +140,72 @@ public class l001 {
         return myAns;
     }
 
-    public static void hamintonainPathAndCycle(ArrayList<Edge>[] graph, int src, ArrayList<String> ans) {
+    public static pair lightestPath(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis) {
+        return new pair();
+    }
+
+    public static class pair2 {
+        int length = 0;
+        String psf = "";
+
+        pair2() {
+
+        }
+
+        pair2(int length, String psf) {
+            this.length = length;
+            this.psf = psf;
+        }
+    }
+
+    public static pair2 longestPath(ArrayList<Edge>[] graph, int src, int dest, boolean[] vis) {
+        return new pair2();
+    }
+
+    public static void hamintonainPathAndCycle(ArrayList<Edge>[] graph, int src, int osrc, int edgeCount, boolean[] vis,
+            String psf, ArrayList<String> ans) {
+        if (edgeCount == graph.length - 1) {
+            psf += src;
+            int idx = findEdge(graph, src, osrc);
+            if (idx != -1)
+                psf += '*';
+
+            ans.add(psf);
+            return;
+        }
+
+        vis[src] = true;
+        for (Edge e : graph[src]) {
+            if (!vis[e.v])
+                hamintonainPathAndCycle(graph, e.v, osrc, edgeCount + 1, vis, psf + src, ans);
+        }
+        vis[src] = false;
+    }
+
+    // get conected components
+    public static void dfs_compo(ArrayList<Edge>[] graph, int src, boolean[] vis) {
+        vis[src] = true;
+        for (Edge e : graph[src])
+            if (!vis[e.v])
+                dfs_compo(graph, e.v, vis);
+    }
+
+    public static void gcc(ArrayList<Edge>[] graph) {
+        int N = graph.length;
+        boolean[] vis = new boolean[N];
+
+        int components = 0;
+        for (int i = 0; i < N; i++) {
+            if (!vis[i]) {
+                components++;
+                dfs_compo(graph, i, vis);
+            }
+        }
 
     }
 
     public static void constructGraph() {
-        int V = 9;
+        int V = 7;
         ArrayList<Edge>[] graph = new ArrayList[V];
         for (int i = 0; i < V; i++)
             graph[i] = new ArrayList<>();
@@ -155,18 +215,23 @@ public class l001 {
         addEdge(graph, 1, 2, 10);
         addEdge(graph, 2, 3, 40);
 
-        addEdge(graph, 2, 7, 2);
-        addEdge(graph, 2, 8, 4);
-        addEdge(graph, 7, 8, 3);
+        // addEdge(graph, 2, 7, 2);
+        // addEdge(graph, 2, 8, 4);
+        // addEdge(graph, 7, 8, 3);
 
         addEdge(graph, 3, 4, 2);
         addEdge(graph, 4, 5, 2);
         addEdge(graph, 4, 6, 8);
         addEdge(graph, 5, 6, 3);
 
+        addEdge(graph, 0, 6, 3);
+
         boolean[] vis = new boolean[V];
-        pair ans = heavyPath(graph, 0, 6, vis);
-        System.out.println(ans.heavyPath + " @ " + ans.psf);
+        // pair ans = heavyPath(graph, 0, 6, vis);
+        // System.out.println(ans.heavyPath + " @ " + ans.psf);
+        ArrayList<String> ans = new ArrayList<>();
+        hamintonainPathAndCycle(graph, 0, 0, 0, vis, "", ans);
+        System.out.println(ans);
     }
 
     public static void main(String[] args) {
