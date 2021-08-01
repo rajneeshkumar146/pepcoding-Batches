@@ -185,10 +185,11 @@ public class algo {
         Arrays.fill(par, -1);
 
         pq.add(new pair(src, 0));
+        dis[src] = 0;
         while (pq.size() != 0) {
             pair p = pq.remove();
 
-            if (p.wsf >= dis[p.vtx])
+            if (p.wsf > dis[p.vtx])
                 continue;
 
             for (Edge e : graph[p.vtx]) {
@@ -219,6 +220,7 @@ public class algo {
         int[] dis = new int[N];
         Arrays.fill(dis, (int) 1e9);
 
+        dis[src] = 0;
         pq.add(new primsPair(src, 0));
         while (pq.size() != 0) {
             primsPair p = pq.remove();
@@ -228,12 +230,47 @@ public class algo {
 
             vis[p.vtx] = true;
             for (Edge e : graph[p.vtx]) {
-                if (e.w < dis[e.v]) {
+                if (vis[e.v] && e.w < dis[e.v]) {
                     dis[e.v] = e.w;
                     pq.add(new primsPair(e.v, e.w));
                 }
             }
         }
+    }
+
+    public static void bellmanFordAlgo(int N, int[][] edges, int src) {
+        int[] prev = new int[N];
+
+        Arrays.fill(prev, (int) 1e9);
+
+        prev[src] = 0;
+        boolean negativeCycle = false;
+        for (int i = 1; i <= N; i++) {
+            int[] curr = new int[N];
+            for (int j = 0; j < N; j++)
+                curr[j] = prev[j];
+                
+            boolean anyUpdate = false;
+            for (int[] e : edges) {
+                int u = e[0], v = e[1], w = e[2];
+                if (prev[u] != (int) 1e9 && prev[u] + w < curr[v]) {
+                    curr[v] = prev[u] + w;
+                    anyUpdate = true;
+                    if (i == N) {
+                        negativeCycle = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!anyUpdate)
+                break;
+
+            prev = curr;
+        }
+
+        System.out.println("Negative Cycle: " + negativeCycle);
+
     }
 
 }
