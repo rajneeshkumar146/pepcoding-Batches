@@ -164,6 +164,31 @@ public class l004NqueenSet {
         return count;
     }
 
+    static int r = 0, c = 0, d = 0, ad = 0;
+
+    public static int nQueen_07(int n, int m, int floor, int tnq, String asf) {
+        if (tnq == 0) {
+            System.out.println(asf);
+            return 1;
+        }
+
+        int count = 0;
+        for (int room = 0; room < m; room++) {
+            int r = floor, c = room;
+            if ((c & (1 << c)) == 0 && (d & (1 << (r + c))) == 0 && (ad & (1 << (r - c + m - 1))) == 0) {
+                c ^= (1 << c);
+                d ^= (1 << (r + c));
+                ad ^= (1 << (r - c + m - 1));
+                count += nQueen_07(n, m, floor + 1, tnq - 1, asf + "(" + r + "," + c + ") ");
+                c ^= (1 << c);
+                d ^= (1 << (r + c));
+                ad ^= (1 << (r - c + m - 1));
+            }
+        }
+
+        return count;
+    }
+
     public static void nqueen() {
         int n = 4, tnq = 4;
         // boolean[][] box = new boolean[n][n];
