@@ -230,7 +230,7 @@ public class algo {
 
             vis[p.vtx] = true;
             for (Edge e : graph[p.vtx]) {
-                if (vis[e.v] && e.w < dis[e.v]) {
+                if (!vis[e.v] && e.w < dis[e.v]) {
                     dis[e.v] = e.w;
                     pq.add(new primsPair(e.v, e.w));
                 }
@@ -249,7 +249,7 @@ public class algo {
             int[] curr = new int[N];
             for (int j = 0; j < N; j++)
                 curr[j] = prev[j];
-                
+
             boolean anyUpdate = false;
             for (int[] e : edges) {
                 int u = e[0], v = e[1], w = e[2];
@@ -271,6 +271,54 @@ public class algo {
 
         System.out.println("Negative Cycle: " + negativeCycle);
 
+    }
+
+    public static void bellmanFordAlgo_02(int N, int[][] edges, int src) {
+        int[] curr = new int[N];
+        Arrays.fill(curr, (int) 1e9);
+
+        curr[src] = 0;
+        boolean negativeCycle = false;
+        for (int i = 1; i <= N; i++) {
+            boolean anyUpdate = false;
+            for (int[] e : edges) {
+                int u = e[0], v = e[1], w = e[2];
+                if (curr[u] != (int) 1e9 && curr[u] + w < curr[v]) {
+                    curr[v] = curr[u] + w;
+                    anyUpdate = true;
+                    if (i == N) {
+                        negativeCycle = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!anyUpdate)
+                break;
+        }
+
+        System.out.println("Negative Cycle: " + negativeCycle);
+    }
+
+    // floyd warshall algorithm
+    public static void floyadWarshall(int[][] edges, int n) {
+        int[][] mat = new int[n][n];
+        for (int[] d : mat)
+            Arrays.fill(d, (int) 1e9);
+
+        for (int[] e : edges)
+            mat[e[0]][e[1]] = e[2];
+
+        for (int i = 0; i < n; i++)
+            mat[i][i] = 0;
+
+        for (int k = 0; k < n; k++) {
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    mat[i][j] = Math.min(mat[i][j], mat[i][k] + mat[k][j]);
+                }
+            }
+        }
     }
 
 }

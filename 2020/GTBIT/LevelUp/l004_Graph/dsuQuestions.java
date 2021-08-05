@@ -297,4 +297,49 @@ public class dsuQuestions {
     }
 
     // 685. Redundant Connection II
+
+    public int minMalwareSpread(int[][] graph, int[] initial) {
+        int n = graph.length;
+        par = new int[n];
+        int[] poc = new int[n];  // populationOfCountry
+        for (int i = 0; i < n; i++) {
+            par[i] = i;
+            poc[i] = 1;
+        }
+
+        for (int i = 0; i < n; i++) {
+            int p1 = findPar(i);
+            for (int j = 0; j < n; j++) {
+                if (i != j) {
+                    if (graph[i][j] == 1) {
+                        int p2 = findPar(j);
+                        if (p1 != p2) {
+                            par[p2] = p1;
+                            poc[p1] += poc[p2];
+                        }
+                    }
+                }
+            }
+        }
+        
+        Arrays.sort(initial);
+
+        int[] ipc = new int[n]; // infected person in a country
+        for (int ip : initial) {
+            int c = findPar(ip);
+            ipc[c]++;
+        }
+
+        int maxPopulated = 0;
+        int c = initial[0];
+        for (int ip : initial) {
+            int p = findPar(ip);
+            if (ipc[p] == 1 && poc[p] > maxPopulated) {
+                maxPopulated = poc[p];
+                c = ip;
+            }
+        }
+
+        return c;
+    }
 }
