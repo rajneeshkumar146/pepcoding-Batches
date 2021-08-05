@@ -264,6 +264,46 @@ public class l001 {
         }
     }
 
+    public static void bipartite(ArrayList<Edge>[] graph, int src, int[] vis) {
+        LinkedList<Integer> que = new LinkedList<>();
+        que.addLast(src);
+
+        // No Color : -1 , Red : 0, Green : 1
+        int color = 0;
+        boolean isCycle = false, isBipartite = true;
+
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                int rvtx = que.removeFirst();
+                if (vis[rvtx] != -1) {
+                    isCycle = true;
+                    if (color != vis[rvtx]) // conflict
+                        isBipartite = false;
+                    continue;
+                }
+
+                vis[rvtx] = color;
+                for (Edge e : graph[rvtx]) {
+                    if (vis[e.v] == -1) {
+                        que.addLast(e.v);
+                    }
+                }
+            }
+
+            color = (color + 1) % 2;
+        }
+
+        if (!isCycle)
+            System.out.println("Bipartite Graph with no cycle");
+        else {
+            if (isBipartite)
+                System.out.println("Bipartite Graph with Even Length cycle");
+            else
+                System.out.println("Non Bipartite Graph with Odd Length cycle");
+        }
+    }
+
     public static void constructGraph() {
         int V = 7;
         ArrayList<Edge>[] graph = new ArrayList[V];
