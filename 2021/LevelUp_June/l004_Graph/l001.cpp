@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <list>
 
 using namespace std;
 
@@ -114,6 +115,77 @@ pair_ heavyPath(vector<vector<Edge>> &graph, int src, int dest, vector<bool> &vi
 
 void hamintonainPathAndCycle(vector<vector<Edge>> &graph, int src)
 {
+}
+
+void bfs(vector<vector<Edge>> &graph, int src, vector<bool> &vis)
+{
+    list<int> que;
+    que.push_back(src);
+
+    int level = 0;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        cout << "Level: " << level << " ->";
+
+        while (size-- > 0)
+        {
+            int vtx = que.front();
+            que.pop_front();
+
+            if (vis[vtx])
+            {
+                cout << "cycle";
+                continue;
+            }
+
+            cout << vtx << ", ";
+
+            vis[vtx] = true;
+            for (Edge e : graph[vtx])
+            {
+                if (!vis[e.v])
+                    que.push_back(e.v);
+            }
+        }
+
+        level++;
+        cout << endl;
+    }
+}
+
+void bfs_withoutCycle(vector<vector<Edge>> &graph, int src, vector<bool> &vis)
+{
+    list<int> que;
+    que.push_back(src);
+    vis[src] = true;
+
+    int level = 0;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        cout << "Level: " << level << " ->";
+
+        while (size-- > 0)
+        {
+            int vtx = que.front();
+            que.pop_front();
+
+            cout << vtx << ", ";
+
+            for (Edge e : graph[vtx])
+            {
+                if (!vis[e.v])
+                {
+                    vis[e.v] = true;
+                    que.push_back(e.v);
+                }
+            }
+        }
+
+        level++;
+        cout << endl;
+    }
 }
 
 void constructGraph()

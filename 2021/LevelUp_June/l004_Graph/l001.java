@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class l001 {
     public static class Edge {
@@ -202,6 +203,65 @@ public class l001 {
             }
         }
 
+    }
+
+    // BFS.=======================================================================
+
+    public static void bfs(ArrayList<Edge>[] graph, int src, boolean[] vis) {
+        LinkedList<Integer> que = new LinkedList<>();
+        que.add(src);
+
+        int level = 0;
+        while (que.size() != 0) {
+            int size = que.size();
+            System.out.print("Level: " + level + " ->");
+
+            while (size-- > 0) {
+                int vtx = que.removeFirst();
+                if (vis[vtx]) {
+                    System.out.println("cycle");
+                    continue;
+                }
+
+                System.out.print(vtx + ", ");
+
+                vis[vtx] = true;
+                for (Edge e : graph[vtx]) {
+                    if (!vis[e.v])
+                        que.addLast(e.v);
+                }
+            }
+
+            level++;
+            System.out.println();
+        }
+    }
+
+    public static void bfs_withouCycle(ArrayList<Edge>[] graph, int src, boolean[] vis) {
+        LinkedList<Integer> que = new LinkedList<>();
+        que.add(src);
+        vis[src] = true;
+
+        int level = 0;
+        while (que.size() != 0) {
+            int size = que.size();
+            System.out.print("Level: " + level + " ->");
+
+            while (size-- > 0) {
+                int vtx = que.removeFirst();
+                System.out.print(vtx + ", ");
+
+                for (Edge e : graph[vtx]) {
+                    if (!vis[e.v]) {
+                        vis[e.v] = true;
+                        que.addLast(e.v);
+                    }
+                }
+            }
+
+            level++;
+            System.out.println();
+        }
     }
 
     public static void constructGraph() {
