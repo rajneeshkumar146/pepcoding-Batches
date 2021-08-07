@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import org.graalvm.compiler.lir.CompositeValue.Component;
+
 import java.util.Arrays;
 
 public class l002directedGraph {
@@ -119,6 +122,61 @@ public class l002directedGraph {
 
         return ans;
     }
+
+    // SCC
+    public static void dfs_topo(int src, ArrayList<Edge>[] graph, boolean[] vis, ArrayList<Integer> ans) {
+        vis[src] = true;
+        for (Edge e : graph[src]) {
+            if (!vis[e.v])
+                dfs_topo(e.v, graph, vis, ans);
+        }
+
+        ans.add(src);
+    }
+
+    public static void dfs_SCC_Compo(int src, ArrayList<Edge>[] graph, boolean[] vis, ArrayList<Integer> components) {
+        vis[src] = true;
+        components.add(src);
+
+        for (Edge e : graph[src]) {
+            if (!vis[e.v])
+                dfs_SCC_Compo(e.v, graph, vis, components);
+        }
+    }
+
+    public static void kosaRaju(int N, ArrayList<Edge>[] graph) {
+        boolean[] vis = new boolean[N];
+        ArrayList<Integer> order = new ArrayList<>();
+        for (int i = 0; i < N; i++)
+            if (!vis[i])
+                dfs_topo(i, graph, vis, order);
+
+        ArrayList<Edge>[] ngraph = new ArrayList[N];
+        for (int i = 0; i < N; i++)
+            ngraph[i] = new ArrayList<>();
+
+        for (int i = 0; i < N; i++) {
+            ArrayList<Edge> ar = graph[i];
+            for (Edge e : ar) {
+                ngraph[e.v].add(new Edge(i, e.w));
+            }
+        }
+
+        for (int i = 0; i < N; i++)
+            vis[i] = false;
+
+        ArrayList<Integer> components = new ArrayList<>();
+        for (int i = order.size() - 1; i >= 0; i--) {
+            int vtx = order.get(i);
+            if (!vis[vtx]) {
+                dfs_SCC_Compo(vtx, ngraph, vis, components);
+                System.out.println(components);
+                components.clear();
+            }
+        }
+    }
+
+    // https://practice.geeksforgeeks.org/problems/mother-vertex/1
 
     public static void constructGraph() {
         int N = 7;
