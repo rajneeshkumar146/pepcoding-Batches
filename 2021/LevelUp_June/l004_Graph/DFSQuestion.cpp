@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 
 using namespace std;
 
@@ -152,3 +153,110 @@ void solve(vector<vector<char>> &grid)
 }
 
 //694
+
+// Journey to the Moon
+int dfs(int src, vector<vector<int>> &graph, vector<bool> &vis)
+{
+    int size = 1;
+    vis[src] = true;
+    for (int v : graph[src])
+    {
+        if (!vis[v])
+            size += dfs(v, graph, vis);
+    }
+
+    return size;
+}
+
+long journeyToMoon(int n, vector<vector<int>> edges)
+{
+    vector<vector<int>> graph(n);
+    for (vector<int> &e : edges)
+    {
+        graph[e[0]].push_back(e[1]);
+        graph[e[1]].push_back(e[0]);
+    }
+
+    vector<bool> vis(n, false);
+    long sum = 0, ans = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (!vis[i])
+        {
+            int size = dfs(i, graph, vis);
+            ans += size * sum;
+            sum += size;
+        }
+    }
+
+    return ans;
+}
+
+//207
+bool canFinish(int N, vector<vector<int>> &prerequisites)
+{
+    vector<vector<int>> graph(N);
+    vector<int> indegree(N, 0);
+
+    for (vector<int> &ar : prerequisites)
+    {
+        graph[ar[0]].push_back(ar[1]);
+        indegree[ar[1]]++;
+    }
+
+    queue<int> que;
+    for (int i = 0; i < N; i++)
+        if (indegree[i] == 0)
+            que.push(i);
+
+    int vtxCount = 0;
+    while (que.size() != 0)
+    {
+        int vtx = que.front();
+        que.pop();
+        vtxCount++;
+        for (int v : graph[vtx])
+        {
+            if (--indegree[v] == 0)
+                que.push(v);
+        }
+    }
+
+    return vtxCount == N;
+}
+
+//210
+vector<int> findOrder(int N, vector<vector<int>> &prerequisites)
+{
+    vector<vector<int>> graph(N);
+    vector<int> indegree(N, 0);
+
+    for (vector<int> &ar : prerequisites)
+    {
+        graph[ar[1]].push_back(ar[0]);
+        indegree[ar[0]]++;
+    }
+
+    queue<int> que;
+    for (int i = 0; i < N; i++)
+        if (indegree[i] == 0)
+            que.push(i);
+
+    vector<int> ans;
+    while (que.size() != 0)
+    {
+        int vtx = que.front();
+        que.pop();
+        ans.push_back(vtx);
+        for (int v : graph[vtx])
+        {
+            if (--indegree[v] == 0)
+                que.push(v);
+        }
+    }
+
+    if (ans.size() != N)
+        ans.clear();
+
+    return ans;
+}
