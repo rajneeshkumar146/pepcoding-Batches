@@ -379,11 +379,9 @@ public class bfsQuestions {
 
                 que.add(new pair(r, c, l));
                 distance[r][c] = l;
-                if (r == er && c == ec)
-                    return l;
             }
         }
 
-        return -1;
+        return distance[er][ec] != (int) 1e8 ? distance[er][ec] : -1;
     }
 }
