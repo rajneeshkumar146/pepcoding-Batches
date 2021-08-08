@@ -260,3 +260,101 @@ vector<int> findOrder(int N, vector<vector<int>> &prerequisites)
 
     return ans;
 }
+
+//210
+bool dfs_isCycle(int src, vector<int> &vis, vector<int> &ans, vector<vector<int>> &graph)
+{
+    vis[src] = 1;
+    bool isCycle = false;
+    for (int v : graph[src])
+    {
+        if (vis[v] == 0)
+        {
+            isCycle = isCycle || dfs_isCycle(v, vis, ans, graph);
+        }
+        else if (vis[v] == 1)
+            return true;
+    }
+
+    ans.push_back(src);
+    vis[src] = 2;
+    return isCycle;
+}
+
+vector<int> findOrder(int N, vector<vector<int>> &prerequisites)
+{
+    vector<vector<int>> graph(N);
+    for (vector<int> &ar : prerequisites)
+    {
+        graph[ar[0]].push_back(ar[1]);
+    }
+
+    vector<int> ans;
+    vector<int> vis(N, 0);
+
+    bool cycle = false;
+    for (int i = 0; i < N; i++)
+    {
+        if (vis[i] == 0)
+        {
+            cycle = cycle || dfs_isCycle(i, vis, ans, graph);
+        }
+    }
+
+    if (cycle)
+        ans.clear();
+
+    return ans;
+}
+
+//329
+int longestIncreasingPath(vector<vector<int>> &matrix)
+{
+    int n = matrix.size(), m = matrix[0].size();
+    vector<vector<int>> indegree(n, vector<int>(m, 0));
+
+    vector<vector<int>> dir{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    queue<int> que;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            for (vector<int> &d : dir)
+            {
+                int r = i + d[0];
+                int c = j + d[1];
+                if (r >= 0 && c >= 0 && r < n && c < m && matrix[r][c] < matrix[i][j])
+                {
+                    indegree[i][j]++;
+                }
+            }
+
+            if (indegree[i][j] == 0)
+                que.push(i * m + j);
+        }
+    }
+
+    int level = 0;
+    while (que.size() != 0)
+    {
+        int size = que.size();
+        while (size-- > 0)
+        {
+            int idx = que.front();
+            que.pop();
+            int i = idx / m, j = idx % m;
+
+            for (vector<int> &d : dir)
+            {
+                int r = i + d[0];
+                int c = j + d[1];
+                if (r >= 0 && c >= 0 && r < n && c < m && matrix[r][c] > matrix[i][j] && --indegree[r][c] == 0)
+                    que.push(r * m + c);
+            }
+        }
+        level++;
+    }
+
+    return level;
+}
