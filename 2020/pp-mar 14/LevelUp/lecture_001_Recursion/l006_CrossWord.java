@@ -43,7 +43,7 @@ public class l006_CrossWord {
     }
 
     public static boolean isPossiblePlaceV(int r, int c, String word) {
-
+            //
     }
 
     public static int placeV(int r, int c, String word) {
