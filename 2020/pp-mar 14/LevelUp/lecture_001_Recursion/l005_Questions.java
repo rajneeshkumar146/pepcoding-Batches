@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class l005_Questions {
@@ -209,26 +210,79 @@ public class l005_Questions {
         return count;
     }
 
-    public static void equalSet(int[] arr, int idx, int sum, ArrayList<ArrayList<Integer>> ans) {
+    public static void ksubsets(int[] arr, int idx, int[] subsetSum, ArrayList<ArrayList<Integer>> ans) {
+        if (idx == arr.length) {
+            int s = subsetSum[0];
+            for (int ele : subsetSum) {
+                if (s != ele) {
+                    return;
+                }
+            }
 
+            for (ArrayList<Integer> a : ans) {
+                System.out.print(a + " ");
+            }
+            System.out.println();
+
+            return;
+        }
+
+        for (int k = 0; k < subsetSum.length; k++) {
+            ArrayList<Integer> set = ans.get(k);
+            set.add(arr[idx]);
+            subsetSum[k] += arr[idx];
+
+            ksubsets(arr, idx + 1, subsetSum, ans);
+
+            subsetSum[k] -= arr[idx];
+            set.remove(set.size() - 1);
+            if (set.size() == 0)
+                break;
+        }
     }
 
-    public static void equalSet(int[] arr, int idx) {
+    public static void equalSet(int[] arr, int k) {
         ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < k; i++)
             ans.add(new ArrayList<>());
 
         int sum = 0;
         for (int ele : arr)
             sum += ele;
 
-        if ((sum & 1) != 0)
+        if (sum % k != 0)
             return;
 
-        equalSet(arr, 0, sum / 2, ans);
+        int[] sumArray = new int[k];
+        ksubsets(arr, 0, sumArray, ans);
         System.out.println(ans);
     }
 
+    static int count = 1;
+
+    public static void kPartition(int num, int TotalNum, ArrayList<ArrayList<Integer>> ans) {
+        if (num > TotalNum) {
+            if (ans.get(ans.size() - 1).size() == 0)
+                return;
+
+            System.out.print(count++ + ". ");
+            for (ArrayList<Integer> a : ans)
+                System.out.print(a + " ");
+            System.out.println();
+
+            return;
+        }
+
+        for (ArrayList<Integer> a : ans) {
+            a.add(num);
+
+            kPartition(num + 1, TotalNum, ans);
+
+            a.remove(a.size() - 1);
+            if (a.size() == 0)
+                break;
+        }
+    }
     public static void main(String[] args) {
         int[] arr = { 10, 20, 30, 40, 50, 60, 70, 80 };
         equalSet(arr, 0, 0, " ", 0, "");
