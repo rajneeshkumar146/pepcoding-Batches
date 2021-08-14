@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 using namespace std;
 
@@ -137,4 +138,34 @@ vector<int> numIslands2(int n, int m, vector<vector<int>> &positions)
         ans.push_back(count);
     }
     return ans;
+}
+
+//1168
+
+int minCostToSupplyWater(int n, vector<int> &wells, vector<vector<int>> &pipes)
+{
+    for (int i = 0; i < wells.size(); i++)
+    {
+        pipes.push_back({0, i + 1, wells[i]});
+    }
+
+    sort(pipes.begin(), pipes.end(), [](vector<int> &a, vector<int> &b)
+         { return a[2] < b[2]; });
+
+    for (int i = 0; i <= n; i++)
+        par.push_back(i);
+
+    int cost = 0;
+    for (vector<int> &e : pipes)
+    {
+        int u = e[0], v = e[1], w = e[2];
+        int p1 = findPar(u), p2 = findPar(v);
+        if (p1 != p2)
+        {
+            par[p1] = p2;
+            cost += w;
+        }
+    }
+
+    return cost;
 }
