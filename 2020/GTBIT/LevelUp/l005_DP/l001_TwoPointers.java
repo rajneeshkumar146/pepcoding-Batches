@@ -518,8 +518,52 @@ public class l001_TwoPointers {
 
     // https://www.geeksforgeeks.org/count-the-number-of-ways-to-divide-n-in-k-groups-incrementally/
 
+    public static int divideInKGroup(int n, int k, int[][] dp) {
+        if (k == 1 || n == k) {
+            return dp[n][k] = 1;
+        }
+
+        if (dp[n][k] != -1)
+            return dp[n][k];
+
+        int selfSet = divideInKGroup(n - 1, k - 1, dp);
+        int partOfAnotherSet = divideInKGroup(n - 1, k, dp) * k;
+
+        return dp[n][k] = selfSet + partOfAnotherSet;
+    }
+
+    public static int divideInKGroup_DP(int N, int K, int[][] dp) {
+        for (int n = 1; n <= N; n++) {
+            for (int k = 1; k <= K; k++) {
+                if (k > n)
+                    break;
+
+                if (k == 1 || n == k) {
+                    dp[n][k] = 1;
+                    continue;
+                }
+
+                int selfSet = dp[n - 1][k - 1];// divideInKGroup(n - 1, k - 1, dp);
+                int partOfAnotherSet = dp[n - 1][k] * k;// divideInKGroup(n - 1, k, dp) * k;
+
+                dp[n][k] = selfSet + partOfAnotherSet;
+            }
+        }
+
+        return dp[N][K];
+    }
+
+    public static void divideInKGroup() {
+        int n = 5, k = 3;
+        int[][] dp = new int[n + 1][k + 1];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+        System.out.println(divideInKGroup(n, k, dp));
+        display2D(dp);
+    }
+
     public static void main(String[] args) {
-        board_path();
+        divideInKGroup();
     }
 
 }
