@@ -167,6 +167,167 @@ public class l001 {
         return even.next;
     }
 
+    public static ListNode segregate01(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode zero = new ListNode(-1), one = new ListNode(-1), zp = zero, op = one, curr = head;
+
+        while (curr != null) {
+            if (curr.val == 0) {
+                zp.next = curr;
+                zp = zp.next;
+            } else {
+                op.next = curr;
+                op = op.next;
+            }
+
+            curr = curr.next;
+        }
+
+        zp.next = op.next = null;
+        zp.next = one.next;
+
+        return zero.next;
+    }
+
+    public static ListNode segregate012(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode zero = new ListNode(-1), one = new ListNode(-1), two = new ListNode(-1), zp = zero, op = one, tp = two,
+                curr = head;
+
+        while (curr != null) {
+            if (curr.val == 0) {
+                zp.next = curr;
+                zp = zp.next;
+            } else if (curr.val == 1) {
+                op.next = curr;
+                op = op.next;
+            } else {
+                tp.next = curr;
+                tp = tp.next;
+            }
+
+            curr = curr.next;
+        }
+
+        zp.next = op.next = tp.next = null;
+
+        op.next = two.next;
+        zp.next = one.next;
+
+        return zero.next;
+    }
+
+    public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if (l1 == null || l2 == null)
+            return l1 != null ? l1 : l2;
+
+        ListNode dummy = new ListNode(-1), p = dummy, c1 = l1, c2 = l2;
+
+        while (c1 != null && c2 != null) {
+            if (c1.val < c2.val) {
+                p.next = c1;
+                c1 = c1.next;
+            } else {
+                p.next = c2;
+                c2 = c2.next;
+            }
+
+            p = p.next;
+        }
+
+        p.next = c1 != null ? c1 : c2;
+        return dummy.next;
+    }
+
+    public static ListNode mergeSort(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode mid = midNode(head);
+        ListNode nHead = mid.next;
+        mid.next = null;
+
+        return mergeTwoLists(mergeSort(head), mergeSort(nHead));
+    }
+
+    public static ListNode mergeKLists(ListNode[] lists, int si, int ei) {
+        if (si == ei)
+            return lists[si];
+
+        int mid = (si + ei) / 2;
+        ListNode leftList = mergeKLists(lists, si, mid);
+        ListNode rightList = mergeKLists(lists, mid + 1, ei);
+
+        return mergeTwoLists(leftList, rightList);
+    }
+
+    public static ListNode mergeKLists(ListNode[] lists) {
+        if (lists.length == 0)
+            return null;
+
+        return mergeKLists(lists, 0, lists.length - 1);
+    }
+
+    private static ListNode th = null, tt = null;
+
+    private static void addFirstNode(ListNode node) {
+        if (th == null) {
+            th = tt = node;
+        } else {
+            node.next = th;
+            th = node;
+        }
+    }
+
+    public static int length(ListNode head) {
+        if (head == null)
+            return 0;
+
+        int len = 0;
+        ListNode curr = head;
+        while (curr != null) {
+            curr = curr.next;
+            len++;
+        }
+
+        return len;
+    }
+
+    public static ListNode reverseInKGroup(ListNode head, int k) {
+        if (head == null || head.next == null || k <= 1)
+            return head;
+
+        int len = length(head);
+        ListNode curr = head, oh = null, ot = null;
+        while (len >= k) {
+            int tempK = k;
+            while (tempK-- > 0) {
+                ListNode forw = curr.next;
+                curr.next = null;
+                addFirstNode(curr);
+                curr = forw;
+            }
+
+            if (oh == null) {
+                oh = th;
+                ot = tt;
+            } else {
+                ot.next = th;
+                ot = tt;
+            }
+
+            th = tt = null;
+            len -= k;
+        }
+
+        ot.next = curr;
+        return oh;
+    }
+
     public static void main(String[] args) {
 
     }
