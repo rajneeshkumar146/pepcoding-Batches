@@ -328,6 +328,57 @@ public class l001 {
         return oh;
     }
 
+    public static ListNode reverseInRange(ListNode head, int n, int m) {
+        if (head == null || head.next == null || n == m)
+            return head;
+
+        ListNode dummy = new ListNode(-1), prev = dummy, curr = head;
+        prev.next = head;
+        int i = 1;
+        while (i <= m) {
+            while (i >= n && i <= m) {
+                ListNode forw = curr.next;
+                curr.next = null;
+                addFirstNode(curr);
+                curr = forw;
+                i++;
+            }
+
+            if (i > m) {
+                prev.next = th;
+                tt.next = curr;
+                break;
+            }
+
+            i++;
+            prev = curr;
+            curr = curr.next;
+        }
+
+        return dummy.next;
+    }
+
+    public static ListNode removeDuplicates(ListNode head) {
+        if (head == null || head.next == null)
+            return head;
+
+        ListNode curr = head.next, prev = head;
+        while (curr != null) {
+            while (curr != null && curr.val == prev.val) {
+                ListNode forw = curr.next;
+                curr.next = null;
+                curr = forw;
+            }
+
+            prev.next = curr;
+            prev = prev.next;
+            if (curr != null)
+                curr = curr.next;
+        }
+
+        return head;
+    }
+
     public static void main(String[] args) {
 
     }
