@@ -5,6 +5,7 @@ public class l001 {
     public static class ListNode {
         int val = 0;
         ListNode next = null;
+        ListNode random = null;
 
         ListNode(int val) {
             this.val = val;
@@ -377,6 +378,208 @@ public class l001 {
         }
 
         return head;
+    }
+
+    public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if (l1 == null || l2 == null)
+            return l1 != null ? l1 : l2;
+
+        ListNode dummy = new ListNode(-1), prev = dummy, c1 = reverse(l1), c2 = reverse(l2);
+        int carry = 0;
+        while (c1 != null || c2 != null || carry != 0) {
+            int sum = carry + (c1 != null ? c1.val : 0) + (c2 != null ? c2.val : 0);
+            int digit = sum % 10;
+            carry = sum / 10;
+
+            prev.next = new ListNode(digit);
+            prev = prev.next;
+
+            if (c1 != null)
+                c1 = c1.next;
+            if (c2 != null)
+                c2 = c2.next;
+        }
+
+        return reverse(dummy.next);
+    }
+
+    public static int getLength(ListNode head) {
+        if (head == null)
+            return 0;
+        int len = 0;
+        ListNode curr = head;
+        while (curr != null) {
+            curr = curr.next;
+            len++;
+        }
+
+        return len;
+    }
+
+    public static boolean isBiggerList(ListNode l1, ListNode l2) {
+        int len1 = getLength(l1), len2 = getLength(l2);
+        if (len1 > len2)
+            return true;
+        else if (len1 < len2)
+            return false;
+
+        ListNode c1 = l1, c2 = l2;
+        while (c1 != null) {
+            if (c1.val > c2.val)
+                return true;
+            else if (c1.val < c2.val)
+                return false;
+
+            c1 = c1.next;
+            c2 = c2.next;
+        }
+
+        return true;
+    }
+
+    public static ListNode subtractTwoNumbers(ListNode l1, ListNode l2) {
+        ListNode c1 = null, c2 = null;
+        if (isBiggerList(l1, l2)) {
+            c1 = reverse(l1);
+            c2 = reverse(l2);
+        } else {
+            c1 = reverse(l2);
+            c2 = reverse(l1);
+        }
+
+        ListNode dummy = new ListNode(-1), prev = dummy;
+        int borrow = 0;
+        while (c1 != null || c2 != null) {
+            int diff = borrow + (c1 != null ? c1.val : 0) - (c2 != null ? c2.val : 0);
+            if (diff < 0) {
+                borrow = -1;
+                diff += 10;
+            } else {
+                borrow = 0;
+            }
+
+            prev.next = new ListNode(diff);
+            prev = prev.next;
+
+            if (c1 != null)
+                c1 = c1.next;
+            if (c2 != null)
+                c2 = c2.next;
+        }
+
+        ListNode ans = reverse(dummy.next);
+        prev = dummy;
+        prev.next = null;
+        ListNode c = ans;
+        while (c != null) {
+            if (c.val != 0) {
+                prev.next = c;
+                break;
+            }
+
+            ListNode forw = c.next;
+            c.next = null;
+            c = forw;
+        }
+
+        return dummy.next != null ? dummy.next : new ListNode(0);
+    }
+
+    public static void addList(ListNode prev, ListNode list) {
+        int carry = 0;
+        while (list != null || carry != 0) {
+            int sum = carry + (list != null ? list.val : 0) + (prev.next != null ? prev.next.val : 0);
+            int digit = sum % 10;
+            carry = sum / 10;
+
+            if (prev.next != null)
+                prev.next.val = digit;
+            else
+                prev.next = new ListNode(digit);
+
+            prev = prev.next;
+            if (list != null)
+                list = list.next;
+        }
+    }
+
+    public static ListNode multiplyDigit(ListNode list, int d) {
+        ListNode dummy = new ListNode(-1), curr = list, prev = dummy;
+
+        int carry = 0;
+        while (curr != null || carry != 0) {
+            int ans = carry + (curr != null ? curr.val : 0) * d;
+            int digit = ans % 10;
+            carry = ans / 10;
+
+            prev.next = new ListNode(digit);
+            prev = prev.next;
+
+            if (curr != null)
+                curr = curr.next;
+        }
+
+        return dummy.next;
+    }
+
+    public static ListNode multiplyTwoLL(ListNode l1, ListNode l2) {
+        l1 = reverse(l1);
+        l2 = reverse(l2);
+
+        ListNode ans = new ListNode(-1), prev = ans;
+        while (l2 != null) {
+            ListNode multipliedList = multiplyDigit(l1, l2.val);
+            addList(prev, multipliedList);
+            prev = prev.next;
+            l2 = l2.next;
+        }
+
+        return reverse(ans.next);
+    }
+
+    public static void copyList(ListNode head) {
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode forw = curr.next;
+            ListNode node = new ListNode(curr.val);
+
+            curr.next = node;
+            node.next = forw;
+
+            curr = forw;
+        }
+    }
+
+    public static void copyRandoms(ListNode head) {
+        ListNode curr = head;
+        while (curr != null) {
+            if (curr.random != null) {
+                curr.next.random = curr.random.next;
+            }
+
+            curr = curr.next.next;
+        }
+    }
+
+    public static ListNode extractList(ListNode head) {
+        ListNode curr = head, dummy = new ListNode(-1), prev = dummy;
+        while (curr != null) {
+            ListNode forw = curr.next.next; // backup
+
+            prev.next = curr.next; // links
+            curr.next = forw;
+
+            curr = forw; // move
+            prev = prev.next;
+        }
+
+        return dummy.next;
+    }
+
+    public static ListNode copyRandomList(ListNode head) {
+        copyList(head);
+        copyRandoms(head);
+        return extractList(head);
     }
 
     public static void main(String[] args) {
