@@ -132,4 +132,147 @@ public class DSUQuestions {
         return totalCost > K ? -1 : conversions;
     }
 
+    // 1584
+    private int distance(int[][] points, int i, int j) {
+        return Math.abs(points[i][0] - points[j][0]) + Math.abs(points[i][1] - points[j][1]);
+    }
+
+    public int minCostConnectPoints(int[][] points) {
+
+        int n = points.length;
+        ArrayList<int[]> list = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                list.add(new int[] { distance(points, i, j), i, j });
+            }
+        }
+
+        Collections.sort(list, (a, b) -> {
+            return a[0] - b[0];
+        });
+
+        par = new int[n];
+        for (int i = 0; i < n; i++)
+            par[i] = i;
+
+        int cost = 0, NoOfEdges = 0;
+        for (int[] e : list) {
+            int u = e[1], v = e[2], w = e[0];
+            int p1 = findPar(u), p2 = findPar(v);
+
+            if (p1 != p2) {
+                par[p1] = p2;
+                cost += w;
+                NoOfEdges++;
+            }
+        }
+
+        return cost;
+    }
+
+    // 924
+    int[] population;
+
+    public int minMalwareSpread(int[][] graph, int[] initial) {
+        int n = graph.length;
+        par = new int[n];
+        population = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            par[i] = i;
+            population[i] = 1;
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (graph[i][j] == 0 || i == j)
+                    continue;
+
+                int p1 = findPar(i), p2 = findPar(j);
+                if (p1 != p2) {
+                    par[p1] = p2;
+                    population[p2] += population[p1];
+                }
+            }
+        }
+
+        int[] infectedCount = new int[n];
+        for (int ele : initial) {
+            int p = findPar(ele);
+            infectedCount[p]++;
+        }
+
+        Arrays.sort(initial);
+
+        int ans = initial[0];
+        int maxPopulation = 0;
+        for (int ele : initial) {
+            int p = findPar(ele);
+            if (infectedCount[p] == 1 && population[p] > maxPopulation) {
+                maxPopulation = population[p];
+                ans = ele;
+            }
+        }
+
+        return ans;
+    }
+
+    public int union_slashes(int p1, int p2) {
+        if (p1 != p2) {
+            par[p1] = Math.min(p1, p2);
+            par[p2] = Math.min(p1, p2);
+            return 0;
+        }
+        return 1;
+    }
+
+    public int regionsBySlashes(String[] grid) {
+        int n = grid.length;
+        int N = n + 1;
+        par = new int[N * N];
+        for (int i = 0; i < N * N; i++)
+            if (i / N == 0 || i % N == 0 || i / N == N - 1 || i % N == N - 1)
+                par[i] = 0;
+            else
+                par[i] = i;
+
+        int regions = 1;
+        for (int r = 0; r < n; r++) {
+            String s = grid[r];
+            for (int c = 0; c < s.length(); c++) {
+                if (s.charAt(c) == '/')
+                    regions += union_slashes(findPar(r * N + c + 1), findPar((r + 1) * N + c));
+                else if (s.charAt(c) == '\\')
+                    regions += union_slashes(findPar(r * N + c), findPar((r + 1) * N + c + 1));
+            }
+        }
+
+        return regions;
+    }
+
+    public boolean equationsPossible(String[] equations) {
+        par = new int[26];
+        for (int i = 0; i < 26; i++)
+            par[i] = i;
+
+        for (String s : equations) {
+            if (s.charAt(1) == '=') {
+                int p1 = findPar(s.charAt(0) - 'a');
+                int p2 = findPar(s.charAt(3) - 'a');
+                if (p1 != p2)
+                    par[p1] = p2;
+            }
+        }
+
+        for (String s : equations) {
+            if (s.charAt(1) == '!') {
+                int p1 = findPar(s.charAt(0) - 'a');
+                int p2 = findPar(s.charAt(3) - 'a');
+                if (p1 == p2)
+                    return false;
+            }
+        }
+
+        return true;
+    }
 }
