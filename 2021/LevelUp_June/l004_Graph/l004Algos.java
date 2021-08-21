@@ -127,6 +127,7 @@ public class l004Algos {
         pq.add(new pair(src, 0));
         par[src] = -1;
         dis[src] = 0;
+
         while (pq.size() != 0) {
             pair p = pq.remove();
             if (vis[p.src]) // if (p.wsf >= dis[p.src])
@@ -143,6 +144,35 @@ public class l004Algos {
                     pq.add(new pair(e.v, p.wsf + e.w));
                 }
             }
+        }
+    }
+
+    // {{src,dest,weight}}
+    public static void bellmanFord(int[][] edges, int N, int src) {
+        int[] prev = new int[N];
+        Arrays.fill(prev, (int) 1e9);
+        prev[src] = 0;
+
+        boolean isNegativeCycle = false;
+        for (int edgeCount = 1; edgeCount <= N; edgeCount++) {
+            int[] curr = new int[N];
+            for (int i = 0; i < N; i++)
+                curr[i] = prev[i];
+
+            boolean isAnyUpdate = false;
+            for (int[] e : edges) {
+                int u = e[0], v = e[1], w = e[2];
+                if (prev[u] + w < curr[v]) {
+                    curr[v] = prev[u] + w;
+                    isAnyUpdate = true;
+                }
+            }
+
+            if (edgeCount == N && isAnyUpdate)
+                isNegativeCycle = true;
+
+            if (!isAnyUpdate)
+                break;
         }
     }
 
