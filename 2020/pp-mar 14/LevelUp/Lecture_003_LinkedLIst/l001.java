@@ -582,6 +582,68 @@ public class l001 {
         return extractList(head);
     }
 
+    // 141 Cycle
+    public boolean hasCycle(ListNode head) {
+        if (head == null || head.next == null)
+            return false;
+
+        ListNode slow = head, fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+
+            if (slow == fast)
+                return true;
+        }
+
+        return false;
+    }
+
+    // 142
+    public ListNode detectCycle(ListNode head) {
+        if (head == null || head.next == null)
+            return null;
+
+        ListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+            if (fast == slow)
+                break;
+        }
+
+        if (slow != fast)
+            return null;
+
+        slow = head;
+        while (slow != fast) {
+            slow = slow.next;
+            fast = fast.next;
+        }
+
+        return slow;
+    }
+
+    // 160
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        if (headA == null || headB == null)
+            return null;
+
+        ListNode tail = headA;
+        while (tail.next != null) {
+            tail = tail.next;
+        }
+
+        tail.next = headB;
+
+        ListNode ans = detectCycle(headA);
+
+        tail.next = null;
+
+        return ans;
+    }
+
     public static void main(String[] args) {
 
     }
