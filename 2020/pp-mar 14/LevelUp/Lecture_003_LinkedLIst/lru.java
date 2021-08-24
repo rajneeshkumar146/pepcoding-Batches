@@ -24,16 +24,43 @@ public class lru {
             this.maxSize = capacity;
         }
 
-        public void addLast(Node node){
+        public void addLast(Node node) {
+            if (head == null)
+                head = tail = node;
+            else {
+                tail.next = node;
+                node.prev = this.tail;
+                this.tail = node;
+            }
 
+            this.size++;
         }
 
-        public void remove(Node node){
+        public void remove(Node node) {
+            Node forw = node.next, prev = node.prev;
+            if (this.size == 1) {
+                this.head = this.tail = null;
+            } else if (node == this.tail) {
+                prev.next = this.tail.prev = null;
+                this.tail = prev;
+            } else if (node == this.head) {
+                this.head.next = forw.prev = null;
+                this.head = forw;
+            } else {
+                prev.next = forw;
+                forw.prev = prev;
 
+                node.prev = node.next = null;
+            }
+
+            this.size--;
         }
 
         public void makeRecent(Node node) {
+            if(node == this.tail) return;
 
+            remove(node);
+            addLast(node);
         }
 
         public int get(int appName) {
@@ -53,9 +80,12 @@ public class lru {
             } else {
                 Node node = new Node(appName, state);
                 if (this.size == this.maxSize) {
+                    map.remove(this.head.key);
                     remove(this.head);
                 }
+
                 addLast(node);
+                map.put(appName, node);
             }
 
         }
