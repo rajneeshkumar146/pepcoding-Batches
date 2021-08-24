@@ -41,10 +41,10 @@ public class lru {
             if (this.size == 1) {
                 this.head = this.tail = null;
             } else if (node == this.tail) {
-                prev.next = this.tail.prev = null;
+                prev.next = node.prev = null;
                 this.tail = prev;
             } else if (node == this.head) {
-                this.head.next = forw.prev = null;
+                node.next = forw.prev = null;
                 this.head = forw;
             } else {
                 prev.next = forw;
