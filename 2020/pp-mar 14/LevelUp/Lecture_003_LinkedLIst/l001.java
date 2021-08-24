@@ -782,6 +782,28 @@ public class l001 {
         return new ListNode[] { smaller.next, pivotNode, larger.next };
     }
 
+    public static ListNode[] mergeLists(ListNode[] left, ListNode pivotNode, ListNode[] right) {
+        ListNode fh = null, ft = null;
+        if (left[0] != null && right[0] != null) {
+            fh = left[0];
+            left[1].next = pivotNode;
+            pivotNode.next = right[0];
+            ft = right[1];
+        } else if (left[0] == null && right[0] == null) {
+            fh = ft = pivotNode;
+        } else if (left[0] == null) {
+            fh = pivotNode;
+            pivotNode.next = right[0];
+            ft = right[1];
+        } else {
+            fh = left[0];
+            left[1].next = pivotNode;
+            ft = pivotNode;
+        }
+
+        return new ListNode[] { fh, ft };
+    }
+
     // {head,tail}
     public static ListNode[] quickSort(ListNode head) {
         if (head == null || head.next == null)
