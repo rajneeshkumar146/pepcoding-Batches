@@ -303,6 +303,192 @@ public class l002_StringSet {
         return ans;
     }
 
+    // https://practice.geeksforgeeks.org/problems/count-subsequences-of-type-ai-bj-ck4425/1
+    public int fun(String s) {
+        int emptyCount = 1;
+        long aCount = 0, bCount = 0, cCount = 0;
+        int mod = (int) 1e9 + 7;
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+
+            if (ch == 'a')
+                aCount = aCount + (aCount + emptyCount) % mod;
+            else if (ch == 'b')
+                bCount = bCount + (bCount + aCount) % mod;
+            else if (ch == 'c')
+                cCount = cCount + (cCount + bCount) % mod;
+        }
+
+        return (int) (cCount % mod);
+    }
+
+    // Count all palindrmicSubsequence
+    long countPS(String str, int i, int j, long[][] dp) {
+        if (i >= j) {
+            return dp[i][j] = (i == j ? 1 : 0);
+        }
+
+        if (dp[i][j] != -1)
+            return dp[i][j];
+
+        long common = countPS(str, i + 1, j - 1, dp);
+        long excludingFirst = countPS(str, i + 1, j, dp);
+        long excludingLast = countPS(str, i, j - 1, dp);
+
+        int mod = (int) 1e9 + 7;
+
+        if (str.charAt(i) == str.charAt(j))
+            dp[i][j] = (excludingFirst + excludingLast + 1) % mod;
+        else
+            dp[i][j] = (excludingFirst + excludingLast - common + mod) % mod;
+
+        return dp[i][j];
+    }
+
+    long countPS(String str) {
+        int n = str.length();
+        long[][] dp = new long[n][n];
+        for (long[] d : dp)
+            Arrays.fill(d, -1);
+
+        return countPS(str, 0, n - 1, dp);
+    }
+
+    // 44
+    public String removeStars(String str) {
+        if (str.length() == 0)
+            return "";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(str.charAt(0));
+
+        int i = 1;
+        while (i < str.length()) {
+            while (i < str.length() && sb.charAt(sb.length() - 1) == '*' && str.charAt(i) == '*')
+                i++;
+
+            if (i < str.length())
+                sb.append(str.charAt(i));
+            i++;
+        }
+
+        return sb.toString();
+    }
+
+    public int isMatch(String s, String p, int n, int m, int[][] dp) {
+        if (n == 0 || m == 0) {
+            if (n == 0 && m == 0)
+                return dp[n][m] = 1;
+            else if (m == 1 && p.charAt(m - 1) == '*')
+                return dp[n][m] = 1;
+            else
+                return dp[n][m] = 0;
+        }
+
+        if (dp[n][m] != -1)
+            return dp[n][m];
+
+        char ch1 = s.charAt(n - 1);
+        char ch2 = p.charAt(m - 1);
+
+        if (ch1 == ch2 || ch2 == '?')
+            return dp[n][m] = isMatch(s, p, n - 1, m - 1, dp);
+        else if (ch2 == '*') {
+            boolean res = false;
+            res = res || isMatch(s, p, n - 1, m, dp) == 1; // star matched with current character
+            res = res || isMatch(s, p, n, m - 1, dp) == 1; // star matched with empty string
+
+            return dp[n][m] = res ? 1 : 0;
+        } else
+            return dp[n][m] = 0;
+    }
+
+    public boolean isMatch(String s, String p) {
+        p = removeStars(p);
+        int n = s.length(), m = p.length();
+
+        int[][] dp = new int[n + 1][m + 1];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        return isMatch(s, p, n, m, dp) == 1;
+    }
+
+    // 132
+    public int minCut_memo(String s, int si, boolean[][] isPlaindromeDp, int[] dp) {
+        if (isPlaindromeDp[si][s.length() - 1])
+            return dp[si] = 0;
+
+        if (dp[si] != -1)
+            return dp[si];
+
+        int minAns = (int) 1e8;
+        for (int cut = si; cut < s.length(); cut++) {
+            if (isPlaindromeDp[si][cut])
+                minAns = Math.min(minAns, minCut_memo(s, cut + 1, isPlaindromeDp, dp) + 1);
+        }
+
+        return dp[si] = minAns;
+
+    }
+
+    public int minCut(String s) {
+        int n = s.length();
+        boolean[][] isPlaindromeDp = new boolean[n][n];
+        for (int gap = 0; gap < n; gap++) {
+            for (int i = 0, j = gap; j < n; i++, j++) {
+                if (gap == 0)
+                    isPlaindromeDp[i][j] = true;
+                else if (gap == 1 && s.charAt(i) == s.charAt(j))
+                    isPlaindromeDp[i][j] = true;
+                else
+                    isPlaindromeDp[i][j] = s.charAt(i) == s.charAt(j) && isPlaindromeDp[i + 1][j - 1];
+            }
+        }
+
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, -1);
+        return minCut_memo(s, 0, isPlaindromeDp, dp);
+    }
+
+    // 10
+    public int isMatch(String s, String p, int n, int m, int[][] dp) {
+        if (n == 0 && m == 0)
+            return dp[n][m] = 1;
+        if (m == 0)
+            return dp[n][m] = 0;
+
+        if (dp[n][m] != -1)
+            return dp[n][m];
+
+        char ch1 = n > 0 ? s.charAt(n - 1) : '$';
+        char ch2 = p.charAt(m - 1);
+
+        if (ch1 != '$' && (ch1 == ch2 || ch2 == '.'))
+            return dp[n][m] = isMatch(s, p, n - 1, m - 1, dp);
+        else if (ch2 == '*') {
+            boolean res = false;
+            if (m > 1 && n > 0 && (p.charAt(m - 2) == '.' || p.charAt(m - 2) == s.charAt(n - 1)))
+                res = res || isMatch(s, p, n - 1, m, dp) == 1;
+            res = res || isMatch(s, p, n, m - 2, dp) == 1;
+
+            return dp[n][m] = res ? 1 : 0;
+        } else
+            return dp[n][m] = 0;
+
+    }
+
+    public boolean isMatch(String s, String p) {
+        p = removeStars(p);
+        int n = s.length(), m = p.length();
+
+        int[][] dp = new int[n + 1][m + 1];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        return isMatch(s, p, n, m, dp) == 1;
+    }
+
     public static void main(String[] args) {
         longestCommonSubsequence("abcde", "ace");
     }
