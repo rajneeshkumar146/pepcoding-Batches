@@ -324,14 +324,14 @@ public class BFSQuestions {
                     steps++;
                 }
 
-                if (!(r == er && c == ec)) {
+                if (!(r == er && c == ec)) {   // why it is necc. ???
                     r -= d[0];
                     c -= d[1];
                     steps--;
                 }
 
                 pair np = new pair(r, c, steps, p.psf + dirS[i]);
-                if (steps > dis[r][c].steps || dis[r][c].compareTo(np) <= 0)
+                if (steps > dis[r][c].steps || dis[r][c].compareTo(np) <= 0)   // why this kind of check
                     continue;
 
                 que.add(np);
