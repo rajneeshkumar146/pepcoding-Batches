@@ -331,7 +331,7 @@ public class BFSQuestions {
                 }
 
                 pair np = new pair(r, c, steps, p.psf + dirS[i]);
-                if (steps > dis[r][c].steps || dis[r][c].compareTo(np) <= 0)   // why this kind of check
+                if (steps > dis[r][c].steps || dis[r][c].compareTo(np) <= 0)   // why this kind of check ???
                     continue;
 
                 que.add(np);
