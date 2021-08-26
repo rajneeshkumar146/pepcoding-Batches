@@ -318,7 +318,7 @@ public class BFSQuestions {
                 int[] d = dir[i];
 
                 int r = p.r, c = p.c, steps = p.steps;
-                while (r >= 0 && c >= 0 && r < n && c < m && maze[r][c] == 0 && !(r == er && c == ec)) {
+                while (r >= 0 && c >= 0 && r < n && c < m && maze[r][c] == 0 && !(r == er && c == ec)) {   // !(r == er && c == ec) == (r != er || c != ec)
                     r += d[0];
                     c += d[1];
                     steps++;
