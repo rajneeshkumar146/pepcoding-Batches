@@ -226,7 +226,7 @@ public class BFSQuestions {
     public static class pair implements Comparable<pair> {
         int r = 0, c = 0, steps = 0;
 
-        pair(int r, int c, int dis) {
+        pair(int r, int c, int steps) {
             this.r = r;
             this.c = c;
             this.steps = steps;
