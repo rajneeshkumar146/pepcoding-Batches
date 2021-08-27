@@ -358,3 +358,46 @@ int longestIncreasingPath(vector<vector<int>> &matrix)
 
     return level;
 }
+
+void dfs_motherVtx(int src, vector<int> graph[], vector<bool> &vis)
+{
+    vis[src] = true;
+    for (int v : graph[src])
+    {
+        if (!vis[v])
+            dfs_motherVtx(v, graph, vis);
+    }
+}
+
+int dfs_motherVtx_02(int src, vector<int> graph[], vector<bool> &vis)
+{
+
+    vis[src] = true;
+    int size = 1;
+    for (int v : graph[src])
+    {
+        if (!vis[v])
+            size += dfs_motherVtx_02(v, graph, vis);
+    }
+
+    return size;
+}
+
+int findMotherVertex(int V, vector<int> graph[])
+{
+    vector<bool> vis(V, false);
+    int lastVtx = -1;
+    for (int i = 0; i < V; i++)
+    {
+        if (!vis[i])
+        {
+            dfs_motherVtx(i, graph, vis);
+            lastVtx = i;
+        }
+    }
+
+    vis.clear();
+    vis.resize(V, false);
+    int count = dfs_motherVtx_02(lastVtx, graph, vis);
+    return count == V ? lastVtx : -1;
+}

@@ -147,6 +147,8 @@ void kosaRajuAlgo(int n, vector<vector<Edge>> &graph)
     }
 }
 
+
+
 void constructGraph()
 {
     int V = 9;
