@@ -318,20 +318,23 @@ public class BFSQuestions {
                 int[] d = dir[i];
 
                 int r = p.r, c = p.c, steps = p.steps;
-                while (r >= 0 && c >= 0 && r < n && c < m && maze[r][c] == 0 && !(r == er && c == ec)) {   // !(r == er && c == ec) == (r != er || c != ec)
+                while (r >= 0 && c >= 0 && r < n && c < m && maze[r][c] == 0 && !(r == er && c == ec)) { // !(r == er &&
+                                                                                                         // c == ec) ==
+                                                                                                         // (r != er ||
+                                                                                                         // c != ec)
                     r += d[0];
                     c += d[1];
                     steps++;
                 }
 
-                if (!(r == er && c == ec)) {   // why it is necc. ???
+                if (!(r == er && c == ec)) { // why it is necc. ???
                     r -= d[0];
                     c -= d[1];
                     steps--;
                 }
 
                 pair np = new pair(r, c, steps, p.psf + dirS[i]);
-                if (steps > dis[r][c].steps || dis[r][c].compareTo(np) <= 0)   // why this kind of check ???
+                if (steps > dis[r][c].steps || dis[r][c].compareTo(np) <= 0) // why this kind of check ???
                     continue;
 
                 que.add(np);
@@ -342,4 +345,5 @@ public class BFSQuestions {
         pair ans = dis[er][ec];
         return ans.steps != (int) 1e8 ? ans.psf : "impossible";
     }
+
 }

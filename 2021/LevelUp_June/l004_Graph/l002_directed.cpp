@@ -83,6 +83,70 @@ void kahnsAlgo_01(int n, vector<vector<Edge>> &graph)
     }
 }
 
+void dfs_01(int src, vector<vector<Edge>> &graph, vector<bool> &vis, vector<int> &st)
+{
+    vis[src] = true;
+    for (Edge &e : graph[src])
+    {
+        if (!vis[e.v])
+        {
+            dfs_01(e.v, graph, vis, st);
+        }
+    }
+
+    st.push_back(src);
+}
+
+void dfs_02(int src, vector<vector<Edge>> &graph, vector<bool> &vis)
+{
+    vis[src] = true;
+    cout << src << endl;
+    for (Edge &e : graph[src])
+    {
+        if (!vis[e.v])
+        {
+            dfs_02(e.v, graph, vis);
+        }
+    }
+}
+
+void kosaRajuAlgo(int n, vector<vector<Edge>> &graph)
+{
+    vector<bool> vis(n, false);
+    vector<int> st;
+    for (int i = 0; i < n; i++)
+    {
+        if (!vis[i])
+        {
+            dfs_01(i, graph, vis, st);
+        }
+    }
+
+    //inverse of graph
+    vector<vector<Edge>> ngraph(n, vector<Edge>());
+    for (int i = 0; i < n; i++)
+    {
+        for (Edge &e : graph[i])
+        {
+            Edge ne(i, e.w);
+            ngraph[e.v].push_back(ne);
+        }
+    }
+
+    vis.clear();
+    vis.resize(n, false);
+
+    int count = 0;
+    for (int i = st.size() - 1; i >= 0; i--)
+    {
+        if (!vis[st[i]])
+        {
+            dfs_02(st[i], graph, vis);
+            count++;
+        }
+    }
+}
+
 void constructGraph()
 {
     int V = 9;
