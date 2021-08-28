@@ -69,7 +69,8 @@ public class l004_targetSet {
     }
 
     public static int combination_tabu(int[] arr, int Tar) {
-        int[] dp = new int[arr.length];
+        int[] dp = new int[Tar + 1];
+        dp[0] = 1;
         for (int ele : arr) {
             for (int tar = 0; tar <= Tar; tar++) {
                 if (tar - ele >= 0) {
@@ -78,6 +79,7 @@ public class l004_targetSet {
             }
         }
 
+        display(dp);
         return dp[Tar];
     }
 
@@ -94,8 +96,8 @@ public class l004_targetSet {
         for (int[] d : dp)
             Arrays.fill(d, -1);
 
-        System.out.println(combination_memo(arr, tar, n, dp));
-        display2D(dp);
+        System.out.println(combination_tabu(arr, tar));
+        // display2D(dp);
     }
 
     public static void main(String[] args) {
