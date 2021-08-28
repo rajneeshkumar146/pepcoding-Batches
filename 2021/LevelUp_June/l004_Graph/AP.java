@@ -40,7 +40,7 @@ public class AP {
                     APoints[src] = true;
                 }
                 //Articulation Bridges
-                if (disc[src] ??? low[e.v]) {
+                if (disc[src] < low[e.v]) {
                     System.out.println("Articulation Edge : (" + src + "," + e.v + ") ");
                 }
 
