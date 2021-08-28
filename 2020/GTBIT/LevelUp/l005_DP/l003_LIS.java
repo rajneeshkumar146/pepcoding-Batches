@@ -22,7 +22,7 @@ public class l003_LIS {
         return dp;
     }
 
-    // LIS -> Right to Left  === LDS
+    // LIS -> Right to Left === LDS
     public int[] LIS_RL(int[] nums) {
         int n = nums.length;
         int[] dp = new int[n];
@@ -56,7 +56,7 @@ public class l003_LIS {
 
     // ===========================================================================
 
-    // LDS -> left to Right  
+    // LDS -> left to Right
     public int[] LDS_LR(int[] nums) {
         int n = nums.length;
         int[] dp = new int[n];
@@ -163,6 +163,62 @@ public class l003_LIS {
         }
 
         return n - maxLen;
+    }
+
+    public static int LIS_Rec(int[] arr, int ei, int[] dp) {
+        if (dp[ei] != 0)
+            return dp[ei];
+
+        int maxLen = 1;
+        for (int i = ei - 1; i >= 0; i--) {
+            if (arr[i] < arr[ei]) {
+                maxLen = Math.max(maxLen, LIS_Rec(arr, i, dp) + 1);
+            }
+        }
+
+        return dp[ei] = maxLen;
+    }
+
+    public static int LIS_Rec(int[] arr) {
+        int maxLen = 1, n = arr.length;
+        int[] dp = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            maxLen = Math.max(maxLen, LIS_Rec(arr, i, dp));
+        }
+
+        return maxLen;
+    }
+
+    public int findNumberOfLIS(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n];
+        int[] count = new int[n];
+
+        int maxLen = 0, maxCount = 0;
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            count[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (nums[i] > nums[j]) {
+                    if (dp[j] + 1 > dp[i]) {
+                        dp[i] = dp[j] + 1;
+                        count[i] = count[j];
+                    } else if (dp[j] + 1 == dp[i]) {
+                        count[i] += count[j];
+                    }
+                }
+
+            }
+
+            if (maxLen < dp[i]) {
+                maxLen = dp[i];
+                maxCount = count[i];
+            } else if (maxLen == dp[i])
+                maxCount += count[i];
+        }
+
+        return maxCount;
     }
 
     public static void main(String[] args) {
