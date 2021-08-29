@@ -142,6 +142,93 @@ public class l001_twoPointerSet {
         display2D(dp);
     }
 
+    // Leetcode 62, 63
+    public int mazePath_tabuObstacle(int SR, int SC, int ER, int EC, int[][] dp, int[][] dir, int[][] obstacleGrid) {
+        for (int sr = ER; sr >= SR; sr--) {
+            for (int sc = EC; sc >= SC; sc--) {
+                if (ER == sr && EC == sc) {
+                    dp[sr][sc] = 1;
+                    continue;
+                }
+
+                int count = 0;
+                for (int[] d : dir) {
+                    int r = sr + d[0], c = sc + d[1];
+                    if (r >= 0 && c >= 0 && r < dp.length && c < dp[0].length && obstacleGrid[r][c] == 0) {
+                        count += dp[r][c];// mazePath_memo(r, c, er, ec, dp, dir);
+                    }
+                }
+
+                dp[sr][sc] = count;
+            }
+        }
+
+        return dp[SR][SC];
+    }
+
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int n = obstacleGrid.length, m = obstacleGrid[0].length;
+        if (obstacleGrid[0][0] == 1 || obstacleGrid[n - 1][m - 1] == 1)
+            return 0;
+        int[][] dp = new int[n][m];
+        int[][] dir = { { 1, 0 }, { 0, 1 } };
+        return mazePath_tabuObstacle(0, 0, n - 1, m - 1, dp, dir, obstacleGrid);
+    }
+
+    // Leetcode 70
+    // 746
+    public int minCostClimbingStairs(int[] cost) {
+        int N = cost.length;
+        int[] dp = new int[N];
+        for (int n = 0; n < N; n++) {
+            if (n <= 1) {
+                dp[n] = cost[n];
+                continue;
+            }
+
+            int ans = Math.min(dp[n - 1], dp[n - 2]) + cost[n];
+            dp[n] = ans;
+        }
+
+        return Math.min(dp[N - 2], dp[N - 1]);
+    }
+
+    // Board Path.========================================================
+
+    public static int boardPath_memo(int sp, int ep, int[] dp) {
+        if (sp == ep) {
+            return dp[sp] = 1;
+        }
+
+        if (dp[sp] != 0)
+            return dp[sp];
+
+        int count = 0;
+        for (int dice = 1; dice <= 6 && sp + dice <= ep; dioce++) {
+            count += boardPath_memo(sp + dice, ep, dp);
+        }
+
+        return dp[sp] = count;
+    }
+
+    public static int boardPath_tabu(int SP, int ep, int[] dp) {
+        for (int sp = ep; sp >= 0; sp--) {
+            if (sp == ep) {
+                dp[sp] = 1;
+                continue;
+            }
+
+            int count = 0;
+            for (int dice = 1; dice <= 6 && sp + dice <= ep; dioce++) {
+                count += dp[sp + dice];// boardPath_memo(sp + dice, ep, dp);
+            }
+
+            dp[sp] = count;
+        }
+
+        return dp[sp];
+    }
+
     public static void main(String[] args) {
         // fibo();
         mazePath();
