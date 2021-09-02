@@ -264,6 +264,38 @@ public class l004_targetSet {
     }
 
     // 494
+    public int findTargetSumWays(int[] nums, int n, int target, int sum, int[][] dp) {
+        if (n == 0) {
+            return dp[n][sum] = (target == sum) ? 1 : 0;
+        }
+
+        if (dp[n][sum] != -1)
+            return dp[n][sum];
+
+        int count = 0;
+        count += findTargetSumWays(nums, n - 1, target, sum - nums[n - 1], dp);
+        count += findTargetSumWays(nums, n - 1, target, sum + nums[n - 1], dp);
+
+        return dp[n][sum] = count;
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        if (nums.length == 0)
+            return 0;
+        int sum = 0;
+        for (int ele : nums)
+            sum += ele;
+
+        int n = nums.length;
+        if (sum < target || target < -sum)
+            return 0;
+        int[][] dp = new int[n + 1][2 * sum + 2];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        int ans = findTargetSumWays(nums, n, target + sum, sum, dp);
+        return ans;
+    }
 
     public static void main(String[] args) {
         targetSum();
