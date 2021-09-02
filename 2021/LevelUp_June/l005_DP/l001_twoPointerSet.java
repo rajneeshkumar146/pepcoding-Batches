@@ -315,6 +315,91 @@ public class l001_twoPointerSet {
         return ans;
     }
 
+    // 639
+    int mod = (int) 1e9 + 7;
+
+    public long numDecodings02_memo(String str, int idx, long[] dp) {
+        int n = str.length();
+        if (idx == n) {
+            return dp[idx] = 1;
+        }
+
+        if (dp[idx] != -1)
+            return dp[idx];
+
+        char ch = str.charAt(idx);
+        if (ch == '0')
+            return dp[idx] = 0;
+
+        long count = 0;
+        if (ch == '*') {
+            count = (count + 9 * numDecodings02_memo(str, idx + 1, dp)) % mod;
+            if (idx < n - 1) {
+                char ch1 = str.charAt(idx + 1);
+                if (ch1 >= '0' && ch1 <= '6')
+                    count = (count + 2 * numDecodings02_memo(str, idx + 2, dp)) % mod;
+                else if (ch1 >= '7' && ch1 <= '9')
+                    count = (count + 1 * numDecodings02_memo(str, idx + 2, dp)) % mod;
+                else
+                    count = (count + 15 * numDecodings02_memo(str, idx + 2, dp)) % mod;
+            }
+        } else {
+            count += 1 * numDecodings02_memo(str, idx + 1, dp) % mod;
+            if (idx < n - 1) {
+                char ch1 = str.charAt(idx + 1);
+                if (ch1 == '*' && ch == '1')
+                    count = (count + 9 * numDecodings02_memo(str, idx + 2, dp)) % mod;
+                else if (ch1 == '*' && ch == '2')
+                    count = (count + 6 * numDecodings02_memo(str, idx + 2, dp)) % mod;
+                else if (ch1 != '*') {
+                    int num = (ch - '0') * 10 + (ch1 - '0');
+                    if (num <= 26)
+                        count = (count + 1 * numDecodings02_memo(str, idx + 2, dp)) % mod;
+                }
+            }
+        }
+
+        return dp[idx] = count;
+    }
+
+    public static int goldMine(int[][] arr, int sr, int sc, int[][] dir, int[][] dp) {
+        int n = arr.length, m = arr[0].length;
+        if (sc == m - 1)
+            return dp[sr][sc] = arr[sr][sc];
+
+        if (dp[sr][sc] != -1)
+            return dp[sr][sc];
+
+        int maxGold = 0;
+        for (int[] d : dir) {
+            int r = sr + d[0];
+            int c = sc + d[1];
+
+            if (r >= 0 && c >= 0 && r < n && c < m) {
+                maxGold = Math.max(maxGold, goldMine(arr, r, c, dir, dp) + arr[sr][sc]);
+            }
+        }
+
+        return dp[sr][sc] = maxGold;
+    }
+
+    public static void goldMine() {
+        int[][] arr = { { 10, 33, 13, 15 }, { 22, 21, 04, 1 }, { 5, 0, 2, 3 }, { 0, 6, 14, 2 } };
+        int[][] dir = { { 0, 1 }, { 1, 1 }, { -1, 1 } };
+        int n = arr.length, m = arr[0].length;
+        int[][] dp = new int[n][m];
+
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        int maxGold = 0;
+        for (int r = 0; r < n; r++) {
+            maxGold = Math.max(maxGold, goldMine(arr, r, 0, dir, dp));
+        }
+
+        System.out.println(maxGold);
+    }
+
     public static void main(String[] args) {
         // fibo();
         numDecodings("212311");
