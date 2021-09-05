@@ -180,6 +180,25 @@ public class l002_stringSet {
             return dp[n][m] = Math.min(Math.min(insert, delete), replace) + 1;
     }
 
+    // cost : {insert = a, replace = b, delete = c}
+    public int minDistance_02(String word1, String word2, int n, int m, int[] cost, int[][] dp) {
+        if (n == 0 || m == 0) {
+            return dp[n][m] = (n == 0 ? m * cost[0] : n * cost[2]);
+        }
+
+        if (dp[n][m] != -1)
+            return dp[n][m];
+
+        int insert = minDistance_02(word1, word2, n, m - 1, cost, dp);
+        int delete = minDistance_02(word1, word2, n - 1, m, cost, dp);
+        int replace = minDistance_02(word1, word2, n - 1, m - 1, cost, dp);
+
+        if (word1.charAt(n - 1) == word2.charAt(m - 1))
+            return dp[n][m] = replace;
+        else
+            return dp[n][m] = Math.min(Math.min(insert + cost[0], delete + cost[2]), replace + cost[1]);
+    }
+
     public int minDistance(String s, String t) {
         int n = s.length(), m = t.length();
         int[][] dp = new int[n + 1][m + 1];
@@ -189,5 +208,67 @@ public class l002_stringSet {
         int ans = minDistance(s, t, n, m, dp);
 
         return ans;
+    }
+
+    // 44
+    public String removeStars(String str) {
+        if (str.length() == 0)
+            return str;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(str.charAt(0));
+
+        int i = 1;
+        while (i < str.length()) {
+            while (i < str.length() && sb.charAt(sb.length() - 1) == '*' && str.charAt(i) == '*')
+                i++;
+
+            if (i < str.length())
+                sb.append(str.charAt(i));
+            i++;
+        }
+
+        return sb.toString();
+    }
+
+    public int isMatch(String s, String p, int n, int m, int[][] dp) {
+        if (n == 0 || m == 0) {
+            if (n == 0 && m == 0)
+                return dp[n][m] = 1; // true
+            else if (m == 1 && p.charAt(m - 1) == '*')
+                return dp[n][m] = 1;
+            else
+                return dp[n][m] = 0;
+        }
+
+        if (dp[n][m] != -1)
+            return dp[n][m];
+
+        char ch1 = s.charAt(n - 1);
+        char ch2 = p.charAt(m - 1);
+
+        if (ch1 == ch2 || ch2 == '?') {
+            return dp[n][m] = isMatch(s, p, n - 1, m - 1, dp);
+        } else if (ch2 == '*') {
+            boolean res = false;
+            res = res || isMatch(s, p, n - 1, m, dp) == 1; // sequnence of character
+            res = res || isMatch(s, p, n, m - 1, dp) == 1; // empty string
+
+            return dp[n][m] = res ? 1 : 0;
+
+        } else
+            return dp[n][m] = 0;
+    }
+
+    public boolean isMatch(String s, String p) {
+        p = removeStars(p);
+        int n = s.length(), m = p.length();
+        int[][] dp = new int[n + 1][m + 1];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        int ans = isMatch(s, p, n, m, dp);
+
+        return ans == 1;
     }
 }
