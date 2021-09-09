@@ -73,6 +73,28 @@ public class l002_stringSet {
         return dp[n][m];
     }
 
+    public static int lcsubstring_DP(String str1, String str2, int N, int M, int[][] dp) {
+        int maxLen = 0, ei = 0;
+        for (int n = 0; n <= N; n++) {
+            for (int m = 0; m <= M; m++) {
+                if (n == 0 || m == 0) {
+                    dp[n][m] = 0;
+                    continue;
+                }
+
+                if (str1.charAt(n - 1) == str2.charAt(m - 1)) {
+                    dp[n][m] = dp[n - 1][m - 1] + 1;
+                    if (dp[n][m] > maxLen) {
+                        maxLen = dp[n][m];
+                        ei = n - 1;
+                    }
+                }
+            }
+        }
+
+        return maxLen;
+    }
+
     public static int lcss_DP(String str1, String str2, int N, int M, int[][] dp) {
         for (int n = 0; n <= N; n++) {
             for (int m = 0; m <= M; m++) {
@@ -99,6 +121,11 @@ public class l002_stringSet {
         int ans = lcss(text1, text2, n, m, dp);
 
         return ans;
+    }
+
+    //583
+    public int minDistance(String word1, String word2) {
+        return word1.length() + word2.length() - 2 * longestCommonSubsequence(word1,word2);
     }
 
     // 115
@@ -270,5 +297,94 @@ public class l002_stringSet {
         int ans = isMatch(s, p, n, m, dp);
 
         return ans == 1;
+    }
+
+    // 1035
+    public int maxUncrossedLines(int[] arr1, int[] arr2, int N, int M, int[][] dp) {
+        for (int n = 0; n <= N; n++) {
+            for (int m = 0; m <= M; m++) {
+                if (n == 0 || m == 0) {
+                    dp[n][m] = 0;
+                    continue;
+                }
+
+                if (arr1[n - 1] == arr2[m - 1])
+                    dp[n][m] = dp[n - 1][m - 1] + 1;// lcss(str1, str2, n - 1, m - 1, dp) + 1;
+                else
+                    dp[n][m] = Math.max(dp[n - 1][m], dp[n][m - 1]);
+            }
+        }
+
+        return dp[N][M];
+    }
+
+    public int maxUncrossedLines(int[] nums1, int[] nums2) {
+        int n = nums1.length, m = nums2.length;
+        int[][] dp = new int[n + 1][m + 1];
+        int ans = maxUncrossedLines(nums1, nums2, n, m, dp);
+        return ans;
+    }
+
+    // 1458
+    public int maximum(int... arr) {
+        int max = arr[0];
+        for (int ele : arr)
+            max = Math.max(ele, max);
+
+        return max;
+    }
+
+    public int maxDotProduct(int[] nums1, int[] nums2, int n, int m, int[][] dp) {
+
+        if (n == 0 || m == 0) {
+            return dp[n][m] = -(int) 1e8;
+        }
+
+        if (dp[n][m] != -(int) 1e9)
+            return dp[n][m];
+
+        int val = nums1[n - 1] * nums2[m - 1];
+        int acceptBothNumbers = maxDotProduct(nums1, nums2, n - 1, m - 1, dp) + val;
+        int a = maxDotProduct(nums1, nums2, n - 1, m, dp);
+        int b = maxDotProduct(nums1, nums2, n, m - 1, dp);
+
+        return dp[n][m] = maximum(val, acceptBothNumbers, a, b);
+    }
+
+    public int maxDotProduct(int[] nums1, int[] nums2) {
+        int n = nums1.length, m = nums2.length;
+        int[][] dp = new int[n + 1][m + 1];
+        for (int[] d : dp)
+            Arrays.fill(d, -(int) 1e9);
+        int ans = maxDotProduct(nums1, nums2, n, m, dp);
+        return ans;
+    }
+
+    // 005
+    public String longestPalindrome(String s) {
+        int n = s.length();
+        boolean[][] dp = new boolean[n][n];
+
+        int count = 0, MaxLen = 0, si = 0;
+        for (int gap = 0; gap < n; gap++) {
+            for (int i = 0, j = gap; j < n; i++, j++) {
+                if (gap == 0)
+                    dp[i][j] = true;
+                else if (gap == 1 && s.charAt(i) == s.charAt(j))
+                    dp[i][j] = true;
+                else
+                    dp[i][j] = s.charAt(i) == s.charAt(j) && dp[i + 1][j - 1];
+
+                if (dp[i][j]) {
+                    count++;
+                    if (j - i + 1 > MaxLen) {
+                        MaxLen = j - i + 1;
+                        si = i;
+                    }
+                }
+            }
+        }
+
+        return s.substring(si, si + MaxLen);
     }
 }
