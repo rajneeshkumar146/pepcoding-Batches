@@ -51,6 +51,42 @@ public class l002 {
         return Math.min(minEle, arr[idx]);
     }
 
+    public static int firstIdx(int[] arr, int idx, int data) {
+        if (idx == arr.length)
+            return -1;
+
+        if (arr[idx] == data)
+            return idx;
+        return firstIdx(arr, idx + 1, data);
+    }
+
+    public static int lastIdx(int[] arr, int idx, int data) {
+        if (idx == arr.length)
+            return -1;
+
+        int isDataPresent = lastIdx(arr, idx + 1, data);
+        if (isDataPresent != -1)
+            return isDataPresent;
+
+        return arr[idx] == data ? idx : -1;
+    }
+
+    public static int[] allIndices(int[] arr, int data, int idx, int count) {
+        if (idx == arr.length) {
+            return new int[count];
+        }
+
+        if (arr[idx] == data)
+            count++;
+
+        int[] ans = allIndices(arr, data, idx + 1, count);
+
+        if (arr[idx] == data)
+            ans[count - 1] = idx;
+
+        return ans;
+    }
+
     public static void main(String[] args) {
         int[] arr = { 10, -20, 3, 345, -234, 234, 40, 64 };
         System.out.println(minimum(arr, 0));
