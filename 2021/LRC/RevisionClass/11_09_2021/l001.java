@@ -331,7 +331,7 @@ public class l001 {
         for (int i = 0; i < 10; i++) {
             arr.add(new ArrayList<>());
             for (int j = 0; j < 3; j++) {
-                arr.get(i).add(new StringBuilder("("+i + ", " + j + ") "));
+                arr.get(i).add(new StringBuilder("(" + i + ", " + j + ") "));
             }
         }
 
@@ -341,6 +341,32 @@ public class l001 {
             }
             System.out.println();
         }
+
+        @SuppressWarnings("unchecked")
+        ArrayList<Integer>[] ar = new ArrayList[10];
+        for (int i = 0; i < 10; i++) {
+            ar[i] = new ArrayList<>();
+        }
+
+        ar[3].add(2873);
+    }
+
+    public static void ArrayListTest_02() {
+        ArrayList<ArrayList<int[][]>> arr = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            arr.add(new ArrayList<>());
+            for (int j = 0; j < 4; j++)
+                arr.get(i).add(new int[3][3]);
+        }
+
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 4; j++) {
+                int[][] ar = arr.get(i).get(j);
+
+            }
+
+        }
+
     }
 
     public static void main(String[] args) {
