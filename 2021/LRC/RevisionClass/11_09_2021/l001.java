@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class l001 {
 
     public static int decimalToBinary(int n) {
@@ -180,7 +182,7 @@ public class l001 {
         return false;
     }
 
-    public static int[] addTwoArrays(int[] a, int[] b) {
+    public static void addTwoArrays(int[] a, int[] b) {
         int n = a.length, m = b.length;
         int len = Math.max(n, m) + 1;
         int[] ans = new int[len];
@@ -218,7 +220,7 @@ public class l001 {
         return 0;
     }
 
-    public static int[] subtractTwoArrays(int[] a, int[] b) {
+    public static void subtractTwoArrays(int[] a, int[] b) {
         int n = a.length, m = b.length, len = Math.max(n, m);
         int[] ans = new int[len];
         int res = compareTo(a, b);
@@ -257,7 +259,91 @@ public class l001 {
         }
     }
 
-    public static void main(String[] args) {
+    public static void spiralDisplay(int[][] arr) {
+        int n = arr.length, m = arr[0].length, rmin = 0, cmin = 0, rmax = n - 1, cmax = m - 1, count = n * m;
+        while (count > 0) {
+            for (int c = cmin; c <= cmax && count > 0; c++) {
+                System.out.print(arr[rmin][c]);
+                count--;
+            }
+            rmin++;
 
+            for (int r = rmin; r <= rmax && count > 0; r++) {
+                System.out.print(arr[r][cmax]);
+                count--;
+            }
+            cmax--;
+
+            for (int c = cmax; c >= cmin && count > 0; c--) {
+                System.out.print(arr[rmax][c]);
+                count--;
+            }
+            rmax--;
+
+            for (int r = rmax; r >= rmin && count > 0; r--) {
+                System.out.print(arr[r][cmin]);
+                count--;
+            }
+            cmin++;
+        }
+    }
+
+    public static int minElementInRow(int[] arr) {
+        int minEle = arr[0];
+        int minIdx = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] < minEle) {
+                minEle = arr[i];
+                minIdx = i;
+            }
+        }
+
+        return minIdx;
+    }
+
+    public static int maxElementInCol(int[][] arr, int c) {
+        int maxEle = arr[0][c];
+        int maxIdx = 0;
+
+        for (int r = 0; r < arr.length; r++) {
+            if (arr[r][c] > maxEle) {
+                maxEle = arr[r][c];
+                maxIdx = r;
+            }
+        }
+        return maxIdx;
+    }
+
+    public static int saddlePrice(int[][] arr) {
+        for (int r = 0; r < arr.length; r++) {
+            int c = minElementInRow(arr[r]);
+            int ele = arr[r][c];
+            int maxEleRowIdx = maxElementInCol(arr, c);
+            if (maxEleRowIdx == r)
+                return ele;
+        }
+
+        return -1;
+    }
+
+    public static void ArrayListTest() {
+        ArrayList<ArrayList<StringBuilder>> arr = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            arr.add(new ArrayList<>());
+            for (int j = 0; j < 3; j++) {
+                arr.get(i).add(new StringBuilder("("+i + ", " + j + ") "));
+            }
+        }
+
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print(arr.get(i).get(j) + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        ArrayListTest();
     }
 }
