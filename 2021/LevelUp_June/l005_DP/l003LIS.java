@@ -104,5 +104,80 @@ public class l003LIS {
         return maxLen;
     }
 
+    // https://practice.geeksforgeeks.org/problems/maximum-sum-bitonic-subsequence1857/1
+    // https://practice.geeksforgeeks.org/problems/maximum-sum-increasing-subsequence4749/1
     // Mimimum deletetion required to make array sorted.
+
+    public static int minDeletion(int[] arr) {
+        int n = arr.length, maxLen = 0;
+        int[] dp = new int[n];
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[i] >= arr[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            maxLen = Math.max(dp[i], maxLen);
+        }
+
+        return arr.length - maxLen;
+    }
+
+    // 673
+    public int findNumberOfLIS(int[] arr) {
+
+        int n = arr.length, maxLen = 0, maxCount = 0;
+        int[] dp = new int[n];
+        int[] count = new int[n];
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            count[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[i] > arr[j]) {
+                    if (dp[j] + 1 > dp[i]) {
+                        dp[i] = dp[j] + 1;
+                        count[i] = count[j];
+                    } else if (dp[i] == dp[j] + 1) {
+                        count[i] += count[j];
+                    }
+                }
+            }
+
+            if (dp[i] > maxLen) {
+                maxLen = dp[i];
+                maxCount = count[i];
+            } else if (dp[i] == maxLen) {
+                maxCount += count[i];
+            }
+        }
+
+        return maxCount;
+    }
+
+    // https://www.geeksforgeeks.org/dynamic-programming-building-bridges/
+    // {{sp,ep}...}
+    public static int maxmimumBridge(int[][] arr) {
+        Arrays.sort(arr, (a, b) -> {
+            return a[1] - b[1];
+        });
+
+        int n = arr.length, maxLen = 0;
+        int[] dp = new int[n];
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[i][0] > arr[j][0] && arr[i][1] > arr[j][1]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            maxLen = Math.max(dp[i], maxLen);
+        }
+
+        return maxLen;
+    }
+
+    //354
+    
+
 }
