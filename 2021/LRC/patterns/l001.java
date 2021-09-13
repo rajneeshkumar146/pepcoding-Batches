@@ -167,13 +167,181 @@ public class l001 {
             }
             System.out.println();
         }
-
-        
     }
 
+    public static void pattern_10_hollowDiamond(int rows) {
+        int n = rows, nst = n / 2 + 1, nsp = 1;
+
+        for (int r = 1; r <= n; r++) {
+            for (int cst = 1; cst <= nst; cst++)
+                System.out.print("*\t");
+            for (int csp = 1; csp <= nsp; csp++)
+                System.out.print("\t");
+            for (int cst = 1; cst <= nst; cst++)
+                System.out.print("*\t");
+
+            System.out.println();
+            if (r <= n / 2) {
+                nsp += 2;
+                nst--;
+            } else {
+                nsp -= 2;
+                nst++;
+            }
+        }
+    }
+
+    public static void pattern_07_pep(int n) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i - j == 0)
+                    System.out.print("*\t");
+                else
+                    System.out.print("\t");
+            }
+
+            System.out.println();
+        }
+    }
+
+    public static void pattern_08_pep(int n) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i + j == n - 1)
+                    System.out.print("*\t");
+                else
+                    System.out.print("\t");
+            }
+
+            System.out.println();
+        }
+    }
+
+    public static void pattern_09_pep(int n) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i + j == n - 1 || i - j == 0)
+                    System.out.print("*\t");
+                else
+                    System.out.print("\t");
+            }
+
+            System.out.println();
+        }
+    }
+
+    public static void pattern_10_pep(int n) {
+        int nsp1 = n / 2, nsp2 = -1;
+        for (int r = 1; r <= n; r++) {
+            for (int csp = 1; csp <= nsp1; csp++)
+                System.out.print("\t");
+
+            System.out.print("*\t");
+
+            for (int csp = 1; csp <= nsp2; csp++)
+                System.out.print("\t");
+
+            if (r > 1 && r < n)
+                System.out.print("*\t");
+
+            if (r <= n / 2) {
+                nsp1--;
+                nsp2 += 2;
+            } else {
+                nsp1++;
+                nsp2 -= 2;
+            }
+            System.out.println();
+        }
+    }
+
+    public static void pattern11(int rows) {
+        int n = rows, nst = 1, count = 1;
+        for (int r = 1; r <= n; r++) {
+            for (int cst = 1; cst <= nst; cst++) {
+                System.out.print(count++ + "\t");
+            }
+
+            nst++;
+            System.out.println();
+        }
+    }
+
+    public static void pattern12(int rows) {
+        int n = rows, nst = 1, a = 0, b = 1;
+        for (int r = 1; r <= n; r++) {
+            for (int cst = 1; cst <= nst; cst++) {
+                System.out.print(a + "\t");
+                int sum = a + b;
+                a = b;
+                b = sum;
+            }
+
+            nst++;
+            System.out.println();
+        }
+    }
+
+    public static void pattern_13(int rows) {
+        int n = rows;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 || j == 0 || i == n - 1 || j == n - 1 || i - j == 0 || i + j == n - 1) {
+                    System.out.print("*\t");
+                } else {
+                    System.out.print("\t");
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    public static void pattern_14(int rows) {
+        int n = rows, nsp = n / 2, nst = 1;
+        for (int r = 1; r <= n; r++) {
+
+            for (int csp = 1; csp <= nsp; csp++)
+                System.out.print((r == n / 2 + 1 ? "*\t" : "\t"));
+
+            for (int cst = 1; cst <= nst; cst++)
+                System.out.print("*\t");
+
+            if (r <= n / 2)
+                nst++;
+            else
+                nst--;
+
+            System.out.println();
+        }
+    }
+
+    public static void pattern_14_02(int rows) {
+        int n = rows, nsp = n / 2, nst = 1;
+        for (int r = 1; r <= n; r++) {
+
+            for (int csp = 1; csp <= nsp; csp++)
+                System.out.print("\t");
+
+            for (int cst = 1; cst <= nst; cst++)
+                System.out.print("*\t");
+
+            if (r < n / 2)
+                nst++;
+            else if (r == n / 2) {
+                nsp -= n / 2;
+                nst += n / 2 + 1;
+            } else if (r == n / 2 + 1) {
+                nsp += n / 2;
+                nst -= n / 2 + 1;
+            } else
+                nst--;
+
+            System.out.println();
+        }
+    }
 
     public static void main(String[] args) {
-        pattern_09(7);
+        pattern_14_02(11);
     }
 
 }
