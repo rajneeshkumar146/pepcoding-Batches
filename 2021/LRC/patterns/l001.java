@@ -342,6 +342,54 @@ public class l001 {
 
     public static void pattern_16_part1(int rows) {
         int n = rows, nst = 1, nsp = 2 * n - 3;
+
+        for (int r = 1; r <= n; r++) {
+            int count = 1;
+            for (int cst = 1; cst <= nst; cst++)
+                System.out.print(count++ + "\t");
+            for (int csp = 1; csp <= nsp; csp++)
+                System.out.print("\t");
+            if (r == n) {
+                nst--;
+                count--;
+            }
+            for (int cst = 1; cst <= nst; cst++)
+                System.out.print(--count + "\t");
+
+            nsp -= 2;
+            nst++;
+            System.out.println();
+        }
+    }
+
+    public static void pattern_014_pep(int num) {
+        int n = 10;
+        for (int r = 1; r <= n; r++) {
+            System.out.println(num + " * " + r + " = " + (num * r));
+        }
+    }
+
+    public static void tableInRange(int a, int b) {
+
+        for (int i = a; i <= b; i++) {
+            pattern_014_pep(i);
+            System.out.println("-----------------------");
+        }
+    }
+
+    public static void pattern_013(int rows) {
+        for (int n = 0; n < rows; n++) {
+            int val = 1;
+            for (int r = 0; r <= n; r++) {
+                System.out.print(val + "\t");
+                val = (val * (n - r)) / (r + 1);
+            }
+            System.out.println();
+        }
+    }
+
+    public static void pattern_Butterfly_Part_01(int rows) {
+        int n = rows, nst = 1, nsp = 2 * n - 2;
         for (int r = 1; r <= n; r++) {
             for (int cst = 1; cst <= nst; cst++)
                 System.out.print("*\t");
@@ -352,12 +400,116 @@ public class l001 {
 
             nsp -= 2;
             nst++;
+            System.out.println();
+        }
+    }
+
+    public static void pattern_Butterfly_Part_02(int rows) {
+        int n = rows, nst = n, nsp = 0;
+        for (int r = 1; r <= n; r++) {
+            for (int cst = 1; cst <= nst; cst++)
+                System.out.print("*\t");
+            for (int csp = 1; csp <= nsp; csp++)
+                System.out.print("\t");
+            for (int cst = 1; cst <= nst; cst++)
+                System.out.print("*\t");
+
+            nsp += 2;
+            nst--;
+            System.out.println();
+        }
+    }
+
+    public static void butterfly(int n) {
+        pattern_Butterfly_Part_01(n / 2);
+        pattern_Butterfly_Part_02(n / 2);
+    }
+
+    public static void pattern_014_rom(int rows) {
+        int n = rows, nst = n, nsp = n - 1;
+        for (int r = 1; r <= n; r++) {
+            for (int csp = 1; csp <= nsp; csp++)
+                System.out.print("\t");
+            for (int cst = 1; cst <= nst; cst++)
+                System.out.print("*\t");
+
+            System.out.println();
+            nsp--;
+        }
+    }
+
+    public static void pattern_015_hollowRom(int row) {
+        int n = row, nsp1 = n - 1, nsp2 = n - 2;
+        for (int r = 1; r <= n; r++) {
+            for (int csp = 1; csp <= nsp1; csp++)
+                System.out.print("\t");
+            System.out.print("*\t");
+            for (int csp = 1; csp <= nsp2; csp++)
+                System.out.print((r == 1 || r == n) ? "*\t" : "\t");
+            System.out.print("*\t");
+
+            nsp1--;
+            System.out.println();
+        }
+    }
+
+    public static void pattern_016(int rows) {
+        int n = rows, nsp = n / 2;
+
+        for (int r = 1; r <= n; r++) {
+            for (int csp = 1; csp <= nsp; csp++)
+                System.out.print((r == n / 2 + 1) ? "*\t" : "\t");
+
+            System.out.print("*\t");
+
+            if (r <= n / 2)
+                nsp++;
+            else
+                nsp--;
+
+            System.out.println();
+        }
+    }
+
+    public static void heartShape(int n) {
+        int nst = n;
+        int nsp = n % 2 == 0 ? n - 1 : n;
+
+        for (int r = 1; r <= n; r += 2) {
+
+            for (int csp = 1; csp <= nsp / 2; csp++)
+                System.out.print(" ");
+
+            for (int cst = 1; cst <= nst; cst++)
+                System.out.print("*");
+
+            for (int csp = 1; csp <= nsp; csp++)
+                System.out.print(" ");
+
+            for (int cst = 1; cst <= nst; cst++)
+                System.out.print("*");
+
+            System.out.println();
+            nst += 2;
+            nsp -= 2;
         }
 
+        nst = 2 * nst - 3;
+        nsp = 0;
+        while (nst > 0) {
+            for (int csp = 1; csp <= nsp; csp++)
+                System.out.print(" ");
+            for (int cst = 1; cst <= nst; cst++)
+                System.out.print("*");
+
+            nst -= 2;
+            nsp++;
+            System.out.println();
+        }
     }
 
     public static void main(String[] args) {
-        pattern_16_part1(5);
+        heartShape(10);
     }
 
 }
