@@ -340,8 +340,24 @@ public class l001 {
         }
     }
 
+    public static void pattern_16_part1(int rows) {
+        int n = rows, nst = 1, nsp = 2 * n - 3;
+        for (int r = 1; r <= n; r++) {
+            for (int cst = 1; cst <= nst; cst++)
+                System.out.print("*\t");
+            for (int csp = 1; csp <= nsp; csp++)
+                System.out.print("\t");
+            for (int cst = 1; cst <= nst; cst++)
+                System.out.print("*\t");
+
+            nsp -= 2;
+            nst++;
+        }
+
+    }
+
     public static void main(String[] args) {
-        pattern_14_02(11);
+        pattern_16_part1(5);
     }
 
 }
