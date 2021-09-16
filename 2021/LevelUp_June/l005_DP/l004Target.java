@@ -133,7 +133,6 @@ public class l004Target {
         int ans = targetSum(arr, N, sum, dp);
 
         // display2D(dp);
-        targetSum(arr, N, dp, sum, "");
         return ans == 1;
     }
 
@@ -170,7 +169,7 @@ public class l004Target {
         if (tar - arr[N - 1] >= 0 && dp[N - 1][tar - arr[N - 1]])
             count += targetSum_path(arr, N - 1, dp, tar - arr[N - 1], psf + arr[N - 1] + " ");
         if (dp[N - 1][tar])
-            count += targetSum_path(arr, N - 1, dp, tar, psf + " ");
+            count += targetSum_path(arr, N - 1, dp, tar, psf);
 
         return count;
     }
@@ -208,6 +207,7 @@ public class l004Target {
     }
 
     // https://www.geeksforgeeks.org/find-number-of-solutions-of-a-linear-equation-of-n-variables/
+    // https://practice.geeksforgeeks.org/problems/knapsack-with-duplicate-items4201/1
 
     public static void main(String[] args) {
         targetSum_backEngg();
