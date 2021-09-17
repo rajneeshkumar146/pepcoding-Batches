@@ -180,13 +180,49 @@ public class l005 {
         return count;
     }
 
+    public static String sort(String str) {
+        int[] freq = new int[26];
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            freq[ch - 'a']++;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 26; i++) {
+            while (freq[i]-- > 0)
+                sb.append((char) (i + 'a'));
+        }
+
+        return sb.toString();
+    }
+
+    public static int permutationUnique(String str, String asf) {
+        if (str.length() == 0) {
+            System.out.println(asf);
+            return 1;
+        }
+
+        int count = 0;
+        char prev = '$';
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if (ch != prev) {
+                String ros = str.substring(0, i) + str.substring(i + 1);
+                count += permutationUnique(ros, asf + ch);
+            }
+            prev = ch;
+        }
+
+        return count;
+    }
+
     public static void main(String... args) {
         // System.out.println(sumOfDigit("12345678", 0));
         // System.out.println(reverseDigit(123456789, 0));
         // String ans = removeDuplicates("abbbaaaccccccddddddeeeeeeefffffgh", 0);
         // System.out.println(ans);
 
-        System.out.println(permutation("abc", ""));
+        System.out.println(permutationUnique(sort("abacbabac"), ""));
 
     }
 }
