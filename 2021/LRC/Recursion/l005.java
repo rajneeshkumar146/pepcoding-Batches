@@ -161,6 +161,21 @@ public class l005 {
                     count += 6 * decodeWays_02(str, idx + 2);
             }
         }
+        return count;
+    }
+
+    public static int permutation(String str, String asf) {
+        if (str.length() == 0) {
+            System.out.println(asf);
+            return 1;
+        }
+
+        int count = 0;
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            String ros = str.substring(0, i) + str.substring(i + 1);
+            count += permutation(ros, asf + ch);
+        }
 
         return count;
     }
@@ -171,7 +186,7 @@ public class l005 {
         // String ans = removeDuplicates("abbbaaaccccccddddddeeeeeeefffffgh", 0);
         // System.out.println(ans);
 
-        System.out.println(removeHiWithoutHit("hihithihi", 0, ""));
+        System.out.println(permutation("abc", ""));
 
     }
 }
