@@ -1,23 +1,2 @@
-h1 h1 v1 v1 
-h1 h1 v2 
-h1 v1 h1 v1 
-h1 v1 v1 h1 
-h1 v1 d1 
-h1 v2 h1 
-h1 d1 v1 
-h2 v1 v1 
-h2 v2 
-v1 h1 h1 v1 
-v1 h1 v1 h1 
-v1 h1 d1 
-v1 h2 v1 
-v1 v1 h1 h1 
-v1 v1 h2 
-v1 d1 h1 
-v2 h1 h1 
-v2 h2 
-d1 h1 v1 
-d1 v1 h1 
-d1 d1 
-d2 
-22
+pephitpeppep
+3

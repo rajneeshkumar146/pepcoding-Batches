@@ -93,7 +93,7 @@ public class l004 {
         return count;
     }
 
-    public static int mazePathJump_02(int sr, int sc, int er, int ec, int[][] dir, String[] dirS, String asf) {
+    public static int mazePathJump_02(i  nt sr, int sc, int er, int ec, int[][] dir, String[] dirS, String asf) {
         if (sr == er && sc == ec) {
             System.out.println(asf);
             return 1;
