@@ -209,6 +209,62 @@ public class l004Target {
     // https://www.geeksforgeeks.org/find-number-of-solutions-of-a-linear-equation-of-n-variables/
     // https://practice.geeksforgeeks.org/problems/knapsack-with-duplicate-items4201/1
 
+    public static int unboundedKnapsack(int[] wt, int[] val, int bagWeight) {
+        int n = wt.length;
+        int[] dp = new int[bagWeight + 1];
+        for (int weight = 0; weight <= bagWeight; weight++) {
+            for (int i = 0; i < wt.length; i++) {
+                if (weight - wt[i] >= 0)
+                    dp[weight] = Math.max(dp[weight], dp[weight - wt[i]] + val[i]);
+            }
+        }
+
+        return dp[bagWeight];
+    }
+
+    // 416
+    public boolean canPartition(int[] nums) {
+        int sum = 0;
+        for (int ele : nums)
+            sum += ele;
+
+        if (sum % 2 != 0)
+            return false;
+        int tar = sum / 2, n = nums.length;
+        boolean[][] dp = new boolean[n + 1][tar + 1];
+        return targetSum_DP(nums, n, tar, dp);
+    }
+
+    // 494
+    public int findTargetSumWays(int[] nums, int n, int sum, int target, int[][] dp) {
+        if (n == 0) {
+            return dp[n][sum] = target == sum ? 1 : 0;
+        }
+
+        if (dp[n][sum] != -1)
+            return dp[n][sum];
+
+        int count = 0;
+        count += findTargetSumWays(nums, n - 1, sum + nums[n - 1], target, dp);
+        count += findTargetSumWays(nums, n - 1, sum - nums[n - 1], target, dp);
+
+        return dp[n][sum] = count;
+    }
+
+    public int findTargetSumWays(int[] nums, int target) {
+        int sum = 0, n = nums.length;
+        for (int ele : nums)
+            sum += ele;
+        if (target > sum || target < -sum)
+            return 0;
+
+        int[][] dp = new int[n + 1][2 * sum + 1];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        return findTargetSumWays(nums, n, sum, sum + target, dp);
+    }
+
     public static void main(String[] args) {
         targetSum_backEngg();
     }
