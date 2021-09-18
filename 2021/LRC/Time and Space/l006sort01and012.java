@@ -58,7 +58,7 @@ public class l006sort01and012 {
             return;
 
         int pIdx = (si + ei) / 2;
-        pIdx = partition_02(arr, pIdx);
+        pIdx = partition_02(arr, pIdx, si, ei);
 
         quickSort(arr, si, pIdx - 1);
         quickSort(arr, pIdx + 1, ei);
