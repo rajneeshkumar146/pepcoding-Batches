@@ -1,4 +1,2 @@
-true
-7 3 
-5 3 2 
-2
+Min value: 27
+Max value: 105
