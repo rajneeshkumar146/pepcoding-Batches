@@ -18,7 +18,8 @@ public class targetSum {
         }
     }
 
-    public static void twoSum(int[] arr, int target, int si, int ei, List<List<Integer>> ans) {
+    public static List<List<Integer>> twoSum(int[] arr, int target, int si, int ei) {
+        List<List<Integer>> ans = new ArrayList<>();
         while (si < ei) {
             int sum = arr[si] + arr[ei];
             if (sum == target) {
@@ -35,6 +36,30 @@ public class targetSum {
             else
                 ei--;
         }
+
+        return ans;
+    }
+
+    public static void prepareAns(List<List<Integer>> ans, int a, List<List<Integer>> smallAns) {
+        for (List<Integer> sa : smallAns) {
+            sa.add(0, a);   // add(idx, data)
+            ans.add(sa);
+        }
+    }
+
+    public static List<List<Integer>> threeSum(int[] arr, int target, int si, int ei) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int idx = si;
+        while (idx < ei) {
+            while (si != idx && idx < ei && arr[idx] == arr[idx - 1])
+                idx++;
+
+            List<List<Integer>> smallAns = twoSum(arr, target - arr[idx], idx + 1, ei);
+            prepareAns(ans, arr[idx], smallAns);
+            idx++;
+        }
+
+        return ans;
     }
 
     public static void main(String[] args) {
