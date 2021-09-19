@@ -110,6 +110,44 @@ public class targetSum {
         return ans;
     }
 
+    public int findMin(int[] arr) {
+        int n = arr.length, si = 0, ei = n - 1;
+        // if(arr[si] <= arr[ei]) return si;
+
+        while (si < ei) {
+            int mid = (si + ei) / 2;
+            if (arr[mid] < arr[ei])
+                ei = mid;
+            else
+                si = mid + 1;
+        }
+
+        return si;
+    }
+
+    public boolean isPossibleToEat(int[] arr, int hr, int rateOfEating) {
+        int h = 0;
+        for (int ele : arr) {
+            h += (ele - 1) / rateOfEating + 1;
+            if (h > hr)
+                return false;
+        }
+        return true;
+    }
+
+    public int minEatingSpeed(int[] arr, int h) {
+        int si = 1, ei = (int) 1e9;
+        while (si < ei) {
+            int rateOfEating = (si + ei) / 2;
+            if (isPossibleToEat(arr, h, rateOfEating))
+                ei = rateOfEating;
+            else
+                si = rateOfEating + 1;
+        }
+
+        return ei;
+    }
+
     public static void main(String[] args) {
         int[] arr = { 10, 10, 10, 10, 20, 20, 20, 20, 20, 30, 30, 30, 40, 40, 50, 50, 50 };
         int target = 60;
