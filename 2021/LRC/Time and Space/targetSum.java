@@ -4,6 +4,21 @@ import java.util.ArrayList;
 
 public class targetSum {
 
+    public int[] twoSum(int[] arr, int tar) {
+        int si = 0, ei = arr.length - 1;
+        while (si < ei) {
+            int sum = arr[si] + arr[ei];
+            if (sum == tar) {
+                return new int[] { si + 1, ei + 1 };
+            } else if (sum < tar)
+                si++;
+            else
+                ei--;
+        }
+
+        return new int[0];
+    }
+
     public static void _1Sum_unique(int[] arr, int target) {
         Arrays.sort(arr);
         int si = 0, ei = arr.length - 1;
@@ -42,7 +57,7 @@ public class targetSum {
 
     public static void prepareAns(List<List<Integer>> ans, int a, List<List<Integer>> smallAns) {
         for (List<Integer> sa : smallAns) {
-            sa.add(0, a);   // add(idx, data)
+            sa.add(0, a); // add(idx, data)
             ans.add(sa);
         }
     }
@@ -55,6 +70,39 @@ public class targetSum {
                 idx++;
 
             List<List<Integer>> smallAns = twoSum(arr, target - arr[idx], idx + 1, ei);
+            prepareAns(ans, arr[idx], smallAns);
+            idx++;
+        }
+
+        return ans;
+    }
+
+    public static List<List<Integer>> fourSum(int[] arr, int target, int si, int ei) {
+        List<List<Integer>> ans = new ArrayList<>();
+        int idx = si;
+        while (idx < ei) {
+            while (si != idx && idx < ei && arr[idx] == arr[idx - 1])
+                idx++;
+
+            List<List<Integer>> smallAns = threeSum(arr, target - arr[idx], idx + 1, ei);
+            prepareAns(ans, arr[idx], smallAns);
+            idx++;
+        }
+
+        return ans;
+    }
+
+    public static List<List<Integer>> kSum(int[] arr, int target, int k, int si, int ei) {
+        if (k == 2) {
+            return twoSum(arr, target, si, ei);
+        }
+        List<List<Integer>> ans = new ArrayList<>();
+        int idx = si;
+        while (idx < ei) {
+            while (si != idx && idx < ei && arr[idx] == arr[idx - 1])
+                idx++;
+
+            List<List<Integer>> smallAns = kSum(arr, target - arr[idx], k - 1, idx + 1, ei);
             prepareAns(ans, arr[idx], smallAns);
             idx++;
         }
