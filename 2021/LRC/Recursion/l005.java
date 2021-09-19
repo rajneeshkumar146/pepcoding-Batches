@@ -216,6 +216,17 @@ public class l005 {
         return count;
     }
 
+    public static void targetSum(int[] arr, int idx, int tar, String asf) {
+        if (idx == arr.length || tar == 0) {
+            if (tar == 0)
+                System.out.println(asf + ".");
+            return;
+        }
+
+        targetSum(arr, idx + 1, tar - arr[idx], asf + arr[idx] + ", ");
+        targetSum(arr, idx + 1, tar, asf);
+    }
+
     public static void main(String... args) {
         // System.out.println(sumOfDigit("12345678", 0));
         // System.out.println(reverseDigit(123456789, 0));

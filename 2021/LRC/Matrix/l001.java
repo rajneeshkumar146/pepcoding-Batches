@@ -38,40 +38,108 @@ public class Main {
     }
 
     public static void exitPoint(int[][] arr) {
-
         int n = arr.length, m = arr[0].length;
-        int d = 0, r = 0, c= 0;
+        int d = 0, r = 0, c = 0;
 
-        while(??){
-
-
-            if(d == 0){  // E
+        while (true) {
+            d = (d + arr[r][c]) % 4;
+            if (d == 0) { // E
                 c++;
-                if(c == m){  // exit point
-
+                if (c == m) { // exit point
+                    System.out.println(r);
+                    System.out.println(c - 1);
+                    break;
                 }
-
-            }else if(d == 1){ //N
+            } else if (d == 1) { // N
                 r++;
-                if(r == n){  // exit point
-
+                if (r == n) { // exit point
+                    System.out.println(r - 1);
+                    System.out.println(c);
+                    break;
                 }
-            }else if(d == 2){  // W
+            } else if (d == 2) { // W
                 c--;
-                if(c == -1){
-
+                if (c == -1) {
+                    System.out.println(r);
+                    System.out.println(c + 1);
+                    break;
                 }
-            }else{  // S
+            } else { // S
                 r--;
-                if(r == -1){
-
+                if (r == -1) {
+                    System.out.println(r + 1);
+                    System.out.println(c);
+                    break;
                 }
             }
-
-
-
         }
+    }
 
+    public static void swap2D(int[][] arr, int i1, int j1, int i2, int j2) {
+        int temp = arr[i1][j1];
+        arr[i1][j1] = arr[i2][j2];
+        arr[i2][j2] = temp;
+    }
+
+    public static void transpose(int[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = i; j < arr[0].length; j++) {
+                swap2D(arr, i, j, j, i);
+            }
+        }
+    }
+
+    public static void swapColums(int[][] arr) {
+        int si = 0, ei = arr[0].length;
+        while (si < ei) {
+            for (int i = 0; i < arr.length; i++)
+                swap2D(arr, si, i, ei, i);
+        }
+    }
+
+    public static void rotate90D(int[][] arr) {
+        transpose(arr);
+        swapColums(arr);
+    }
+
+    public static void diagonalTraversal(int[][] arr) {
+        for (int gap = 0; gap < arr[0].length; gap++) {
+            for (int i = 0, j = gap; j < arr[0].length; i++, j++) {
+                System.out.println(arr[i][j]);
+            }
+        }
+    }
+
+    public static void matrixMultiplication(int[][] arr1, int[][] arr2) {
+        int n = arr1.length, m = arr1[0].length;
+        int p = arr2.length, q = arr2[0].length;
+
+        int[][] ans = new int[n][q];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < q; j++) {
+                int res = 0;
+                for (int k = 0; k < m; k++) {
+                    res += arr1[i][k] * arr2[k][j];
+                }
+                ans[i][j] = res;
+            }
+        }
+    }
+
+    public static void serachIn2D(int[][] arr, int data) {
+        int r = arr.length - 1, c = 0;
+        while (r >= 0 && c < arr[0].length) {
+            if (arr[r][c] > data)
+                r--;
+            else if (arr[r][c] < data)
+                c++;
+            else {
+                System.out.println(r);
+                System.out.println(c);
+                break;
+            }
+        }
     }
 
     public static void main(String[] args) throws Exception {

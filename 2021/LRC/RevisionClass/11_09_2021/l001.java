@@ -366,7 +366,16 @@ public class l001 {
             }
 
         }
+    }
 
+    public static void toh(int n, int src, int dest, int help) {
+        if (n == 0) {
+            return;
+        }
+
+        toh(n - 1, src, help, dest);
+        System.out.println(n + "[" + src + " -> " + dest + "]");
+        toh(n - 1, help, dest, src);
     }
 
     public static void main(String[] args) {
