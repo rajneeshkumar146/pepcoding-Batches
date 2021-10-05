@@ -1,14 +1,15 @@
-public class stack {
+public class queue {
     private int[] arr;
-    private int tos;
+    private int front;
+    private int back;
     private int NoOfElements;
     private int MaxCapacity;
 
-    stack(int size) {
+    queue(int size) {
         initialize(size);
     }
 
-    stack() {
+    queue() {
         this(10);
     }
 
@@ -16,21 +17,22 @@ public class stack {
         this.NoOfElements = 0;
         this.MaxCapacity = size;
         this.arr = new int[this.MaxCapacity];
-        this.tos = -1;
+        this.front = this.back = 0;
     }
 
     private void overflowException() throws Exception {
         if (this.NoOfElements == this.MaxCapacity)
-            throw new Exception("StackIsOverflow");
+            throw new Exception("QueueIsOverflow");
     }
 
     private void underflowException() throws Exception {
         if (this.NoOfElements == 0)
-            throw new Exception("StackIsUnderflow");
+            throw new Exception("QueueIsUnderflow");
     }
 
     public void display() {
-        for (int i = this.tos; i >= 0; i--) {
+        for (int idx = 0; idx < this.NoOfElements; idx++) {
+            int i = (idx + this.front) % this.MaxCapacity;
             System.out.print(this.arr[i] + " ");
         }
     }
@@ -45,18 +47,20 @@ public class stack {
 
     public void push(int data) throws Exception {
         overflowException();
-        this.arr[++this.tos] = data;
+        this.arr[this.back] = data;
+        this.back = (this.back + 1) % this.MaxCapacity;
         this.NoOfElements++;
     }
 
-    public int peek() throws Exception {
+    public int top() throws Exception {
         underflowException();
-        return this.arr[this.tos];
+        return this.arr[this.front];
     }
 
     public int pop() throws Exception {
         underflowException();
-        int rv = this.arr[this.tos--];
+        int rv = this.arr[this.front];
+        this.front = (this.front + 1) % this.MaxCapacity;
         this.NoOfElements--;
         return rv;
     }

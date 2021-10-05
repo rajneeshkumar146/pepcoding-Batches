@@ -2,6 +2,7 @@ import java.util.LinkedList;
 import java.util.Arrays;
 
 public class l001 {
+
     public static int[] NGOR(int[] arr) {
         int n = arr.length;
         int[] ans = new int[n];
@@ -150,6 +151,74 @@ public class l001 {
         }
 
         return st.size() == 0;
+    }
+
+    // 735
+    public int[] asteroidCollision(int[] arr) {
+        int n = arr.length;
+        LinkedList<Integer> st = new LinkedList<>();
+
+        for (int ele : arr) {
+            if (ele > 0) {
+                st.addFirst(ele);
+                continue;
+            }
+
+            while (st.size() != 0 && st.getFirst() > 0 && st.getFirst() < -ele)
+                st.removeFirst();
+
+            if (st.size() != 0 && st.getFirst() == -ele)
+                st.removeFirst();
+            else if (st.size() == 0 || st.getFirst() < 0)
+                st.addFirst(ele);
+            else {
+                // nothing to do
+            }
+        }
+
+        int[] ans = new int[st.size()];
+        int idx = ans.length - 1;
+        while (st.size() != 0) {
+            ans[idx--] = st.removeFirst();
+        }
+
+        return ans;
+    }
+
+    // 946
+    public boolean validateStackSequences(int[] pushed, int[] popped) {
+        int n = pushed.length, idx = 0;
+        LinkedList<Integer> st = new LinkedList<>();
+        for (int ele : pushed) {
+            st.addFirst(ele);
+            while (st.size() != 0 && st.getFirst() == popped[idx]) {
+                idx++;
+                st.removeFirst();
+            }
+        }
+
+        return st.size() == 0;
+    }
+
+    // 856
+    public int scoreOfParentheses(String s) {
+        LinkedList<Integer> st = new LinkedList<>();
+        st.addFirst(0);
+
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (ch == '(')
+                st.addFirst(0);
+            else {
+                int a = st.removeFirst();
+                int b = st.removeFirst();
+
+                int val = b + Math.max(2 * a, 1);
+                st.addFirst(val);
+            }
+        }
+
+        return st.removeFirst();
     }
 
 }

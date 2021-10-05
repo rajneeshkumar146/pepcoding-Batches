@@ -17,7 +17,7 @@ public:
 
     stack()
     {
-        initialize(10);
+        stack(10);
     }
 
 protected:
