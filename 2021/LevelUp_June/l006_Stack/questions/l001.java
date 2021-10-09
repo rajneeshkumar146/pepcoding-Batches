@@ -1,5 +1,6 @@
 import java.util.LinkedList;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 public class l001 {
 
@@ -293,4 +294,92 @@ public class l001 {
         return maxLen;
     }
 
+    // 402
+    public String removeKdigits(String num, int k) {
+        ArrayList<Character> st = new ArrayList<>();
+
+        for (int i = 0; i < num.length(); i++) {
+            char ch = num.charAt(i);
+            while (st.size() != 0 && st.get(st.size() - 1) > ch && k > 0) {
+                k--;
+                st.remove(st.size() - 1);
+            }
+            st.add(ch);
+        }
+
+        while (k-- > 0)
+            st.remove(st.size() - 1);
+
+        StringBuilder sb = new StringBuilder();
+        boolean nonZeroValue = false;
+        for (Character ch : st) {
+            if (ch == '0' && !nonZeroValue)
+                continue;
+
+            nonZeroValue = true;
+            sb.append(ch);
+        }
+
+        return sb.length() != 0 ? sb.toString() : "0";
+    }
+
+    // 316, 1081
+    public String removeDuplicateLetters(String s) {
+        int n = s.length();
+        StringBuilder st = new StringBuilder();
+        boolean[] vis = new boolean[26];
+        int[] freq = new int[26];
+
+        for (int i = 0; i < n; i++)
+            freq[s.charAt(i) - 'a']++;
+
+        for (int i = 0; i < n; i++) {
+            char ch = s.charAt(i);
+            freq[ch - 'a']--;
+            if (vis[ch - 'a'])
+                continue;
+
+            while (st.length() != 0 && st.charAt(st.length() - 1) > ch && freq[st.charAt(st.length() - 1) - 'a'] > 0) {
+                vis[st.charAt(st.length() - 1) - 'a'] = false;
+                st.deleteCharAt(st.length() - 1);
+            }
+
+            vis[ch - 'a'] = true;
+            st.append(ch);
+        }
+
+        return st.toString();
+    }
+
+    // 1249
+    public String minRemoveToMakeValid(String s) {
+        int n = s.length();
+        LinkedList<Integer> st = new LinkedList<>();
+        char[] chArr = s.toCharArray();
+
+        for (int i = 0; i < n; i++) {
+            char ch = s.charAt(i);
+            if (ch == ')') {
+                if (st.size() != 0)
+                    st.removeFirst();
+                else
+                    chArr[i] = '#';
+            } else if (ch == '(')
+                st.addFirst(i);
+        }
+
+        while (st.size() != 0)
+            chArr[st.removeFirst()] = '#';
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            if (chArr[i] != '#')
+                sb.append(s.charAt(i));
+
+        }
+
+        return sb.toString();
+    }
+
+    // Home work : String : (((abc)))()(fd)(d(f)())
 }
