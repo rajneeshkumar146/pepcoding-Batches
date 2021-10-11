@@ -435,4 +435,87 @@ public class l001 {
         }
     }
 
+    class FreqStack_ {
+
+        private ArrayList<LinkedList<Integer>> freqMap;
+        private HashMap<Integer, Integer> map;
+        private int maxFreq = 0;
+
+        public FreqStack() {
+            freqMap = new ArrayList<>();
+            map = new HashMap<>();
+
+            freqMap.add(new LinkedList<>());
+        }
+
+        public void push(int val) {
+            map.put(val, map.getOrDefault(val, 0) + 1);
+            maxFreq = Math.max(maxFreq, map.get(val));
+
+            if (maxFreq == freqMap.size())
+                freqMap.add(new LinkedList<>());
+
+            freqMap.get(map.get(val)).addFirst(val);
+        }
+
+        public int pop() {
+            int rv = freqMap.get(maxFreq).removeFirst();
+            if (freqMap.get(maxFreq).size() == 0) {
+                freqMap.remove(maxFreq--);
+            }
+
+            map.put(rv, map.get(rv) - 1);
+            if (map.get(rv) == 0)
+                map.remove(rv);
+
+            return rv;
+        }
+    }
+
+    //155
+    class MinStack {
+        LinkedList<Long> st = new LinkedList<>();
+        long minSf = 0;
+
+        public MinStack() {
+
+        }
+
+        public void push(int val) {
+            long x = val;
+            if (st.size() == 0) {
+                st.addFirst(x);
+                minSf = x;
+                return;
+            }
+
+            if (x < minSf) {
+                st.addFirst(2 * x - minSf);
+                minSf = x;
+            } else {
+                st.addFirst(x);
+            }
+        }
+
+        public void pop() {
+            if (st.getFirst() < minSf) {
+                minSf = 2 * minSf - st.getFirst();
+            }
+
+            st.removeFirst();
+        }
+
+        public int top() {
+            if (st.getFirst() < minSf) {
+                return (int)minSf;
+            }
+
+            return (int)(long)st.getFirst();
+        }
+
+        public int getMin() {
+            return (int)minSf;
+        }
+    }
+
 }
