@@ -2,14 +2,16 @@ import java.util.ArrayList;
 
 public class heap {
     private ArrayList<Integer> arr;
+    private boolean isMax = true;
 
-    public heap() {
+    public heap( boolean isMax) {
         this.arr = new ArrayList<>();
+        this.isMax = isMax;
     }
 
     // O(n + nLog(n)) -> O(n)
-    public heap(int[] arr) {
-        this();
+    public heap(int[] arr, boolean isMax) {
+        this(isMax);
         for (int ele : arr)
             this.arr.add(ele);
 
@@ -19,7 +21,8 @@ public class heap {
 
     //O(1)
     public boolean compareTo(int x, int y) {
-        return this.arr.get(x) > this.arr.get(y);
+       if(isMax) return this.arr.get(x) > this.arr.get(y);
+       else return this.arr.get(y) > this.arr.get(x);
     }
 
     //O(1)
