@@ -4,7 +4,7 @@ public class heap {
     private ArrayList<Integer> arr;
     private boolean isMax = true;
 
-    public heap( boolean isMax) {
+    public heap(boolean isMax) {
         this.arr = new ArrayList<>();
         this.isMax = isMax;
     }
@@ -19,13 +19,15 @@ public class heap {
             downHeapify(i);
     }
 
-    //O(1)
+    // O(1)
     public boolean compareTo(int x, int y) {
-       if(isMax) return this.arr.get(x) > this.arr.get(y);
-       else return this.arr.get(y) > this.arr.get(x);
+        if (isMax)
+            return this.arr.get(x) > this.arr.get(y);
+        else
+            return this.arr.get(y) > this.arr.get(x);
     }
 
-    //O(1)
+    // O(1)
     private void swap(int x, int y) {
         int v1 = this.arr.get(x);
         int v2 = this.arr.get(y);
@@ -34,7 +36,7 @@ public class heap {
         this.arr.set(y, v1);
     }
 
-    //Log(n)
+    // Log(n)
     private void downHeapify(int pi) {
         int lci = 2 * pi + 1;
         int rci = 2 * pi + 2;
@@ -52,7 +54,7 @@ public class heap {
         }
     }
 
-    //Log(n)
+    // Log(n)
     private void upHeapify(int ci) {
         int pi = (ci - 1) / 2;
         if (pi >= 0 && compareTo(ci, pi)) {
@@ -61,7 +63,7 @@ public class heap {
         }
     }
 
-    public int size(){
+    public int size() {
         return this.arr.size();
     }
 
@@ -83,6 +85,17 @@ public class heap {
     // O(1)
     public int peek() {
         return this.arr.get(0);
+    }
+
+    public static void input(ArrayList<ArrayList<Integer>> list) {
+        int n = list.size(), m = list.get(0).size();
+        int[][] arr = new int[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                arr[i][j] = list.get(i).get(j);
+            }
+        }
+
     }
 
 }
