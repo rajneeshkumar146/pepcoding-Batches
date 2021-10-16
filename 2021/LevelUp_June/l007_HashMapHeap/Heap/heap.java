@@ -95,7 +95,6 @@ public class heap {
                 arr[i][j] = list.get(i).get(j);
             }
         }
-
     }
 
 }
