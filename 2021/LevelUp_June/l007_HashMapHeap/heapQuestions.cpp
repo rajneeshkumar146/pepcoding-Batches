@@ -5,7 +5,7 @@
 
 using namespace std;
 
-//378
+// 378
 int kthSmallest(vector<vector<int>> &matrix, int k)
 {
     int n = matrix.size();
@@ -30,7 +30,7 @@ int kthSmallest(vector<vector<int>> &matrix, int k)
     return matrix[r][c];
 }
 
-//347
+// 347
 vector<int> topKFrequent(vector<int> &nums, int k)
 {
 
@@ -59,4 +59,69 @@ vector<int> topKFrequent(vector<int> &nums, int k)
     return ans;
 }
 
-//451
+// 451
+
+vector<vector<int>> kClosest(vector<vector<int>> &points, int k)
+{
+
+    //{d,x,y}
+    priority_queue<vector<int>> pq; // maxPQ
+
+    for (vector<int> &p : points)
+    {
+        int x = p[0];
+        int y = p[1];
+        pq.push({x * x + y * y, x, y});
+        if (pq.size() > k)
+            pq.pop();
+    }
+
+    vector<vector<int>> ans;
+    while (pq.size() != 0)
+    {
+        vector<int> p = pq.top();
+        pq.pop();
+        int x = p[1];
+        int y = p[2];
+
+        ans.push_back({x, y});
+    }
+
+    return ans;
+}
+
+struct comp
+{
+public:
+    bool operator()(const pair<string, int> &a, const pair<string, int> &b) const
+    {
+        if (a.second == b.second)
+            return b.first > a.first;
+
+        return a.second > b.second;
+    }
+};
+
+vector<string> topKFrequent(vector<string> &words, int k)
+{
+    unordered_map<string, int> map;
+    for (string &s : words)
+        map[s]++;
+
+    priority_queue<pair<string, int>, vector<pair<string, int>>, comp> pq;
+    for (auto &key : map)
+    {
+        pq.push(key);
+        if (pq.size() > k)
+            pq.pop();
+    }
+
+    vector<string> ans(k);
+    for (int i = k - 1; i >= 0; i--)
+    {
+        ans[i] = pq.top().first;
+        pq.pop();
+    }
+
+    return ans;
+}
