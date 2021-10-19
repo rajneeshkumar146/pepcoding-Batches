@@ -163,8 +163,8 @@ public class heapQuestions {
         
         int n = nums.size();
         
-        //{r,c}
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->{
+        //{r,c}                                                  // {ele, r,c};
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a,b)->{   // priority_queue<vector<int>,vector<vector<int>>,greater<vector<int>>> pq;
             int r1 = a[0], c1 = a[1];
             int r2 = b[0], c2 = b[1];
             
