@@ -2,6 +2,8 @@ import java.util.HashSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Arrays;
 
 public class HashMapQuestions {
 
@@ -115,5 +117,65 @@ public class HashMapQuestions {
 
         return len;
     }
+
+    // 954
+    public boolean canReorderDoubled(int[] arr) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        int N = arr.length;
+        Integer[] ARR = new Integer[N];
+        for (int i = 0; i < N; i++) {
+            map.put(arr[i], map.getOrDefault(arr[i], 0) + 1);
+            ARR[i] = arr[i];
+        }
+
+        Arrays.sort(ARR, (a, b) -> {
+            return Math.abs(a) - Math.abs(b);
+        });
+
+        for (Integer ele : ARR) {
+            if (map.get(ele) == 0)
+                continue;
+            if (map.getOrDefault(2 * ele, 0) <= 0)
+                return false;
+
+            map.put(ele, map.get(ele) - 1);
+            map.put(2 * ele, map.get(2 * ele) - 1);
+        }
+
+        return true;
+    }
+
+    // 295
+    class MedianFinder {
+
+        private PriorityQueue<Integer> maxpq = new PriorityQueue<>((a, b) -> {
+            return b - a;
+        });
+        private PriorityQueue<Integer> minpq = new PriorityQueue<>();
+
+        public MedianFinder() {
+
+        }
+
+        public void addNum(int num) {
+            if (maxpq.size() == 0 || num <= maxpq.peek())
+                maxpq.add(num);
+            else
+                minpq.add(num);
+
+            if(maxpq.size() - minpq.size() == 2) minpq.add(maxpq.remove());
+            if(maxpq.size() - minpq.size() == -1) maxpq.add(minpq.remove());
+        }
+
+        public double findMedian() {
+            if (maxpq.size() == minpq.size())
+                return (maxpq.peek() + minpq.peek()) / 2.0;
+            else
+                return maxpq.peek() * 1.0;
+        }
+    }
+    
+    // 127
 
 }
