@@ -164,8 +164,10 @@ public class HashMapQuestions {
             else
                 minpq.add(num);
 
-            if(maxpq.size() - minpq.size() == 2) minpq.add(maxpq.remove());
-            if(maxpq.size() - minpq.size() == -1) maxpq.add(minpq.remove());
+            if (maxpq.size() - minpq.size() == 2)
+                minpq.add(maxpq.remove());
+            if (maxpq.size() - minpq.size() == -1)
+                maxpq.add(minpq.remove());
         }
 
         public double findMedian() {
@@ -175,7 +177,69 @@ public class HashMapQuestions {
                 return maxpq.peek() * 1.0;
         }
     }
-    
+
     // 127
+
+    // 447
+    public int numberOfBoomerangs(int[][] points) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int ans = 0, n = points.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == j)
+                    continue;
+                int dis = distance(points, i, j);
+                map.put(dis, map.getOrDefault(dis, 0) + 1);
+            }
+
+            for (int ele : map.values()) {
+                ans += ele * (ele - 1);
+            }
+
+            map.clear();
+        }
+
+        return ans;
+    }
+
+    public int distance(int[][] points, int i, int j) {
+        int x = (points[j][0] - points[i][0]);
+        int y = (points[j][1] - points[i][1]);
+
+        return x * x + y * y;
+    }
+
+    // 149
+    public int maxPoints(int[][] points) {
+        HashMap<String, Integer> map = new HashMap<>();
+        int ans = 0, n = points.length;
+        for (int i = 0; i < n; i++) {
+            int overlap = 0, max = 0;
+            for (int j = i + 1; j < n; j++) {
+                int xdiff = points[j][0] - points[i][0];
+                int ydiff = points[j][1] - points[i][1];
+
+                int gcd = gcd(xdiff, ydiff);
+
+                xdiff /= gcd;
+                ydiff /= gcd;
+
+                String s = xdiff + "@" + ydiff;
+                map.put(s, map.getOrDefault(s, 0) + 1);
+                max = Math.max(map.get(s), max);
+            }
+
+            ans = Math.max(max + 1, ans);
+            map.clear();
+        }
+
+        return ans;
+    }
+
+    public int gcd(int a, int b) {
+        if (b == 0)
+            return a;
+        return gcd(b, a % b);
+    }
 
 }

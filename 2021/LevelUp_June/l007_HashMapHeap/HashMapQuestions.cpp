@@ -66,3 +66,48 @@ bool canReorderDoubled(vector<int> &arr)
     }
     return true;
 }
+
+// 380
+class RandomizedSet
+{
+public:
+    unordered_map<int, int> map;
+    vector<int> list;
+
+    RandomizedSet()
+    {
+    }
+
+    bool insert(int val)
+    {
+        if (map.find(val) != map.end())
+            return false;
+
+        int idx = list.size();
+        map[val] = idx;
+        list.push_back(val);
+        return true;
+    }
+
+    bool remove(int val)
+    {
+        if (map.find(val) == map.end())
+            return false;
+
+        int idx = map[val];
+        int lidx = list.size() - 1;
+        list[idx] = list[lidx];
+
+        list.pop_back();
+        map[list[idx]] = idx;
+        map.erase(val);
+
+        return true;
+    }
+
+    int getRandom()
+    {
+        int idx = rand() % list.size();
+        return list[idx];
+    }
+};
