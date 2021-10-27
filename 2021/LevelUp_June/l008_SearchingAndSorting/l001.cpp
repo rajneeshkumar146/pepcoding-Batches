@@ -132,3 +132,27 @@ bool searchMatrix(vector<vector<int>> &matrix, int target)
 
     return false;
 }
+
+// 658
+vector<int> findClosestElements(vector<int> &arr, int k, int x)
+{
+    int n = arr.size();
+    if (x <= arr[0])
+        return {arr.begin(), arr.begin() + k};
+    else if (x >= arr[n - 1])
+        return {arr.end() - k, arr.end()};
+
+    int idx = perfectLocation(arr, x);
+    int si = max(0, idx - k);
+    int ei = min(n - 1, idx + k);
+
+    while ((ei - si + 1) > k)
+    {
+        if ((x - arr[si]) > (arr[ei] - x))
+            si++;
+        else
+            ei--;
+    }
+
+    return {arr.begin() + si, arr.begin() + ei + 1};
+}
