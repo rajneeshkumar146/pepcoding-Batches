@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 using namespace std;
 
@@ -156,3 +157,19 @@ vector<int> findClosestElements(vector<int> &arr, int k, int x)
 
     return {arr.begin() + si, arr.begin() + ei + 1};
 }
+
+
+// 1 ========
+ vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_map<int,int> map;
+        
+        for(int i=0; i<nums.size(); i++){
+            if(map.find(target-nums[i])!=map.end()){
+                return {i,map[target-nums[i]]};
+            } else {
+                map[nums[i]]=i;
+            }
+        }
+        return {};
+        
+    }
