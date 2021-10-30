@@ -150,7 +150,7 @@ public class l001 {
             int fix=nums[i];
             
             // 2 sum
-            List<List<Integer>> smallAns=3sum(nums,i+1,ei,target-fix);
+            List<List<Integer>> smallAns=allPairs(nums,i+1,ei,target-fix);
 
             makeAns(ans,smallAns,fix);
 
@@ -159,5 +159,160 @@ public class l001 {
         }
 
         return ans;
+    }
+
+
+    // 4 sum / leet 18 
+
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+        List<List<Integer>> ans=new ArrayList<>();
+
+        for(int i=0; i<nums.length; i++){
+            int fix=nums[i];
+
+            // 3 sum call
+            List<Integer> smallAns = 3sum(nums,i+1,ei,target-fix);
+
+            makeAns(ans,smallAns,fix);
+
+            i++;
+
+            // to remove duplicates
+            while(i<ei && nums[i]==nums[i-1]) i++;
+        }
+
+        return ans;
+    }
+    // generic KSum ====================
+
+    public List<List<Integer>> KSum(int[] nums, int target, int k, int si, int ei) {
+        if(k==2){
+            return allPairs(nums,target,si,ei);
+        }
+
+        List<List<Integer>> ans=new ArrayList<>();
+
+        for(int i=si; i<ei; i++){
+            int fix=nums[i];
+
+            // 3 sum call
+            List<Integer> smallAns = KSum(nums,target-fix,k-1, i+1, ei);
+
+            makeAns(ans,smallAns,fix);
+
+            i++;
+
+            // to remove duplicates
+            while(i<ei && nums[i]==nums[i-1]) i++;
+        }
+
+        return ans;
+    }
+    
+
+    // two sum count ====================================
+
+
+    public int count(int[] arr1, int[] arr2, int target){
+        int ans=0;
+
+        HashMap<Integer,Integer> map=new HashMap<>();
+
+        for(int i=0; i<arr1.length; i++){
+            map.put(arr1[i],map.getOrDefault(arr1[i],0)+1);
+        }
+
+        for(int i=0; i<arr2.length; i++){
+            int new_target=target-arr2[i];
+
+            if(map.containsKey(new_target)){
+                ans+=map.get(new_target);
+            }
+        }
+
+        return ans;
+    }
+
+    // leet 454 
+
+    public int fourSumCount(int[] nums1, int[] nums2, int[] nums3, int[] nums4) {
+        HashMap<Integer,Integer> map=new HashMap<>();
+        
+        for(int e:nums1){
+            for(int f:nums2){
+                map.put(e+f,map.getOrDefault(e+f,0)+1);
+            }
+        }
+        
+        int ans=0;
+        for(int e:nums3){
+            for(int f:nums4){
+                if(map.containsKey(0-(e+f))){
+                    ans+=map.get(0-(e+f));
+                }
+            }
+        }
+        
+        return ans;
+    }
+
+    // leet 33 ============================================
+
+    public int search(int[] nums, int target) {
+        int si=0;
+        int ei=nums.length-1;
+        
+        while(si<=ei){
+            int mid=si+(ei-si)/2;
+            
+            if(nums[mid]==target) return mid;
+            
+            if(si==mid || nums[si]<nums[mid]){ // from si to mid, nums is sorted
+                if(nums[si]<=target && nums[mid]>target){
+                    ei=mid-1;
+                } else {
+                    si=mid+1;
+                }
+            } else {
+                if(nums[mid]<target && nums[ei]>=target){
+                    si=mid+1;
+                } else {
+                    ei=mid-1;
+                }
+            }
+        }
+        
+        return -1;
+    }
+
+    // leet 81 ================
+    public boolean search(int[] nums, int target) {
+        int si=0;
+        int ei=nums.length-1;
+        
+        
+        while(si<=ei){
+            int mid=(si+ei)/2;
+            
+            if(nums[mid]==target || nums[si]==target) return true;
+            
+            if(nums[si]<nums[mid]){
+                if(nums[si]<=target && target<nums[mid]){
+                    ei=mid-1;
+                } else {
+                    si=mid+1;
+                }
+            } else if(nums[mid]<nums[ei]){
+                if(nums[mid]<target && target<=nums[ei]){
+                    si=mid+1;
+                } else {
+                    ei=mid-1;
+                }
+            } else {
+                si++;
+            }
+        }
+        
+        return false;
     }
 }
