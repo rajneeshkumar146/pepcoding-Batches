@@ -98,9 +98,11 @@ void twoDQueen()
     int n = 4, tnq = 4;
     vector<vector<bool>> board(n, vector<bool>(n, false));
 
-    // cout << queenCombination2D(board, 0, tnq, "") << endl;
-    cout << queenPermutation2D(board, 0, tnq, "") << endl;
+    cout << queenCombination2D(board, 0, tnq, "") << endl;
+    // cout << queenPermutation2D(board, 0, tnq, "") << endl;
 }
+
+
 
 int main()
 {
