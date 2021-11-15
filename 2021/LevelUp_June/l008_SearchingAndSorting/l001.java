@@ -315,4 +315,220 @@ public class l001 {
         
         return false;
     }
+// leetcode 4 ================ O(n+m) 
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int s1=nums1.length;
+        int s2=nums2.length;
+        int total=s1+s2;
+        
+        int[] marr=new int[total];
+        
+        int i=0;
+        int j=0;
+        int k=0;
+        
+        while(i<s1 && j<s2){
+            // comapre nums1 and nums2
+            if(nums1[i]<=nums2[j]){
+                marr[k]=nums1[i];
+                i++;
+            } else {
+                marr[k]=nums2[j];
+                j++;
+            }
+            k++;
+        }
+        
+        while(i<s1){
+            marr[k]=nums1[i];
+            i++;
+            k++;
+        }
+        
+        while(j<s2){
+            marr[k]=nums2[j];
+            j++;
+            k++;
+        }
+        
+        // find median
+        if(total%2==0){
+            int sum=(marr[total/2]+marr[(total-1)/2]);
+            return sum*1.0/2.0;
+        } else {
+            return marr[total/2];
+        }
+    }
+
+
+// leetcode 4 optimized =====================
+
+ public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        if(nums1.length>nums2.length){
+            // swap-> making nums1 smaller 
+            return findMedianSortedArrays(nums2,nums1);
+        }
+        
+        
+        int s1=nums1.length;
+        int s2=nums2.length;
+        int total=s1+s2;
+        
+        int si=0;
+        int ei=s1;
+        
+        while(si<=ei){
+            int mid=(si+ei)/2;
+            
+            int bmid=((total+1)/2)-mid; // for even odd both;
+            
+            int aright=(mid==s1) ? (int)1e9 : nums1[mid];
+            int aleft=(mid==0) ? -(int)1e9 : nums1[mid-1];
+            
+            int bright=(bmid==s2) ? (int)1e9 : nums2[bmid];
+            int bleft=(bmid==0) ? -(int)1e9 : nums2[bmid-1];
+            
+            // checking if partition is okay
+            if(bleft<=aright && aleft<=bright){
+                // find median 
+                if(total%2==0){
+                    int sum=Math.max(aleft,bleft)+Math.min(bright,aright);
+                    
+                    return (sum*1.0)/2.0;
+                } else {
+                    return Math.max(aleft,bleft);
+                }
+            }
+            
+            if(bleft>aright){
+                si=mid+1;
+            } else if(aleft>bright){
+                ei=mid-1;
+            }
+        }
+        
+        return -1;
+    }
+
+    // leet 2064 ===============================================================
+    public boolean check(int mid, int n, int[] q){
+        for(int e:q){
+            int stores=e/mid;
+            
+            if(e%mid!=0) stores++;
+            n-=stores;
+        }
+        return n>=0;
+    }
+    
+    public int minimizedMaximum(int n, int[] quantities) {
+        int si=1;
+        int ei=1;
+        
+        for(int e:quantities){
+            ei=Math.max(ei,e);
+        }
+        
+        while(si<ei){
+            int mid=(si+ei)/2;
+            
+            if(!check(mid,n,quantities)){
+                si=mid+1;
+            } else {
+                ei=mid;
+            }
+        }
+        
+        return si;
+    }
+
+
+    // leetcode 75 (segregate 0's, 1's and 2's)
+     void sortColors(int[] nums) {
+        int p1=-1;
+        int p2=0;
+        int n=nums.length;
+        int p3=n-1;
+        
+        
+        while(p2<=p3){
+            if(nums[p2]==0){
+                // swap(nums[++p1],nums[p2++]);
+                p1++;
+                //swap
+                int t=nums[p1];
+                nums[p1]=nums[p2];
+                nums[p2]=t;
+
+                p2++;
+            } else if(nums[p2]==2) {
+                // swap(nums[p3--],nums[p2]);
+                int t=nums[p3];
+                nums[p3]=nums[p2];
+                nums[p2]=t;
+
+                p3--;
+            } else {
+                p2++;
+            }
+        }
+    }
+
+    // https://practice.geeksforgeeks.org/problems/max-sum-in-the-configuration/1#
+
+    int max_sum(int A[], int n)
+    {
+	    int total_sum=0;
+	    
+	    for(int e:A){
+	        total_sum+=e;
+	    }
+	    
+	    int csum=0;
+	    
+	    for(int i=0; i<n; i++){
+	        csum+=A[i]*i;
+	    }
+	    
+	    int max=csum;
+	    
+	    for(int i=1; i<n; i++){
+	        int nsum=csum-(total_sum)+n*A[i-1];
+	        csum=nsum;
+	        
+	        max=Math.max(max,csum);
+	    }
+	    
+	    return max;
+    }
+
+    // leet 11 ============================================
+
+    public int maxArea(int[] height) {
+     int n=height.length;
+        
+        int p1=0;
+        int p2=n-1;
+        
+        int max_area=0;
+        
+        while(p1<p2){
+            int len=Math.min(height[p1],height[p2]);
+            int width=p2-p1;
+            
+            int curr_area=len*width;
+            
+            max_area=Math.max(curr_area,max_area);
+            
+            if(height[p1]<=height[p2]){
+                p1++;
+            } else {
+                p2--;
+            }
+        }
+        
+        return max_area;
+    }
+
+
 }
