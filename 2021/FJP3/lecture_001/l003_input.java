@@ -7,6 +7,6 @@ public class l003_input {
         int b = scn.nextInt();
 
         System.out.println(a);
-        System.out.println(b);
+        System.out.println("\\n");
     }
 }
