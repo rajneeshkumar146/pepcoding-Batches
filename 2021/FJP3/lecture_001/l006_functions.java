@@ -75,6 +75,60 @@ public class l006_functions {
         }
     }
 
+    public static void printInReverseOrder(int num) {
+        while (num != 0) {
+            int lastDigit = num % 10;
+            num /= 10;
+
+            System.out.println(lastDigit);
+        }
+    }
+
+    public static int inverseOfNumber(int num) {
+        int totalDigit = countDigitOfNumber(num);
+        int lastIndex = totalDigit, res = 0;
+        while (num != 0) {
+            int lastDigit = num % 10;
+            num /= 10;
+
+            res += lastIndex * (int) Math.pow(10, totalDigit - lastDigit);
+            lastIndex--;
+        }
+
+        return res;
+    }
+
+    public static int inverseOfNumber_Easy(int num) {
+        int lastIndex = 1, res = 0;
+        while (num != 0) {
+            int lastDigit = num % 10;
+            num /= 10;
+
+            res += lastIndex * (int) Math.pow(10, lastDigit - 1);
+            lastIndex++;
+        }
+
+        return res;
+    }
+
+    public static void BenjaminBulbs(int n) {
+        for (int i = 1; i * i <= n; i++) {
+            System.out.println(i * i);
+        }
+    }
+
+    public static boolean Pythagorean(int a, int b, int c) {
+        if (a * a == b * b + c * c)
+            return true;
+        else if (b * b == a * a + c * c)
+            return true;
+        else if (c * c == b * b + a * a)
+            return true;
+        else
+            return false;
+
+    }
+
     public static void main(String[] args) {
         // for (int i = 0; i < 10; i++)
         // printMessage();
