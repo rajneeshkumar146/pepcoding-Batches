@@ -129,6 +129,48 @@ public class l006_functions {
 
     }
 
+    public static int rotateNumber(int num, int r) {
+        int len = countDigitOfNumber(num);
+
+        r = (r % len + len) % len;
+
+        int a = num / (int) Math.pow(10, r);
+        int b = num % (int) Math.pow(10, r);
+
+        return (b * (int) Math.pow(10, len - r) + a);
+    }
+
+    public static int rotateNumber2(int num, int r) {
+        int len = countDigitOfNumber(num);
+
+        r = (r % len + len) % len;
+
+        int div = 1, mul = 1;
+        for (int i = 1; i <= len; i++)
+            if (i <= r)
+                div *= 10;
+            else
+                mul *= 10;
+
+        int a = num / div;
+        int b = num % div;
+
+        return (b * mul + a);
+    }
+
+    public static void primeFactor(int n) {
+        for (int pn = 2; pn * pn <= n; pn++) {
+            while (n % pn == 0) {
+                System.out.print(pn + " ");
+                n /= pn;
+            }
+        }
+
+        if (n != 1)
+            System.out.print(n);
+
+    }
+
     public static void main(String[] args) {
         // for (int i = 0; i < 10; i++)
         // printMessage();
