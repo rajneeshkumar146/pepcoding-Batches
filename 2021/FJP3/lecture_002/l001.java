@@ -203,14 +203,90 @@ public class l001 {
     public static void pattern9(int rows) {
         for (int r = 1; r <= rows; r++) {
             for (int c = 1; c <= rows; c++) {
-                // ????
-                if (r + c == rows + 1)
+                if (r == c || r + c == rows + 1)
                     System.out.print("*\t");
                 else
                     System.out.print("\t");
             }
             System.out.println();
         }
+    }
+
+    public static void pattern9_01(int n) {
+        int nsp1 = 0, nsp2 = n - 2;
+        for (int r = 1; r <= n; r++) {
+            for (int csp1 = 1; csp1 <= nsp1; csp1++)
+                System.out.print("\t");
+
+            System.out.print("*\t");
+
+            for (int csp2 = 1; csp2 <= nsp2; csp2++)
+                System.out.print("\t");
+
+            if (r != n / 2 + 1)
+                System.out.print("*\t");
+
+            if (r <= n / 2) {
+                nsp1++;
+                nsp2 -= 2;
+            } else {
+                nsp1--;
+                nsp2 += 2;
+            }
+
+            System.out.println();
+        }
+    }
+
+    public static void extraPattern_03(int n) {
+        int nst = 1;
+        for (int r = 1; r <= n; r++) {
+            for (int cst = 1; cst <= nst; cst++) {
+                System.out.print(nst + "\t");
+            }
+            System.out.println();
+            nst++;
+        }
+
+    }
+
+    public static void pattern11(int n) {
+        int nst = 1, count = 1;
+        for (int r = 1; r <= n; r++) {
+            for (int cst = 1; cst <= nst; cst++) {
+                System.out.print(count++ + "\t");
+            }
+            System.out.println();
+            nst++;
+        }
+
+    }
+
+    public static void extraPattern_04_diamond(int n) {
+        int nst = 1, nsp = n / 2;
+        for (int r = 1; r <= n; r++) {
+
+            for (int csp = 1; csp <= nsp; csp++) {
+                System.out.print("\t");
+            }
+
+            int count = (r <= n / 2 + 1 ? r : n - r + 1);
+
+            for (int cst = 1; cst <= nst; cst++) {
+                System.out.print(count + "\t");
+            }
+
+            if (r <= n / 2) {
+                nsp--;
+                nst += 2;
+            } else {
+                nsp++;
+                nst -= 2;
+            }
+
+            System.out.println();
+        }
+
     }
 
     public static void pattern10(int rows) {
@@ -229,6 +305,6 @@ public class l001 {
     public static void main(String[] args) {
         Scanner scn = new Scanner(System.in);
         int n = scn.nextInt();
-        pattern6_HollowDiamond(n);
+        extraPattern_04_diamond(n);
     }
 }
