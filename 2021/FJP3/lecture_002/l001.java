@@ -288,6 +288,46 @@ public class l001 {
         }
     }
 
+    public static void pattern12(int n) {
+
+        // int a = 0, b = 1;
+        // for (int i = 0; i <= n; i++) {
+        // System.out.print(a + " ");
+        // int sum = a + b;
+        // a = b;
+        // b = sum;
+        // }
+
+        int nst = 1, a = 0, b = 1;
+        for (int r = 1; r <= n; r++) {
+            for (int cst = 1; cst <= nst; cst++) {
+                System.out.print(a + "\t");
+
+                int sum = a + b;
+                a = b;
+                b = sum;
+            }
+
+            nst++;
+            System.out.println();
+
+        }
+
+    }
+
+    public static void pattern13(int rows) {
+        for (int n = 0; n <= rows; n++) {
+            int val = 1;
+            for (int r = 0; r <= n; r++) {
+                // System.out.print(n + "C" + r + "\t");
+                System.out.print(val + "\t");
+                val = ((n - r) * val) / (r + 1);
+            }
+
+            System.out.println();
+        }
+    }
+
     public static void pattern14(int n) {
         for (int r = 1; r <= 10; r++) {
             System.out.println(n + " * " + r + " = " + (n * r));
@@ -300,17 +340,20 @@ public class l001 {
         for (int r = 1; r <= n; r++) {
             int count = 1;
             for (int cst = 1; cst <= nst; cst++) {
-                System.out.print(count + "\t");
+                System.out.print(count++ + "\t");
             }
 
             for (int csp = 1; csp <= nsp; csp++) {
                 System.out.print("\t");
             }
 
-            if (r == n)
+            if (r == n) {
                 nst--;
+                count--;
+            }
+
             for (int cst = 1; cst <= nst; cst++) {
-                System.out.print(count + "\t");
+                System.out.print(--count + "\t");
             }
 
             nst++;
@@ -386,6 +429,6 @@ public class l001 {
     public static void main(String[] args) {
         Scanner scn = new Scanner(System.in);
         int n = scn.nextInt();
-        pattern16(n);
+        pattern13(n);
     }
 }
