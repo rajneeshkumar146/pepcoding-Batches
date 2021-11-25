@@ -289,7 +289,9 @@ public class l001 {
     }
 
     public static void pattern14(int n) {
-
+        for (int r = 1; r <= 10; r++) {
+            System.out.println(n + " * " + r + " = " + (n * r));
+        }
     }
 
     public static void pattern16(int n) {
@@ -362,6 +364,6 @@ public class l001 {
     public static void main(String[] args) {
         Scanner scn = new Scanner(System.in);
         int n = scn.nextInt();
-        pattern15_extra(n);
+        pattern14(n);
     }
 }
