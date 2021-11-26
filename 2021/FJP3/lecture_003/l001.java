@@ -26,6 +26,19 @@ public class l001 {
         return ans;
     }
 
+    public static int binaryToDecimal(int n) {
+        int ans = 0, pow = 1;
+        while (n != 0) {
+            int rem = n % 10;
+            n /= 10;
+
+            ans += rem * pow;
+            pow = pow * 2;
+        }
+
+        return ans;
+    }
+
     // 1 < b <= 10
     public static int decimalToanyBase(int n, int b) {
         int pow = 1, ans = 0;
@@ -54,28 +67,68 @@ public class l001 {
         return ans;
     }
 
-    public static int binaryToDecimal(int n) {
-        int ans = 0, pow = 1;
-        while (n != 0) {
-            int rem = n % 10;
-            n /= 10;
+    public static int anyBaseToanyBase(int n, int b1, int b2) {
+        int decimal = anyBaseToDecimal(n, b1);
+        int ans = decimalToanyBase(decimal, b2);
 
-            ans += rem * pow;
-            pow = pow * 2;
+        return ans;
+    }
+
+    public static int decimalAddition(int n, int m) {
+        int ans = 0, pow = 1, carry = 0;
+
+        while (n != 0 || m != 0 || carry != 0) {
+            int sum = carry + n % 10 + m % 10;
+            n /= 10;
+            m /= 10;
+            carry = sum / 10;
+            sum %= 10;
+
+            ans += sum * pow;
+            pow *= 10;
         }
 
         return ans;
     }
 
+    public static int anyBaseAddition(int n, int m, int b) {
+        int ans = 0, pow = 1, carry = 0;
+
+        while (n != 0 || m != 0 || carry != 0) {
+            int sum = carry + n % 10 + m % 10;
+            n /= 10;
+            m /= 10;
+
+            // carry = sum / 2;
+            // sum %= 2;
+
+            carry = sum / b;
+            sum %= b;
+
+            ans += sum * pow;
+            pow *= 10;
+        }
+
+        return ans;
+    }
+
+    // m - n = ??
+    public static int decimalSubtraction(int n, int m) {
+        int ans = 0, pow = 1, borrow = 0;
+        return ans;
+    }
+
     public static void main(String[] args) {
         Scanner scn = new Scanner(System.in);
-        int n = scn.nextInt();
+        // int n = scn.nextInt();
 
-        int binary = decimalToBinary(n);
-        System.out.println(binary);
+        // int binary = decimalToBinary(n);
+        // System.out.println(binary);
 
-        int decimal = binaryToDecimal(binary);
-        System.out.println(decimal);
+        // int decimal = binaryToDecimal(binary);
+        // System.out.println(decimal);
+
+        System.out.println(decimalAddition(scn.nextInt(), scn.nextInt()));
     }
 
 }
