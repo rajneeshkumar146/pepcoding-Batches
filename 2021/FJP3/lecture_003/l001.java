@@ -28,12 +28,30 @@ public class l001 {
 
     // 1 < b <= 10
     public static int decimalToanyBase(int n, int b) {
+        int pow = 1, ans = 0;
+        while (n != 0) {
+            int rem = n % b;
+            n /= b;
 
+            ans += rem * pow;
+            pow *= 10;
+        }
+
+        return ans;
     }
 
     // 1 < b <= 10
     public static int anyBaseToDecimal(int n, int b) {
+        int pow = 1, ans = 0;
+        while (n != 0) {
+            int rem = n % 10;
+            n /= 10;
 
+            ans += rem * pow;
+            pow *= b;
+        }
+
+        return ans;
     }
 
     public static int binaryToDecimal(int n) {
@@ -55,7 +73,7 @@ public class l001 {
 
         int binary = decimalToBinary(n);
         System.out.println(binary);
-        
+
         int decimal = binaryToDecimal(binary);
         System.out.println(decimal);
     }
