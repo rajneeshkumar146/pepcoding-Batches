@@ -223,6 +223,190 @@ public class l005_cutSet {
         return countWays(S, 0, N - 1, dp).tCount;
     }
 
+    // OBST
+
+    public static int sumOfFreq(int i, int j, int[] freq) {
+        int sum = 0;
+        while (i <= j) {
+            sum += freq[i];
+            i++;
+        }
+        return sum;
+    }
+
+    public static int obst_memo(int[] nodes, int[] freq, int si, int ei, int[][] dp) {
+        if (dp[si][ei] != -1)
+            return dp[si][ei];
+
+        int minAns = (int) 1e9;
+        int sum = 0;
+        for (int cut = si; cut <= ei; cut++) {
+            int leftRes = si == cut ? 0 : obst_memo(nodes, freq, si, cut - 1, dp);
+            int rightRes = ei == cut ? 0 : obst_memo(nodes, freq, cut + 1, ei, dp);
+
+            sum += freq[cut];
+            int myAns = leftRes + rightRes;
+            minAns = Math.min(minAns, myAns);
+        }
+
+        return dp[si][ei] = minAns + sum;
+    }
+
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+
+        TreeNode() {
+        }
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
+    }
+
+    public void generateAllBST(int num, List<TreeNode> left, List<TreeNode> right, List<TreeNode> ans) {
+        if (left.size() != 0 && right.size() != 0) {
+            for (int i = 0; i < left.size(); i++) {
+                for (int j = 0; j < right.size(); j++) {
+                    TreeNode root = new TreeNode(num);
+                    root.left = left.get(i);
+                    root.right = right.get(j);
+                    ans.add(root);
+                }
+            }
+        } else if (left.size() != 0) {
+            for (int i = 0; i < left.size(); i++) {
+                TreeNode root = new TreeNode(num);
+                root.left = left.get(i);
+                ans.add(root);
+            }
+        } else if (right.size() != 0) {
+            for (int j = 0; j < right.size(); j++) {
+                TreeNode root = new TreeNode(num);
+                root.right = right.get(j);
+                ans.add(root);
+            }
+        } else {
+            ans.add(new TreeNode(num));
+        }
+    }
+
+    public List<TreeNode> generateTrees(int si, int ei) {
+        List<TreeNode> ans = new ListNode<>();
+        for (int cut = si; cut <= ei; cut++) {
+            List<TreeNode> leftList = generateTrees(si, cut - 1);
+            List<TreeNode> rightList = generateTrees(cut + 1, ei);
+
+            generateAllBST(cut, leftList, rightList, ans);
+        }
+
+        return ans;
+    }
+
+    public int minScoreTriangulation(int[] values, int si, int ei, int[][] dp) {
+        if (ei - si <= 1) {
+            return dp[si][ei] = 0;
+        }
+
+        if (dp[si][ei] != -1)
+            return dp[si][ei];
+
+        int minRes = (int) 1e9;
+        for (int cut = si + 1; cut < ei; cut++) {
+            int leftRes = minScoreTriangulation(values, si, cut, dp);
+            int rightRes = minScoreTriangulation(values, cut, ei, dp);
+
+            int myAns = leftRes + values[si] * values[cut] * values[ei] + rightRes;
+            minRes = Math.min(myAns, minRes);
+        }
+
+        return dp[si][ei] = minRes;
+    }
+
+    public int minScoreTriangulation(int[] values) {
+        int n = values.length;
+        int[][] dp = new int[n][n];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+
+        return minScoreTriangulation(values, 0, n - 1, dp);
+    }
+
+    // 139
+    public boolean wordBreak(String s, List<String> wordDict) {
+        int n = s.length();
+
+        int len = 0;
+        HashSet<String> words = new HashSet<>();
+        for (String str : wordDict) {
+            len = Math.max(str.length(), len);
+            words.add(str);
+        }
+
+        boolean[] dp = new boolean[n + 1];
+
+        dp[0] = true;
+        for (int i = 0; i < n; i++) {
+            if (!dp[i])
+                continue;
+
+            for (int l = 1; len <= len && i + l <= n; l++) {
+                if (words.contains(s.substring(i, i + l)))
+                    dp[i + l] = true;
+            }
+        }
+
+        return dp[n];
+    }
+
+    public void dfs(String str, int idx, int len, String asf, List<String> ans, HashSet<String> words, boolean[] dp) {
+        if (idx == str.length()) {
+            ans.add(asf.substring(0, asf.length() - 1));
+            return;
+        }
+        for (int l = 1; idx + l <= str.length() && l <= len; l++) {
+            if (dp[idx + l] && words.contains(str.substring(idx, idx + l)))
+                dfs(str, idx + l, len, asf + str.substring(idx, idx + l) + " ", ans, words, dp);
+        }
+    }
+
+    public List<String> wordBreak_II(String s, List<String> wordDict) {
+        int n = s.length();
+
+        int len = 0;
+        HashSet<String> words = new HashSet<>();
+        for (String str : wordDict) {
+            len = Math.max(str.length(), len);
+            words.add(str);
+        }
+
+        boolean[] dp = new boolean[n + 1];
+
+        dp[0] = true;
+        for (int i = 0; i < n; i++) {
+            if (!dp[i])
+                continue;
+
+            for (int l = 1; len <= len && i + l <= n; l++) {
+                if (words.contains(s.substring(i, i + l)))
+                    dp[i + l] = true;
+            }
+        }
+
+        List<String> ans = new ArrayList<>();
+        if (!dp[n])
+            return ans;
+        dfs(s, 0, len, "", ans, words, dp);
+        return ans;
+    }
+
     public static void main(String[] args) {
         minMaxEvaluation();
     }
