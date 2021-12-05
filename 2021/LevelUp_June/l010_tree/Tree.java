@@ -1,3 +1,8 @@
+import java.util.ArrayList;
+
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreeNode;
+
 class tree{
     class Node {
         public int val;
@@ -179,7 +184,7 @@ class tree{
         return ans;
     }
     public int k_far_find(TreeNode root, TreeNode target, int k,List<Integer> ans){
-        if(root==null) return false;
+        if(root==null) return -1;
 
         if(root==target){
             kdown_fill(root,k,ans,null);
@@ -207,5 +212,55 @@ class tree{
         k_far_find(root,target,k,ans);
 
         return ans;
+    }
+
+
+    // burning Tree ===================================================== 
+    public static void getBurningNodesAtSpecificTime(TreeNode root, int time,ArrayList<ArrayList<Integer>> ans,TreeNode blocker){
+        if(root==null || root==blocker) return;
+
+        if(time==ans.size()){
+            ans.add(new ArrayList<>());
+        }
+
+        ans.get(time).add(root.val);
+
+        getBurningNodesAtSpecificTime(root.left,time+1,ans,blocker);
+        getBurningNodesAtSpecificTime(root.right,time+1,ans,blocker);
+    }
+
+
+    public static int find_burningTre(TreeNode root, TreeNode data, ArrayList<ArrayList<Integer>> ans){
+        if(root==null) return -1;
+
+        if(root==data){
+            // get every node below this node
+            getBurningNodesAtSpecificTime(root,0,ans,null);
+            return 1;
+        }
+
+        int left_dis=find_burningTre(root.left,data,ans);
+        int right_dis=find_burningTre(root.right,data,ans);
+
+        if(left_dis>=0){
+            // get nodes
+            getBurningNodesAtSpecificTime(root, left_dis, ans, root.left);
+            return left_dis+1;
+        }
+
+        if(right_dis>=0){
+            // get nodes
+            getBurningNodesAtSpecificTime(root, right_dis, ans, root.right);
+            return right_dis+1;
+        }
+
+        return -1;
+    }
+
+
+    public static void burningTree(TreeNode root, TreeNode data){
+        ArrayList<ArrayList<Integer>> ans=new ArrayList<>();
+        find_burningTre(root, data,ans);
+
     }
 }
