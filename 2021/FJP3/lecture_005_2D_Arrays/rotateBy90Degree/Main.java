@@ -14,22 +14,40 @@ public class Main {
         }
     }
     
+    public static void reverse1D(int [] arr){
+        int li = 0;
+        int ri = arr.length-1;
+        while(li<=ri){
+            int t = arr[li];
+            arr[li] = arr[ri];
+            arr[ri] = t;
+            li++;
+            ri--;
+        }
+        
+    }
+    
     public static void reverse(int [][] arr){
         int n = arr.length;
-        for(int i = 0; i<n ; i++){
-            int li = 0;
-            int ri = n-1;
+        // for(int i = 0; i<n ; i++){
+        //     int li = 0;
+        //     int ri = n-1;
             
-            while(li<=ri){
-                int tmp = arr[i][li];
-                arr[i][li] = arr[i][ri];
-                arr[i][ri] = tmp;
+        //     while(li<=ri){
+        //         int tmp = arr[i][li];
+        //         arr[i][li] = arr[i][ri];
+        //         arr[i][ri] = tmp;
                 
-                li++;
-                ri--;
-            }
+        //         li++;
+        //         ri--;
+        //     }
             
-        }
+        // }
+        
+        for(int [] d : arr)
+            reverse1D(d);
+
+        
     }
     
     public static void main(String[] args) throws Exception {
