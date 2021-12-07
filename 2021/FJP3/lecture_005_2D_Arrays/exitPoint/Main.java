@@ -4,7 +4,13 @@ import java.util.*;
 public class Main {
     
     public static Scanner scn = new Scanner(System.in);
-    
+    public static void input(int [][] arr){
+        for(int i = 0; i<arr.length; i++){
+            for(int j = 0; j<arr[0].length; j++){
+                arr[i][j] = scn.nextInt();
+            }
+        }
+    }
     
     public static void exitPoint(int [][] arr){
         //east 0. south 1, west = 2, north = 3
@@ -22,17 +28,17 @@ public class Main {
             dir %= 4;
             
             if(dir == 0){
-                
+                j++;
             }
             else if(dir == 1){
-                
+                i++;
             }
             else if(dir == 2){
-                
+                j--;
             }
             else{
                 //dir == 3
-                
+                i--;
             }
             
             if( i < 0 || j < 0 || i >= n || j >= m){
