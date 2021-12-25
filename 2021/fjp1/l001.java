@@ -124,7 +124,7 @@ public class l001 {
         if (si == ei)
             return lists[si];
 
-        int mid = (si + ei) / 2;
+        int mid = si + (ei-si)/2;
         ListNode l1 = mergeKLists(lists, si, mid);
         ListNode l2 = mergeKLists(lists, mid + 1, ei);
         return mergeTwoLists(l1, l2);
