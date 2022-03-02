@@ -119,7 +119,22 @@ public class l001 {
         return count;
     }
 
+    // jump : 1,2,3
+    public static int stairPath(int n,String ans) {
+        if(n == 0){
+            System.out.println(ans);
+            return 1;
+        }
+        int count = 0;
+        count += stairPath(n - 1, ans + 1);
+        count += stairPath(n - 2, ans + 2);
+        count += stairPath(n - 3, ans + 3);
+
+        return count;
+
+    }
+
     public static void main(String... args) {
-        System.out.println(subseq2("abc",3,""));
+        System.out.println(stairPath(5, ""));
     }
 }
