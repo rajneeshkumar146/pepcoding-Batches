@@ -120,18 +120,31 @@ public class l001 {
     }
 
     // jump : 1,2,3
-    public static int stairPath(int n,String ans) {
-        if(n == 0){
+    public static int stairPath(int n, String ans) {
+        if (n == 0) {
             System.out.println(ans);
             return 1;
         }
+
         int count = 0;
-        count += stairPath(n - 1, ans + 1);
-        count += stairPath(n - 2, ans + 2);
-        count += stairPath(n - 3, ans + 3);
+        for (int jump = 1; jump <= 3 && n - jump >= 0; jump++)
+            count += stairPath(n - jump, ans + jump);
 
         return count;
+    }
 
+    // jumps : [1,4,6,7]
+    public static int variablePath(int[] jumps, int n, String ans) {
+        if (n == 0) {
+            System.out.println(ans);
+            return 1;
+        }
+
+        int count = 0;
+        for (int i = 0; i < jumps.length && n - jumps[i] >= 0; i++)
+            count += variablePath(jumps, n - jumps[i], ans + jumps[i]);
+
+        return count;
     }
 
     public static void main(String... args) {
