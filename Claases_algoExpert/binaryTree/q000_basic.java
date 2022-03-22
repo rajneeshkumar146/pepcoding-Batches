@@ -13,21 +13,38 @@ class Program {
     }
 
     public static int height(BinaryTree root) {
-        return root == null ? -1: Math.max(height(root.left), height(root.right)) + 1;
+        return root == null ? -1 : Math.max(height(root.left), height(root.right)) + 1;
     }
 
     public static int maximum(BinaryTree root) {
-       
+        if (root == null)
+            return Integer.MIN_VALUE;
+
+        int lmax = maximum(root.left);
+        int rmax = maximum(root.right);
+
+        return Math.max(Math.max(lmax, rmax), root.value);
     }
 
-    public static int miminum(BinaryTree root) {
-       
+    public static int minimum(BinaryTree root) {
+        return root == null ? Integer.MAX_VALUE : Math.min(root.val, Math.min(minimum(root.left), minimum(root.right)));
     }
 
-    public static boolean find(BinaryTree root,int data) {
-       
+    public static boolean find(BinaryTree root, int data) {
+        if (root == null)
+            return false;
+
+        if (root.val == data)
+            return true;
+
+        return find(root.left, data) || find(root.right, data);
     }
-    
+
+    public static ArrayList<BinaryTree> nodeToRootPath(BinaryTree root, int data){
+
+
+    }
+
     static class BinaryTree {
         int value;
         BinaryTree left;
