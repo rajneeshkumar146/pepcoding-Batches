@@ -40,8 +40,18 @@ class Program {
         return find(root.left, data) || find(root.right, data);
     }
 
-    public static ArrayList<BinaryTree> nodeToRootPath(BinaryTree root, int data){
+    public static boolean nodeToRootPath_(BinaryTree root, int data,ArrayList<BinaryTree> ans){
+        if (root == null)
+        return false;
 
+    if (root.val == data)
+        return true;
+
+    ??? nodeToRootPath_(root.left, data) || nodeToRootPath_(root.right, data);
+
+    }
+
+    public static ArrayList<BinaryTree> nodeToRootPath(BinaryTree root, int data) {
 
     }
 
