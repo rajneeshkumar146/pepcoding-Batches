@@ -112,7 +112,7 @@ public class l001 {
             return 1;
         }
 
-        obstacleGrid[sr][sc] = 1;
+        obstacleGrid[sr][sc] = 1;   // dosen't need to mark and unmark for this question
         int count = 0;
         for (int d = 0; d < dir.length; d++) {
             int r = sr + dir[d][0];
