@@ -48,9 +48,10 @@ public class l001 {
                 int r = sr + rad * dir[d][0];
                 int c = sc + rad * dir[d][1];
 
-                if (r >= 0 && c >= 0 && r <= er && c <= ec && !vis[r][c]) {
+                if (r >= 0 && c >= 0 && r <= er && c <= ec) {
                     count += mazePathJump(r, c, er, ec, dir, dirS, psf + dirS[d] + rad);
-                }
+                } else
+                    break;
             }
         }
 
@@ -79,7 +80,8 @@ public class l001 {
         return count;
     }
 
-    public static int floodFillJump(int sr, int sc, int er, int ec,boolean[][] vis, int[][] dir, String[] dirS, String psf) {
+    public static int floodFillJump(int sr, int sc, int er, int ec, boolean[][] vis, int[][] dir, String[] dirS,
+            String psf) {
         if (sr == er && sc == ec) {
             System.out.println(psf);
             return 1;
@@ -92,9 +94,12 @@ public class l001 {
                 int r = sr + rad * dir[d][0];
                 int c = sc + rad * dir[d][1];
 
+                // Is it a right code?
                 if (r >= 0 && c >= 0 && r <= er && c <= ec) {
-                    count += floodFillJump(r, c, er, ec,vis, dir, dirS, psf + dirS[d] + rad);
-                }
+                    if (!vis[r][c])
+                        count += floodFillJump(r, c, er, ec, vis, dir, dirS, psf + dirS[d] + rad);
+                } else
+                    break;
             }
         }
 
