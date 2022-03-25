@@ -112,7 +112,7 @@ public class l001 {
             return 1;
         }
 
-        obstacleGrid[sr][sc] = 1;   // dosen't need to mark and unmark for this question
+        obstacleGrid[sr][sc] = 1; // dosen't need to mark and unmark for this question
         int count = 0;
         for (int d = 0; d < dir.length; d++) {
             int r = sr + dir[d][0];
@@ -134,6 +134,37 @@ public class l001 {
         int[][] dir = { { 0, 1 }, { 1, 0 } };
 
         return uniquePathsWithObstacles(0, 0, n - 1, m - 1, obstacleGrid, dir);
+    }
+
+    public static class pairSP {
+        int len = (int) 1e9;
+        String str = "";
+    }
+
+    // pair<int,string>
+    public static pairSP shortesPath(int sr, int sc, int er, int ec, int[][] mat, int[][] dir, String[] dirS) {
+        if(sr == er && sc == ec){
+            pairSP base = new pairSP();
+            base.len = 0;
+            return base;
+        }
+        pairSP ans = new pairSP();
+        mat[sr][sc] = 1; // block
+        for (int d = 0; d < dir.length; d++) {
+            int r = sr + dir[d][0];
+            int c = sc + dir[d][1];
+
+            if (r >= 0 && c >= 0 && r <= er && c <= sc && mat[r][c] == 0) {
+                pairSP recAns = shortesPath(r, c, er, ec, mat, dir, dirS);
+                if (recAns.len != (int)1e9 &&  recAns.len + 1 < ans.len) {
+                    ans.len = recAns.len + 1;
+                    ans.str = recAns.str + dirS[d];
+                }
+            }
+        }
+
+        mat[sr][sc] = 0; // unblock
+        return ans;
     }
 
     public static void main(String[] args) {
