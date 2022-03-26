@@ -27,7 +27,7 @@ class q000_Leetcode {
         return res;
     }
 
-    //236
+    // 236
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         ArrayList<TreeNode> l1 = new ArrayList<>();
         nodeToRootPath_(root, p.val, l1);
@@ -48,12 +48,13 @@ class q000_Leetcode {
         return ans;
     }
 
-    //863
+    // 863
 
-    public void kDown(TreeNode root,TreeNode blockNode, int level, List<Integer> ans){
-        if(level < 0 || root == null || root == blockNode) return;
+    public void kDown(TreeNode root, TreeNode blockNode, int level, List<Integer> ans) {
+        if (level < 0 || root == null || root == blockNode)
+            return;
 
-        if(level == 0){
+        if (level == 0) {
             ans.add(root.val);
             return;
         }
@@ -68,10 +69,46 @@ class q000_Leetcode {
 
         List<Integer> ans = new ArrayList<>();
         TreeNode blockNode = null;
-        for(int i = 0; i < list.size();i++){
-           kDown(list.get(i), blockNode, k - i, ans);
-           blockNode = list.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            kDown(list.get(i), blockNode, k - i, ans);
+            blockNode = list.get(i);
         }
+
+        return ans;
+    }
+
+    // 112
+    public boolean hasPathSum(TreeNode root, int targetSum) {
+        if (root == null)
+            return false;
+        if (root.left == null && root.right == null && targetSum - root.val == 0)
+            return true;
+
+        return hasPathSum(root.left, targetSum - root.val) || hasPathSum(root.right, targetSum - root.val);
+    }
+
+    // 113
+    public void pathSum(TreeNode root, int targetSum, List<List<Integer>> ans, List<Integer> smallAns) {
+        if (root == null)
+            return;
+        if (root.left == null && root.right == null && targetSum - root.val == 0) {
+            List<Integer> base = new ArrayList<>(smallAns);
+            base.add(root.val);
+            ans.add(base);
+            return;
+        }
+
+        smallAns.add(root.val);
+
+        pathSum(root.left, targetSum - root.val, ans, smallAns);
+        pathSum(root.right, targetSum - root.val, ans, smallAns);
+        
+        smallAns.remove(smallAns.size() - 1);
+    }
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        List<List<Integer>> ans = new ArrayList<>();
+        pathSum(root,targetSum,ans,new ArrayList<>());
 
         return ans;
     }
