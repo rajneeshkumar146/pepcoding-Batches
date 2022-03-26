@@ -62,7 +62,7 @@ class Program {
         return ans;
     }
 
-    //===========================================================
+    // ===========================================================
 
     public static class diaPair {
         int dia = 0;
@@ -74,8 +74,8 @@ class Program {
         }
     }
 
-    public static diaPair diameter(BinaryTree root){
-        if(root == null){
+    public static diaPair diameter(BinaryTree root) {
+        if (root == null) {
             diaPair base = new diaPair(0, -1);
             return base;
         }
@@ -83,16 +83,34 @@ class Program {
         diaPair lp = diameter(root.left);
         diaPair rp = diameter(root.right);
 
-        int dia = Math.max(Math.max(lp.dia,rp.dia),lp.height + rp.height + 2);
+        int dia = Math.max(Math.max(lp.dia, rp.dia), lp.height + rp.height + 2);
         int h = Math.max(lp.height, rp.height) + 1;
         diaPair myPair = new diaPair(dia, h);
 
         return myPair;
     }
 
-    public int binaryTreeDiameter(BinaryTree tree) {       
+    public int binaryTreeDiameter(BinaryTree tree) {
         return diameter(tree).dia;
-      }
+    }
+
+    public static void branchSums(BinaryTree root, List<Integer> ans, int ssf) { // sum so far
+        if (root == null)
+            return;
+        if (root.left == null && root.right == null) {
+            ans.add(ssf + root.value);
+            return;
+        }
+
+        branchSums(root.left, ans, ssf + root.value);
+        branchSums(root.right, ans, ssf + root.value);
+    }
+
+    public static List<Integer> branchSums(BinaryTree root) {
+        List<Integer> ans = new ArrayList<>();
+        branchSums(root, ans, 0);
+        return ans;
+    }
 
     static class BinaryTree {
         int value;
