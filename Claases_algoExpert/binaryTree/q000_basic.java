@@ -112,6 +112,77 @@ class Program {
         return ans;
     }
 
+    public class balPair {
+        int height = -1;
+        boolean isBal = true;
+    }
+
+    public balPair heightBalancedBinaryTree_(BinaryTree root) {
+        if (root == null) {
+            return new balPair();
+        }
+
+        balPair lp = heightBalancedBinaryTree_(root.left);
+        balPair rp = heightBalancedBinaryTree_(root.right);
+
+        balPair myBal = new balPair();
+        myBal.isBal = false;
+        myBal.height = Math.max(lp.height, rp.height) + 1;
+
+        if (lp.isBal && rp.isBal && Math.abs(lp.height - rp.height) <= 1) {
+            myBal.isBal = true;
+        }
+
+        return myBal;
+    }
+
+    public boolean heightBalancedBinaryTree(BinaryTree root) {
+        return heightBalancedBinaryTree_(root).isBal;
+    }
+
+    public class allSolPair {
+        int height = -1;
+        int size = 0;
+        int max = -(int) 1e9;
+
+        int ceil = ??;
+        int floor = ??;
+
+        BinaryTree succ = null;
+        BinaryTree pred = null;
+        BinaryTree prev = null;
+    }
+
+    public void allSol(BinaryTree root, BinaryTree node, int level, allSolPair pair) {
+        if (root == null)
+            return;
+
+        pair.size++;
+        pair.max = Math.max(pair.max, root.value);
+        pair.height = Math.max(pair.height, level);
+
+        pair.ceil = ??;
+        pair.floor = ??;
+
+        allSol(root.left, node, level + 1, pair);
+
+        if (pair.prev != null && pair.prev == node)
+            pair.succ = root;
+
+        if (root == node)
+            pair.pred = pair.prev;
+
+        pair.prev = root;
+
+        allSol(root.right, node, level + 1, pair);
+    }
+
+    public BinaryTree findSuccessor(BinaryTree tree, BinaryTree node) {
+        allSolPair pair = new allSolPair();
+        allSol(tree, node, 0, pair);
+        return pair.succ;
+    }
+
     static class BinaryTree {
         int value;
         BinaryTree left;
