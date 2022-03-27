@@ -145,8 +145,8 @@ class Program {
         int size = 0;
         int max = -(int) 1e9;
 
-        int ceil = ??;
-        int floor = ??;
+        int ceil = (int) 1e9;
+        int floor = -(int) 1e9;
 
         BinaryTree succ = null;
         BinaryTree pred = null;
@@ -161,8 +161,10 @@ class Program {
         pair.max = Math.max(pair.max, root.value);
         pair.height = Math.max(pair.height, level);
 
-        pair.ceil = ??;
-        pair.floor = ??;
+        if (root.value > node.value)
+            pair.ceil = Math.min(pair.ceil, root.value);
+        if (root.value < node.value)
+            pair.floor = Math.max(pair.floor, root.value);
 
         allSol(root.left, node, level + 1, pair);
 
