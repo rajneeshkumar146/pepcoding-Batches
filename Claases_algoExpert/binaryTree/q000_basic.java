@@ -185,6 +185,8 @@ class Program {
         return pair.succ;
     }
 
+    
+
     static class BinaryTree {
         int value;
         BinaryTree left;

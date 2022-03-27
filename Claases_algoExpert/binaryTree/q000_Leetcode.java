@@ -106,6 +106,15 @@ class q000_Leetcode {
         smallAns.remove(smallAns.size() - 1);
     }
 
+    public class isBSTPair{
+        boolean isBST = true;
+        TreeNode prev = null;
+    }
+
+    public boolean isValidBST(TreeNode root) {
+        
+    }
+
     public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
         List<List<Integer>> ans = new ArrayList<>();
         pathSum(root,targetSum,ans,new ArrayList<>());
