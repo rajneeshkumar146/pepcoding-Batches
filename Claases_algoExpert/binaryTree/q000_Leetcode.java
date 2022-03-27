@@ -102,22 +102,38 @@ class q000_Leetcode {
 
         pathSum(root.left, targetSum - root.val, ans, smallAns);
         pathSum(root.right, targetSum - root.val, ans, smallAns);
-        
+
         smallAns.remove(smallAns.size() - 1);
     }
 
-    public class isBSTPair{
+    public class isBSTPair {
         boolean isBST = true;
         TreeNode prev = null;
     }
 
-    public boolean isValidBST(TreeNode root) {
+    public void isValidBST(TreeNode root, isBSTPair pair) {
+        if (root == null)
+            return;
+
+        isValidBST(root.left, pair);
+
+        if (pair.prev != null && pair.prev.val >= root.val)
+            pair.isBST = false;
+        pair.prev = root;
         
+        isValidBST(root.right, pair);
+    }
+
+    public boolean isValidBST(TreeNode root) {
+        isBSTPair pair = new isBSTPair();
+        isValidBST(root, pair);
+
+        return pair.isBST;
     }
 
     public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
         List<List<Integer>> ans = new ArrayList<>();
-        pathSum(root,targetSum,ans,new ArrayList<>());
+        pathSum(root, targetSum, ans, new ArrayList<>());
 
         return ans;
     }

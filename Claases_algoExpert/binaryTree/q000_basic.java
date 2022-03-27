@@ -1,5 +1,7 @@
 import java.util.*;
 
+import javax.swing.tree.TreeNode;
+
 class Program {
 
     public static int nodeDepths(BinaryTree root) {
@@ -185,7 +187,33 @@ class Program {
         return pair.succ;
     }
 
-    
+    public static class flatternPair {
+        BinaryTree head = null, prev = null;
+    }
+
+    public static void flattenBinaryTree(BinaryTree root, flatternPair pair) {
+        if (root == null)
+            return;
+
+        flattenBinaryTree(root.left, pair);
+
+        if (pair.prev == null)
+            pair.head = root;
+        else {
+            root.left = pair.prev;
+            pair.prev.right = root;
+        }
+
+        pair.prev = root;
+
+        flattenBinaryTree(root.right, pair);
+    }
+
+    public static BinaryTree flattenBinaryTree(BinaryTree root) {
+        flatternPair pair = new flatternPair();
+        flattenBinaryTree(root, pair);
+        return pair.head;
+    }
 
     static class BinaryTree {
         int value;
