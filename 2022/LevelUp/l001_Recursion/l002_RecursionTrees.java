@@ -78,6 +78,9 @@ class l002_RecursionTrees {
         }
 
         int count = 0;
+        if (tar - coins[idx] >= 0)
+            count += coinChangePermutation_IN_Sub(coins, tar - coins[idx], 0, psf + coins[idx] + " ");
+        count += coinChangePermutation_IN_Sub(coins, tar, idx + 1, psf);
 
         return count;
     }
@@ -92,6 +95,9 @@ class l002_RecursionTrees {
         }
 
         int count = 0;
+        if (tar - coins[idx] >= 0)
+            count += coinChangeCombination_IN_Sub(coins, tar - coins[idx], idx, psf + coins[idx] + " ");
+        count += coinChangeCombination_IN_Sub(coins, tar, idx + 1, psf);
 
         return count;
     }
@@ -125,6 +131,13 @@ class l002_RecursionTrees {
         }
 
         int count = 0;
+        if (tar - coins[idx] >= 0) {
+            int val = coins[idx];
+            coins[idx] = -coins[idx];
+            count += coinChangePermutation_IN_Sub(coins, tar - val, 0, psf + val + " ");
+            coins[idx] = -coins[idx];
+        }
+        count += coinChangePermutation_IN_Sub(coins, tar, idx + 1, psf);
 
         return count;
     }
