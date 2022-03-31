@@ -72,17 +72,20 @@ class q000_leetcode {
     }
 
     public boolean kthSmallest(TreeNode root, kthSmallestPair pair) {
-        if(root == null) return false;
-        
-        if(kthSmallest(root.left, pair)) return true;
+        if (root == null)
+            return false;
+
+        if (kthSmallest(root.left, pair))
+            return true;
 
         pair.k--;
-        if(pair.k == 0){
+        if (pair.k == 0) {
             pair.node = root;
             return true;
         }
-        
-        if(kthSmallest(root.right, pair)) return true;
+
+        if (kthSmallest(root.right, pair))
+            return true;
         return false;
     }
 
@@ -91,6 +94,89 @@ class q000_leetcode {
         pair.k = k;
         kthSmallest(root, pair);
         return pair.node.val;
+    }
+
+    // 94
+    // for stack -> addFirst, removeFirst
+    private void insertAllLeft(TreeNode node, LinkedList<TreeNode> st) {
+        TreeNode curr = node;
+        while (curr != null) {
+            st.addFirst(curr);
+            curr = curr.left;
+        }
+    }
+
+    public List<Integer> inorderTraversal(TreeNode root) {
+        LinkedList<TreeNode> st = new LinkedList<>();
+        insertAllLeft(root, st);
+
+        List<Integer> ans = new ArrayList<>();
+        while (st.size() != 0) {
+            TreeNode node = st.removeFirst();
+            ans.add(node.val);
+            insertAllLeft(node.right, st);
+        }
+
+        return ans;
+    }
+
+    // 102
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (root == null)
+            return ans;
+
+        // addFirst, removeFirst
+        LinkedList<TreeNode> que = new LinkedList<>();
+        que.addLast(root);
+        while (que.size() != 0) {
+            int size = que.size();
+            List<Integer> smallAns = new ArrayList<>();
+            while (size-- > 0) {
+                TreeNode node = que.removeFirst();
+                smallAns.add(node.val);
+                if (node.left != null)
+                    que.addLast(node.left);
+                if (node.right != null)
+                    que.addLast(node.right);
+            }
+            ans.add(smallAns);
+        }
+        return ans;
+    }
+
+    private TreeNode leftMost(TreeNode node) {
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+
+    private TreeNode rightMost(TreeNode node) {
+        while (node.right != null) {
+            node = node.right;
+        }
+        return node;
+    }
+
+    public void predSuccOfBST(TreeNode root, int data) {
+        TreeNode succ = null, pred = null;
+
+        while (root != null) {
+            if (root.val < data) {
+                pred = root;
+                root = root.right;
+            } else if (root.val > data) {
+                succ = root;
+                root = root.left;
+            } else {
+                if (root.right != null)
+                    succ = leftMost(root.right);
+                if (root.left != null)
+                    pred = rightMost(root.left);
+            }
+        }
+
     }
 
 }

@@ -230,4 +230,46 @@ class q000_basic {
         return array;
     }
 
+    // find closest Value
+    private static BST leftMost(BST node) {
+        while (node.left != null) {
+            node = node.left;
+        }
+        return node;
+    }
+
+    private static BST rightMost(BST node) {
+        while (node.right != null) {
+            node = node.right;
+        }
+        return node;
+    }
+
+    public static int findClosestValueInBst(BST root, int data) {
+        BST succ = null, pred = null;
+
+        while (root != null) {
+            if (root.value < data) {
+                pred = root;
+                root = root.right;
+            } else if (root.value > data) {
+                succ = root;
+                root = root.left;
+            } else {
+                if (root.value == data)
+                    return data;
+
+                if (root.right != null)
+                    succ = leftMost(root.right);
+                if (root.left != null)
+                    pred = rightMost(root.left);
+            }
+        }
+
+        if (succ == null || pred == null)
+            return succ != null ? succ.value : pred.value;
+
+        return data - pred.value <= succ.value - data ? pred.value : succ.value;
+    }
+
 }

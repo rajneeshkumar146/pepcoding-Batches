@@ -215,6 +215,100 @@ class Program {
         return pair.head;
     }
 
+    // max Path Sum
+    private static int NTN_maxPathSum = -(int) 1e9;
+
+    private static int max(int... arr) {
+        int max = arr[0];
+        for (int ele : arr)
+            max = Math.max(max, ele);
+
+        return max;
+    }
+
+    private static int maxPathSum_(BinaryTree root) {
+        if (root == null)
+            return 0;
+
+        int lrtn = maxPathSum_(root.left); // left root to node
+        int rrtn = maxPathSum_(root.right); // right root to node
+
+        int rootToNode = Math.max(lrtn, rrtn) + root.value;
+
+        NTN_maxPathSum = max(NTN_maxPathSum, rootToNode, root.value, lrtn + root.value + rrtn);
+
+        return max(rootToNode, root.value);
+    }
+
+    public static int maxPathSum(BinaryTree tree) {
+        NTN_maxPathSum = -(int) 1e9;
+        maxPathSum_(tree);
+        return NTN_maxPathSum;
+    }
+
+    // https://www.geeksforgeeks.org/find-maximum-path-sum-two-leaves-binary-tree/
+
+    // right Sibling Tree
+    public static BinaryTree rightSiblingTree(BinaryTree root) {
+        if (root == null)
+            return root;
+
+        // addFirst, removeFirst
+        LinkedList<BinaryTree> que = new LinkedList<>();
+        que.addLast(root);
+        while (que.size() != 0) {
+            int size = que.size();
+            while (size-- > 0) {
+                BinaryTree node = que.removeFirst();
+                if (node == null)
+                    continue;
+                que.addLast(node.left != null ? node.left : null);
+                que.addLast(node.right != null ? node.right : null);
+
+                node.right = size != 0 ? que.getFirst() : null;
+            }
+
+        }
+        return root;
+    }
+
+    // Leaf Traversal
+
+    private void getAllLeafs(BinaryTree root, ArrayList<Integer> list) {
+        if (root == null)
+            return;
+
+        if (root.left == null && root.right == null) {
+            list.add(root.value);
+            return;
+        }
+
+        getAllLeafs(root.left, list);
+        getAllLeafs(root.right, list);
+    }
+
+    public boolean compareLeafTraversal(BinaryTree tree1, BinaryTree tree2) {
+        ArrayList<Integer> list1 = new ArrayList<>();
+        getAllLeafs(tree1, list1);
+
+        ArrayList<Integer> list2 = new ArrayList<>();
+        getAllLeafs(tree2, list2);
+
+        if (list1.size() != list2.size())
+            return false;
+        else {
+            int i = 0;
+            while (i < list1.size()) {
+                if (list1.get(i) != list2.get(i))
+                    return false;
+                i++;
+            }
+
+        }
+
+        return true;
+    }
+
     static class BinaryTree {
         int value;
         BinaryTree left;
