@@ -120,6 +120,28 @@ public class l004_Queen {
 
     private boolean isPossibleToPlaceNumber(char[][] board, int r, int c, int num) {
 
+        // row
+        for (int i = 0; i < 9; i++) {
+            if (board[i][c] - '0' == num)
+                return false;
+        }
+
+        // col
+        for (int i = 0; i < 9; i++) {
+            if (board[r][i] - '0' == num)
+                return false;
+        }
+
+        // 3 X 3
+        r = (r / 3) * 3;
+        c = (c / 3) * 3;
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                if (board[r + i][c + j] - '0' == num)
+                    return false;
+
+        return true;
+
     }
 
     public boolean sudokuSolver(char[][] board, ArrayList<Integer> list, int idx) {
@@ -153,6 +175,31 @@ public class l004_Queen {
                 }
             }
         }
+    }
+
+    // 139 : word break
+    public boolean wordBreak(String str, String asf, HashSet<String> set) {
+        if (str.length() == 0) {
+            System.out.println(asf);
+            return true;
+        }
+        for (int len = 1; len <= str.length(); len++) {
+            String smallStr = str.substring(0, len);
+            if (set.contains(smallStr)) {
+                if (wordBreak(str.substring(len), asf + smallStr + " ", set))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean wordBreak(String str, List<String> wordDict) {
+        HashSet<String> set = new HashSet<>();
+        for (String s : wordDict)
+            set.add(s);
+
+        return wordBreak(str, "", set);
     }
 
     public static void main(String... args) {
