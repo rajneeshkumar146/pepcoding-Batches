@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class l004_Queen {
 
     // tnq : total no of queens, qpsf : queen placed so far
@@ -63,7 +65,7 @@ public class l004_Queen {
 
     public static boolean isSafeToPlaceQueen(boolean[][] boxes, int r, int c) {
         // int[][] dir = { { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 } };
-        int[][] dir = { { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 },  { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 } };
+        int[][] dir = { { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 } };
         int n = boxes.length;
         for (int d = 0; d < dir.length; d++) {
             for (int rad = 1; rad <= n; rad++) {
@@ -112,6 +114,45 @@ public class l004_Queen {
             }
         }
         return count;
+    }
+
+    // Sudoku
+
+    private boolean isPossibleToPlaceNumber(char[][] board, int r, int c, int num) {
+
+    }
+
+    public boolean sudokuSolver(char[][] board, ArrayList<Integer> list, int idx) {
+        if (idx == list.size())
+            return true;
+
+        int r = list.get(idx) / 9;
+        int c = list.get(idx) % 9;
+
+        for (int num = 1; num <= 9; num++) {
+            if (isPossibleToPlaceNumber(board, r, c, num)) {
+                board[r][c] = (char) ('0' + num);
+
+                if (sudokuSolver(board, list, idx + 1))
+                    return true;
+
+                board[r][c] = '.';
+            }
+        }
+
+        return false;
+    }
+
+    public void solveSudoku(char[][] board) {
+        ArrayList<Integer> list = new ArrayList<>(); // blank places
+        int n = 9;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == '.') {
+                    list.add(i * n + j);
+                }
+            }
+        }
     }
 
     public static void main(String... args) {
