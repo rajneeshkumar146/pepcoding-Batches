@@ -272,4 +272,34 @@ class q000_basic {
         return data - pred.value <= succ.value - data ? pred.value : succ.value;
     }
 
+    // same bst
+    private static List<Integer> smallerElements(List<Integer> arr) {
+        return arr.stream().filter(ele -> ele.intValue() < arr.get(0).intValue()).collect(Collectors.toList());
+    }
+
+    private static List<Integer> greaterElements(List<Integer> arr) {
+        List<Integer> ans = arr.stream().filter(ele -> ele.intValue() >= arr.get(0).intValue()).collect(Collectors.toList());
+        // ans.remove(0);
+        return ans.subList(1, ans.size());
+    }
+
+    public static boolean sameBsts(List<Integer
+    > arr1, List<Integer> arr2) {
+        if (arr1.size() != arr2.size())
+            return false;
+        if (arr1.size() == 0 && arr2.size() == 0)
+            return true;
+
+        if (arr1.get(0).intValue() != arr2.get(0).intValue())
+            return false;
+
+        List<Integer> smallerList1 = smallerElements(arr1);
+        List<Integer> greaterList1 = greaterElements(arr1);
+
+        List<Integer> smallerList2 = smallerElements(arr2);
+        List<Integer> greaterList2 = greaterElements(arr2);
+
+        return sameBsts(smallerList1, smallerList2) && sameBsts(greaterList1, greaterList2);
+    }
+
 }

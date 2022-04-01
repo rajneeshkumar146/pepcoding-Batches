@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.function.Function;
 
 import javax.swing.tree.TreeNode;
 
@@ -307,6 +308,178 @@ class Program {
         }
 
         return true;
+    }
+
+    // Node Depth
+
+    // private static int depthSum = 0;
+
+    // private static void nodeDepths_(BinaryTree root, int level) {
+    // if (root == null)
+    // return;
+    // depthSum += level;
+    // nodeDepths_(root.left, level + 1);
+    // nodeDepths_(root.right, level + 1);
+    // }
+
+    // public static int nodeDepths(BinaryTree root) {
+    // depthSum = 0;
+    // nodeDepths_(root, 0);
+    // return depthSum;
+    // }
+
+    private static class depthPair1 {
+        int depth = 0;
+        int size = 0;
+
+    }
+
+    private static depthPair1 nodeDepths_(BinaryTree root) {
+        if (root == null)
+            return new depthPair1();
+
+        depthPair1 lp = nodeDepths_(root.left);
+        depthPair1 rp = nodeDepths_(root.right);
+
+        depthPair1 mypair = new depthPair1();
+        mypair.depth = (lp.depth + lp.size) + (rp.depth + rp.size);
+        mypair.size = lp.size + rp.size + 1;
+
+        return mypair;
+    }
+
+    public static int nodeDepths(BinaryTree root) {
+        return nodeDepths_(root).depth;
+    }
+
+    // all Kind of depth
+    private static class depthPair2 {
+        int depth = 0;
+        int size = 0;
+        int totalDepthSum = 0;
+    }
+
+    private static depthPair2 allKindsOfNodeDepths_(BinaryTree root) {
+        if (root == null)
+            return new depthPair2();
+
+        depthPair2 lp = allKindsOfNodeDepths_(root.left);
+        depthPair2 rp = allKindsOfNodeDepths_(root.right);
+
+        depthPair2 mypair = new depthPair2();
+        mypair.depth = (lp.depth + lp.size) + (rp.depth + rp.size);
+        mypair.size = lp.size + rp.size + 1;
+        mypair.totalDepthSum = lp.totalDepthSum + rp.totalDepthSum + mypair.depth;
+
+        return mypair;
+    }
+
+    public static int allKindsOfNodeDepths(BinaryTree root) {
+        return allKindsOfNodeDepths_(root).totalDepthSum;
+    }
+
+    //
+terative In
+    Prder Traversal
+
+    // for stack -> addFirst, removeFirst
+    private static void insertAllLeft(BinaryTree node, LinkedList<BinaryTree> st) {
+        BinaryTree curr = node;
+        while (curr != null) {
+            st.addFirst(curr);
+            curr = curr.left;
+        }
+    }
+
+    public static List<BinaryTree> inorderTraversal(BinaryTree root) {
+        LinkedList<BinaryTree> st = new LinkedList<>();
+        insertAllLeft(root, st);
+
+        List<BinaryTree> ans = new ArrayList<>();
+        while (st.size() != 0) {
+            BinaryTree node = st.removeFirst();
+            ans.add(node);
+            insertAllLeft(node.right, st);
+        }
+
+        return ans;
+    }
+
+    public static void iterativeInOrderTraversal(
+            BinaryTree tree, Function<BinaryTree, Void> callback) {
+
+        List<BinaryTree> ans = inorderTraversal(tree);
+        for (BinaryTree ele : ans)
+            callback.apply(ele);
+
+    }
+
+    public static void iterativeInOrderTraversal_2(
+            BinaryTree tree, Function<BinaryTree, Void> callback) {
+
+        BinaryTree previousNode = null, currNode = tree;
+        while (currNode != null) {
+            BinaryTree nextNode = null;
+            if (previousNode == null || currNode.parent == previousNode) {
+                if (currNode.left != null) {
+                    nextNode = currNode.left;
+                } else {
+                    callback.apply(currNode);
+                    nextNode = currNode.right != null ? currNode.right : currNode.parent;
+                }
+            } else if (currNode.left == previousNode) { // we already traversed left subtree
+                callback.apply(currNode);
+                nextNode = currNode.right != null ? currNode.right : currNode.parent;
+            } else {
+                nextNode = currNode.parent;
+            }
+
+            previousNode = currNode;
+            currNode = nextNode;
+        }
+    }
+
+    // find nodes distance k
+    public void kDown(BinaryTree root, BinaryTree blockNode, int level, ArrayList<Integer> ans) {
+        if (level < 0 || root == null || root == blockNode)
+            return;
+
+        if (level == 0) {
+            ans.add(root.value);
+            return;
+        }
+
+        kDown(root.left, blockNode, level - 1, ans);
+        kDown(root.right, blockNode, level - 1, ans);
+    }
+
+    public boolean nodeToRootPath_(BinaryTree root, int data, ArrayList<BinaryTree> ans) {
+        if (root == null)
+            return false;
+
+        if (root.value == data) {
+            ans.add(root);
+            return true;
+        }
+
+        boolean res = nodeToRootPath_(root.left, data, ans) || nodeToRootPath_(root.right, data, ans);
+        if (res)
+            ans.add(root);
+        return res;
+    }
+
+    public ArrayList<Integer> findNodesDistanceK(BinaryTree root, int target, int k) {
+        ArrayList<BinaryTree> list = new ArrayList<>();
+        nodeToRootPath_(root, target, list);
+
+        ArrayList<Integer> ans = new ArrayList<>();
+        BinaryTree blockNode = null;
+        for (int i = 0; i < list.size(); i++) {
+            kDown(list.get(i), blockNode, k - i, ans);
+            blockNode = list.get(i);
+        }
+
+        return ans;
     }
 
     static class BinaryTree {
