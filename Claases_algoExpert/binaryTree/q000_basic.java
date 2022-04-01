@@ -378,9 +378,7 @@ class Program {
         return allKindsOfNodeDepths_(root).totalDepthSum;
     }
 
-    //
-terative In
-    Prder Traversal
+    //iterative Inorder Traversal
 
     // for stack -> addFirst, removeFirst
     private static void insertAllLeft(BinaryTree node, LinkedList<BinaryTree> st) {
