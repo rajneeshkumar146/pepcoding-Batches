@@ -202,6 +202,51 @@ public class l004_Queen {
         return wordBreak(str, "", set);
     }
 
+    // crypto
+    static String str1 = "send", str2 = "more", str3 = "money";
+    static boolean[] isNumUsed = new boolean[10];
+
+    public static void crypto() {
+        String str = str1 + str2 + str3;
+        int[] freq = new int[26];
+        for (int i = 0; i < str.length(); i++) {
+            freq[str.charAt(i) - 'a']++;
+        }
+
+        str = "";
+        for (int i = 0; i < 26; i++) {
+            if (freq[i] > 0)
+                str += (char) (i + 'a');
+        }
+
+        if (str.length() > 10)
+            return;
+    }
+
+    public static int crypto(String str, int idx) {
+        if (idx == str.length()) {
+            if (valid) {
+                return 1;
+            }
+
+            return 0;
+        }
+
+        int count = 0;
+        for (int num = 0; num <= 9; num++) {
+            if (!isNumUsed[num]) {
+                isNumUsed[num] = true;
+
+                count += crypto(str, idx + 1);
+
+                isNumUsed[num] = false;
+            }
+
+        }
+
+        return count;
+    }
+
     public static void main(String... args) {
         // System.out.println(queenCombination1D(boxes, 3, 0, 0, ""));
         // System.out.println(queenPermutation1D(boxes, 3, 0, ""));
