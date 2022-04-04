@@ -37,7 +37,17 @@ public class l005_bits {
 
     // 342
     public boolean isPowerOfFour(int n) {
+        if (!isPowerOfTwo(n))
+            return false;
 
+        int count = 0;
+        while (n != 0) {
+            if ((n & 1) == 0)
+                count++;
+            n >>>= 1;
+        }
+
+        return (count & 1) == 0;
     }
 
     // 136
