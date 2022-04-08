@@ -46,12 +46,39 @@ public class l006_Nqueen {
         return count;
     }
 
+    public static int nqueen_03(int n, int floor, String psf) {
+        if (floor == n) {
+            System.out.println(psf);
+            return 1;
+        }
+        int count = 0, r = floor;
+        for (int room = 0; room < n; room++) {
+            int c = room;
+            if ((row & (1 << r)) == 0 && (col & (1 << c)) == 0 && (diag & (1 << (r - c + n - 1))) == 0
+                    && (adiag & (1 << (r + c))) == 0) {
+                row ^= (1 << r);
+                col ^= (1 << c);
+                diag ^= (1 << (r - c + n - 1));
+                adiag ^= (1 << (r + c));
+
+                count += nqueen_03(n, floor + 1, psf + "(" + r + "," + c + ") ");
+
+                row ^= (1 << r);
+                col ^= (1 << c);
+                diag ^= (1 << (r - c + n - 1));
+                adiag ^= (1 << (r + c));
+            }
+        }
+        return count;
+    }
+
     public static void main(String... args) {
         int n = 4, tnq = 4;
         // rows = new boolean[n];
         // cols = new boolean[n];
         // diags = new boolean[n + n - 1];
         // adiags = new boolean[n + n - 1];
-        System.out.println(nqueen_02(n, tnq, 0, ""));
+        // System.out.println(nqueen_02(n, tnq, 0, ""));
+        System.out.println(nqueen_03(n, 0, ""));
     }
 }
