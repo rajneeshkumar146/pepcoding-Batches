@@ -72,6 +72,28 @@ public class l006_Nqueen {
         return count;
     }
 
+    public static boolean isPalindrome(String str, int i, int j) {
+        while (i <= j) {
+            if (str.charAt(i) != str.charAt(j))
+                return false;
+            i++;
+            j--;
+        }
+        return true;
+    }
+
+    public static void solution(String str, int i, String asf) {
+        if (i >= str.length()) {
+            System.out.println(asf);
+            return;
+        }
+        for (int j = i; j < str.length(); j++) {
+            if (isPalindrome(str, i, j)) {
+                solution(str, j + 1, asf + "(" + str.substring(i, j + 1) + ") ");
+            }
+        }
+    }
+
     public static void main(String... args) {
         int n = 4, tnq = 4;
         // rows = new boolean[n];
