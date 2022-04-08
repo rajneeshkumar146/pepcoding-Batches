@@ -177,6 +177,104 @@ public class l004_Queen {
         }
     }
 
+    boolean[][] rows = new boolean[10][10];
+    boolean[][] cols = new boolean[10][10];
+    boolean[][][] mats = new boolean[3][3][10];
+
+    public boolean sudokuSolver_02(char[][] board, ArrayList<Integer> list, int idx) {
+        if (idx == list.size())
+            return true;
+
+        int r = list.get(idx) / 9;
+        int c = list.get(idx) % 9;
+
+        for (int num = 1; num <= 9; num++) {
+            if (!rows[r][num] && !cols[c][num] && !mats[r / 3][c / 3][num]) {
+                board[r][c] = (char) ('0' + num);
+                rows[r][num] = cols[c][num] = mats[r / 3][c / 3][num] = true;
+
+                if (sudokuSolver_02(board, list, idx + 1))
+                    return true;
+
+                board[r][c] = '.';
+                rows[r][num] = cols[c][num] = mats[r / 3][c / 3][num] = false;
+            }
+        }
+
+        return false;
+    }
+
+    public void solveSudoku_02(char[][] board) {
+        ArrayList<Integer> list = new ArrayList<>(); // blank places
+        int n = 9;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == '.') {
+                    list.add(i * n + j);
+                } else {
+                    int num = board[i][j] - '0';
+                    rows[i][num] = cols[j][num] = mats[i / 3][j / 3][num] = true;
+                }
+            }
+        }
+
+        sudokuSolver_02(board, list, 0);
+    }
+
+    int[] row = new int[10];
+    int[] col = new int[10];
+    int[][] mat = new int[3][3];
+
+    public boolean sudokuSolver_03_bits(char[][] board, ArrayList<Integer> list, int idx) {
+        if (idx == list.size())
+            return true;
+
+        int r = list.get(idx) / 9;
+        int c = list.get(idx) % 9;
+
+        for (int num = 1; num <= 9; num++) {
+            int mask = 1 << num;
+            if ((row[r] & mask) == 0 && (col[c] & mask) == 0 && (mat[r / 3][c / 3] & mask) == 0) {
+                board[r][c] = (char) ('0' + num);
+                row[r] ^= mask;
+                col[c] ^= mask;
+                mat[r / 3][c / 3] ^= mask;
+
+                if (sudokuSolver_03_bits(board, list, idx + 1))
+                    return true;
+
+                board[r][c] = '.';
+
+                row[r] ^= mask;
+                col[c] ^= mask;
+                mat[r / 3][c / 3] ^= mask;
+
+            }
+        }
+
+        return false;
+    }
+
+    public void solveSudoku_03_bits(char[][] board) {
+        ArrayList<Integer> list = new ArrayList<>(); // blank places
+        int n = 9;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == '.') {
+                    list.add(i * n + j);
+                } else {
+                    int num = board[i][j] - '0';
+                    int mask = 1 << num;
+                    row[i] ^= mask;
+                    col[j] ^= mask;
+                    mat[i / 3][j / 3] ^= mask;
+                }
+            }
+        }
+
+        sudokuSolver_03_bits(board, list, 0);
+    }
+
     // 139 : word break
     public boolean wordBreak(String str, String asf, HashSet<String> set) {
         if (str.length() == 0) {
