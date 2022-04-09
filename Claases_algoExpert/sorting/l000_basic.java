@@ -103,7 +103,7 @@ public class l000_basic {
   public static int[] mergeTwoSortedArrays(int[] arr1, int[] arr2) {
     int n = arr1.length, m = arr2.length;
     if (n == 0 || m == 0)
-    return n == 0 ? arr2 : arr1;
+      return n == 0 ? arr2 : arr1;
 
     int[] ans = new int[n + m];
     int i = 0, j = 0, k = 0;
@@ -139,6 +139,84 @@ public class l000_basic {
     if (n <= 1)
       return array;
     return mergeSort(array, 0, n - 1);
+  }
+
+  // Count Inversions
+  public static int inversionsAcrossArray(int[] array, int si, int mid, int ei, int[] temp) {
+    int i = si, j = mid + 1, k = si, count = 0;
+    while (i <= mid && j <= ei) {
+      if (array[i] > array[j]) {
+        count += mid - i + 1;
+        temp[k++] = array[j++];
+      } else
+        temp[k++] = array[i++];
+    }
+
+    while (i <= mid)
+      temp[k++] = array[i++];
+    while (j <= ei)
+      temp[k++] = array[j++];
+
+    for (int idx = si; idx <= ei; idx++) {
+      array[idx] = temp[idx];
+    }
+
+    return count;
+  }
+
+  public int countInversions(int[] array, int si, int ei, int[] temp) {
+    if (si >= ei) {
+      return 0;
+    }
+
+    int mid = (si + ei) / 2;
+    int count = 0;
+
+    count += countInversions(array, si, mid, temp);
+    count += countInversions(array, mid + 1, ei, temp);
+
+    return count + inversionsAcrossArray(array, si, mid, ei, temp);
+  }
+
+  public int countInversions(int[] array) {
+    int n = array.length;
+    int[] temp = new int[n];
+    return countInversions(array, 0, n - 1, temp);
+  }
+
+  // partition
+  private static void swap(int[] arr, int i, int j) {
+    int temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+  }
+
+  private static int partition(int[] arr, int si, int ei, int pidx) {
+    swap(arr, pidx, ei);
+    int piviotEle = arr[ei], pt = si - 1, idx = si;
+    while (idx <= ei) {
+      if (arr[idx] <= piviotEle)
+        swap(arr, ++pt, idx);
+      idx++;
+    }
+
+    return pt;
+  }
+
+  public static void quickSort(int[] arr, int si, int ei) {
+    if (si >= ei)
+      return;
+    int mid = (si + ei) / 2;
+    int pidx = partition(arr, si, ei, mid); // pidx = mid , si, ei, randomId;
+
+    quickSort(arr, si, pidx - 1);
+    quickSort(arr, pidx + 1, ei);
+  }
+
+  public static int[] quickSort(int[] arr) {
+    int n = arr.length;
+    quickSort(arr, 0, n - 1);
+    return arr;
   }
 
 }
