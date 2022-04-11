@@ -203,11 +203,24 @@ public class l000_basic {
     return pt;
   }
 
+  private static Random rand = new Random();
+
+  private static boolean isArraySorted(int[] arr, int si,int ei){
+    for(int i = si + 1;i <= ei;i++){
+      if(arr[i - 1] > arr[i]) return false;
+    }
+
+    return true;
+  }
+
   public static void quickSort(int[] arr, int si, int ei) {
     if (si >= ei)
       return;
-    int mid = (si + ei) / 2;
+    int mid = (si + ei) / 2;  // rand.nextInt(ei - si + 1) + si;
     int pidx = partition(arr, si, ei, mid); // pidx = mid , si, ei, randomId;
+    
+    if(isArraySorted(arr, si, ei)) return;
+    
 
     quickSort(arr, si, pidx - 1);
     quickSort(arr, pidx + 1, ei);
