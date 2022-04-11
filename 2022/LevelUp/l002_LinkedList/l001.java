@@ -79,11 +79,56 @@ public class l001 {
 
     // 234
     public boolean isPalindrome(ListNode head) {
+        if (head == null && head.next == null)
+            return true;
 
+        ListNode mid = midNode(head), nHead = mid.next;
+        mid.next = null;
+        nHead = reverseList(nHead);
+
+        ListNode c1 = head, c2 = nHead;
+        boolean res = true;
+        while (c2 != null) {
+            if (c1.val != c2.val) {
+                res = false;
+                break;
+            }
+            c1 = c1.next;
+            c2 = c2.next;
+        }
+
+        nHead = reverseList(nHead);
+        mid.next = nHead;
+
+        return res;
     }
 
     // 143
     public void reorderList(ListNode head) {
+        if (head == null && head.next == null)
+            return;
+
+        ListNode mid = midNode(head), nHead = mid.next;
+        mid.next = null;
+        nHead = reverseList(nHead);
+        ListNode c1 = head, c2 = nHead;
+        while (c2 != null) {
+            ListNode f1 = c1.next, f2 = c2.next; // backup
+
+            c1.next = c2; // link
+            c2.next = f1;
+
+            c1 = f1;
+            c2 = f2;
+        }
+    }
+
+    // 21
+    public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+
+    }
+
+    public static void unfold(ListNode head) {
 
     }
 
