@@ -125,11 +125,60 @@ public class l001 {
 
     // 21
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
+        if (list1 == null || list2 == null)
+            return list1 == null ? list2 : list1;
+
+        ListNode dummy = new ListNode(-1), prev = dummy, c1 = list1, c2 = list2;
+        while (c1 != null && c2 != null) {
+            if (c1.val <= c2.val) {
+                prev.next = c1;
+                c1 = c1.next;
+            } else {
+                prev.next = c2;
+                c2 = c2.next;
+            }
+            prev = prev.next;
+        }
+
+        prev.next = c1 != null ? c1 : c2;
+        ListNode head = dummy.next;
+        dummy.next = null;
+        return head;
+    }
+
+    public void unfold(ListNode head) {
+        if (head == null || head.next == null)
+            return;
+
+        ListNode h1 = head, h2 = head.next, c1 = h1, c2 = h2;
+
+        while (c2 != null && c2.next != null) {
+            ListNode f = c2.next;
+
+            c1.next = f;
+            c2.next = f.next;
+
+            c1 = c1.next;
+            c2 = c2.next;
+        }
+
+        h2 = reverseList(h2);
+        c1.next = h2;
+    }
+
+    // 19
+    public ListNode removeNthFromEnd(ListNode head, int n) {
 
     }
 
-    public static void unfold(ListNode head) {
+    // 2
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 
+    }
+
+    // pepcoding
+    public ListNode subtractTwoNumbers(ListNode l1, ListNode l2) {
+        return null;
     }
 
 }
