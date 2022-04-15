@@ -114,4 +114,70 @@ public class l001_basic {
         return ans;
     }
 
+    public int[] sortKSortedArray(int[] array, int k) {
+        int n = array.length, idx = 0;
+        int[] ans = new int[n];
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for (int ele : array) {
+            pq.add(ele);
+            if (pq.size() > k + 1) {
+                ans[idx++] = pq.remove();
+            }
+        }
+
+        while (pq.size() != 0)
+            ans[idx++] = pq.remove();
+
+        return ans;
+    }
+
+    // laptop rentals
+    public int laptopRentals(ArrayList<ArrayList<Integer>> times) {
+        int n = times.size(), idx = 0;
+        int[] start = new int[n];
+        int[] end = new int[n];
+        for (var ele : times) {
+            start[idx] = ele.get(0);
+            end[idx++] = ele.get(1);
+        }
+
+        Arrays.sort(start);
+        Arrays.sort(end);
+        int usedLaptop = 0, sIdx = 0, eIdx = 0;
+        while (sIdx < n) {
+            if (start[sIdx] >= end[eIdx]) {
+                usedLaptop--;
+                eIdx++;
+            }
+
+            usedLaptop++;
+            sIdx++;
+        }
+
+        return usedLaptop;
+    }
+
+    // median
+    static class ContinuousMedianHandler {
+        double median = 0;
+            PriorityQueue<Integer> minPQ = new PriorityQueue<>();
+            PriorityQueue<Integer> maxPQ = new PriorityQueue<>((a,b)->{
+                return  b - a;
+            });
+            
+        public void insert(int number) {
+          if(maxPQ.size() == 0 || number <= maxPQ.peek()) maxPQ.add(number);
+                else minPQ.add(number);
+                
+                if(maxPQ.size() - minPQ.size() == 2) minPQ.add(maxPQ.remove());
+                else if(maxPQ.size() - minPQ.size() == -1) maxPQ.add(minPQ.remove());
+        }
+    
+        public double getMedian() {
+                if(maxPQ.size()== minPQ.size()) median = (maxPQ.peek() + minPQ.peek()) / 2.0;
+                else median = maxPQ.peek() * 1.0;
+          return median;
+        }
+      }
+
 }
