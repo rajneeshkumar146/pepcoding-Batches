@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class l001_basic {
 
     public static void printIncreasing(int a, int b) {
@@ -59,12 +62,104 @@ public class l001_basic {
         System.out.println("post: " + n);
 
         return count + 3;
+    }
 
+    public static int check2(int n) {
+        if (n <= 2) {
+            System.out.println("base: " + n);
+            return n + 3;
+        }
+
+        int count = 0;
+
+        System.out.println("pre: " + n);
+        count += check2(n - 1);
+
+        System.out.println("in1: " + n);
+
+        count += check2(n - 2);
+        System.out.println("in2: " + n);
+
+        count += check2(n - 3);
+        System.out.println("post: " + n);
+
+        return count + 3;
+    }
+
+    public static int powBtr(int a, int b) {
+        if (b == 0) {
+            return 1;
+        }
+
+        int smallAns = pow(a, b / 2);
+        smallAns *= smallAns;
+
+        return b % 2 == 0 ? smallAns : smallAns * a;
+    }
+
+    public static void display(int[] arr, int idx) {
+        if (idx == arr.length)
+            return;
+        System.out.println(arr[idx]);
+        display(arr, idx + 1);
+    }
+
+    public static int subseq(String str, int idx, String asf) {
+        if (idx == str.length()) {
+            System.out.println(asf);
+            return 1;
+        }
+
+        int count = 0;
+        count += subseq(str, idx + 1, asf);
+        count += subseq(str, idx + 1, asf + str.charAt(idx));
+
+        return count;
+    }
+
+    public static void powerset(List<Integer> array, int idx, List<List<Integer>> res, List<Integer> smallAns) {
+        if (idx == array.size()) {
+            List<Integer> base = new ArrayList<>(smallAns);
+            res.add(base);
+            return;
+        }
+
+        powerset(array, idx + 1, res, smallAns); // include nahi krne ki call
+
+        smallAns.add(array.get(idx));
+        powerset(array, idx + 1, res, smallAns); // include krne ki call
+        smallAns.remove(smallAns.size() - 1);
+    }
+
+    public static List<List<Integer>> powerset(List<Integer> array) {
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> smallAns = new ArrayList<>();
+        powerset(array, 0, res, smallAns);
+        return res;
+    }
+
+    public static void permutation(String str, boolean[] usedChar, int count, String asf) {
+        if (count == str.length()) {
+            System.out.println(asf);
+            return;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            if (!usedChar[i]) {
+                usedChar[i] = true;
+                permutation(str, usedChar, count + 1, asf + str.charAt(i));
+                usedChar[i] = false;
+            }
+        }
     }
 
     public static void main(String... args) {
-        printDecreasing(5, 15);
-        System.out.println(check(5));
+        // int[] arr = { 1, 2, 345, 67, 233, 5 };
+        // display(arr, 0);
+
+        // System.out.println(subseq("123", 0, ""));
+        boolean[] usedChar = new boolean[3];
+        permutation("abc",usedChar,0,"");
+
     }
 
 }
