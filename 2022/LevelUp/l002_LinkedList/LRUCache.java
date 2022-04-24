@@ -17,13 +17,46 @@ class LRUCache {
     private HashMap<Integer, Node> map;
     private Node head = null, tail = null;
     private int capacity = 0;
+    private int linkedListSize = 0;
+
+    public LRUCache(int capacity) {
+        this.map = new HashMap<>();
+        this.capacity = capacity;
+    }
 
     private void addFirst(Node node) {
-
+        if (this.head == null)
+            this.head = this.tail = node;
+        else {
+            this.head.next = node;
+            node.prev = this.head;
+            this.head = node;
+        }
+        this.linkedListSize++;
     }
 
     private void removeNode(Node node) {
+        if (this.linkedListSize == 1)
+            this.head = this.tail = null;
+        else if (this.head == node) {
+            Node prevNode = node.prev;
+            prevNode.next = node.prev = null;
+            this.head = prevNode;
+        } else if (this.tail == node) {
+            Node nextNode = node.next;
+            nextNode.prev = node.next = null;
+            this.tail = nextNode;
+        } else {
+            Node prevNode = node.prev;
+            Node nextNode = node.next;
 
+            prevNode.next = nextNode;
+            nextNode.prev = prevNode;
+
+            node.prev = node.next = null;
+        }
+        
+        this.linkedListSize--;
     }
 
     private void makeRecentApp(Node node) {
@@ -32,11 +65,6 @@ class LRUCache {
 
         removeNode(node);
         addFirst(node);
-    }
-
-    public LRUCache(int capacity) {
-        this.map = new HashMap<>();
-        this.capacity = capacity;
     }
 
     private Node fetchNode(int key) {
