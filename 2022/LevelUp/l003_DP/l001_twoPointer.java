@@ -165,9 +165,30 @@ public class l001_twoPointer {
         return minCostClimbingStairs_memo(cost, n, dp);
     }
 
-    // HW : https://practice.geeksforgeeks.org/problems/friends-pairing-problem5425/1
+    // HW :
+    // https://practice.geeksforgeeks.org/problems/friends-pairing-problem5425/1
+
+    public static int friendsPairing_memo(int n, int[] dp) {
+        if (n <= 1) {
+            return dp[n] = 1;
+        }
+
+        if (dp[n] != 0)
+            return dp[n];
+
+        int single = friendsPairing_memo(n - 1, dp);
+        int pair = friendsPairing_memo(n - 2, dp) * (n - 1);
+
+        return dp[n] = single + pair;
+    }
+
+    public static int friendsPairing(int n) {
+        int[] dp = new int[n + 1];
+        int ans =  friendsPairing_memo(n,dp);
+        return ans; 
+    }
 
     public static void main(String[] args) {
-        tribonacci(10);
+
     }
 }
