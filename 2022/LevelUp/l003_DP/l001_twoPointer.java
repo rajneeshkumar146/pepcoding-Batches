@@ -306,6 +306,10 @@ public class l001_twoPointer {
         System.out.println(ans);
     }
 
+    // 62,63
+    // 396
+    // https://www.geeksforgeeks.org/count-the-number-of-ways-to-divide-n-in-k-groups-incrementally/
+
     public static void main(String[] args) {
         mazePath();
     }
