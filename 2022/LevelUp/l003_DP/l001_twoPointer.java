@@ -168,7 +168,7 @@ public class l001_twoPointer {
     // HW :
     // https://practice.geeksforgeeks.org/problems/friends-pairing-problem5425/1
 
-    public static int friendsPairing_memo(int n, int[] dp) {
+    public static long friendsPairing_memo(int n, long[] dp) {
         if (n <= 1) {
             return dp[n] = 1;
         }
@@ -176,19 +176,137 @@ public class l001_twoPointer {
         if (dp[n] != 0)
             return dp[n];
 
-        int single = friendsPairing_memo(n - 1, dp);
-        int pair = friendsPairing_memo(n - 2, dp) * (n - 1);
+        long single = friendsPairing_memo(n - 1, dp);
+        long pairUp = friendsPairing_memo(n - 2, dp) * (n - 1);
 
-        return dp[n] = single + pair;
+        return dp[n] = single + pairUp;
     }
 
-    public static int friendsPairing(int n) {
-        int[] dp = new int[n + 1];
-        int ans =  friendsPairing_memo(n,dp);
-        return ans; 
+    public long friendsPairing_tabu(int N, long[] dp) {
+        long mod = (long) 1e9 + 7;
+        for (int n = 0; n <= N; n++) {
+            if (n <= 1) {
+                dp[n] = 1;
+                continue;
+            }
+            dp[n] = (dp[n - 1] % mod + (dp[n - 2] % mod * (n - 1)) % mod) % mod;
+        }
+
+        return dp[N];
+    }
+
+    public long countFriendsPairings(int n) {
+        long[] dp = new long[n + 1];
+        long ans = friendsPairing_tabu(n, dp);
+        return ans;
+    }
+
+    // maze Path
+
+    public static int mazePath_memo(int er, int ec, int[][] dp, int[][] dir) {
+        if (er == 0 && ec == 0) {
+            return dp[er][ec] = 1;
+        }
+
+        if (dp[er][ec] != 0)
+            return dp[er][ec];
+
+        int count = 0;
+        for (int d = 0; d < dir.length; d++) {
+            int r = er + dir[d][0];
+            int c = ec + dir[d][1];
+            if (r >= 0 && c >= 0 && r < dp.length && c < dp.length) {
+                count += mazePath_memo(r, c, dp, dir);
+            }
+        }
+
+        return dp[er][ec] = count;
+    }
+
+    public static int mazePath_tabu(int ER, int EC, int[][] dp, int[][] dir) {
+        for (int er = 0; er <= ER; er++) {
+            for (int ec = 0; ec <= EC; ec++) {
+                if (er == 0 && ec == 0) {
+                    dp[er][ec] = 1;
+                    continue;
+                }
+
+                int count = 0;
+                for (int d = 0; d < dir.length; d++) {
+                    int r = er + dir[d][0];
+                    int c = ec + dir[d][1];
+                    if (r >= 0 && c >= 0 && r < dp.length && c < dp.length) {
+                        count += dp[r][c];
+                    }
+                }
+                dp[er][ec] = count;
+            }
+        }
+
+        return dp[ER][EC];
+    }
+
+    public static int mazePathJump_memo(int er, int ec, int[][] dp, int[][] dir) {
+        if (er == 0 && ec == 0) {
+            return dp[er][ec] = 1;
+        }
+
+        if (dp[er][ec] != 0)
+            return dp[er][ec];
+
+        int count = 0;
+        for (int d = 0; d < dir.length; d++) {
+            int r = er + dir[d][0];
+            int c = ec + dir[d][1];
+            while (r >= 0 && c >= 0 && r < dp.length && c < dp.length) {
+                count += mazePathJump_memo(r, c, dp, dir);
+                r += dir[d][0];
+                c += dir[d][1];
+            }
+        }
+
+        return dp[er][ec] = count;
+    }
+
+    public static int mazePathJump_tabu(int ER, int EC, int[][] dp, int[][] dir) {
+        for (int er = 0; er <= ER; er++) {
+            for (int ec = 0; ec <= EC; ec++) {
+                if (er == 0 && ec == 0) {
+                    dp[er][ec] = 1;
+                    continue;
+                }
+
+                int count = 0;
+                for (int d = 0; d < dir.length; d++) {
+                    int r = er + dir[d][0];
+                    int c = ec + dir[d][1];
+                    while (r >= 0 && c >= 0 && r < dp.length && c < dp.length) {
+                        count += mazePathJump_memo(r, c, dp, dir);
+                        r += dir[d][0];
+                        c += dir[d][1];
+                    }
+                }
+
+                dp[er][ec] = count;
+            }
+        }
+
+        return dp[ER][EC];
+    }
+
+    public static void mazePath() {
+        int n = 3, m = 3;
+        int er = n - 1, ec = m - 1;
+        int[][] dp = new int[n][m];
+        int[][] dir = { { -1, 0 }, { 0, -1 }, { -1, -1 } };
+
+        int ans = mazePathJump_memo(er, ec, dp, dir);
+        display2D(dp);
+
+        System.out.println(ans);
     }
 
     public static void main(String[] args) {
-
+        mazePath();
     }
 }
