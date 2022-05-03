@@ -152,13 +152,59 @@ public class l001_basic {
         }
     }
 
+    // algo expert question
+
+    public static void getPermutations(List<Integer> arr, boolean[] usedIndex, int count, List<List<Integer>> res,
+            List<Integer> smallAns) {
+        if (count == arr.size()) {
+            List<Integer> base = new ArrayList<>(smallAns);
+            res.add(base);
+            return;
+        }
+
+        for (int i = 0; i < arr.size(); i++) {
+            if (!usedIndex[i]) {
+                usedIndex[i] = true;
+                smallAns.add(arr.get(i));
+                getPermutations(arr, usedIndex, count + 1, res, smallAns);
+                usedIndex[i] = false;
+                smallAns.remove(smallAns.size() - 1);
+            }
+
+        }
+
+    }
+
+    public static List<List<Integer>> getPermutations(List<Integer> arr) {
+        if (arr.size() == 0)
+            return new ArrayList<>();
+
+        List<List<Integer>> res = new ArrayList<>();
+        List<Integer> smallAns = new ArrayList<>();
+        boolean[] usedIndex = new boolean[arr.size()];
+        getPermutations(arr, usedIndex, 0, res, smallAns);
+        return res;
+    }
+
+    public int staircaseTraversal(int height, int maxSteps) {
+        if (height == 0)
+            return 1;
+
+        int count = 0;
+        for (int jump = 1; jump <= maxSteps && height - jump >= 0; jump++) {
+            count += staircaseTraversal(height - jump, maxSteps);
+        }
+
+        return count;
+    }
+
     public static void main(String... args) {
         // int[] arr = { 1, 2, 345, 67, 233, 5 };
         // display(arr, 0);
 
         // System.out.println(subseq("123", 0, ""));
         boolean[] usedChar = new boolean[3];
-        permutation("abc",usedChar,0,"");
+        permutation("abc", usedChar, 0, "");
 
     }
 
