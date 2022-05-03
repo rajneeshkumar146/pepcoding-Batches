@@ -61,4 +61,28 @@ public class l001 {
         }
         return code.toString();
     }
+
+    // https://www.algoexpert.io/questions/Longest%20Substring%20Without%20Duplication
+    public static String longestSubstringWithoutDuplication(String s) {
+        if (s.length() <= 1)
+            return s;
+        int n = s.length(), si = 0, ei = 0, len = 0, count = 0;
+        int[] freq = new int[256];
+        int idx = 0;
+        while (ei < n) {
+            if (freq[s.charAt(ei++)]++ == 1)
+                count++;
+
+            while (count != 0)
+                if (freq[s.charAt(si++)]-- > 1)
+                    count--;
+
+            // len = Math.max(len, ei - si);
+            if (ei - si > len) {
+                len = ei - si;
+                idx = si;
+            }
+        }
+        return s.substring(idx, idx + len);
+    }
 }
