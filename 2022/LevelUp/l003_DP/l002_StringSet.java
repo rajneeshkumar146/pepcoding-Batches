@@ -66,7 +66,7 @@ public class l002_StringSet {
             return dp[n][m] = 0;
         }
 
-        if (dp[n][m] != 0)
+        if (dp[n][m] != -1)
             return dp[n][m];
 
         int a = longestCommonSubsequence_memo(s1, s2, n - 1, m - 1, dp);
@@ -185,6 +185,23 @@ public class l002_StringSet {
             return dp[n][m] = b;
     }
 
+    public int numDistinct_tabu(String s, String t, int N, int M, int[][] dp) {
+        for (int n = 0; n <= N; n++) {
+            for (int m = 0; m <= M; m++) {
+                if (m == 0 || n == 0) {
+                    dp[n][m] = m == 0 ? 1 : 0;
+                    continue;
+                }
+
+                if (s.charAt(n - 1) == t.charAt(m - 1))
+                    dp[n][m] = dp[n - 1][m - 1] + dp[n - 1][m];
+                else
+                    dp[n][m] = dp[n - 1][m];
+            }
+        }
+        return dp[N][M];
+    }
+
     public int numDistinct(String s, String t) {
         int n = s.length(), m = t.length();
         int[][] dp = new int[n + 1][m + 1];
@@ -192,6 +209,46 @@ public class l002_StringSet {
             Arrays.fill(d, -1);
         return numDistinct_memo(s, t, n, m, dp);
     }
+
+    // 583
+    public int minDistance(String s1, String s2) {
+        int n = s1.length(), m = s2.length();
+        int[][] dp = new int[n + 1][m + 1];
+        for (int[] d : dp)
+            Arrays.fill(d, -1);
+        int ans = longestCommonSubsequence_memo(s1, s2, n, m, dp);
+
+        return n + m - 2 * ans;
+    }
+
+    // 1035
+    public int maxUncrossedLines(int[] nums1, int[] nums2) {
+        int N = nums1.length, M = nums2.length;
+        int[][] dp = new int[N + 1][M + 1];
+        for (int n = 0; n <= N; n++) {
+            for (int m = 0; m <= M; m++) {
+                if (n == 0 || m == 0) {
+                    dp[n][m] = 0;
+                    continue;
+                }
+
+                if (nums1[n - 1] == nums2[m - 1])
+                    dp[n][m] = dp[n - 1][m - 1] + 1;
+                else
+                    dp[n][m] = Math.max(dp[n - 1][m], dp[n][m - 1]);
+            }
+        }
+
+        return dp[N][M];
+    }
+
+    // 005
+
+
+    // https://practice.geeksforgeeks.org/problems/count-subsequences-of-type-ai-bj-ck4425/1
+
+
+    // https://www.geeksforgeeks.org/longest-common-substring-dp-29/
 
     public static void main(String[] args) {
         longestPlaindromicSubsequence();
