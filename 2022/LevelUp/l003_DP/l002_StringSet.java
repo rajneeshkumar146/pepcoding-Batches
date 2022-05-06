@@ -243,10 +243,29 @@ public class l002_StringSet {
     }
 
     // 005
+    public int longestPlaindromicSubstring(String s) {
+        int n = s.length(), ans = 0;
+        int[][] dp = new int[n][n];
+        for (int gap = 0; gap < n; gap++) {
+            for (int i = 0, j = gap; j < n; i++, j++) {
+                if (gap == 0)
+                    dp[i][j] = 1;
+                else if (gap == 1 && s.charAt(i) == s.charAt(j))
+                    dp[i][j] = 2;
+                else
+                    dp[i][j] = s.charAt(i) == s.charAt(j) && dp[i + 1][j - 1] > 0 ? dp[i + 1][j - 1] + 2 : 0;
 
+                ans = Math.max(ans, dp[i][j]);
+            }
+        }
+
+        // count: Total no of palindromic substring
+        // return -> longest substring
+
+        return ans;
+    }
 
     // https://practice.geeksforgeeks.org/problems/count-subsequences-of-type-ai-bj-ck4425/1
-
 
     // https://www.geeksforgeeks.org/longest-common-substring-dp-29/
 
