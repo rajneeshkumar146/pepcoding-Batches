@@ -244,7 +244,7 @@ public class l002_StringSet {
 
     // 005
     public int longestPlaindromicSubstring(String s) {
-        int n = s.length(), ans = 0;
+        int n = s.length(), len = 0, stIdx = 0, count = 0;
         int[][] dp = new int[n][n];
         for (int gap = 0; gap < n; gap++) {
             for (int i = 0, j = gap; j < n; i++, j++) {
@@ -255,19 +255,62 @@ public class l002_StringSet {
                 else
                     dp[i][j] = s.charAt(i) == s.charAt(j) && dp[i + 1][j - 1] > 0 ? dp[i + 1][j - 1] + 2 : 0;
 
-                ans = Math.max(ans, dp[i][j]);
+                if (dp[i][j] > len) {
+                    len = dp[i][j];
+                    stIdx = i;
+                }
+
+                count += dp[i][j] > 0 ? 1 : 0;
             }
         }
 
-        // count: Total no of palindromic substring
-        // return -> longest substring
-
-        return ans;
+        // s.substring(stIdx, stIdx + len);
+        return len;
     }
 
     // https://www.geeksforgeeks.org/longest-common-substring-dp-29/
+    public int longestCommonSubstring(String s) {
+        int n = s.length(), len = 0, stIdx = 0, count = 0;
+        int[][] dp = new int[n][n];
+        for (int gap = 0; gap < n; gap++) {
+            for (int i = 0, j = gap; j < n; i++, j++) {
+                if (gap == 0)
+                    dp[i][j] = 1;
+                else if (gap == 1 && s.charAt(i) == s.charAt(j))
+                    dp[i][j] = 2;
+                else
+                    dp[i][j] = s.charAt(i) == s.charAt(j) && dp[i + 1][j - 1] > 0 ? dp[i + 1][j - 1] + 2 : 0;
+
+                if (dp[i][j] > len) {
+                    len = dp[i][j];
+                    stIdx = i;
+                }
+
+                count += dp[i][j] > 0 ? 1 : 0;
+            }
+        }
+
+        // s.substring(stIdx, stIdx + len);
+        return len;
+    }
 
     // https://practice.geeksforgeeks.org/problems/count-subsequences-of-type-ai-bj-ck4425/1
+    public int fun(String s) {
+        int aCount = 0, bCount = 0, cCount = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (ch == 'a') {
+                aCount = aCount + (1 + aCount);
+            } else if (ch == 'b') {
+                bCount = bCount + (aCount + bCount);
+            } else {
+                cCount = cCount + (bCount + cCount);
+            }
+        }
+
+        return cCount;
+    }
 
     public static void main(String[] args) {
         longestPlaindromicSubsequence();
