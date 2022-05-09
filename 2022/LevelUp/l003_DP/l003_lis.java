@@ -57,13 +57,74 @@ public class l003_lis {
         return maxLen;
     }
 
-    // https://www.geeksforgeeks.org/maximum-sum-increasing-subsequence-dp-14/
+    public static int LIS_SumDP(int[] arr, int[] dp) {
+        int maxSum = 0, n = arr.length;
+        for (int i = 0; i < n; i++) {
+            dp[i] = arr[i];
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[j] < arr[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + arr[i]);
+                }
+            }
+
+            maxSum = Math.max(maxSum, dp[i]);
+        }
+
+        return maxSum;
+    }
+
+    public static int LDS_SumDP(int[] arr, int[] dp) {
+        int maxSum = 0, n = arr.length;
+        for (int i = n - 1; i >= 0; i--) {
+            dp[i] = arr[i];
+            for (int j = i + 1; j < n; j++) {
+                if (arr[j] < arr[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + arr[i]);
+                }
+            }
+
+            maxSum = Math.max(maxSum, dp[i]);
+        }
+
+        return maxSum;
+    }
 
     // https://practice.geeksforgeeks.org/problems/longest-bitonic-subsequence0824/1/
     public int LongestBitonicSequence(int[] nums) {
+        int n = nums.length;
 
+        int[] LIS = new int[n];
+        int[] LDS = new int[n];
+
+        LIS_DP(nums, LIS);
+        LDS_DP(nums, LDS);
+
+        int maxLen = 0;
+        for (int i = 0; i < n; i++) {
+            maxLen = Math.max(maxLen, LIS[i] + LDS[i] - 1);
+        }
+        return maxLen;
     }
 
     // https://practice.geeksforgeeks.org/problems/maximum-sum-bitonic-subsequence1857/1/
+    public static int maxSumBS(int arr[], int n) {
+
+        int[] LIS = new int[n];
+        int[] LDS = new int[n];
+
+        LIS_SumDP(arr, LIS);
+        LDS_SumDP(arr, LDS);
+
+        int maxSum = 0;
+        for (int i = 0; i < n; i++) {
+            maxSum = Math.max(maxSum, LIS[i] + LDS[i] - arr[i]);
+        }
+        return maxSum;
+
+    }
+
+    // reverse_longestBitonicSequnece
+
+    // 354: https://leetcode.com/problems/russian-doll-envelopes/
 
 }
