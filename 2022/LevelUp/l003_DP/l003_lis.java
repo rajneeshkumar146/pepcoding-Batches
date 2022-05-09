@@ -199,6 +199,9 @@ public class l003_lis {
         return maxLen;
     }
 
+    // 673
+    // https://leetcode.com/problems/number-of-longest-increasing-subsequence/
+
     // O(NlogN)
     public int maxEnvelopes_optimized(int[][] envelopes) {
 
