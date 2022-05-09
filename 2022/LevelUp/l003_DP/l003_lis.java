@@ -26,18 +26,44 @@ public class l003_lis {
     }
 
     public static int LIS_DP(int[] arr, int[] dp) {
+        int maxLen = 0, n = arr.length;
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[j] < arr[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
 
+            maxLen = Math.max(maxLen, dp[i]);
+        }
+
+        return maxLen;
     }
 
     public static int LDS_DP(int[] arr, int[] dp) {
+        int maxLen = 0, n = arr.length;
+        for (int i = n - 1; i >= 0; i--) {
+            dp[i] = 1;
+            for (int j = i + 1; j < n; j++) {
+                if (arr[j] < arr[i]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
 
+            maxLen = Math.max(maxLen, dp[i]);
+        }
+
+        return maxLen;
     }
 
     // https://www.geeksforgeeks.org/maximum-sum-increasing-subsequence-dp-14/
 
     // https://practice.geeksforgeeks.org/problems/longest-bitonic-subsequence0824/1/
     public int LongestBitonicSequence(int[] nums) {
-        
+
     }
+
+    // https://practice.geeksforgeeks.org/problems/maximum-sum-bitonic-subsequence1857/1/
 
 }
