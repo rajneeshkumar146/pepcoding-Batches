@@ -1,4 +1,4 @@
-import java.util.Arrays;
+import java.util.*;
 
 public class l003_lis {
 
@@ -18,7 +18,7 @@ public class l003_lis {
     }
 
     public static void LIS_Rec() {
-        int[] arr = { 0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15, 14 };
+        int[] arr = { 0, 8, 4, 12, 2, 10, 6, 14, 1, 9, 5, 13, 3, 11, 7, 15, 14, 7 };
         int n = arr.length, maxLen = 0;
         int[] dp = new int[n];
 
@@ -202,9 +202,107 @@ public class l003_lis {
     // 673
     // https://leetcode.com/problems/number-of-longest-increasing-subsequence/
 
-    // O(NlogN)
-    public int maxEnvelopes_optimized(int[][] envelopes) {
+    public int findNumberOfLIS(int[] nums) {
 
+        int n = nums.length;
+        int[] count = new int[n];
+        int[] dp = new int[n];
+        int maxLen = 0, maxCount = 0;
+
+        for (int i = 0; i < n; i++) {
+            count[i] = 1;
+            dp[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (nums[j] < nums[i]) {
+                    if (dp[j] + 1 == dp[i])
+                        count[i] += count[j];
+                    else if (dp[j] + 1 > dp[i]) {
+                        dp[i] = dp[j] + 1;
+                        count[i] = count[j];
+                    }
+                }
+
+            }
+
+            if (maxLen == dp[i])
+                maxCount += count[i];
+            else if (dp[i] > maxLen) {
+                maxLen = dp[i];
+                maxCount = count[i];
+            }
+        }
+
+        return maxCount;
+    }
+
+    // Mimimum deletetion required to make array sorted.
+    public static int minDeletion(int[] arr) {
+        int n = arr.length, maxLen = 0;
+        int[] dp = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[j] <= arr[i]) {
+                    dp[i] = Math.max(dp[j] + 1, dp[i]);
+                }
+            }
+
+            maxLen = Math.max(maxLen, dp[i]);
+        }
+
+        return n - maxLen;
+    }
+
+    // https://www.geeksforgeeks.org/dynamic-programming-building-bridges/
+    public static int buildingBridges(int[][] arr) {
+        Arrays.sort(arr, (a, b) -> {
+            return a[0] - b[0];
+        });
+
+        int n = arr.length, maxLen = 0;
+        int[] dp = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            dp[i] = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (arr[j][1] < arr[i][1] && arr[j][0] < arr[i][0]) {
+                    dp[i] = Math.max(dp[j] + 1, dp[i]);
+                }
+            }
+
+            maxLen = Math.max(maxLen, dp[i]);
+        }
+
+        return maxLen;
+    }
+
+    private static int binarySearch(List<Integer> list, int num) {
+        int li = 0, ri = list.size();
+        while (li < ri) {
+            int mid = (li + ri) / 2;
+            if (num <= list.get(mid))
+                ri = mid;
+            else
+                li = mid + 1;
+        }
+
+        return li;
+    }
+
+    // O(NlogN)
+    public static int LIS_BS(int[] arr) {
+        int n = arr.length;
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            int idx = binarySearch(list, arr[i]);
+            if (idx == list.size())
+                list.add(arr[i]);
+            else
+                list.set(idx, arr[i]);
+        }
+
+        return list.size();
     }
 
 }
