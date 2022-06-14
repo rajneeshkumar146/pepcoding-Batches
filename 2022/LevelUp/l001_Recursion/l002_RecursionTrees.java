@@ -131,13 +131,13 @@ class l002_RecursionTrees {
         }
 
         int count = 0;
-        if (tar - coins[idx] >= 0) {
+        if (tar - coins[idx] >= 0 && coins[idx]>0) {
             int val = coins[idx];
             coins[idx] = -coins[idx];
-            count += coinChangePermutation_IN_Sub(coins, tar - val, 0, psf + val + " ");
+            count += coinChangePermutation_Sin_Sub(coins, tar - val, 0, psf + val + " ");
             coins[idx] = -coins[idx];
         }
-        count += coinChangePermutation_IN_Sub(coins, tar, idx + 1, psf);
+        count += coinChangePermutation_Sin_Sub(coins, tar, idx + 1, psf);
 
         return count;
     }
